@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,9 +7,6 @@ import '../constant/app_colors.dart';
 import '../widget/app_buttons.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-
-
-
 
 class AppUtil {
   static void hideKeyboard(BuildContext context) {
@@ -29,9 +25,9 @@ class AppUtil {
               AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)),
     ));
   }
-  
-Future buildErrorDialog(String message) {
-    final size= Get.mediaQuery.size;
+
+  Future buildErrorDialog(String message) {
+    final size = Get.mediaQuery.size;
     return Get.defaultDialog(
       title: "Error!",
       titlePadding: const EdgeInsets.only(top: 20, bottom: 10),
@@ -46,12 +42,14 @@ Future buildErrorDialog(String message) {
       ),
     );
   }
-///دالة لفحص الانترنت
- static Future<bool> checkInternet() async {
+
+  ///دالة لفحص الانترنت
+  static Future<bool> checkInternet() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     return connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi;
   }
+
   static void showErrorToast(String title, String message) {
     Get.snackbar(title, message,
         duration: const Duration(seconds: 4),
@@ -67,45 +65,44 @@ Future buildErrorDialog(String message) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
       content: Text(
         message,
-        style: Get.textTheme.bodyMedium!.copyWith(color: Colors.white),      
+        style: Get.textTheme.bodyMedium!.copyWith(color: Colors.white),
       ),
       backgroundColor: color,
       duration: const Duration(seconds: 4),
     ));
   }
-  static 
-Future<bool> exitApp(BuildContext context) {
 
-  Get.defaultDialog(
-      title: "تنبيه",
-      titleStyle:  TextStyle(
-          color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
-      middleText: "هل تريد الخروج من التطبيق؟",
-      actions: [
-        ElevatedButton(
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all(Theme.of(context).primaryColor)),
-          onPressed: () {
-            exit(0);
-          },
-          child: const Text(
-            "تاكيد",
-            style: TextStyle(color: AppColors.textColor),
-          ),
-        ),
-        ElevatedButton(
+  static Future<bool> exitApp(BuildContext context) {
+    Get.defaultDialog(
+        title: "تنبيه",
+        titleStyle: TextStyle(
+            color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
+        middleText: "هل تريد الخروج من التطبيق؟",
+        actions: [
+          ElevatedButton(
             style: ButtonStyle(
                 backgroundColor:
                     MaterialStateProperty.all(Theme.of(context).primaryColor)),
             onPressed: () {
-              Get.back();
+              exit(0);
             },
             child: const Text(
-              "الغاء",
+              "تاكيد",
               style: TextStyle(color: AppColors.textColor),
-            ))
-      ]);
-  return Future.value(true);
-}
+            ),
+          ),
+          ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      Theme.of(context).primaryColor)),
+              onPressed: () {
+                Get.back();
+              },
+              child: const Text(
+                "الغاء",
+                style: TextStyle(color: AppColors.textColor),
+              ))
+        ]);
+    return Future.value(true);
+  }
 }
