@@ -1,19 +1,17 @@
-import 'package:ashghal/core/services/dependency_injection.dart';
-import 'package:ashghal/features/auth/domain/entities/user.dart';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
-import 'package:ashghal/core/constant/app_routes.dart';
-import 'package:ashghal/core/util/app_util.dart';
-import 'package:ashghal/features/auth/domain/Requsets/login_request.dart';
-import 'package:ashghal/features/auth/domain/use_cases/login.dart';
 
+
+import '../../../../../core/constant/app_routes.dart';
+import '../../../../../core/services/dependency_injection.dart' as di;
 import '../../../../../core_api/errors/failures.dart';
-import 'chooseusertype_controller.dart';
-import 'forgetpassword_controller.dart';
-import 'singup_controller.dart';
+import '../../../domain/Requsets/login_request.dart';
+import '../../../domain/entities/user.dart';
+import '../../../domain/use_cases/login.dart';
+
 
 class LoginController extends GetxController {
   bool isVisible = true;
@@ -29,7 +27,7 @@ class LoginController extends GetxController {
     LoginRequest loginRequest = LoginRequest.withEmail(
         password: passwordController.text.trim(),
         email: emailController.text.trim());
-    LoginUseCase loginUseCase = getIt();
+    LoginUseCase loginUseCase =di. getIt();
     final result = await loginUseCase(loginRequest);
 
     result.fold(

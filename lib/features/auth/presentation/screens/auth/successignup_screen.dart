@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 
 import '../../../../../core/constant/app_colors.dart';
 import '../../../../../core/constant/app_routes.dart';
-import '../../../../../core/core/widget/app_buttons.dart';
+import '../../../../../core/widget/app_buttons.dart';
+
 
 class SuccesSignUp extends StatelessWidget{ //GetView<SuccessSignUpControllerImp> {
   const SuccesSignUp({super.key});
