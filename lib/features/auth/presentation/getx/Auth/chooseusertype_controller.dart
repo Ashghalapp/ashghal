@@ -1,4 +1,4 @@
-import 'package:ashghal/core/constant/app_routes.dart';
+
 import 'package:get/get.dart';
 
 import 'singup_controller.dart';

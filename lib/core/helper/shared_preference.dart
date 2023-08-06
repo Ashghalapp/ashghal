@@ -44,7 +44,8 @@
 //   static Future<bool> isUserLoggedIn() async {}
 // }
 
-import 'package:ashghal/core/services/app_services.dart';
+
+import 'package:ashghal_app_frontend/core/core/services/app_services.dart';
 import 'package:get/get.dart';
 
 class SharedPrefs {

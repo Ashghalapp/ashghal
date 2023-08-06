@@ -1,9 +1,8 @@
 
-
-import 'package:ashghal/core/widget/app_buttons.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../core/widget/app_buttons.dart';
 
 
 

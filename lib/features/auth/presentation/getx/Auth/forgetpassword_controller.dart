@@ -1,11 +1,9 @@
 
-
-import 'package:ashghal/core/constant/app_routes.dart';
-import 'package:ashghal/core/util/app_util.dart';
-import 'package:ashghal/features/auth/presntaion/getx/Auth/verficationresetpassword_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+
+import '../../../../../core/app_util.dart';
 
 
 class ForgetPasswordController extends GetxController {
