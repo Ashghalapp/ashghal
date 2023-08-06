@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constant/app_colors.dart';
+import '../config/app_colors.dart';
 import '../widget/app_buttons.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';

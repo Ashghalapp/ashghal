@@ -22,6 +22,8 @@ abstract class UserProviderRepository{
 
   Future<Either<Failure, Success>> resendEmailVerificationCode();
 
+  Future<Either<Failure, bool>> checkEmailExist(String email);
+
   Future<Either<Failure, User>> login(LoginRequest request);
 
   Future<Either<Failure, Success>> logout();

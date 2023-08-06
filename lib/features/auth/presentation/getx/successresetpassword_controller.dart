@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 
 
-import '../../../../../core/constant/app_routes.dart';
+import '../../../../../core/config/app_routes.dart';
 
 import 'login_controller.dart';
 

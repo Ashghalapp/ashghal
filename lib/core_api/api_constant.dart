@@ -13,10 +13,11 @@ class ApiConstants {
   static String REGISTER_PROVIDER = "${AUTH_ENDPOINT}register-provider";
   static String LOGIN = "${AUTH_ENDPOINT}login";
   static String LOGOUT = "${AUTH_ENDPOINT}logout";
+  static String VERIFY_EMAIL = "${AUTH_ENDPOINT}verify-email";
   static String RESEND_EMAIL_VERIFICATION_CODE = "${AUTH_ENDPOINT}resend-email-verification-code";
+  static String CHECK_EMAIL_EXIST = "${AUTH_ENDPOINT}check-email-exist/";
   static String RESEND_FORGET_PASSWORD_CODE = "${AUTH_ENDPOINT}resend-forget-password-code";
   static String FORGET_PASSWORD = "${AUTH_ENDPOINT}forget-password";
   static String VERIFY_RESET_PASSWORD_CODE = "${AUTH_ENDPOINT}verify-reset-password-code";
-  static String RESET_PASSWORD = "${AUTH_ENDPOINT}reset-password";
-  static String VERIFY_EMAIL = "${AUTH_ENDPOINT}verify-email";
+  static String RESET_PASSWORD = "${AUTH_ENDPOINT}reset-password";  
 }

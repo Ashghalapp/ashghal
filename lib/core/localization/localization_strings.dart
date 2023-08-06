@@ -618,4 +618,11 @@ class LocalizationString {
       'This username will be shown to all user. Choose a wise user name like it_mike_here'
           .tr;
   static String followFriendsToSendPost = "Follow your friends to send post".tr;
+
+
+  //======================Sign up strings============================//
+  static String emailAlreadyExist = "emailAlreadyExist";
+  static String successRegister = "SuccessfullRegister, VerifyEmail";
+  static String successfullRegisteredAndverified = "SuccessfullRegisteredAndverifiedEemail";
+
 }

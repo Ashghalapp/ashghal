@@ -1,13 +1,20 @@
 import 'dart:math';
 
+import 'package:ashghal_app_frontend/core/localization/localization_strings.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/Requsets/register_user_provider_request.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/check_email_exist.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_provider_with_email.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_user_with_email.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../../core/constant/app_routes.dart';
-import '../../../../../core_api/api_response_model.dart';
+import '../../../../../core/config/app_routes.dart';
 import 'login_controller.dart';
 import 'verficationsignup_controller.dart';
-
+import '../../../../core/services/dependency_injection.dart' as di;
 
 class SignUpController extends GetxController {
   late TextEditingController emailController;
@@ -19,6 +26,7 @@ class SignUpController extends GetxController {
   late TextEditingController jobDescController;
   GlobalKey<FormState> signUpFormKey = GlobalKey();
   GlobalKey<FormState> jobFormKey = GlobalKey();
+  RxBool isLoading = RxBool(false);
   bool isVisible = true;
 
   final RxList<Map<String, Object>> categoriesList = RxList([
@@ -29,7 +37,7 @@ class SignUpController extends GetxController {
   ]);
 // RxString selectedItem = 'Item 1'.obs;
 
-    @override
+  @override
   void onInit() async {
     try {
       emailController = TextEditingController();
@@ -76,6 +84,8 @@ class SignUpController extends GetxController {
     Get.offNamed(AppRoutes.logIn);
   }
 
+
+
   Widget hanldlingWaitingRequest(
       {required RxBool isLoading, required Widget child}) {
     return Obx(() => isLoading.value
@@ -90,7 +100,7 @@ class SignUpController extends GetxController {
   }
 //  var isLoading = false.obs;
 
-// 
+//
 
   dynamic isPhoneExist() async {
     // try {
@@ -106,73 +116,87 @@ class SignUpController extends GetxController {
     // }
   }
 
-  dynamic isEmailExist() async {
-    // try {
-    //   String email = emailController.text;
-    //   ApiResponseModel response = await ApiController().checkEmailExist(email);
-    //   return response.data;
-    // } catch (e) {
-    //   if (e is http.ClientException) {
-    //     throw ApiError('Request failed: ${e.message}', '');
-    //   } else {
-    //     throw ApiError('An error occurred during the request.', '');
-    //   }
-    // }
+  Future<Either<Failure, bool>> isEmailExist() {
+    CheckEmailExistUseCase checkEmail = di.getIt();
+    return checkEmail(emailController.text);
+  }
+
+  Future<void> submitEmailNamePass(bool isProviderSignUp) async {
+    if (!signUpFormKey.currentState!.validate()) return;
+    isLoading.value = true;
+    Get.focusScope!.unfocus(); // اخفاء الكيبورد
+    (await isEmailExist()).fold((failure) {
+      AppUtil.showMessage(failure.message, Get.theme.colorScheme.error);
+    }, (isExist) async {
+      if (isExist) {
+        AppUtil.showMessage(LocalizationString.emailAlreadyExist, Get.theme.colorScheme.error);
+      } else {
+        isProviderSignUp
+            ? Get.toNamed(AppRoutes.singUpScreenJob)
+            : (await registerUser())
+                ? Get.toNamed(AppRoutes.verficationSignUp)
+                : AppUtil.showMessage(
+                    LocalizationString.failed, Get.theme.colorScheme.error);
+        // if (isProviderSignUp) {
+        //   Get.toNamed(AppRoutes.singUpScreenJob);
+        // } else if (await registerUser()) {
+        //   Get.toNamed(AppRoutes.verficationSignUp);
+        // } else {
+        //   AppUtil.showMessage(
+        //       LocalizationString.failed, Get.theme.colorScheme.error);
+        // }
+      }
+    });
+    isLoading.value = false;
   }
 
   Future<bool> registerUser() async {
-    // ApiResponseModel? response = await ApiController().registerUser(
-    //   name: nameController.text,
-    //   phone: phoneController.text,
-    //   email: emailController.text,
-    //   password: passwordController.text,
-    // );
-
-    // if (response?.status ?? false) {
-    //   showSnackBar("", "Register succesfully\nPlease verify your email.");
-    //   // print("////////token:: ${response?.data['token']}");
-    //   // SharedPrefs().setUserLoggedIn(true);
-    //   SharedPrefs().setAuthorizationKey(response?.data['token']);
-    //   return true;
-    // } else if (response != null) {
-    //   handleShowResponseErrors(response.errors!);
-    //   return false;
-    // }
-    return false;
+    RegisterUserWithEmailUseCase registerUserWithEmail= di.getIt();
+    RegisterUserRequest request = RegisterUserRequest.withEmail(
+      name: nameController.text,
+      password: passwordController.text,
+      email: emailController.text,
+    );
+    var result = await registerUserWithEmail.call(request);
+    return result.fold((failure) {
+      AppUtil.showMessage(failure.message, Get.theme.colorScheme.error);
+      return false;
+    }, (user) {
+      // some code for user data
+      AppUtil.showMessage(LocalizationString.successRegister, Colors.green);
+      return true;
+    });
   }
 
+  Future<void> submitJobInfo() async {
+    if (!jobFormKey.currentState!.validate()) return;
+    isLoading.value = true;
+    Get.focusScope!.unfocus(); // اخفاء الكيبورد
+    if (await registerProvider()) Get.toNamed(AppRoutes.verficationSignUp);    
+    isLoading.value = false;
+  }
+  
   Future<bool> registerProvider() async {
-    // ApiResponseModel? response = await ApiController().registerProvider(
-    //   name: nameController.text,
-    //   password: passwordController.text,
-    //   email: emailController.text,
-    //   phone: phoneController.text,
-    //   jobName: jobNameController.text,
-    //   jobDesc: jobDescController.text,
-    //   categoryId: jobCategoryController.text,
-    // );
-
-    // if (response?.status ?? false) {
-    //   showSnackBar("", "Register succesfully\nPlease verify your email.");
-    //   // print("////////token:: ${response?.data['token']}");
-    //   // SharedPrefs().setUserLoggedIn(true);
-    //   SharedPrefs().setAuthorizationKey(response?.data['token']);
-    //   return true;
-    // } else if (response != null) {
-    //   handleShowResponseErrors(response.errors!);
-    //   return false;
-    // }
-    return false;
+    RegisterProviderWithEmailUseCase registerProviderWithEmail= di.getIt();
+    RegisterProviderRequest request = RegisterProviderRequest.withEmail(
+      name: nameController.text,
+      password: passwordController.text,
+      email: emailController.text,
+      jobName: jobNameController.text,
+      jobDesc: jobDescController.text,
+      categoryId: int.parse(jobCategoryController.text),
+    );
+    var result = await registerProviderWithEmail.call(request);
+    return result.fold((failure) {
+      AppUtil.showMessage(failure.message, Get.theme.colorScheme.error);
+      return false;
+    }, (provider) {
+      // some code for provider data      
+      AppUtil.showMessage(LocalizationString.successRegister, Colors.green);
+      return true;
+    });
   }
 
-  // void updateLoginStatus(StatusRequest status) {
-  //   statusRequest = status;
-  //   update();
-  // }
-  // void showErrorMessage(String message) {
-
-  //   debugPrint(message);
-  // }
 
   //  void verifyEmail(String otpCode, ) async {
   //   AppUtil.checkInternet().then((hasInternet) async {

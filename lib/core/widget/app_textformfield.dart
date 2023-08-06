@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../constant/app_colors.dart';
+import '../config/app_colors.dart';
 
 class MyTextFormField extends StatelessWidget {
   const MyTextFormField({

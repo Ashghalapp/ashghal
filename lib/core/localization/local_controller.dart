@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../constant/app_theme.dart';
+import '../config/app_theme.dart';
 import '../helper/shared_preference.dart';
 
 class MyLocalController extends GetxController {

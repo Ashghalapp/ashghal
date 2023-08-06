@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constant/app_routes.dart';
+import '../config/app_routes.dart';
 
 import '../helper/shared_preference.dart';
 import '../services/app_services.dart';

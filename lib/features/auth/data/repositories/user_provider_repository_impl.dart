@@ -66,6 +66,14 @@ class UserProviderRepositoryImpl extends UserProviderRepository {
   }
 
   @override
+  Future<Either<Failure, bool>> checkEmailExist(String email) async {
+    var result = await _handleErrors(()async{
+      return await remoteDataSource.checkEmailExist(email);
+    });
+    return result is bool? Right(result): Left(result);
+  }
+
+  @override
   Future<Either<Failure, User>> login(LoginRequest request) async {
    var login = await _handleErrors(()async{
       return  await remoteDataSource.login(request);

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
-import '../../../../../core/constant/app_routes.dart';
+import '../../../../../core/config/app_routes.dart';
 
 import 'resetpassword_controller.dart';
 

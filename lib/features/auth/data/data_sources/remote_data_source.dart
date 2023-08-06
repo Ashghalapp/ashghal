@@ -1,5 +1,6 @@
 // لكل implement الكلاس الاساسي والي يحتوي العمليات الاساسية حتى يتم منه عمل
 // تقنية مستخدمة حتى تمثل مصدر البيانات، وهكذا تسهل عملية التعديل وايضا التغيير
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/api_response_model.dart';
 import 'package:ashghal_app_frontend/core_api/dio_service.dart';
@@ -28,6 +29,8 @@ abstract class RemoteDataSource {
 
   Future<Success> resendEmailVerificationCode();
 
+  Future<bool> checkEmailExist(String email);
+
   Future<User> login(LoginRequest loginRequest);
 
   Future<Success> logout();
@@ -49,6 +52,7 @@ class RemoteDataSourceImpl implements RemoteDataSource{
   Future<User> registerUserWithEmail(RegisterUserRequest request) async {
     ApiResponseModel response = await dio.post(ApiConstants.REGISTER_USER, request.toJson());
     if (response.status) {
+      SharedPref.setAuthorizationKey(response.data['token']);
       print("::: S End registerUserWithEmail func in remote datasource");
       return UserModel.fromJson(response.data as Map<String, dynamic>);
     }
@@ -59,6 +63,7 @@ class RemoteDataSourceImpl implements RemoteDataSource{
   Future<User> registerUserWithPhone(RegisterUserRequest request) async {
     ApiResponseModel response = await dio.post(ApiConstants.REGISTER_USER, request.toJson());
     if (response.status) {
+      SharedPref.setAuthorizationKey(response.data['token']);
       print("::: S End registerUserWithPhone func in remote datasource");
       return UserModel.fromJson(response.data as Map<String, dynamic>);
     }
@@ -69,6 +74,7 @@ class RemoteDataSourceImpl implements RemoteDataSource{
   Future<Provider> registerProviderWithEmail(RegisterProviderRequest request) async {
     ApiResponseModel response = await dio.post(ApiConstants.REGISTER_PROVIDER, request.toJson());
     if (response.status) {
+      SharedPref.setAuthorizationKey(response.data['token']);
       print("::: S End registerProviderWithEmail func in remote datasource");
       return ProviderModel.fromJson(response.data as Map<String, dynamic>);
     }
@@ -79,6 +85,7 @@ class RemoteDataSourceImpl implements RemoteDataSource{
   Future<Provider> registerProviderWithPhone(RegisterProviderRequest request) async {
     ApiResponseModel response = await dio.post(ApiConstants.REGISTER_PROVIDER, request.toJson());
     if (response.status) {
+      SharedPref.setAuthorizationKey(response.data['token']);
       print("::: S End registerProviderWithPhone func in remote datasource");
       return ProviderModel.fromJson(response.data as Map<String, dynamic>);
     }
@@ -106,9 +113,20 @@ class RemoteDataSourceImpl implements RemoteDataSource{
   }
 
   @override
+  Future<bool> checkEmailExist(String email) async{
+    ApiResponseModel response = await dio.get(ApiConstants.CHECK_EMAIL_EXIST + email);
+    if (response.status) {
+      print("::: S End checkEmailExist func in remote datasource");
+      return response.data;
+    }
+    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+  }
+
+  @override
   Future<User> login(LoginRequest request) async {
     ApiResponseModel response = await dio.post(ApiConstants.LOGIN, request.toJson());
     if (response.status) {
+      SharedPref.setAuthorizationKey(response.data['token']);
       print("::: S End login func in remote datasource");
       if (response.data != null && response.data['is_provider']){
         return ProviderModel.fromJson(response.data as Map<String, dynamic>);

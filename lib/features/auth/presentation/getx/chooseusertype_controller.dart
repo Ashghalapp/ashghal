@@ -1,7 +1,7 @@
 
 import 'package:get/get.dart';
 
-import '../../../../../core/constant/app_routes.dart';
+import '../../../../../core/config/app_routes.dart';
 import 'singup_controller.dart';
 
 abstract class ChooseUserTypeController extends GetxController {
@@ -9,7 +9,6 @@ abstract class ChooseUserTypeController extends GetxController {
 }
 
 class ChooseUserTypeControllerImp extends ChooseUserTypeController {
-  // }
   @override
   goToNextSignUp(bool isProvider) {
     Get.lazyPut(() => SignUpController());
