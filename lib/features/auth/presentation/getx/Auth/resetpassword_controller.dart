@@ -1,144 +1,135 @@
 
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
-// import '../../../../../core/constant/app_routes.dart';
-// import '../../../../../core/core/util/app_util.dart';
-// import '../../../domain/Requsets/reset_password_request.dart';
-// import 'successresetpassword_controller.dart';
+import '../../../../../core/constant/app_routes.dart';
 
-// class ResetPasswordController extends GetxController {
-//   late TextEditingController passwordController;
-//   late TextEditingController confirmPasswordController;
-//   GlobalKey<FormState> resetPasswordFormKey = GlobalKey();
-//   bool isVisible = true;
-//   bool isConfirmVisible = true;
+import 'successresetpassword_controller.dart';
 
-//   checkResetPassword() async {
-//     String otpCode = Get.arguments['otpCode'];
-//     String email = Get.arguments['email'];
-//     debugPrint('====================${otpCode + email}');
-//     final valid = resetPasswordFormKey.currentState?.validate() ?? false;
-//     if (valid) {
-//       resetPasswordFormKey.currentState?.save();
-//       final hasInternet = await AppUtil.checkInternet();
-//       if (hasInternet) {
-//         try {
-//           EasyLoading.show(status: 'loading');
+class ResetPasswordController extends GetxController {
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
+  GlobalKey<FormState> resetPasswordFormKey = GlobalKey();
+  bool isVisible = true;
+  bool isConfirmVisible = true;
 
-//          ResetPasswordRequest resetPasswordRequest=ResetPasswordRequest.withEmail(
-//             email: email,
-//             code: otpCode,
-//             newPassword: passwordController.text,
-//           );
+  checkResetPassword() async {
+    // String otpCode = Get.arguments['otpCode'];
+    // String email = Get.arguments['email'];
+    // debugPrint('====================${otpCode + email}');
+    // final valid = resetPasswordFormKey.currentState?.validate() ?? false;
+    // if (valid) {
+    //   resetPasswordFormKey.currentState?.save();
+    //   final hasInternet = await AppUtil.checkInternet();
+    //   if (hasInternet) {
+    //     try {
+    //       EasyLoading.show(status: 'loading');
 
-//           EasyLoading.dismiss();
+    //      ResetPasswordRequest resetPasswordRequest=ResetPasswordRequest.withEmail(
+    //         email: email,
+    //         code: otpCode,
+    //         newPassword: passwordController.text,
+    //       );
 
-//           if (response.status) {
-//             debugPrint(
-//                 '>>>>>>>>>>> The response data from restpwd is :${response.data}');
-//             debugPrint(
-//                 '>>>>>>>>>>> The response message  from restpwd  is :${response.message}');
-//             debugPrint(
-//                 '>>>>>>>>>>> The response code  from restpwd  is :${response.code}');
+    //       EasyLoading.dismiss();
 
-//             showMessage(response.message, isSuccess: true);
-//             goToSuccessResetPassword();
-//           } else {
-//             debugPrint(
-//                 '>>>>>>>>>>> The Error message from Reset pwd :${response.message}');
-//             handleError(response);
-//           }
-//         } catch (e) {
-//           EasyLoading.dismiss();
-//           handleError(null);
-//           debugPrint('Error: $e');
-//         }
-//       } else {
-//         showMessage('No internet connection');
-//       }
-//     }
-//   }
+    //       if (response.status) {
+    //         debugPrint(
+    //             '>>>>>>>>>>> The response data from restpwd is :${response.data}');
+    //         debugPrint(
+    //             '>>>>>>>>>>> The response message  from restpwd  is :${response.message}');
+    //         debugPrint(
+    //             '>>>>>>>>>>> The response code  from restpwd  is :${response.code}');
 
-//   showMessage(String message, {bool? isSuccess}) {
-//     Get.snackbar(
-//       isSuccess == true ? LocalizationString.success : LocalizationString.error,
-//       message,
-//       backgroundColor: isSuccess == true ? Colors.green : Colors.red,
-//       colorText: Colors.white,
-//       duration: const Duration(seconds: 3),
-//     );
-//   }
+    //         showMessage(response.message, isSuccess: true);
+    //         goToSuccessResetPassword();
+    //       } else {
+    //         debugPrint(
+    //             '>>>>>>>>>>> The Error message from Reset pwd :${response.message}');
+    //         handleError(response);
+    //       }
+    //     } catch (e) {
+    //       EasyLoading.dismiss();
+    //       handleError(null);
+    //       debugPrint('Error: $e');
+    //     }
+    //   } else {
+    //     showMessage('No internet connection');
+    //   }
+    // }
+  }
 
-//   ///دالة لمعالجة الاخطاء
-//   void handleError(ApiResponseModel? response) {
-//     if (response == null) {
-//       showMessage('Failed to Rest Password');
-//       return;
-//     }
-//     switch (response.code) {
-//       case 'S0011':
-//         // showMessage('" You cann\'t reset password, becuase your code is not verified before. Try verify the code, or send a valid code, or ask for a new code.');
-//         showMessage(response.message);
-//         break;
+ 
 
-//       case 'E00013':
-//         if (response.errors != null &&
-//             response.errors is Map<String, dynamic>) {
-//           // final errors = response.errors as Map<String, dynamic>;
-//           // Handle field errors here if needed
-//           if (response.errors != null &&
-//               response.errors is Map<String, dynamic>) {
-//             Map<String, dynamic>? errors = response.errors;
+  ///دالة لمعالجة الاخطاء
+  // void handleError(ApiResponseModel? response) {
+  //   if (response == null) {
+  //     showMessage('Failed to Rest Password');
+  //     return;
+  //   }
+  //   switch (response.code) {
+  //     case 'S0011':
+  //       // showMessage('" You cann\'t reset password, becuase your code is not verified before. Try verify the code, or send a valid code, or ask for a new code.');
+  //       showMessage(response.message);
+  //       break;
 
-//             if (errors!.containsKey('email')) {
-//               showMessage(
-//                 errors['email'][0],
-//               );
-//             }
+  //     case 'E00013':
+  //       if (response.errors != null &&
+  //           response.errors is Map<String, dynamic>) {
+  //         // final errors = response.errors as Map<String, dynamic>;
+  //         // Handle field errors here if needed
+  //         if (response.errors != null &&
+  //             response.errors is Map<String, dynamic>) {
+  //           Map<String, dynamic>? errors = response.errors;
 
-//             if (errors.containsKey('otp_code')) {
-//               showMessage(
-//                 errors['otp_code'][0],
-//               );
-//             }
-//             // Handle other fields' errors as needed
-//           } else {
-//             showMessage(response.message);
-//           }
-//         }
-//     }
-//   }
+  //           if (errors!.containsKey('email')) {
+  //             showMessage(
+  //               errors['email'][0],
+  //             );
+  //           }
 
-//   goToSuccessResetPassword() {
-//     Get.lazyPut(() => SuccessResetPasswordControllerImp());
-//     Get.offAllNamed(AppRoutes.succesResetPassword);
-//   }
+  //           if (errors.containsKey('otp_code')) {
+  //             showMessage(
+  //               errors['otp_code'][0],
+  //             );
+  //           }
+  //           // Handle other fields' errors as needed
+  //         } else {
+  //           showMessage(response.message);
+  //         }
+  //       }
+  //   }
+  // }
 
-//   @override
-//   void onInit() {
-//     passwordController = TextEditingController();
-//     confirmPasswordController = TextEditingController();
+  goToSuccessResetPassword() {
+    Get.lazyPut(() => SuccessResetPasswordControllerImp());
+    Get.offAllNamed(AppRoutes.succesResetPassword);
+  }
 
-//     super.onInit();
-//   }
+  @override
+  void onInit() {
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
 
-//   @override
-//   void onClose() {
-//     passwordController.dispose();
-//     confirmPasswordController.dispose();
+    super.onInit();
+  }
 
-//     super.onClose();
-//   }
+  @override
+  void onClose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
 
-//   changVisible() {
-//     isVisible = !isVisible;
-//     update();
-//   }
+    super.onClose();
+  }
 
-//   changConfirmVisible() {
-//     isConfirmVisible = !isConfirmVisible;
-//     update();
-//   }
-// }
+  changVisible() {
+    isVisible = !isVisible;
+    update();
+  }
+
+  changConfirmVisible() {
+    isConfirmVisible = !isConfirmVisible;
+    update();
+  }
+}

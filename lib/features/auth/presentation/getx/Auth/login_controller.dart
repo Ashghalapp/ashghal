@@ -11,6 +11,9 @@ import '../../../../../core_api/errors/failures.dart';
 import '../../../domain/Requsets/login_request.dart';
 import '../../../domain/entities/user.dart';
 import '../../../domain/use_cases/login.dart';
+import 'chooseusertype_controller.dart';
+import 'forgetpassword_controller.dart';
+import 'singup_controller.dart';
 
 
 class LoginController extends GetxController {
