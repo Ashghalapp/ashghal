@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constant/app_colors.dart';
+import '../../config/app_colors.dart';
 import '../widget/app_buttons.dart';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -62,17 +62,20 @@ class AppUtil {
   }
 
   static void showMessage(String message, Color color) {
-    ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(Get.context!).showSnackBar(
+      SnackBar(
       content: Text(
         message,
-        style: Get.textTheme.bodyMedium!.copyWith(color: Colors.white),
+        style: Get.textTheme.bodyMedium!.copyWith(color: Colors.white,),
       ),
       backgroundColor: color,
       duration: const Duration(seconds: 4),
-      
+       behavior: SnackBarBehavior.fixed,
+         
     ));
   }
-
+ 
+  
   static Future<bool> exitApp(BuildContext context) {
     Get.defaultDialog(
         title: "تنبيه",

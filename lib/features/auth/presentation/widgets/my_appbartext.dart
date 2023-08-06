@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/constant/app_colors.dart';
+import '../../../../config/app_colors.dart';
 
 
 

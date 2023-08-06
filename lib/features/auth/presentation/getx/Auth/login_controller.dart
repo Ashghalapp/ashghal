@@ -1,20 +1,20 @@
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
-
-
-import '../../../../../core/constant/app_routes.dart';
+import '../../../../../config/app_routes.dart';
+import '../../../../../core/localization/localization_strings.dart';
 import '../../../../../core/services/dependency_injection.dart' as di;
-import '../../../../../core_api/errors/failures.dart';
+
 import '../../../domain/Requsets/login_request.dart';
-import '../../../domain/entities/user.dart';
+
 import '../../../domain/use_cases/login.dart';
 import 'chooseusertype_controller.dart';
-import 'forgetpassword_controller.dart';
+import '../forgetpwd/forgetpassword_controller.dart';
 import 'singup_controller.dart';
-
 
 class LoginController extends GetxController {
   bool isVisible = true;
@@ -22,21 +22,33 @@ class LoginController extends GetxController {
   late TextEditingController emailController;
   late TextEditingController passwordController;
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
-  late Rx<Either<Failure, User>> loginResult;
- 
 
   ///تسجيل الدخول
-  Future<void> login() async {
-    LoginRequest loginRequest = LoginRequest.withEmail(
+  void login() async {
+    final valid = loginFormKey.currentState?.validate() ?? false;
+    if (valid) {
+      EasyLoading.show(status: LocalizationString.loading);
+      final loginRequest = LoginRequest.withEmail(
         password: passwordController.text.trim(),
-        email: emailController.text.trim());
-    LoginUseCase loginUseCase =di. getIt();
-    final result = await loginUseCase(loginRequest);
+        email: emailController.text.trim(),
+      );
 
-    result.fold(
-      (failure) => loginResult.value = left(failure),
-      (user) => loginResult.value = right(user),
-    );
+      LoginUseCase loginUseCase = di.getIt<LoginUseCase>();
+
+      final result = await loginUseCase(loginRequest);
+
+      result.fold(
+        (failure) {
+          EasyLoading.dismiss();
+          AppUtil.showMessage('Login failed:  ${failure.message}', Colors.red);
+        },
+        (user) {
+          SharedPref.setUserLoggedIn(true);
+          EasyLoading.dismiss();
+          goToHomeScreen();
+        },
+      );
+    }
   }
 
   ///
@@ -71,7 +83,7 @@ class LoginController extends GetxController {
 
   goToHomeScreen() {
     // Get.lazyPut<MainScreenControllerImp>(() => MainScreenControllerImp());
-    // Get.toNamed(AppRoute.homeScreen);
+    Get.toNamed(AppRoutes.testScreen);
     // // changLoading();
     //     print('home screen $isLoading');
   }

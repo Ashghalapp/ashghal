@@ -1,5 +1,6 @@
 // لكل implement الكلاس الاساسي والي يحتوي العمليات الاساسية حتى يتم منه عمل
 // تقنية مستخدمة حتى تمثل مصدر البيانات، وهكذا تسهل عملية التعديل وايضا التغيير
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/api_response_model.dart';
 import 'package:ashghal_app_frontend/core_api/dio_service.dart';
@@ -110,6 +111,7 @@ class RemoteDataSourceImpl implements RemoteDataSource{
     ApiResponseModel response = await dio.post(ApiConstants.LOGIN, request.toJson());
     if (response.status) {
       print("::: S End login func in remote datasource");
+      SharedPref.setAuthorizationKey(response.data['token']);
       if (response.data != null && response.data['is_provider']){
         return ProviderModel.fromJson(response.data as Map<String, dynamic>);
       }

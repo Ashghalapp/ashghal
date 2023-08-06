@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 
 
 
-import '../../../../../core/constant/app_routes.dart';
+import '../../../../../config/app_routes.dart';
 
-import 'login_controller.dart';
+import '../Auth/login_controller.dart';
 
 abstract class SuccessResetPasswordController extends GetxController {
   goToLogIn();

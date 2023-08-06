@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../../core/constant/app_routes.dart';
-import '../../../../../core_api/api_response_model.dart';
+import '../../../../../config/app_routes.dart';
+
 import 'login_controller.dart';
 import 'verficationsignup_controller.dart';
 

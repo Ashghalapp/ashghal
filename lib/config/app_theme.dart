@@ -31,6 +31,7 @@ ThemeData arTheme = ThemeData(
 );
 
 ThemeData enTheme = ThemeData(
+  fontFamily: 'Rubik',
   brightness: Brightness.light,
   primarySwatch: Colors.grey,
   primaryColor: const Color.fromRGBO(34, 34, 34, 1),
