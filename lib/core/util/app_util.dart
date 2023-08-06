@@ -26,7 +26,7 @@ class AppUtil {
     ));
   }
 
-  Future buildErrorDialog(String message) {
+ static Future buildErrorDialog(String message) {
     final size = Get.mediaQuery.size;
     return Get.defaultDialog(
       title: "Error!",
@@ -69,6 +69,7 @@ class AppUtil {
       ),
       backgroundColor: color,
       duration: const Duration(seconds: 4),
+      
     ));
   }
 

@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 
 import '../../../../../core/constant/app_routes.dart';
 import '../../../../../core_api/api_response_model.dart';
+import 'login_controller.dart';
+import 'verficationsignup_controller.dart';
 
 
 class SignUpController extends GetxController {
@@ -43,16 +45,16 @@ class SignUpController extends GetxController {
       nameController.text = "hezbr";
       // phoneController.text = Random(773170413).nextInt(1000000000).toString();
 
-      final ApiResponseModel response =
-          await ApiController().getAllCategories();
-      if (response.status && (response.data as List).isNotEmpty) {
-        categoriesList.value = (response.data as List<CategoryModel>)
-            .map((e) => {'id': e.id!, 'name': e.nameEn})
-            .toList();
-      }
+      // final ApiResponseModel response =
+      //     await ApiController().getAllCategories();
+      // if (response.status && (response.data as List).isNotEmpty) {
+      //   categoriesList.value = (response.data as List<CategoryModel>)
+      //       .map((e) => {'id': e.id!, 'name': e.nameEn})
+      //       .toList();
+      // }
     } catch (e) {
-      print("/////////////Error in signup controller onInit: $e");
-      buildErrorDialog("Something error!.. try again>>");
+      // print("/////////////Error in signup controller onInit: $e");
+      // buildErrorDialog("Something error!.. try again>>");
     }
     super.onInit();
   }
@@ -91,82 +93,82 @@ class SignUpController extends GetxController {
 // 
 
   dynamic isPhoneExist() async {
-    try {
-      String phone = phoneController.text;
-      ApiResponseModel response = await ApiController().checkPhoneExist(phone);
-      return response.data;
-    } catch (e) {
-      if (e is http.ClientException) {
-        throw ApiError('Request failed: ${e.message}', '');
-      } else {
-        throw ApiError('An error occurred during the request.', '');
-      }
-    }
+    // try {
+    //   String phone = phoneController.text;
+    //   ApiResponseModel response = await ApiController().checkPhoneExist(phone);
+    //   return response.data;
+    // } catch (e) {
+    //   if (e is http.ClientException) {
+    //     throw ApiError('Request failed: ${e.message}', '');
+    //   } else {
+    //     throw ApiError('An error occurred during the request.', '');
+    //   }
+    // }
   }
 
   dynamic isEmailExist() async {
-    try {
-      String email = emailController.text;
-      ApiResponseModel response = await ApiController().checkEmailExist(email);
-      return response.data;
-    } catch (e) {
-      if (e is http.ClientException) {
-        throw ApiError('Request failed: ${e.message}', '');
-      } else {
-        throw ApiError('An error occurred during the request.', '');
-      }
-    }
+    // try {
+    //   String email = emailController.text;
+    //   ApiResponseModel response = await ApiController().checkEmailExist(email);
+    //   return response.data;
+    // } catch (e) {
+    //   if (e is http.ClientException) {
+    //     throw ApiError('Request failed: ${e.message}', '');
+    //   } else {
+    //     throw ApiError('An error occurred during the request.', '');
+    //   }
+    // }
   }
 
   Future<bool> registerUser() async {
-    ApiResponseModel? response = await ApiController().registerUser(
-      name: nameController.text,
-      phone: phoneController.text,
-      email: emailController.text,
-      password: passwordController.text,
-    );
+    // ApiResponseModel? response = await ApiController().registerUser(
+    //   name: nameController.text,
+    //   phone: phoneController.text,
+    //   email: emailController.text,
+    //   password: passwordController.text,
+    // );
 
-    if (response?.status ?? false) {
-      showSnackBar("", "Register succesfully\nPlease verify your email.");
-      // print("////////token:: ${response?.data['token']}");
-      // SharedPrefs().setUserLoggedIn(true);
-      SharedPrefs().setAuthorizationKey(response?.data['token']);
-      return true;
-    } else if (response != null) {
-      handleShowResponseErrors(response.errors!);
-      return false;
-    }
+    // if (response?.status ?? false) {
+    //   showSnackBar("", "Register succesfully\nPlease verify your email.");
+    //   // print("////////token:: ${response?.data['token']}");
+    //   // SharedPrefs().setUserLoggedIn(true);
+    //   SharedPrefs().setAuthorizationKey(response?.data['token']);
+    //   return true;
+    // } else if (response != null) {
+    //   handleShowResponseErrors(response.errors!);
+    //   return false;
+    // }
     return false;
   }
 
   Future<bool> registerProvider() async {
-    ApiResponseModel? response = await ApiController().registerProvider(
-      name: nameController.text,
-      password: passwordController.text,
-      email: emailController.text,
-      phone: phoneController.text,
-      jobName: jobNameController.text,
-      jobDesc: jobDescController.text,
-      categoryId: jobCategoryController.text,
-    );
+    // ApiResponseModel? response = await ApiController().registerProvider(
+    //   name: nameController.text,
+    //   password: passwordController.text,
+    //   email: emailController.text,
+    //   phone: phoneController.text,
+    //   jobName: jobNameController.text,
+    //   jobDesc: jobDescController.text,
+    //   categoryId: jobCategoryController.text,
+    // );
 
-    if (response?.status ?? false) {
-      showSnackBar("", "Register succesfully\nPlease verify your email.");
-      // print("////////token:: ${response?.data['token']}");
-      // SharedPrefs().setUserLoggedIn(true);
-      SharedPrefs().setAuthorizationKey(response?.data['token']);
-      return true;
-    } else if (response != null) {
-      handleShowResponseErrors(response.errors!);
-      return false;
-    }
+    // if (response?.status ?? false) {
+    //   showSnackBar("", "Register succesfully\nPlease verify your email.");
+    //   // print("////////token:: ${response?.data['token']}");
+    //   // SharedPrefs().setUserLoggedIn(true);
+    //   SharedPrefs().setAuthorizationKey(response?.data['token']);
+    //   return true;
+    // } else if (response != null) {
+    //   handleShowResponseErrors(response.errors!);
+    //   return false;
+    // }
     return false;
   }
 
-  void updateLoginStatus(StatusRequest status) {
-    statusRequest = status;
-    update();
-  }
+  // void updateLoginStatus(StatusRequest status) {
+  //   statusRequest = status;
+  //   update();
+  // }
   // void showErrorMessage(String message) {
 
   //   debugPrint(message);
