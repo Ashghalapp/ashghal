@@ -1,8 +1,8 @@
 
-import 'package:ashghal/core/helper/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../helper/shared_preference.dart';
 import '../constant/app_routes.dart';
 import '../services/app_services.dart';
 

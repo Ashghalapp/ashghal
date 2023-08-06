@@ -44,8 +44,10 @@
 //   static Future<bool> isUserLoggedIn() async {}
 // }
 
-import 'package:ashghal/core/services/app_services.dart';
+
 import 'package:get/get.dart';
+
+import '../../services/app_services.dart';
 
 class SharedPrefs {
   AppServices appServices = Get.find();

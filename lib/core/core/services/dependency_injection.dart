@@ -1,9 +1,9 @@
 
-import 'package:ashghal/features/auth/data/repositories/user_provider_repository_impl.dart';
-import 'package:ashghal/features/auth/domain/repositories/user_provider_repository.dart';
-import 'package:ashghal/features/auth/domain/use_cases/login.dart';
-import 'package:get_it/get_it.dart';
 
+
+import '../../../features/auth/data/repositories/user_provider_repository_impl.dart';
+import '../../../features/auth/domain/repositories/user_provider_repository.dart';
+import '../../../features/auth/domain/use_cases/login.dart';
 
 final getIt = GetIt.instance;
 

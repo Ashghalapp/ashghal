@@ -1,9 +1,10 @@
 
-import 'package:ashghal/core/constant/app_theme.dart';
-import 'package:ashghal/core/helper/shared_preference.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+
+import '../../constant/app_theme.dart';
+import '../../helper/shared_preference.dart';
 
 
 
