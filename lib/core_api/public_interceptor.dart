@@ -1,6 +1,7 @@
-import 'package:ashghal_app_frontend/core/shared_preference.dart';
+
 import 'package:dio/dio.dart';
 
+import '../core/helper/shared_preference.dart';
 import 'api_constant.dart';
 
 class PublicInterceptor extends Interceptor{
@@ -12,7 +13,7 @@ class PublicInterceptor extends Interceptor{
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     options.headers = ApiConstants.headers;
-    String? authToken= await SharedPref.getUserToken();
+    String? authToken=  SharedPref.getAuthorizationKey();
     if (authToken!=null){
       options.headers['Authorization'] = 'Bearer $authToken';
     }

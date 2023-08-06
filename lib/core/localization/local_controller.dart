@@ -1,22 +1,18 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
 import '../constant/app_theme.dart';
-import '../core/helper/shared_preference.dart';
-
-
+import '../helper/shared_preference.dart';
 
 class MyLocalController extends GetxController {
   Locale? language;
-
 
   ThemeData appTheme = enTheme;
 
   changLang(String langCode) {
     Locale local = Locale(langCode);
-    SharedPrefs().setLanguage(langCode);
+    SharedPref.setLanguage(langCode);
 
     appTheme = langCode == "ar" ? arTheme : enTheme;
     Get.changeTheme(appTheme);
@@ -31,10 +27,10 @@ class MyLocalController extends GetxController {
   }
 
   appLang() async {
-    if ( SharedPrefs().getLanguage() == "ar") {
+    if (SharedPref.getLanguage() == "ar") {
       language = const Locale("ar");
       appTheme == arTheme;
-    } else if ( SharedPrefs().getLanguage() == "en") {
+    } else if (SharedPref.getLanguage() == "en") {
       language = const Locale("en");
       appTheme = enTheme;
     } else {
