@@ -84,36 +84,9 @@ class SignUpController extends GetxController {
     Get.offNamed(AppRoutes.logIn);
   }
 
-
-
-  Widget hanldlingWaitingRequest(
-      {required RxBool isLoading, required Widget child}) {
-    return Obx(() => isLoading.value
-        ? const SizedBox(
-            width: 40,
-            height: 40,
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.black,
-            ),
-          )
-        : child);
-  }
-//  var isLoading = false.obs;
-
-//
-
   dynamic isPhoneExist() async {
-    // try {
-    //   String phone = phoneController.text;
-    //   ApiResponseModel response = await ApiController().checkPhoneExist(phone);
-    //   return response.data;
-    // } catch (e) {
-    //   if (e is http.ClientException) {
-    //     throw ApiError('Request failed: ${e.message}', '');
-    //   } else {
-    //     throw ApiError('An error occurred during the request.', '');
-    //   }
-    // }
+    // CheckEmailExistUseCase checkEmail = di.getIt();
+    // return checkEmail(emailController.text);
   }
 
   Future<Either<Failure, bool>> isEmailExist() {

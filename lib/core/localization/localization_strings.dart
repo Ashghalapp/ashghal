@@ -624,5 +624,6 @@ class LocalizationString {
   static String emailAlreadyExist = "emailAlreadyExist";
   static String successRegister = "SuccessfullRegister, VerifyEmail";
   static String successfullRegisteredAndverified = "SuccessfullRegisteredAndverifiedEemail";
+  static String resendingCode = "ResendingCode...";
 
 }

@@ -1,16 +1,13 @@
-import 'package:ashghal_app_frontend/core/widget/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/config/app_colors.dart';
-import '../../../../../core/config/app_routes.dart';
 import '../../../../../core/localization/localization_strings.dart';
-import '../../../../../core/util/app_util.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../../../../core/widget/custom_appbar.dart';
+import '../../../../../core/widget/loading_state.dart';
 import '../../getx/singup_controller.dart';
-import '../../widgets/social_icons.dart';
 
 class SignUpScreen extends GetView<SignUpController> {
   SignUpScreen({super.key});
