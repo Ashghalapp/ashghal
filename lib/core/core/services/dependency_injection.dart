@@ -5,7 +5,7 @@ import '../../../features/auth/data/repositories/user_provider_repository_impl.d
 import '../../../features/auth/domain/repositories/user_provider_repository.dart';
 import '../../../features/auth/domain/use_cases/login.dart';
 
-final getIt = GetIt.instance;
+// final getIt = GetIt.instance;
 
 void setup() {
 
@@ -22,9 +22,9 @@ void setup() {
   // getIt.registerLazySingleton(() => GetAllPostsUsecase(getIt()));
   // getIt.registerLazySingleton(() => UpdatePostUsecase(getIt()));
   // getIt.registerLazySingleton(() => DeletePostUsecase(getIt()));
-getIt.registerLazySingleton(() => LoginUseCase(getIt()));
+// getIt.registerLazySingleton(() => LoginUseCase(getIt()));
 
   // repository injection
   //  getIt.registerLazySingleton<PostRepository>(()=> PostRepositoryImpl());
-getIt.registerLazySingleton<UserProviderRepository>(() => UserProviderRepositoryImpl());
+// getIt.registerLazySingleton<UserProviderRepository>(() => UserProviderRepositoryImpl());
 }

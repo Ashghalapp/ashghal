@@ -1,10 +1,10 @@
 
-
-import 'package:ashghal/core/constant/app_colors.dart';
-import 'package:ashghal/core/constant/app_routes.dart';
-import 'package:ashghal/core/widget/app_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../../../core/constant/app_colors.dart';
+import '../../../../../core/constant/app_routes.dart';
+import '../../../../../core/core/widget/app_buttons.dart';
 
 class SuccesSignUp extends StatelessWidget{ //GetView<SuccessSignUpControllerImp> {
   const SuccesSignUp({super.key});

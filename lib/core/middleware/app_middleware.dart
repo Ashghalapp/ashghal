@@ -1,9 +1,9 @@
 
-import 'package:ashghal/core/helper/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../constant/app_routes.dart';
+import '../core/helper/shared_preference.dart';
 import '../services/app_services.dart';
 
 class AppMiddleware extends GetMiddleware {
