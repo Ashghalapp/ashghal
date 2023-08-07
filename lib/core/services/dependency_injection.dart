@@ -26,7 +26,7 @@ void setupDependencies() {
  
   //=============================Start Auth Dependencey Injection==================================//
   //// Data sources injection
-  getIt.registerLazySingleton<RemoteDataSource>(()=> RemoteDataSourceImpl());
+  // getIt.registerLazySingleton<RemoteDataSource>(()=> RemoteDataSourceImpl());
   // getIt.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl());
 
   //// repository injection

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
-import '../../../../../core/config/app_colors.dart';
+import '../../../../../config/app_colors.dart';
 import '../../../../../core/util/app_util.dart';
-import '../../getx/verficationsignup_controller.dart';
+import '../../getx/Auth/verficationsignup_controller.dart';
 import '../../widgets/my_appbartext.dart';
 
 
@@ -74,12 +74,8 @@ class VerficationSignUpScreen extends GetView<VerficationSignUpController> {
                       },
                       //runs when every textfield is filled
                       onSubmit: (String verificationCode) async {
-                        try {
                           controller.verifyCode(verificationCode);
-                          print("/////////verificationCode:$verificationCode");
-                        } catch (e) {
-                   AppUtil.       buildErrorDialog("There is something error!.. Try again.");
-                        }
+                          print("/////////verificationCode:$verificationCode");                        
                       }, // end onSubmit
                     ),
                     const SizedBox(

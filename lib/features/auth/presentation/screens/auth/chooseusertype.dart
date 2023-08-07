@@ -1,19 +1,18 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../../core/config/app_colors.dart';
+import '../../../../../config/app_colors.dart';
+import '../../../../../config/app_routes.dart';
 import '../../../../../core/localization/localization_strings.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/custom_appbar.dart';
-import '../../getx/chooseusertype_controller.dart';
 
-class ChooseUserTypeScreen extends GetView<ChooseUserTypeControllerImp> {
+class ChooseUserTypeScreen extends StatelessWidget {
   const ChooseUserTypeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-     Get.lazyPut(() => ChooseUserTypeControllerImp());
+    //  Get.lazyPut(() => ChooseUserTypeControllerImp());
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: MyAppBar().myappbar('52'.tr),
@@ -43,22 +42,28 @@ class ChooseUserTypeScreen extends GetView<ChooseUserTypeControllerImp> {
               //   height: size.height * 0.25,
               // ),
               MyGesterDedector(
-                  text: '54'.tr, color:Theme.of(context).primaryColor, 
-                  onTap: ()=>controller.goToNextSignUp(true)),
-                    SizedBox(height:size.height*0.03),
+                text: '54'.tr,
+                color: Theme.of(context).primaryColor,
+                onTap: () => Get.toNamed(AppRoutes.signUp,
+                    arguments: {'isPorvider': true}),
+              ),
+              SizedBox(height: size.height * 0.03),
               // SvgPicture.asset(
               //   'assets/images/Businessman-amico.svg',
               //   height: size.height * 0.25,
               // ),
-                  Text(
+              Text(
                 LocalizationString.or,
                 style: const TextStyle(color: AppColors.gray),
                 textAlign: TextAlign.center,
               ),
-                    const SizedBox(height: 20),
-                 MyGesterDedector(
-                  text: '55'.tr, color:Theme.of(context).primaryColor,
-                  onTap: () =>controller.goToNextSignUp(false)),
+              const SizedBox(height: 20),
+              MyGesterDedector(
+                text: '55'.tr,
+                color: Theme.of(context).primaryColor,
+                onTap: () => Get.toNamed(AppRoutes.signUp,
+                    arguments: {'isPorvider': true}),
+              ),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.spaceAround,
               //   children: [

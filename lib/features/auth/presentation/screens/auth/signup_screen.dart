@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../core/config/app_colors.dart';
+import '../../../../../config/app_colors.dart';
 import '../../../../../core/localization/localization_strings.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../../../../core/widget/custom_appbar.dart';
 import '../../../../../core/widget/loading_state.dart';
-import '../../getx/singup_controller.dart';
+import '../../getx/Auth/singup_controller.dart';
+import '../../widgets/social_icons.dart';
 
 class SignUpScreen extends GetView<SignUpController> {
   SignUpScreen({super.key});
@@ -138,18 +139,24 @@ class SignUpScreen extends GetView<SignUpController> {
                   const SizedBox(height: 20),
 
                   // عرض زر الانتقال الى الخطوة التالية او عرض شريط الانتظار
-                  Obx(() {
-                    if (controller.isLoading.value) {
-                      return const LoadingWidget();
-                    } else {
-                      return MyGesterDedector(
+                   MyGesterDedector(
                         text: '17'.tr,
                         color: Theme.of(context).primaryColor,
                         onTap: () async => await controller
                             .submitEmailNamePass(isProviderSignUp ?? false),
-                      );
-                    }
-                  }),
+                      ),
+                  // Obx(() {
+                  //   if (controller.isLoading.value) {
+                  //     return const LoadingWidget();
+                  //   } else {
+                  //     return MyGesterDedector(
+                  //       text: '17'.tr,
+                  //       color: Theme.of(context).primaryColor,
+                  //       onTap: () async => await controller
+                  //           .submitEmailNamePass(isProviderSignUp ?? false),
+                  //     );
+                  //   }
+                  // }),
                   SizedBox(height: size.height * 0.03),
 
                   Row(
@@ -176,23 +183,23 @@ class SignUpScreen extends GetView<SignUpController> {
                   SizedBox(
                     height: size.height * 0.03,
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     SocialIcons(
-                  //       icon: 'facebook',
-                  //       press: () {},
-                  //     ),
-                  //     SocialIcons(
-                  //       icon: 'twitter',
-                  //       press: () {},
-                  //     ),
-                  //     SocialIcons(
-                  //       icon: 'google-plus',
-                  //       press: () {},
-                  //     ),
-                  //   ],
-                  // )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SocialIcons(
+                        icon: 'facebook',
+                        press: () {},
+                      ),
+                      SocialIcons(
+                        icon: 'twitter',
+                        press: () {},
+                      ),
+                      SocialIcons(
+                        icon: 'google-plus',
+                        press: () {},
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -209,7 +216,6 @@ class SingUpScreenJob extends GetView<SignUpController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    RxBool isLoading = RxBool(false);
     return Scaffold(
       appBar: MyAppBar().myappbar('60'.tr),
       body: Padding(
@@ -217,16 +223,6 @@ class SingUpScreenJob extends GetView<SignUpController> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // const SizedBox(height: 30),
-              // CustomDropdown.search(
-              //   // futureRequest:controller. getFakeRequestData,
-              //   hintText: 'Search job role',
-              //   controller: controller.jobCategoryController,
-              //   items: controller.categoriesList,
-
-              //   // futureRequestDelay: const Duration(seconds: 3),//it waits 3 seconds before start searching (before execute the 'futureRequest' function)
-              // ),
-
               const SizedBox(height: 20),
               Form(
                 key: controller.jobFormKey,
@@ -279,17 +275,22 @@ class SingUpScreenJob extends GetView<SignUpController> {
               ),
 
               // عرض زر الانتقال الى الخطوة التالية او عرض شريط الانتظار
-              Obx(() {
-                if (controller.isLoading.value) {
-                  return const LoadingWidget();
-                } else {
-                  return MyGesterDedector(
+              // Obx(() {
+              //   if (controller.isLoading.value) {
+              //     return const LoadingWidget();
+              //   } else {
+              //     return MyGesterDedector(
+              //       text: '61'.tr,
+              //       color: Theme.of(context).primaryColor,
+              //       onTap: () async => await controller.submitJobInfo(),
+              //     );
+              //   }
+              // }),
+              MyGesterDedector(
                     text: '61'.tr,
                     color: Theme.of(context).primaryColor,
                     onTap: () async => await controller.submitJobInfo(),
-                  );
-                }
-              }),
+                  ),
               SizedBox(
                 height: size.height * 0.03,
               ),

@@ -128,6 +128,7 @@ class RemoteDataSourceImpl implements RemoteDataSource{
     if (response.status) {
       SharedPref.setAuthorizationKey(response.data['token']);
       print("::: S End login func in remote datasource");
+      SharedPref.setAuthorizationKey(response.data['token']);
       if (response.data != null && response.data['is_provider']){
         return ProviderModel.fromJson(response.data as Map<String, dynamic>);
       }

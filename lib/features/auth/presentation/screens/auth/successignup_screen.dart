@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../../core/config/app_colors.dart';
-import '../../../../../core/config/app_routes.dart';
+import '../../../../../config/app_colors.dart';
+import '../../../../../config/app_routes.dart';
 import '../../../../../core/widget/app_buttons.dart';
 
 

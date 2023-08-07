@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import '../../../../core/config/app_colors.dart';
 
+import '../../../../config/app_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+// ignore: must_be_immutable
 class SocialIcons extends StatelessWidget {
-  final String icon;
-  final Function press;
-  const SocialIcons({
+  String icon;
+  Function press;
+   SocialIcons({
     Key? key,
     required this.icon,
     required this.press,
@@ -18,8 +19,8 @@ class SocialIcons extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
         padding: const EdgeInsets.all(15),
-        decoration:  BoxDecoration(
-          border: Border.all(width: 1.5),
+        decoration:  const BoxDecoration(
+          // border: Border.all(width: 1.5),
           shape: BoxShape.circle,
         ),
           child: SvgPicture.asset('assets/icons/$icon.svg',

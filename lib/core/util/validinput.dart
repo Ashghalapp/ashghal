@@ -51,6 +51,5 @@ validInput(String? val, int? min, int? max, String? type,
         val != confirmpassword) {
       return '50'.tr;
     }
-
   }
 }

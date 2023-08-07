@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-
-import '../config/app_theme.dart';
+import '../../config/app_theme.dart';
 import '../helper/shared_preference.dart';
 
-class MyLocalController extends GetxController {
+class AppLocallcontroller extends GetxController {
   Locale? language;
 
   ThemeData appTheme = enTheme;

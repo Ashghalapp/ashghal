@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../config/app_colors.dart';
+import '../../config/app_colors.dart';
 import 'app_buttons.dart';
 
 class MyAppBar {
