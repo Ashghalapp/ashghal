@@ -11,15 +11,11 @@ import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/forgetpwd/forgetpassword_controller.dart';
 
-
-
-
-
 class ForgetPassword extends GetView<ForgetPasswordController> {
   const ForgetPassword({super.key});
-
   @override
   Widget build(BuildContext context) {
+    Get.lazyPut(()=> ForgetPasswordController());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

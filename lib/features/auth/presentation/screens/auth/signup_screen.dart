@@ -138,25 +138,12 @@ class SignUpScreen extends GetView<SignUpController> {
                   ),
                   const SizedBox(height: 20),
 
-                  // عرض زر الانتقال الى الخطوة التالية او عرض شريط الانتظار
-                   MyGesterDedector(
-                        text: '17'.tr,
-                        color: Theme.of(context).primaryColor,
-                        onTap: () async => await controller
-                            .submitEmailNamePass(isProviderSignUp ?? false),
-                      ),
-                  // Obx(() {
-                  //   if (controller.isLoading.value) {
-                  //     return const LoadingWidget();
-                  //   } else {
-                  //     return MyGesterDedector(
-                  //       text: '17'.tr,
-                  //       color: Theme.of(context).primaryColor,
-                  //       onTap: () async => await controller
-                  //           .submitEmailNamePass(isProviderSignUp ?? false),
-                  //     );
-                  //   }
-                  // }),
+                  MyGesterDedector(
+                    text: '17'.tr,
+                    color: Theme.of(context).primaryColor,
+                    onTap: () async => await controller
+                        .submitEmailNamePass(isProviderSignUp ?? false),
+                  ),
                   SizedBox(height: size.height * 0.03),
 
                   Row(
@@ -274,26 +261,12 @@ class SingUpScreenJob extends GetView<SignUpController> {
                 ),
               ),
 
-              // عرض زر الانتقال الى الخطوة التالية او عرض شريط الانتظار
-              // Obx(() {
-              //   if (controller.isLoading.value) {
-              //     return const LoadingWidget();
-              //   } else {
-              //     return MyGesterDedector(
-              //       text: '61'.tr,
-              //       color: Theme.of(context).primaryColor,
-              //       onTap: () async => await controller.submitJobInfo(),
-              //     );
-              //   }
-              // }),
               MyGesterDedector(
-                    text: '61'.tr,
-                    color: Theme.of(context).primaryColor,
-                    onTap: () async => await controller.submitJobInfo(),
-                  ),
-              SizedBox(
-                height: size.height * 0.03,
+                text: '61'.tr,
+                color: Theme.of(context).primaryColor,
+                onTap: () async => await controller.submitJobInfo(),
               ),
+              SizedBox(height: size.height * 0.03),
             ],
           ),
         ),

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../../../../config/app_colors.dart';
 
+import '../../../../../config/app_routes.dart';
 import '../../../../../core/localization/localization_strings.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
@@ -19,7 +20,7 @@ class LoginScreen extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => LoginController());
+    // Get.lazyPut(() => LoginController());
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -153,7 +154,7 @@ class LoginScreen extends GetView<LoginController> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
-                              onPressed: () => controller.goToForgetpassword(),
+                              onPressed: () =>  Get.toNamed(AppRoutes.forgetPassword),
                               child: Text(
                                 LocalizationString.forgotPwd,
                                 textAlign: TextAlign.end,
@@ -188,9 +189,7 @@ class LoginScreen extends GetView<LoginController> {
                           TextButton(
                             style:
                                 TextButton.styleFrom(shadowColor: Colors.white),
-                            onPressed: () {
-                              controller.goToChooseTypeUser();
-                            },
+                            onPressed: () => Get.offNamed(AppRoutes.chooseUserTypeScreen),
                             child: Text(
                               '17'.tr,
                               style:  TextStyle(
@@ -217,7 +216,7 @@ class LoginScreen extends GetView<LoginController> {
                       TextButton(
                         style: TextButton.styleFrom(shadowColor: Colors.white),
                         onPressed: () {
-                          controller.enterAsGuest();
+                          Get.offNamed(AppRoutes.mainScreen);
                         },
                         child:  Text(
                           "Guest",

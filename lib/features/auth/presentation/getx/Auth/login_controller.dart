@@ -50,15 +50,15 @@ class LoginController extends GetxController {
   }
 
   ///
-  goToSignUp() {
-    Get.lazyPut(() => SignUpController());
-    Get.offNamed(AppRoutes.signUp);
-  }
+  // goToSignUp() {
+  //   Get.lazyPut(() => SignUpController());
+  //   Get.offNamed(AppRoutes.signUp);
+  // }
 
-  goToForgetpassword() {
-    Get.lazyPut(() => ForgetPasswordController());
-    Get.toNamed(AppRoutes.forgetPassword);
-  }
+  // goToForgetpassword() {
+  //   Get.lazyPut(() => ForgetPasswordController());
+  //   Get.toNamed(AppRoutes.forgetPassword);
+  // }
 
   @override
   void onInit() {
@@ -91,16 +91,16 @@ class LoginController extends GetxController {
     update();
   }
 
-  goToChooseTypeUser() {
-    // Get.lazyPut(() => ChooseUserTypeControllerImp());
-    Get.offNamed(AppRoutes.chooseUserTypeScreen);
-  }
+  // goToChooseTypeUser() {
+  //   // Get.lazyPut(() => ChooseUserTypeControllerImp());
+  //   Get.offNamed(AppRoutes.chooseUserTypeScreen);
+  // }
 
-  enterAsGuest() {
-    // SharedPrefs().setUserLoggedInAsGuest(true);
-    // SharedPrefs().setUserLoggedIn(true);
+  // enterAsGuest() {
+  //   // SharedPrefs().setUserLoggedInAsGuest(true);
+  //   // SharedPrefs().setUserLoggedIn(true);
 
-    // Get.lazyPut(() => MainScreenController());
-    Get.offNamed(AppRoutes.mainScreen);
-  }
+  //   // Get.lazyPut(() => MainScreenController());
+  //   Get.offNamed(AppRoutes.mainScreen);
+  // }
 }

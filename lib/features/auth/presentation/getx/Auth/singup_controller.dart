@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:ashghal_app_frontend/core/localization/localization_strings.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
-import 'package:ashghal_app_frontend/core/widget/loading_state.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/register_user_provider_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/check_email_exist.dart';
@@ -28,7 +27,7 @@ class SignUpController extends GetxController {
   late TextEditingController jobDescController;
   GlobalKey<FormState> signUpFormKey = GlobalKey();
   GlobalKey<FormState> jobFormKey = GlobalKey();
-  RxBool isLoading = RxBool(false);
+  // RxBool isLoading = RxBool(false);
   bool isVisible = true;
 
   final RxList<Map<String, Object>> categoriesList = RxList([
@@ -98,7 +97,6 @@ class SignUpController extends GetxController {
 
   Future<void> submitEmailNamePass(bool isProviderSignUp) async {
     if (!signUpFormKey.currentState!.validate()) return;
-    // isLoading.value = true;
     EasyLoading.show(status: LocalizationString.loading);
     Get.focusScope!.unfocus(); // اخفاء الكيبورد
     (await isEmailExist()).fold((failure) {
@@ -116,7 +114,6 @@ class SignUpController extends GetxController {
       }
     });
     EasyLoading.dismiss();
-    // isLoading.value = false;
   }
 
   Future<bool> registerUser() async {
@@ -139,12 +136,10 @@ class SignUpController extends GetxController {
 
   Future<void> submitJobInfo() async {
     if (!jobFormKey.currentState!.validate()) return;
-    // isLoading.value = true;
     EasyLoading.show(status: LocalizationString.loading);
     Get.focusScope!.unfocus(); // اخفاء الكيبورد
     if (await registerProvider()) Get.toNamed(AppRoutes.verficationSignUp);  
     EasyLoading.dismiss();  
-    // isLoading.value = false;
   }
   
   Future<bool> registerProvider() async {
@@ -168,14 +163,14 @@ class SignUpController extends GetxController {
     });
   }
 
-  goToVerficationSignUp() {
-    Get.lazyPut(() => VerficationSignUpController());
-    Get.offNamed(AppRoutes.verficationSignUp);
-  }
+  // goToVerficationSignUp() {
+  //   Get.lazyPut(() => VerficationSignUpController());
+  //   Get.offNamed(AppRoutes.verficationSignUp);
+  // }
 
-  goToSuccesSignUp() {
-    Get.offNamed(AppRoutes.succesSignUp);
-  }
+  // goToSuccesSignUp() {
+  //   Get.offNamed(AppRoutes.succesSignUp);
+  // }
 
   changVisible() {
     isVisible = !isVisible;
