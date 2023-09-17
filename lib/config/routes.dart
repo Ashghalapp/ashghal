@@ -1,5 +1,6 @@
 
 
+import 'package:ashghal_app_frontend/main_screen.dart';
 import 'package:get/get.dart';
 
 import '../features/auth/presentation/screens/auth/chooseusertype.dart';
@@ -39,6 +40,10 @@ List<GetPage<dynamic>>? routes = [
   GetPage(
     name: AppRoutes.testScreen,
     page: () => const TestScreen(),
+  ),
+  GetPage(
+    name: AppRoutes.mainScreen,
+    page: () => const MainScreen(),
   ),
   // GetPage(
   //   name: AppRoutes.addLocationScreen,

@@ -10,8 +10,7 @@ import '../../../../../core/localization/localization_strings.dart';
 import '../../../../../core/services/dependency_injection.dart' as di;
 import '../../../domain/Requsets/login_request.dart';
 import '../../../domain/use_cases/login.dart';
-import '../forgetpwd/forgetpassword_controller.dart';
-import 'singup_controller.dart';
+
 
 
 class LoginController extends GetxController {
