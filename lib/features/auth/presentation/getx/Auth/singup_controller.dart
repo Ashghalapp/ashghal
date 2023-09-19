@@ -1,20 +1,22 @@
 import 'dart:math';
 
+import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/localization/localization_strings.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
+import 'package:ashghal_app_frontend/core_api/success/success.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/Requsets/check_email_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/register_user_provider_request.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/check_email_exist.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_provider_with_email.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_user_with_email.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/check_email_uc.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_user_with_email_uc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 import '../../../../../config/app_routes.dart';
+import '../../../domain/entities/user.dart';
 import 'login_controller.dart';
-import 'verficationsignup_controller.dart';
 import '../../../../../core/services/dependency_injection.dart' as di;
 
 class SignUpController extends GetxController {
@@ -90,78 +92,102 @@ class SignUpController extends GetxController {
     // return checkEmail(emailController.text);
   }
 
-  Future<Either<Failure, bool>> isEmailExist() {
-    CheckEmailExistUseCase checkEmail = di.getIt();
-    return checkEmail(emailController.text);
+  Future<Either<Failure, Success>> checkEmail() {
+    CheckEmailUseCase checkEmail = di.getIt();
+    CheckEmailRequest request = CheckEmailRequest(
+        email: emailController.text, userName: nameController.text);
+
+    return checkEmail.call(request);
   }
 
   Future<void> submitEmailNamePass(bool isProviderSignUp) async {
-    if (!signUpFormKey.currentState!.validate()) return;
+    if (!(signUpFormKey.currentState?.validate() ?? false)) return;
     EasyLoading.show(status: LocalizationString.loading);
     Get.focusScope!.unfocus(); // اخفاء الكيبورد
-    (await isEmailExist()).fold((failure) {
-      AppUtil.showMessage(failure.message, Get.theme.colorScheme.error);
-    }, (isExist) async {
-      if (isExist) {
-        AppUtil.showMessage(LocalizationString.emailAlreadyExist, Get.theme.colorScheme.error);
-      } else {
-        isProviderSignUp
-            ? Get.toNamed(AppRoutes.singUpScreenJob)
-            : (await registerUser())
-                ? Get.toNamed(AppRoutes.verficationSignUp)
-                : AppUtil.showMessage(
-                    LocalizationString.failed, Get.theme.colorScheme.error);
-      }
+
+    (await checkEmail()).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+    }, (success) async {
+      print(success.message);
+      isProviderSignUp
+          ? Get.toNamed(AppRoutes.singUpJobScreen)
+          : Get.toNamed(AppRoutes.verficationSignUp);
     });
     EasyLoading.dismiss();
   }
 
-  Future<bool> registerUser() async {
-    RegisterUserWithEmailUseCase registerUserWithEmail= di.getIt();
+  Future<Either<Failure, User>> signUpUser(String verficationCode,
+      {bool isProviderSignUp = false}) async {
+    RegisterUserWithEmailUseCase registerUserWithEmail = di.getIt();
     RegisterUserRequest request = RegisterUserRequest.withEmail(
       name: nameController.text,
       password: passwordController.text,
       email: emailController.text,
+      birthDate: DateTime.now(),
+      provider: isProviderSignUp
+          ? ProviderDataRequest(
+              jobName: jobNameController.text,
+              jobDesc: jobDescController.text,
+              categoryId: int.parse(jobCategoryController.text),
+            )
+          : null,
+      emailVerificationCode: verficationCode,
+      gender: Gender.male,
     );
-    var result = await registerUserWithEmail.call(request);
-    return result.fold((failure) {
-      AppUtil.showMessage(failure.message, Get.theme.colorScheme.error);
-      return false;
-    }, (user) {
-      // some code for user data
-      AppUtil.showMessage(LocalizationString.successRegister, Colors.green);
-      return true;
-    });
+
+    return await registerUserWithEmail.call(request);
   }
 
   Future<void> submitJobInfo() async {
-    if (!jobFormKey.currentState!.validate()) return;
+    if (!(jobFormKey.currentState?.validate() ?? false)) return;
     EasyLoading.show(status: LocalizationString.loading);
     Get.focusScope!.unfocus(); // اخفاء الكيبورد
-    if (await registerProvider()) Get.toNamed(AppRoutes.verficationSignUp);  
-    EasyLoading.dismiss();  
+    // if (await signUpUser(isProviderSignUp: true)) Get.toNamed(AppRoutes.verficationSignUp);
+    Get.toNamed(AppRoutes.verficationSignUp);
+    EasyLoading.dismiss();
   }
-  
-  Future<bool> registerProvider() async {
-    RegisterProviderWithEmailUseCase registerProviderWithEmail= di.getIt();
-    RegisterProviderRequest request = RegisterProviderRequest.withEmail(
-      name: nameController.text,
-      password: passwordController.text,
-      email: emailController.text,
-      jobName: jobNameController.text,
-      jobDesc: jobDescController.text,
-      categoryId: int.parse(jobCategoryController.text),
-    );
-    var result = await registerProviderWithEmail.call(request);
-    return result.fold((failure) {
-      AppUtil.showMessage(failure.message, Get.theme.colorScheme.error);
-      return false;
-    }, (provider) {
-      // some code for provider data      
-      AppUtil.showMessage(LocalizationString.successRegister, Colors.green);
-      return true;
+
+  /// دالة تستخدم للتحقق من كود البريد مع انشاء حساب المستخدم اذا كان الكود صحيح
+  Future verifyCode(String verficationCode) async {
+    (await signUpUser(verficationCode)).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+    }, (user) {
+      AppUtil.showMessage(
+          LocalizationString.registeredSuccessFully, Colors.green);
+      Get.offNamed(AppRoutes.succesSignUp);
     });
   }
+
+   Future<void> resendCode() async {
+    // AppUtil.showMessage("The code will be sent to your email", Colors.green);
+    EasyLoading.show(status: LocalizationString.loading);
+    (await checkEmail()).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+    }, (success) async {});
+    EasyLoading.dismiss();
+    AppUtil.showMessage(LocalizationString.success, Colors.green);
+  }
+
+  // Future<bool> registerProvider() async {
+  // RegisterProviderWithEmailUseCase registerProviderWithEmail= di.getIt();
+  // RegisterProviderRequest request = RegisterProviderRequest.withEmail(
+  //   name: nameController.text,
+  //   password: passwordController.text,
+  //   email: emailController.text,
+  //   jobName: jobNameController.text,
+  //   jobDesc: jobDescController.text,
+  //   categoryId: int.parse(jobCategoryController.text),
+  // );
+  // var result = await registerProviderWithEmail.call(request);
+  // return result.fold((failure) {
+  //   AppUtil.showMessage(failure.message, Get.theme.colorScheme.error);
+  //   return false;
+  // }, (provider) {
+  //   // some code for provider data
+  //   AppUtil.showMessage(LocalizationString.successRegister, Colors.green);
+  // return true;
+  // });
+  // }
 
   // goToVerficationSignUp() {
   //   Get.lazyPut(() => VerficationSignUpController());
@@ -172,7 +198,7 @@ class SignUpController extends GetxController {
   //   Get.offNamed(AppRoutes.succesSignUp);
   // }
 
-  changVisible() {
+  void changVisible() {
     isVisible = !isVisible;
     update();
   }

@@ -22,17 +22,21 @@ class MainScreenController extends GetxController {
     const BottomNavigationBarItem(
         activeIcon: Icon(
           Iconsax.home_25,
+          // Icons.home,
         ),
         icon: Icon(
           Iconsax.home_24,
+          // Icons.home_filled
         ),
         label: ''),
     const BottomNavigationBarItem(
         activeIcon: Icon(
           Iconsax.search_normal,
+          // Icons.search
         ),
         icon: Icon(
           Iconsax.search_normal_1,
+          // Icons.search,
         ),
         label: ''),
     const BottomNavigationBarItem(
@@ -46,18 +50,22 @@ class MainScreenController extends GetxController {
     const BottomNavigationBarItem(
       activeIcon: Icon(
           Iconsax.heart5,
+          // Icons.heart_broken_outlined
         ),
         icon: Icon(
           Iconsax.heart,
+          // Icons.heart_broken_rounded
         ),
         label: ''),
     const BottomNavigationBarItem(
       activeIcon: Icon(
        
           Iconsax.user,
+          // Icons.person_2_outlined
         ),
         icon: Icon(
           Iconsax.user,
+          // Icons.person_2,
         ),
         label: ''),
   ];

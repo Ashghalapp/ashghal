@@ -4,12 +4,12 @@ import 'package:ashghal_app_frontend/features/auth/domain/Requsets/reset_passwor
 import 'package:ashghal_app_frontend/features/auth/domain/repositories/user_provider_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class ResendForgetPasswordCodeUseCase {
+class ValidateResetPasswordByEmailCode {
   final UserProviderRepository repository;
 
-  ResendForgetPasswordCodeUseCase(this.repository);
+  ValidateResetPasswordByEmailCode(this.repository);
 
-  Future<Either<Failure, Success>> call(ForgetPasswordRequest forgetPasswordRequest) async {
-    return await repository.resendForgetPasswordCode(forgetPasswordRequest);
+  Future<Either<Failure, Success>> call(ValidateResetPasswordCodeRequest verifyResetPasswordCodeRequest) async {
+    return await repository.validateResetPasswordByEmailCode(verifyResetPasswordCodeRequest);
   }
 }

@@ -13,7 +13,7 @@ class PublicInterceptor extends Interceptor{
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     options.headers = ApiConstants.headers;
-    String? authToken=  SharedPref.getAuthorizationKey();
+    String? authToken=  SharedPref.getUserToken();
     if (authToken!=null){
       options.headers['Authorization'] = 'Bearer $authToken';
     }

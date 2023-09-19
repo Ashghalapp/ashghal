@@ -626,4 +626,7 @@ class LocalizationString {
   static String successfullRegisteredAndverified = "SuccessfullRegisteredAndverifiedEemail";
   static String resendingCode = "ResendingCode...";
 
+
+  static String successloggedIn = "SuccessfullLoggedIn";
+
 }

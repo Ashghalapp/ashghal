@@ -1,20 +1,18 @@
-
+import 'package:ashghal_app_frontend/features/auth/data/models/user_model.dart';
+import 'package:ashghal_app_frontend/features/auth/presentation/getx/Auth/singup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 import '../../../../../config/app_colors.dart';
-import '../../../../../core/util/app_util.dart';
-import '../../getx/Auth/verficationsignup_controller.dart';
 import '../../widgets/my_appbartext.dart';
 
-
-class VerficationSignUpScreen extends GetView<VerficationSignUpController> {
+class VerficationSignUpScreen extends GetView<SignUpController> {
   const VerficationSignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => VerficationSignUpController());
+    Get.lazyPut(() => SignUpController());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -56,12 +54,12 @@ class VerficationSignUpScreen extends GetView<VerficationSignUpController> {
                 child: Column(
                   children: [
                     OtpTextField(
-                      focusedBorderColor:Theme.of(context).primaryColor,
+                      focusedBorderColor: Theme.of(context).primaryColor,
                       fieldWidth: 46,
-                      cursorColor:Theme.of(context).primaryColor,
+                      cursorColor: Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(10),
                       numberOfFields: 6,
-                      borderColor:Theme.of(context).primaryColor,
+                      borderColor: Theme.of(context).primaryColor,
                       //set to true to show as box or false to show as dash
                       showFieldAsBox: true,
                       //runs when a code is typed in
@@ -73,9 +71,9 @@ class VerficationSignUpScreen extends GetView<VerficationSignUpController> {
                         // await _authController.signInWithPhoneNumber(code);
                       },
                       //runs when every textfield is filled
-                      onSubmit: (String verificationCode) async {
-                          controller.verifyCode(verificationCode);
-                          print("/////////verificationCode:$verificationCode");                        
+                      onSubmit: (String verificationCode) async {                        
+                        controller.verifyCode(verificationCode);
+                        print("/////////verificationCode:$verificationCode");
                       }, // end onSubmit
                     ),
                     const SizedBox(
@@ -83,20 +81,10 @@ class VerficationSignUpScreen extends GetView<VerficationSignUpController> {
                     ),
                     TextButton(
                       style: TextButton.styleFrom(shadowColor: Colors.white),
-                      onPressed: () {
-                        try {
-                          controller.resendVerificationCode();
-                          // print("/////////$verificationCode");
-                        } catch (e) {
-                            AppUtil.         buildErrorDialog(
-                              "There is something error!.. Try again.");
-                        }
-                      },
-                      child:  Text(
+                      onPressed: () => controller.resendCode(),
+                      child: Text(
                         'Don\'t get The Code?',
-                        style: TextStyle(
-                          color:Theme.of(context).primaryColor,
-                        ),
+                        style: TextStyle(color: Theme.of(context).primaryColor),
                       ),
                     ),
                   ],

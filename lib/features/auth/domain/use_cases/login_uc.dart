@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 
 import '../entities/user.dart';
 
+ /// الخاص به token تسجيل الدخول للمستخدم مع الاحتفاظ بالـ
 class LoginUseCase {
   final UserProviderRepository repository;
 

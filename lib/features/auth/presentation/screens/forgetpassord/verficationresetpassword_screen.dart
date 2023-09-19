@@ -73,7 +73,6 @@ class VerficationResetpasswordScreen
                         },
                         //runs when every textfield is filled
                         onSubmit: (String verificationCode) {
-                          
                           controller.checkCode(verificationCode);
                         }, // end onSubmit
                       ),

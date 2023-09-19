@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../config/app_colors.dart';
@@ -23,7 +24,7 @@ class AppUtil {
     ));
   }
 
- static Future buildErrorDialog(String message) {
+  static Future buildErrorDialog(String message) {
     final size = Get.mediaQuery.size;
     return Get.defaultDialog(
       title: "Error!",
@@ -58,21 +59,28 @@ class AppUtil {
         ));
   }
 
+  static void hanldeAndShowFailure(Failure failure, {String prefixText= ""}) {
+    if (failure is NotSpecificFailure) {
+      buildErrorDialog("$prefixText ${failure.message}");
+    } else {
+      showMessage("$prefixText ${failure.message}", Get.theme.colorScheme.error);
+    }
+  }
+
   static void showMessage(String message, Color color) {
-    ScaffoldMessenger.of(Get.context!).showSnackBar(
-      SnackBar(
+    ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
       content: Text(
         message,
-        style: Get.textTheme.bodyMedium!.copyWith(color: Colors.white,),
+        style: Get.textTheme.bodyMedium!.copyWith(
+          color: Colors.white,
+        ),
       ),
       backgroundColor: color,
       duration: const Duration(seconds: 4),
-       behavior: SnackBarBehavior.fixed,
-         
+      behavior: SnackBarBehavior.fixed,
     ));
   }
- 
-  
+
   static Future<bool> exitApp(BuildContext context) {
     Get.defaultDialog(
         title: "تنبيه",

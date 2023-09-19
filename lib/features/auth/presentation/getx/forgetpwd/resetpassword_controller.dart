@@ -1,5 +1,5 @@
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/reset_password_request.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/reset_password.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/reset_password_uc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -22,30 +22,27 @@ class ResetPasswordController extends GetxController {
     String code = Get.arguments['otpCode'];
     String email = Get.arguments['email'];
 
-    final valid = resetPasswordFormKey.currentState?.validate() ?? false;
-    if (valid) {
-      EasyLoading.show(status: LocalizationString.loading);
-      final resetPasswordRequest = ResetPasswordRequest.withEmail(
-          email: email,
-          code: code,
-          newPassword: passwordController.text.trim());
-      ResetPasswordUseCase resetPasswordUseCase =
-          di.getIt<ResetPasswordUseCase>();
-      final result = await resetPasswordUseCase(resetPasswordRequest);
+    if (!(resetPasswordFormKey.currentState?.validate() ?? false)) return;
 
-      result.fold(
-        (failure) {
-          EasyLoading.dismiss();
-          AppUtil.showMessage(
-              'Reset Password failed:  ${failure.message}', Colors.red);
-        },
-        (success) {
-          AppUtil.showMessage(LocalizationString.success, Colors.greenAccent);
-          goToSuccessResetPassword();
-          EasyLoading.dismiss();
-        },
-      );
-    }
+    EasyLoading.show(status: LocalizationString.loading);
+    final resetPasswordRequest = ResetPasswordRequest.withEmail(
+      email: email,
+      code: code,
+      newPassword: passwordController.text.trim(),
+    );
+    ResetPasswordUseCase resetPasswordUseCase = di.getIt();
+    final result = await resetPasswordUseCase(resetPasswordRequest);
+
+    result.fold(
+      (failure) {
+        AppUtil.hanldeAndShowFailure(failure, prefixText: 'Reset Password failed:');
+      },
+      (success) {
+        AppUtil.showMessage(LocalizationString.success, Colors.greenAccent);
+        goToSuccessResetPassword();
+      },
+    );
+    EasyLoading.dismiss();
   }
 
   goToSuccessResetPassword() {

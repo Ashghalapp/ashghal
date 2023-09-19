@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
       // initialRoute: AppRoutes.languageScreen,
       // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
-      initialRoute: AppRoutes.mainScreen,
+      initialRoute: AppRoutes.chooseUserTypeScreen,
       // initialRoute: '/tester',
       // initialRoute: AppRoutes.testScreen,
       getPages: routes,

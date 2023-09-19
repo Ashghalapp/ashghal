@@ -21,7 +21,7 @@ class BindingAllControllers extends Bindings{
     Get.lazyPut(() => ForgetPasswordController(), fenix: true);
 
     Get.lazyPut(() => SignUpController(), fenix: true);
-    Get.lazyPut(() => VerficationSignUpController(), fenix: true);
+    // Get.lazyPut(() => VerficationSignUpController(), fenix: true);
     Get.lazyPut(() => SuccessSignUpControllerImp(), fenix: true);
   }
 }

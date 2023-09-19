@@ -9,7 +9,7 @@ import '../../../../../config/app_routes.dart';
 import '../../../../../core/localization/localization_strings.dart';
 import '../../../../../core/services/dependency_injection.dart' as di;
 import '../../../domain/Requsets/login_request.dart';
-import '../../../domain/use_cases/login.dart';
+import '../../../domain/use_cases/login_uc.dart';
 
 
 
@@ -20,32 +20,44 @@ class LoginController extends GetxController {
   late TextEditingController passwordController;
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
+
+    @override
+  void onInit() {
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.onClose();
+  }
+
   ///تسجيل الدخول
   void login() async {
-    final valid = loginFormKey.currentState?.validate() ?? false;
-    if (valid) {
-      EasyLoading.show(status: LocalizationString.loading);
-      final loginRequest = LoginRequest.withEmail(
-        password: passwordController.text.trim(),
-        email: emailController.text.trim(),
-      );
+    if (!(loginFormKey.currentState?.validate() ?? false)) return;
 
-      LoginUseCase loginUseCase = di.getIt<LoginUseCase>();
+    EasyLoading.show(status: LocalizationString.loading);
+    final loginRequest = LoginRequest.withEmail(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),      
+    );
+    print(loginRequest.toJson());
 
-      final result = await loginUseCase(loginRequest);
-
-      result.fold(
-        (failure) {
-          EasyLoading.dismiss();
-          AppUtil.showMessage('Login failed:  ${failure.message}', Colors.red);
-        },
-        (user) {
-          SharedPref.setUserLoggedIn(true);
-          EasyLoading.dismiss();
-          goToHomeScreen();
-        },
-      );
-    }
+    LoginUseCase loginUseCase = di.getIt();
+    (await loginUseCase.call(loginRequest)).fold(
+      (failure) {        
+        AppUtil.hanldeAndShowFailure(failure);
+      },
+      (user) {
+        AppUtil.showMessage(LocalizationString.successloggedIn.tr, Colors.green);
+        SharedPref.setUserLoggedIn(true);
+        goToHomeScreen();
+      },
+    );
+    EasyLoading.dismiss();
   }
 
   ///
@@ -59,19 +71,7 @@ class LoginController extends GetxController {
   //   Get.toNamed(AppRoutes.forgetPassword);
   // }
 
-  @override
-  void onInit() {
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-    super.onInit();
-  }
 
-  @override
-  void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.onClose();
-  }
 
   changVisible() {
     isVisible = !isVisible;

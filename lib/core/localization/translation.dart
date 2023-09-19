@@ -230,7 +230,8 @@ class MyTranslation extends Translations {
   "errorMessage": "رسالة خطأ",
   "successMessage": "رسالة نجاح",
   "warningMessage": "رسالة تحذير",
-  "justNow":"الان"
+  "justNow":"الان",
+  "SuccessfullLoggedIn": "تم تسجيل الدخول بنجاح",
         },
 
         ///========================English=====================///
@@ -604,6 +605,7 @@ class MyTranslation extends Translations {
           "searchByUsername": "Search by username",
           "searchByLocation": "Search by location",
           "searchByCategory": "Search by category",
+          "SuccessfullLoggedIn": "Successfull Logged in"
         }
       };
 }

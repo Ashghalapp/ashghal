@@ -46,7 +46,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
         padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 25),
         child: SingleChildScrollView(
           child: Column(
-            children: [
+            children: [              
               Text(
                 textAlign: TextAlign.center,
                 '40'.tr,

@@ -62,7 +62,7 @@ class ChooseUserTypeScreen extends StatelessWidget {
                 text: '55'.tr,
                 color: Theme.of(context).primaryColor,
                 onTap: () => Get.toNamed(AppRoutes.signUp,
-                    arguments: {'isPorvider': true}),
+                    arguments: {'isPorvider': false}),
               ),
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.spaceAround,

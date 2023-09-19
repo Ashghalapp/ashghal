@@ -1,6 +1,6 @@
 import 'package:ashghal_app_frontend/core/localization/localization_strings.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/reset_password_request.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/forget_password.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/forget_password_uc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -17,26 +17,23 @@ class ForgetPasswordController extends GetxController {
   GlobalKey<FormState> forgetPasswordFormKey = GlobalKey();
 
   checkEmail() async {
-    final valid = forgetPasswordFormKey.currentState?.validate() ?? false;
-    if (valid) {
-      EasyLoading.show(status: LocalizationString.loading);
-      final forgetPasswordRequest =
-          ForgetPasswordRequest.withEmail(email: emailController.text.trim());
-      ForgetPasswordUseCase forgetPasswordUseCase =
-          di.getIt<ForgetPasswordUseCase>();
-      final result = await forgetPasswordUseCase(forgetPasswordRequest);
+    if (!(forgetPasswordFormKey.currentState?.validate() ?? false)) return;
+    EasyLoading.show(status: LocalizationString.loading);
+    final forgetPasswordRequest =
+        ForgetPasswordRequest.withEmail(email: emailController.text.trim());
+    ForgetPasswordUseCase forgetPasswordUseCase =
+        di.getIt<ForgetPasswordUseCase>();
+    final result = await forgetPasswordUseCase(forgetPasswordRequest);
 
-      result.fold(
-        (failure) {
-          EasyLoading.dismiss();
-          AppUtil.showMessage('verify failed:  ${failure.message}', Colors.red);
-        },
-        (success) {
-          goToVerficationResetPassword(emailController.text);
-          EasyLoading.dismiss();
-        },
-      );
-    }
+    result.fold(
+      (failure) {        
+        AppUtil.hanldeAndShowFailure(failure, prefixText: 'verify failed');
+      },
+      (success) {
+        goToVerficationResetPassword(emailController.text);
+      },
+    );
+    EasyLoading.dismiss();
   }
 
   goToVerficationResetPassword(String email) {

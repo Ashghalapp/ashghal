@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/reset_password_request.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/resend_forget_password_code.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_reset_password_code.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/forget_password_uc.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_reset_password_code_uc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -46,53 +46,46 @@ class VerficationResetPasswordController extends GetxController {
     String email = Get.arguments['email'];
 
     EasyLoading.show(status: LocalizationString.loading);
-    final resendForgetPasswordCodeRequest = ForgetPasswordRequest.withEmail(
+    final request = ForgetPasswordRequest.withEmail(
       email: email,
     );
-    ResendForgetPasswordCodeUseCase resendForgetPasswordCodeUseCase =
-        di.getIt<ResendForgetPasswordCodeUseCase>();
-    final result =
-        await resendForgetPasswordCodeUseCase(resendForgetPasswordCodeRequest);
+    ForgetPasswordUseCase resendForgetPassCode = di.getIt();
+    final result = await resendForgetPassCode(request);
 
     result.fold(
-      (failure) {
-        EasyLoading.dismiss();
-        AppUtil.showMessage(
-            'Resnd Code failed:  ${failure.message}', Colors.red);
+      (failure) {        
+        AppUtil.hanldeAndShowFailure(failure, prefixText: 'Resend Code failed:');
       },
       (success) {
         AppUtil.showMessage(LocalizationString.success, Colors.greenAccent);
         remainingSeconds.value = 60; // Reset the timer to the initial value
         startTimer();
         update();
-        EasyLoading.dismiss();
       },
     );
+    EasyLoading.dismiss();
   }
 
-  checkCode(String code) async {
+  Future<void> checkCode(String code) async {
     String email = Get.arguments['email'];
 
     EasyLoading.show(status: LocalizationString.loading);
-    final verifyResetPasswordCodeRequest =
-        VerifyResetPasswordCodeRequest.withEmail(email: email, code: code);
-    VerifyResetPasswordCodeUseCase verifyResetPasswordCodeUseCase =
-        di.getIt<VerifyResetPasswordCodeUseCase>();
+    final validateResetPassRequest =
+        ValidateResetPasswordCodeRequest.withEmail(email: email, code: code);
+    ValidateResetPasswordByEmailCode validateResetPassUC = di.getIt();
     final result =
-        await verifyResetPasswordCodeUseCase(verifyResetPasswordCodeRequest);
+        await validateResetPassUC(validateResetPassRequest);
 
     result.fold(
-      (failure) {
-        EasyLoading.dismiss();
-        AppUtil.showMessage(
-            'verify Code failed:  ${failure.message}', Colors.red);
+      (failure) {       
+        AppUtil.hanldeAndShowFailure(failure, prefixText: 'verify Code failed:');
       },
       (success) {
-          AppUtil.showMessage(LocalizationString.success, Colors.greenAccent);
+        AppUtil.showMessage(LocalizationString.success, Colors.greenAccent);
         goToRestPassword(code, email);
-        EasyLoading.dismiss();
       },
     );
+     EasyLoading.dismiss();
   }
 
   goToRestPassword(String otpCode, String email) {

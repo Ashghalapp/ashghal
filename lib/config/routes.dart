@@ -66,7 +66,7 @@ List<GetPage<dynamic>>? routes = [
     page: () => const ChooseUserTypeScreen(),
   ),
   GetPage(
-    name: AppRoutes.singUpScreenJob,
+    name: AppRoutes.singUpJobScreen,
     page: () => const SingUpScreenJob(),
   ),
   // GetPage(
