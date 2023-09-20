@@ -11,8 +11,6 @@ import '../../../../../core/services/dependency_injection.dart' as di;
 import '../../../domain/Requsets/login_request.dart';
 import '../../../domain/use_cases/login_uc.dart';
 
-
-
 class LoginController extends GetxController {
   bool isVisible = true;
   bool isLoading = false;
@@ -20,8 +18,7 @@ class LoginController extends GetxController {
   late TextEditingController passwordController;
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
-
-    @override
+  @override
   void onInit() {
     emailController = TextEditingController();
     passwordController = TextEditingController();
@@ -35,26 +32,29 @@ class LoginController extends GetxController {
     super.onClose();
   }
 
-  ///تسجيل الدخول
+  /// تسجيل الدخول
   void login() async {
     if (!(loginFormKey.currentState?.validate() ?? false)) return;
+    Get.focusScope!.unfocus();
 
     EasyLoading.show(status: LocalizationString.loading);
     final loginRequest = LoginRequest.withEmail(
       email: emailController.text.trim(),
-      password: passwordController.text.trim(),      
+      password: passwordController.text.trim(),
     );
     print(loginRequest.toJson());
 
     LoginUseCase loginUseCase = di.getIt();
     (await loginUseCase.call(loginRequest)).fold(
-      (failure) {        
+      (failure) {
         AppUtil.hanldeAndShowFailure(failure);
       },
       (user) {
-        AppUtil.showMessage(LocalizationString.successloggedIn.tr, Colors.green);
+        AppUtil.showMessage(
+            LocalizationString.successloggedIn.tr, Colors.green);
         SharedPref.setUserLoggedIn(true);
-        goToHomeScreen();
+        // go to home screen
+        Get.offAllNamed(AppRoutes.testScreen);
       },
     );
     EasyLoading.dismiss();
@@ -71,19 +71,17 @@ class LoginController extends GetxController {
   //   Get.toNamed(AppRoutes.forgetPassword);
   // }
 
-
-
   changVisible() {
     isVisible = !isVisible;
     update();
   }
 
-  goToHomeScreen() {
-    // Get.lazyPut<MainScreenControllerImp>(() => MainScreenControllerImp());
-    Get.toNamed(AppRoutes.testScreen);
-    // // changLoading();
-    //     print('home screen $isLoading');
-  }
+  // goToHomeScreen() {
+  //   // Get.lazyPut<MainScreenControllerImp>(() => MainScreenControllerImp());
+  //   Get.toNamed(AppRoutes.testScreen);
+  //   // // changLoading();
+  //   //     print('home screen $isLoading');
+  // }
 
   changLoading() {
     isLoading = !isLoading;

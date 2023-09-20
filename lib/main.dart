@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
+import 'package:ashghal_app_frontend/features/auth/presentation/screens/validate_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -13,7 +14,6 @@ import 'core/services/app_services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  BindingAllControllers();
   await initialServices();
   runApp(const MyApp());
   configLoading();
@@ -52,12 +52,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       locale: controller.language,
       translations: MyTranslation(),
+      initialBinding: BindingAllControllers(),
       // initialBinding: InitialBinding(),
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
       // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
-      initialRoute: AppRoutes.chooseUserTypeScreen,
+      initialRoute: AppRoutes.logIn,
+      // home: ValidateScreen(),
       // initialRoute: '/tester',
       // initialRoute: AppRoutes.testScreen,
       getPages: routes,

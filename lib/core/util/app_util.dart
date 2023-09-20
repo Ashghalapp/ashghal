@@ -70,7 +70,7 @@ class AppUtil {
   static void showMessage(String message, Color color) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
       content: Text(
-        message,
+        message.tr,
         style: Get.textTheme.bodyMedium!.copyWith(
           color: Colors.white,
         ),

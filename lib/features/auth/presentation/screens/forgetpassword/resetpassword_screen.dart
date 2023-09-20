@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,13 +9,10 @@ import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/forgetpwd/resetpassword_controller.dart';
 
-
-
-
-
 class ResetPasswordScreen extends GetView<ResetPasswordController> {
- 
-   const ResetPasswordScreen({super.key, });
+  const ResetPasswordScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +42,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
         padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 25),
         child: SingleChildScrollView(
           child: Column(
-            children: [              
+            children: [
               Text(
                 textAlign: TextAlign.center,
                 '40'.tr,
@@ -118,10 +114,8 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                       ),
                       MyGesterDedector(
                         text: LocalizationString.submit,
-                        color:Theme.of(context).primaryColor,
-                        onTap: () {
-                          controller.checkResetPassword();
-                        },
+                        color: Theme.of(context).primaryColor,
+                        onTap: () => controller.checkResetPassword(),
                       ),
                     ],
                   ),

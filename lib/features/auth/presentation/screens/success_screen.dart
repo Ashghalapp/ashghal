@@ -1,25 +1,25 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../../config/app_colors.dart';
-import '../../../../../config/app_routes.dart';
-import '../../../../../core/widget/app_buttons.dart';
+import '../../../../config/app_colors.dart';
 
+import '../../../../config/app_routes.dart';
+import '../../../../core/localization/localization_strings.dart';
+import '../../../../core/widget/app_buttons.dart';
 
-class SuccesSignUp extends StatelessWidget{ //GetView<SuccessSignUpControllerImp> {
-  const SuccesSignUp({super.key});
+class SuccesResetPassword extends StatelessWidget {
+  final String message;
+  const SuccesResetPassword({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
-    // Get.lazyPut(() =>  SuccessSignUpControllerImp());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
-          '32'.tr,
+          LocalizationString.success,
           style: const TextStyle(
             // fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
@@ -27,40 +27,40 @@ class SuccesSignUp extends StatelessWidget{ //GetView<SuccessSignUpControllerImp
             color: AppColors.gray,
           ),
         ),
-        // leading: MyCircularIconButton(
-        //   onPressed: () {
-        //     Get.back();
-        //   },
-        //   iconData: Icons.arrow_back_ios,
-        //   iconColor: AppColors.gray,
-        // ),
+        leading: MyCircularIconButton(
+          onPressed: () {
+            // Get.back();
+          },
+          iconData: Icons.arrow_back_ios,
+          iconColor: AppColors.gray,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-             Center(
+            Center(
               child: Icon(
                 Icons.check_circle_outline,
                 size: 200,
-                color:Theme.of(context).primaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             Text(
-              '38'.tr,
+              message.tr,
+              textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14,
-                  height: 2,
-                  color: Colors.grey),
+                fontWeight: FontWeight.normal,
+                fontSize: 14,
+                height: 2,
+                color: Colors.grey,
+              ),
             ),
-
-            // Spacer(),
             const SizedBox(
               height: 40,
             ),
             MyGesterDedector(
-              text: '31'.tr,
+              text: LocalizationString.signIn,
               onTap: () => Get.offAllNamed(AppRoutes.logIn),
             )
           ],

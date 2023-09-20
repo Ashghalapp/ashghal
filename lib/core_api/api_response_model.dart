@@ -30,7 +30,7 @@ class ApiResponseModel {
     }
     return ApiResponseModel(
       status: json['status'],
-      code: json['code'],
+      code: json['code'].toString(),
       message: json['message'],
       errors: errorsMap,
       data: json['data'] != null

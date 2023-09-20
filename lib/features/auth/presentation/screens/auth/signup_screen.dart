@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/config/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../config/app_colors.dart';
@@ -157,7 +158,7 @@ class SignUpScreen extends GetView<SignUpController> {
                       ),
                       TextButton(
                         style: TextButton.styleFrom(shadowColor: Colors.white),
-                        onPressed: () => controller.goToLogIn(),
+                        onPressed: () => Get.toNamed(AppRoutes.logIn),
                         child: Text(
                           '9'.tr,
                           style: const TextStyle(

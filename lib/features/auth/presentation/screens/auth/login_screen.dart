@@ -1,8 +1,6 @@
-
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 
 import '../../../../../config/app_colors.dart';
 
@@ -14,13 +12,11 @@ import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/Auth/login_controller.dart';
 import '../../widgets/social_icons.dart';
 
-
 class LoginScreen extends GetView<LoginController> {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get.lazyPut(() => LoginController());
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -59,10 +55,8 @@ class LoginScreen extends GetView<LoginController> {
       ),
       body: WillPopScope(
         ///دالة لمنع الخروج من التطبيق
-        onWillPop: () =>AppUtil. exitApp(context),
-        child:
-
-            Container(
+        onWillPop: () => AppUtil.exitApp(context),
+        child: Container(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
           child: ListView(
             // mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +68,7 @@ class LoginScreen extends GetView<LoginController> {
               //     height: size.height * 0.35,
               //   ),
               // ),
-  
+
               Text(
                 textAlign: TextAlign.center,
                 LocalizationString.welcome,
@@ -154,7 +148,8 @@ class LoginScreen extends GetView<LoginController> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           TextButton(
-                              onPressed: () =>  Get.toNamed(AppRoutes.forgetPassword),
+                              onPressed: () =>
+                                  Get.toNamed(AppRoutes.forgetPassword),
                               child: Text(
                                 LocalizationString.forgotPwd,
                                 textAlign: TextAlign.end,
@@ -168,9 +163,7 @@ class LoginScreen extends GetView<LoginController> {
                       MyGesterDedector(
                         text: '9'.tr,
                         color: Theme.of(context).primaryColor,
-                        onTap: () {
-                          controller.login();
-                        },
+                        onTap: () => controller.login(),
                       ),
 
                       SizedBox(
@@ -189,10 +182,11 @@ class LoginScreen extends GetView<LoginController> {
                           TextButton(
                             style:
                                 TextButton.styleFrom(shadowColor: Colors.white),
-                            onPressed: () => Get.offNamed(AppRoutes.chooseUserTypeScreen),
+                            onPressed: () =>
+                                Get.offNamed(AppRoutes.chooseUserTypeScreen),
                             child: Text(
                               '17'.tr,
-                              style:  TextStyle(
+                              style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                               ),
                             ),
@@ -218,7 +212,7 @@ class LoginScreen extends GetView<LoginController> {
                         onPressed: () {
                           Get.offNamed(AppRoutes.mainScreen);
                         },
-                        child:  Text(
+                        child: Text(
                           "Guest",
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,

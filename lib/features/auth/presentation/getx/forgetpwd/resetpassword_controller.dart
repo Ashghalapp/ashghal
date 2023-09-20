@@ -9,7 +9,7 @@ import '../../../../../config/app_routes.dart';
 
 import '../../../../../core/localization/localization_strings.dart';
 import '../../../../../core/util/app_util.dart';
-import 'successresetpassword_controller.dart';
+import '../../screens/success_screen.dart';
 
 class ResetPasswordController extends GetxController {
   late TextEditingController passwordController;
@@ -18,11 +18,26 @@ class ResetPasswordController extends GetxController {
   bool isVisible = true;
   bool isConfirmVisible = true;
 
-  checkResetPassword() async {
+  @override
+  void onInit() {
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.onClose();
+  }
+
+  Future<void> checkResetPassword() async {
     String code = Get.arguments['otpCode'];
     String email = Get.arguments['email'];
 
     if (!(resetPasswordFormKey.currentState?.validate() ?? false)) return;
+    Get.focusScope!.unfocus();
 
     EasyLoading.show(status: LocalizationString.loading);
     final resetPasswordRequest = ResetPasswordRequest.withEmail(
@@ -35,35 +50,16 @@ class ResetPasswordController extends GetxController {
 
     result.fold(
       (failure) {
-        AppUtil.hanldeAndShowFailure(failure, prefixText: 'Reset Password failed:');
+        AppUtil.hanldeAndShowFailure(failure,
+            prefixText: 'Reset Password failed:');
       },
       (success) {
         AppUtil.showMessage(LocalizationString.success, Colors.greenAccent);
-        goToSuccessResetPassword();
+        // go to successResetPassword screen
+        Get.offAll(()=> const SuccesResetPassword(message: "Successfully reset password"));
       },
     );
     EasyLoading.dismiss();
-  }
-
-  goToSuccessResetPassword() {
-    Get.lazyPut(() => SuccessResetPasswordControllerImp());
-    Get.offAllNamed(AppRoutes.succesResetPassword);
-  }
-
-  @override
-  void onInit() {
-    passwordController = TextEditingController();
-    confirmPasswordController = TextEditingController();
-
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-
-    super.onClose();
   }
 
   changVisible() {

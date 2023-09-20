@@ -64,6 +64,7 @@ class ChooseUserTypeScreen extends StatelessWidget {
                 onTap: () => Get.toNamed(AppRoutes.signUp,
                     arguments: {'isPorvider': false}),
               ),
+
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.spaceAround,
               //   children: [
