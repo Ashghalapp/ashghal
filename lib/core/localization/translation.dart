@@ -309,7 +309,7 @@ class MyTranslation extends Translations {
           "59": "Location",
           "60": "Job",
           "61": "Next",
-          "warning": "Warning",
+    
           "doyouwanttoexitApp": "Do You Want Exit the app?",
           
           "jobnamehint": "Enter Your job Name",
