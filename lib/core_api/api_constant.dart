@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class ApiConstants {
   static const String baseUrl = "http://10.0.2.2:8000/api/";
   // static const String baseUrl = "https://jsonplaceholder.typicode.com/";
@@ -8,15 +10,22 @@ class ApiConstants {
     'x_language': 'en'
   };
 
-  static String AUTH_ENDPOINT = "user/";
+  static String AUTH_ENDPOINT = "auth/";
+   static String CHECK_EMAIL = "${AUTH_ENDPOINT}check-email";
   static String REGISTER_USER = "${AUTH_ENDPOINT}register-user";
-  static String REGISTER_PROVIDER = "${AUTH_ENDPOINT}register-provider";
+  // static String REGISTER_PROVIDER = "${AUTH_ENDPOINT}register-provider";
   static String LOGIN = "${AUTH_ENDPOINT}login";
   static String LOGOUT = "${AUTH_ENDPOINT}logout";
-  static String RESEND_EMAIL_VERIFICATION_CODE = "${AUTH_ENDPOINT}resend-email-verification-code";
-  static String RESEND_FORGET_PASSWORD_CODE = "${AUTH_ENDPOINT}resend-forget-password-code";
+  static String SEND_EMAIL_VERIFICATION_CODE = "${AUTH_ENDPOINT}send-email-verification-code";
+  static String VALIDATE_EMAIL_VERIFICATION_CODE = "${AUTH_ENDPOINT}validate-email-verification-code";
+  // static String VERIFY_EMAIL = "${AUTH_ENDPOINT}verify-email";
+  // static String RESEND_EMAIL_VERIFICATION_CODE = "${AUTH_ENDPOINT}resend-email-verification-code";
+ 
   static String FORGET_PASSWORD = "${AUTH_ENDPOINT}forget-password";
-  static String VERIFY_RESET_PASSWORD_CODE = "${AUTH_ENDPOINT}verify-reset-password-code";
-  static String RESET_PASSWORD = "${AUTH_ENDPOINT}reset-password";
-  static String VERIFY_EMAIL = "${AUTH_ENDPOINT}verify-email";
+  // static String RESEND_FORGET_PASSWORD_CODE = "${AUTH_ENDPOINT}resend-forget-password-code";
+  static String VALIDATE_RESET_PASSWORD_BY_EMAIL_CODE = "${AUTH_ENDPOINT}validate-reset-password-email-code";
+  static String RESET_PASSWORD = "${AUTH_ENDPOINT}reset-password";  
+    
+  static String ADD_OR_CHANGE_PHONE = "${AUTH_ENDPOINT}add-or-change-phone";  
+  static String ADD_OR_CHANGE_EMAIL = "${AUTH_ENDPOINT}add-or-change-email";  
 }

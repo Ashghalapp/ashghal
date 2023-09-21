@@ -1,12 +1,21 @@
+import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
+
+import '../../../../app_library/public_entities/address.dart';
+import 'provider.dart';
+
 class User {
   int id;
   String name;
-  String? phone;
   String? email;
-  bool isProvider;
+  String? phone;
+  String? imagePath;
+  DateTime birthDate;
+  Gender gender;
   bool isBlocked;
-  String? imageUrl;
-  // AddressModel? address;
+  DateTime createdAt;
+  DateTime updatededAt;
+  Address? address;
+  Provider? provider;
   List<int> followersUsers;
   List<int> followingUsers;
   List<int> followersRequestsWait;
@@ -15,13 +24,16 @@ class User {
   User({
     required this.id,
     required this.name,
-    this.phone,
     this.email,
-
-    required this.isProvider,
+    this.phone,
+    this.imagePath,
+    required this.birthDate,
+    required this.gender,
     required this.isBlocked,
-    required this.imageUrl,
-    // this.address,
+    this.address,
+    this.provider,
+    required this.createdAt,
+    required this.updatededAt,    
     required this.followersUsers,
     required this.followingUsers,
     required this.followersRequestsWait,

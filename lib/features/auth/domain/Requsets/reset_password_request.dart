@@ -5,41 +5,41 @@ class ForgetPasswordRequest {
   ForgetPasswordRequest._({this.email, this.phone});  
   
   factory ForgetPasswordRequest.withEmail(
-          {required email}) =>
+          {required String email}) =>
       ForgetPasswordRequest._(email: email);
 
   factory ForgetPasswordRequest.withPhone(
-          {required phone}) =>
+          {required String phone}) =>
       ForgetPasswordRequest._(phone: phone);
 
   Map<String, String?> toJson() {
     return {
-      if (email != null) 'email': email,
-      if (phone != null) 'phone': phone,
+      'email_or_phone': email?? phone,
     };
   }
 }
 
-class VerifyResetPasswordCodeRequest extends ForgetPasswordRequest {
+class ValidateResetPasswordCodeRequest extends ForgetPasswordRequest {
   final String code;
-  VerifyResetPasswordCodeRequest.withEmail(
+  ValidateResetPasswordCodeRequest.withEmail(
       {required String email, required this.code})
-      : super._(email: email);//(email: email);
+      : super._(email: email);
 
-  VerifyResetPasswordCodeRequest.withPhone(
+  ValidateResetPasswordCodeRequest.withPhone(
       {required String phone, required this.code})
       : super._(phone: phone);
 
   @override
   Map<String, String?> toJson() {
     return {
-      ...super.toJson(),
-      'otp_code': code,
+      if (email != null) 'email': email,
+      if (phone != null) 'phone': phone,
+      'code': code,
     };
   }
 }
 
-class ResetPasswordRequest extends VerifyResetPasswordCodeRequest {
+class ResetPasswordRequest extends ValidateResetPasswordCodeRequest {
   final String newPassword;
   ResetPasswordRequest.withEmail({
     required String email,
@@ -56,8 +56,11 @@ class ResetPasswordRequest extends VerifyResetPasswordCodeRequest {
   @override
   Map<String, String?> toJson() {
     return {
-      ...super.toJson(),
-      'password': newPassword,
+      if (email != null) 'email': email,
+      if (phone != null) 'phone': phone,
+      if (email != null) 'email_verification_code': code,
+      if (phone != null) 'phone_verified_at': code,
+      'new_password': newPassword,
     };
   }
 }
