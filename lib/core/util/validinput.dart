@@ -47,8 +47,7 @@ validInput(String? val, int? min, int? max, String? type,
     }
   }
   if (type == 'confirmpassword') {
-    if (!GetUtils.isCaseInsensitiveContains(val!, confirmpassword!) &&
-        val != confirmpassword) {
+    if (val != confirmpassword) {
       return '50'.tr;
     }
   }

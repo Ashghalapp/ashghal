@@ -6,12 +6,10 @@ import 'package:get/get.dart';
 import '../features/auth/presentation/screens/auth/chooseusertype.dart';
 import '../features/auth/presentation/screens/auth/login_screen.dart';
 import '../features/auth/presentation/screens/auth/signup_screen.dart';
-import '../features/auth/presentation/screens/auth/successignup_screen.dart';
 import '../features/auth/presentation/screens/auth/verficationsignup_screen.dart';
-import '../features/auth/presentation/screens/forgetpassord/forgetpassword_screen.dart';
-import '../features/auth/presentation/screens/forgetpassord/resetpassword_screen.dart';
-import '../features/auth/presentation/screens/forgetpassord/successresetpassword.dart';
-import '../features/auth/presentation/screens/forgetpassord/verficationresetpassword_screen.dart';
+import '../features/auth/presentation/screens/forgetpassword/forgetpassword_screen.dart';
+import '../features/auth/presentation/screens/forgetpassword/resetpassword_screen.dart';
+import '../features/auth/presentation/screens/forgetpassword/validateresetpassword_screen.dart';
 import '../features/auth/presentation/screens/test_screen.dart';
 import 'app_routes.dart';
 
@@ -66,7 +64,7 @@ List<GetPage<dynamic>>? routes = [
     page: () => const ChooseUserTypeScreen(),
   ),
   GetPage(
-    name: AppRoutes.singUpScreenJob,
+    name: AppRoutes.singUpJobScreen,
     page: () => const SingUpScreenJob(),
   ),
   // GetPage(
@@ -98,26 +96,22 @@ List<GetPage<dynamic>>? routes = [
     name: AppRoutes.forgetPassword,
     page: () => const ForgetPassword(),
   ),
-  GetPage(
-    name: AppRoutes.verficationResetPassword,
-    page: () => const VerficationResetpasswordScreen(),
-  ),
-  GetPage(
-    name: AppRoutes.verficationSignUp,
-    page: () => const VerficationSignUpScreen(),
-  ),
+  // GetPage(
+  //   name: AppRoutes.verficationResetPassword,
+  //   page: () => const VerficationResetpasswordScreen(),
+  // ),
+  // GetPage(
+  //   name: AppRoutes.verficationSignUp,
+  //   page: () => const VerficationSignUpScreen(),
+  // ),
   GetPage(
     name: AppRoutes.resetPassword,
     page: () =>  const ResetPasswordScreen(),
   ),
-  GetPage(
-    name: AppRoutes.succesSignUp,
-    page: () => const SuccesSignUp(),
-  ),
-  GetPage(
-    name: AppRoutes.succesResetPassword,
-    page: () => const SuccesResetPassword(),
-  ),
+  // GetPage(
+  //   name: AppRoutes.succesSignUp,
+  //   page: () => const SuccesSignUp(),
+  // ),
   // GetPage(
   //   name: AppRoutes.postScreen,
   //   page: () =>  PostsScreen(),

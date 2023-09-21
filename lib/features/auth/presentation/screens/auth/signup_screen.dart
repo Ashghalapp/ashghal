@@ -2,6 +2,7 @@ import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../config/app_colors.dart';
+import '../../../../../config/app_routes.dart';
 import '../../../../../core/localization/localization_strings.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
@@ -158,7 +159,7 @@ class SignUpScreen extends GetView<SignUpController> {
                       ),
                       TextButton(
                         style: TextButton.styleFrom(shadowColor: Colors.white),
-                        onPressed: () => controller.goToLogIn(),
+                        onPressed: () => Get.toNamed(AppRoutes.logIn),
                         child: Text(
                           '9'.tr,
                           style: const TextStyle(

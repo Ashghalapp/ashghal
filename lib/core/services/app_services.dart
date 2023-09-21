@@ -1,5 +1,4 @@
 import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
-import 'package:ashghal_app_frontend/features/auth/presentation/getx/Auth/login_controller.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dependency_injection.dart';
@@ -13,7 +12,7 @@ class AppServices extends GetxService {
     // Get.lazyPut(() => OnBoardingControllerImp());
     Get.lazyPut(() => AppLocallcontroller());
     // Get.lazyPut(() => SignUpController());
-    Get.lazyPut(() => LoginController());
+    // Get.lazyPut(() => LoginController());
     setupDependencies();
     return this;
   }

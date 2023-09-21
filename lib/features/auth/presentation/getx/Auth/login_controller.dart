@@ -9,9 +9,7 @@ import '../../../../../config/app_routes.dart';
 import '../../../../../core/localization/localization_strings.dart';
 import '../../../../../core/services/dependency_injection.dart' as di;
 import '../../../domain/Requsets/login_request.dart';
-import '../../../domain/use_cases/login.dart';
-
-
+import '../../../domain/use_cases/login_uc.dart';
 
 class LoginController extends GetxController {
   bool isVisible = true;
@@ -19,45 +17,6 @@ class LoginController extends GetxController {
   late TextEditingController emailController;
   late TextEditingController passwordController;
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
-
-  ///تسجيل الدخول
-  void login() async {
-    final valid = loginFormKey.currentState?.validate() ?? false;
-    if (valid) {
-      EasyLoading.show(status: LocalizationString.loading);
-      final loginRequest = LoginRequest.withEmail(
-        password: passwordController.text.trim(),
-        email: emailController.text.trim(),
-      );
-
-      LoginUseCase loginUseCase = di.getIt<LoginUseCase>();
-
-      final result = await loginUseCase(loginRequest);
-
-      result.fold(
-        (failure) {
-          EasyLoading.dismiss();
-          AppUtil.showMessage('Login failed:  ${failure.message}', Colors.red);
-        },
-        (user) {
-          SharedPref.setUserLoggedIn(true);
-          EasyLoading.dismiss();
-          goToHomeScreen();
-        },
-      );
-    }
-  }
-
-  ///
-  // goToSignUp() {
-  //   Get.lazyPut(() => SignUpController());
-  //   Get.offNamed(AppRoutes.signUp);
-  // }
-
-  // goToForgetpassword() {
-  //   Get.lazyPut(() => ForgetPasswordController());
-  //   Get.toNamed(AppRoutes.forgetPassword);
-  // }
 
   @override
   void onInit() {
@@ -73,17 +32,56 @@ class LoginController extends GetxController {
     super.onClose();
   }
 
+  /// تسجيل الدخول
+  void login() async {
+    if (!(loginFormKey.currentState?.validate() ?? false)) return;
+    Get.focusScope!.unfocus();
+
+    EasyLoading.show(status: LocalizationString.loading);
+    final loginRequest = LoginRequest.withEmail(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+    print(loginRequest.toJson());
+
+    LoginUseCase loginUseCase = di.getIt();
+    (await loginUseCase.call(loginRequest)).fold(
+      (failure) {
+        AppUtil.hanldeAndShowFailure(failure);
+      },
+      (user) {
+        AppUtil.showMessage(
+            LocalizationString.successloggedIn.tr, Colors.green);
+        SharedPref.setUserLoggedIn(true);
+        // go to home screen
+        Get.offAllNamed(AppRoutes.testScreen);
+      },
+    );
+    EasyLoading.dismiss();
+  }
+
+  ///
+  // goToSignUp() {
+  //   Get.lazyPut(() => SignUpController());
+  //   Get.offNamed(AppRoutes.signUp);
+  // }
+
+  // goToForgetpassword() {
+  //   Get.lazyPut(() => ForgetPasswordController());
+  //   Get.toNamed(AppRoutes.forgetPassword);
+  // }
+
   changVisible() {
     isVisible = !isVisible;
     update();
   }
 
-  goToHomeScreen() {
-    // Get.lazyPut<MainScreenControllerImp>(() => MainScreenControllerImp());
-    Get.toNamed(AppRoutes.testScreen);
-    // // changLoading();
-    //     print('home screen $isLoading');
-  }
+  // goToHomeScreen() {
+  //   // Get.lazyPut<MainScreenControllerImp>(() => MainScreenControllerImp());
+  //   Get.toNamed(AppRoutes.testScreen);
+  //   // // changLoading();
+  //   //     print('home screen $isLoading');
+  // }
 
   changLoading() {
     isLoading = !isLoading;

@@ -15,7 +15,7 @@ class ChooseUserTypeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return AppScaffold(
-      
+
       appBarTitle: LocalizationString.usertype,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
@@ -57,7 +57,7 @@ class ChooseUserTypeScreen extends StatelessWidget {
                 text: LocalizationString.client,
                 color: Theme.of(context).primaryColor,
                 onTap: () => Get.toNamed(AppRoutes.signUp,
-                    arguments: {'isPorvider': true}),
+                    arguments: {'isPorvider': false}),
               ),
      
             ],

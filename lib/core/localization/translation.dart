@@ -46,7 +46,8 @@ class MyTranslation extends Translations {
           "42": "تاكيد كلمة المرور الجديدة",
           "successResetPassword": " تم اعادة تعيين كلمة المرور بنجاح تهانيناً\n" ,
           "37": "ًتهانيناً\n",
-          "38": "تم التسجيل بنجاح",
+          "Successfully Registered": "تم التسجيل بنجاح",
+          "Successfully reset password": "تم تغيير كلمة السر بنجاح",
           "40": "أعد تعيين كلمة مرورك",
           "43": " الرجاء ادخال كلمة المرور الجديدة في الاسفل",
           "44": "حقل مطلوب",
@@ -162,7 +163,9 @@ class MyTranslation extends Translations {
   "enterOTP": "أدخل رمز التحقق",
   "wrongOTP": "رمز التحقق غير صحيح، الرجاء إدخال رمز التحقق الصحيح",
   "resendOTP": "إعادة إرسال رمز التحقق",
-  "pleaseEnterOneTimePassword": "الرجاء إدخال رمز التحقق المرسل إلى بريدك الإلكتروني للتحقق من حسابك وتغيير كلمة المرور",
+  // "pleaseEnterOneTimePassword": "الرجاء إدخال رمز التحقق المرسل إلى بريدك الإلكتروني للتحقق من حسابك وتغيير كلمة المرور",
+  "Please enter the code sent to change your password": "الرجاء إدخال رمز التحقق المرسل إلى بريدك الإلكتروني للتحقق من حسابك وتغيير كلمة المرور",
+  "Please enter the code sent to your email to verify your account": "الرجاء إدخال رمز التحقق المرسل إلى بريدك الإلكتروني للتحقق من حسابك",
   "pleaseEnterOneTimePasswordPhoneNumberChange": "الرجاء إدخال رمز التحقق المرسل إلى رقم هاتفك للتحقق من رقم هاتفك",
   "helpToGetAccount": "دعنا نساعدك في استرداد حسابك",
   "loginUsingAnotherAccount": "تسجيل الدخول باستخدام حساب آخر بدلاً من ذلك",
@@ -235,6 +238,7 @@ class MyTranslation extends Translations {
   "Provider":"مزود خدمة",
   "Client":"عميل",
   "doyouwanttoexitApp":"هل تريد الخروج من التطبيق؟",
+  "SuccessfullLoggedIn": "تم تسجيل الدخول بنجاح",
         },
 
         ///========================English=====================///
@@ -610,6 +614,7 @@ class MyTranslation extends Translations {
           "searchByUsername": "Search by username",
           "searchByLocation": "Search by location",
           "searchByCategory": "Search by category",
+          "SuccessfullLoggedIn": "Successfull Logged in"
         }
       };
 }

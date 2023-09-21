@@ -1,45 +1,38 @@
 import 'user.dart';
 
-class Provider extends User {
-  int jobId;
+class Provider {
+  int pId;
   String jobName;
   String? jobDesc;
   int categoryId;
-  DateTime? createdAt;
-  DateTime? updatedAt;
+  DateTime pCreatedAt;
+  DateTime pUpdatedAt;
 
   Provider({
-    required this.jobId,
+    required this.pId,
     required this.jobName,
     this.jobDesc,
     required this.categoryId,
-    this.createdAt,
-    this.updatedAt,
-    required int id,
-    required String name,
-    String? phone,
-    String? email,
-    required bool isProvider,
-    required bool isBlocked,
-    String? imageUrl,
-    // AddressModel? address,
-    required List<int> followersUsers,
-    required List<int> followingUsers,
-    required List<int> followersRequestsWait,
-    required List<int> followRequestsSent,
-  }) : super(
-          id: id,
-          name: name,
-          phone: phone,
-          email: email,
+    required this.pCreatedAt,
+    required this.pUpdatedAt,
+  });
 
-          isProvider: isProvider,
-          isBlocked: isBlocked,
-          imageUrl: imageUrl,
-          // address: address,
-          followersUsers: followersUsers,
-          followingUsers: followingUsers,
-          followersRequestsWait: followersRequestsWait,
-          followRequestsSent: followRequestsSent,
-        );
+  factory Provider.fromJson(Map<String, dynamic> json){
+    return Provider(
+      pId: json['id'],
+      jobName: json['job_name'],
+      jobDesc: json['job_desc'],
+      categoryId: json['category_id'],
+      pCreatedAt: json['created_at'],
+      pUpdatedAt: json['updated_at'],
+    );
+  }
+
+  Map<String, Object?> toJson(){
+    return {
+      'job_name': jobName,
+      'job_desc': jobDesc,
+      'category_id': categoryId,
+    };
+  }
 }

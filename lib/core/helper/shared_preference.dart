@@ -33,11 +33,11 @@ class SharedPref {
     return _appServices.prefs.getBool('isLoggedIn') ?? false;
   }
 
-  static setAuthorizationKey(String? authKey) {
-    _appServices.prefs.setString('authKey', authKey!);
+  static setUserToken(String? userToken) {
+    _appServices.prefs.setString('authKey', userToken!);
   }
 
-  static String? getAuthorizationKey() {
+  static String? getUserToken() {
     return _appServices.prefs.get('authKey') as String?;
   }
 

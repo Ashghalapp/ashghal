@@ -21,7 +21,6 @@ class LoginScreen extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    // Get.lazyPut(() => LoginController());
     Size size = MediaQuery.of(context).size;
     return AppScaffold(
       // appBarTitle:  LocalizationString.signIn,
