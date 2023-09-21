@@ -1,6 +1,6 @@
 
 
-import 'package:nb_utils/nb_utils.dart';
+// import 'package:nb_utils/nb_utils.dart';
 
 import '../manager/font_manager.dart';
 import '../manager/styles_manager.dart';
@@ -35,7 +35,7 @@ class AppTheme {
             getRegularStyle(fontSize: FontSize.s16, color: AppColors.white),
       surfaceTintColor: AppColors.appLayoutBackground,
       color: AppColors.appLayoutBackground,
-      iconTheme: const IconThemeData(color: textPrimaryColor),
+      // iconTheme: const IconThemeData(color: textPrimaryColor),
       systemOverlayStyle:
           const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.dark),
     ),
@@ -49,7 +49,7 @@ class AppTheme {
     //card theme
     cardTheme: const CardTheme(color: Colors.white),
     cardColor: AppColors.appSectionBackground,
-    iconTheme: const IconThemeData(color: textPrimaryColor),
+    // iconTheme: const IconThemeData(color: textPrimaryColor),
     bottomSheetTheme:  BottomSheetThemeData(backgroundColor: AppColors.white),
 
     // button theme
@@ -151,9 +151,9 @@ class AppTheme {
     fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
     bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.appBackgroundColorDark),
-    primaryTextTheme: TextTheme(
-        titleLarge: primaryTextStyle(color: Colors.white),
-        labelSmall: primaryTextStyle(color: Colors.white)),
+    // primaryTextTheme: TextTheme(
+    //     titleLarge: primaryTextStyle(color: Colors.white),
+    //     labelSmall: primaryTextStyle(color: Colors.white)),
     cardTheme: const CardTheme(color: AppColors.cardBackgroundBlackDark),
     cardColor: AppColors.cardBackgroundBlackDark,
     iconTheme:  IconThemeData(color: AppColors.white),

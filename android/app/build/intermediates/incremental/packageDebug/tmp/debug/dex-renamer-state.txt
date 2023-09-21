@@ -1,0 +1,4 @@
+#Thu Sep 21 05:21:32 MSK 2023
+base.0=C\:\\Users\\MOHAMMED\\Desktop\\ashghal_app_frontend\\android\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

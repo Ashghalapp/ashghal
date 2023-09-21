@@ -1,7 +1,7 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nb_utils/nb_utils.dart';
+// import 'package:nb_utils/nb_utils.dart';
 
 class AppScaffold extends StatelessWidget {
   final String? appBarTitle;
@@ -27,7 +27,7 @@ class AppScaffold extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(appBarTitle.validate(), style:Theme.of(context).textTheme.titleMedium),
+          title: Text(appBarTitle?? "", style:Theme.of(context).textTheme.titleMedium),
           elevation: 1,
           centerTitle: true,
           leading: IconButton(
@@ -42,7 +42,7 @@ class AppScaffold extends StatelessWidget {
           ),
           actions: actions,
         ),
-        backgroundColor: scaffoldBackgroundColor ?? context.scaffoldBackgroundColor,
+        backgroundColor: scaffoldBackgroundColor ,
         body: child,
         bottomNavigationBar: bottomNavigationBar,
       ),

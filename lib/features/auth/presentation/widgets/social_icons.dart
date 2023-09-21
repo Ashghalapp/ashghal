@@ -20,12 +20,12 @@ class SocialIcons extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         padding: const EdgeInsets.all(15),
         decoration:   BoxDecoration(
-          border: Border.all(width: 1.5),
-          shape: BoxShape.rectangle,
+          // border: Border.all(width: 1.5),
+          // shape: BoxShape.rectangle,
         ),
           child: SvgPicture.asset('assets/icons/$icon.svg',
-                height: 20,
-                width:20,
+                height:40,
+                width:30,
                 // ignore: deprecated_member_use
                 // color:AppColors.darkColor,
           ),

@@ -3,7 +3,7 @@ import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:nb_utils/nb_utils.dart';
+
 
 import '../../../../../config/app_colors.dart';
 
@@ -147,9 +147,9 @@ Image.asset(AppImages.logo,fit: BoxFit.contain,width: 200,height: 150,), const S
                         SocialIcons(
                           icon: 'facebook',
                           press: () {},
-                        ),
-                        SocialIcons(icon: 'twitter', press: () {}),
-                        SocialIcons(icon: 'google-plus', press: () {}),
+                        ), SocialIcons(icon: 'google', press: () {}),
+                        SocialIcons(icon: 'apple', press: () {}),
+                       
                       ],
                     ),
                     TextButton(

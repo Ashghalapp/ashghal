@@ -68,7 +68,7 @@ class MyTextFormField extends StatelessWidget {
         hintStyle: Theme.of(context).textTheme.labelSmall,
         prefixIcon: Icon(
           iconData,
-          color: Theme.of(context).iconTheme.color,
+          color: AppColors.grey,
           // size: 22,
         ),
         suffixIcon: IconButton(
