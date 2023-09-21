@@ -16,13 +16,13 @@ import '../features/auth/presentation/screens/test_screen.dart';
 import 'app_routes.dart';
 
 List<GetPage<dynamic>>? routes = [
-//   GetPage(
-//     name: '/',
-//     page: () => const LanguageScreen(),
-//     middlewares: [
-//       AppMiddleware(),
-//     ],
-//   ),
+  // GetPage(
+  //   name: '/',
+  //   page: () => const LanguageScreen(),
+  //   middlewares: [
+  //     AppMiddleware(),
+  //   ],
+  // ),
 //  GetPage(
 //     name: '/SignInGoogle',
 //     page: () =>   SignInGoogle(),

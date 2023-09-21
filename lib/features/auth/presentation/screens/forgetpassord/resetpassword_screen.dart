@@ -25,13 +25,13 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.white,
-        title: const Text(
+        title:  Text(
           'Reset',
           style: TextStyle(
             // fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
             fontSize: 22,
-            color: AppColors.gray,
+            color: AppColors.grey,
           ),
         ),
         leading: MyCircularIconButton(
@@ -39,7 +39,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
             // Get.back();
           },
           iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.gray,
+          iconColor: AppColors.grey,
         ),
       ),
       body: Container(
@@ -57,7 +57,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
               ),
               Text(
                 '43'.tr,
-                style: const TextStyle(color: AppColors.gray),
+                style:  TextStyle(color: AppColors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),

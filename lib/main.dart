@@ -44,11 +44,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AppLocallcontroller controller = Get.find();
     return GetMaterialApp(
-      darkTheme: darkTheme,
+      darkTheme: AppTheme.darkTheme,
       builder: EasyLoading.init(),
       onInit: () {},
       title: 'Ashghal App',
-      theme: controller.appTheme,
+      theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
       locale: controller.language,
       translations: MyTranslation(),
@@ -56,8 +56,8 @@ class MyApp extends StatelessWidget {
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
       // initialRoute: AppRoutes.mainScreen,
-      // initialRoute: AppRoutes.logIn,
-      initialRoute: AppRoutes.mainScreen,
+      initialRoute: AppRoutes.logIn,
+      // initialRoute: AppRoutes.mainScreen,
       // initialRoute: '/tester',
       // initialRoute: AppRoutes.testScreen,
       getPages: routes,

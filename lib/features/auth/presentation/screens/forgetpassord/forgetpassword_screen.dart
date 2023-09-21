@@ -23,11 +23,11 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
         backgroundColor: Colors.white,
         title: Text(
         LocalizationString.verify,
-          style: const TextStyle(
+          style:  TextStyle(
             // fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
             fontSize: 22,
-            color: AppColors.gray,
+            color: AppColors.grey,
           ),
         ),
         leading: MyCircularIconButton(
@@ -35,7 +35,7 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
             Get.back();
           },
           iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.gray,
+          iconColor: AppColors.grey,
         ),
       ),
       body: Container(
@@ -53,7 +53,7 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
               ),
               Text(
                LocalizationString.enterYourEmailForOpt,
-                style: const TextStyle(color: AppColors.gray),
+                style:  TextStyle(color: AppColors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),

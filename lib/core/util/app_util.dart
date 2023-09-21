@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ashghal_app_frontend/core/localization/localization_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../config/app_colors.dart';
@@ -75,7 +76,7 @@ class AppUtil {
   
   static Future<bool> exitApp(BuildContext context) {
     Get.defaultDialog(
-        title: "تنبيه",
+        title: LocalizationString.warning,
         titleStyle: TextStyle(
             color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
         middleText: "هل تريد الخروج من التطبيق؟",
@@ -87,9 +88,9 @@ class AppUtil {
             onPressed: () {
               exit(0);
             },
-            child: const Text(
-              "تاكيد",
-              style: TextStyle(color: AppColors.textColor),
+            child:  Text(
+              LocalizationString.submit,
+              style:Theme.of(context).primaryTextTheme.labelSmall,
             ),
           ),
           ElevatedButton(
@@ -99,9 +100,9 @@ class AppUtil {
               onPressed: () {
                 Get.back();
               },
-              child: const Text(
-                "الغاء",
-                style: TextStyle(color: AppColors.textColor),
+              child:  Text(
+              LocalizationString.cancel,
+                style:Theme.of(context).primaryTextTheme.labelSmall,
               ))
         ]);
     return Future.value(true);

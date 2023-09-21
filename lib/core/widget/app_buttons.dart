@@ -37,7 +37,7 @@ class MyGesterDedector extends StatelessWidget {
           color: color ??Theme.of(context).primaryColor,
         ),
         child: Text(text,
-            style: Theme.of(context).textTheme.labelSmall,
+            style: Theme.of(context).textTheme.displayLarge,
                 ),
       ),
       // style: ElevatedButton.styleFrom(

@@ -44,9 +44,9 @@ class VerficationSignUpScreen extends GetView<VerficationSignUpController> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
+             Text(
               'Please Enter The Digit Code Sent To Your Account  ',
-              style: TextStyle(color: AppColors.gray),
+              style: TextStyle(color: AppColors.grey),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),

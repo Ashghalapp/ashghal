@@ -20,11 +20,11 @@ class SuccesSignUp extends StatelessWidget{ //GetView<SuccessSignUpControllerImp
         backgroundColor: Colors.white,
         title: Text(
           '32'.tr,
-          style: const TextStyle(
+          style:  TextStyle(
             // fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
             fontSize: 22,
-            color: AppColors.gray,
+            color: AppColors.grey,
           ),
         ),
         // leading: MyCircularIconButton(

@@ -19,11 +19,11 @@ class MyAppBarText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(
+      style:  TextStyle(
         // fontFamily: 'Cairo',
         fontWeight: FontWeight.bold,
         fontSize: 22,
-        color: AppColors.gray,
+        color: AppColors.grey,
       ),
     );
   }

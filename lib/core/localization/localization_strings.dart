@@ -8,6 +8,7 @@ class LocalizationString {
   static String ok = 'ok'.tr;
   static String submit = 'submit'.tr;
   static String done = 'done'.tr;
+  static String warning = 'warning'.tr;
   static String left = 'left'.tr;
   static String ended = 'ended'.tr;
   static String ago = 'ago'.tr;
@@ -37,6 +38,17 @@ class LocalizationString {
   static String viewAll = 'viewAll'.tr;
   static String allowComments = 'allowComments'.tr;
   static String newComment = 'newComment'.tr;
+
+
+//////////////
+
+  static String provider = 'Provider'.tr;
+  static String client = 'Client'.tr;
+
+/////////////////
+///
+  static String logintoyouraccount = 'Login to Your Account'.tr;
+
 
   static String top = 'top'.tr;
   static String trending = 'trending'.tr;
@@ -88,6 +100,9 @@ class LocalizationString {
   static String changeUserName = 'Change user name'.tr;
   static String email = 'email'.tr;
   static String emailOrUsername = 'emailOrUsername'.tr;
+  static String usertype = 'usertype'.tr;
+  static String chooseusertype = 'chooseusertype'.tr;
+  static String chooseusertypebody = 'chooseusertypebody'.tr;
 
   static String loginAnotherAccount = 'loginAnotherAccount'.tr;
   static String yourEmail = 'yourEmail'.tr;
@@ -401,6 +416,7 @@ class LocalizationString {
   static String trackEarning = "Track your earnings".tr;
   static String tuneSettings = "Tune your app settings".tr;
   static String exitApp = "Exit the app".tr;
+  static String doyouwanttoexitApp = "doyouwanttoexitApp".tr;
   static String faqMessage = "Frequently asked questions by customers".tr;
 
   static String supportRequests = "Support requests".tr;

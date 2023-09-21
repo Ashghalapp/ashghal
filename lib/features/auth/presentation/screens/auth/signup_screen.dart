@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../config/app_colors.dart';
@@ -26,11 +27,11 @@ class SignUpScreen extends GetView<SignUpController> {
         backgroundColor: Colors.white,
         title: Text(
           '17'.tr,
-          style: const TextStyle(
+          style:  TextStyle(
             // fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
             // fontSize: 22,
-            color: AppColors.gray,
+            color: AppColors.grey,
           ),
         ),
         leading: MyCircularIconButton(
@@ -38,7 +39,7 @@ class SignUpScreen extends GetView<SignUpController> {
             Get.back();
           },
           iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.gray,
+          iconColor: AppColors.grey,
         ),
       ),
       body: Container(
@@ -67,7 +68,7 @@ class SignUpScreen extends GetView<SignUpController> {
             ),
             Text(
               '11'.tr,
-              style: const TextStyle(color: AppColors.gray),
+              style:  TextStyle(color: AppColors.grey),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
@@ -151,7 +152,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     children: [
                       Text(
                         style: const TextStyle(
-                          color: AppColors.secondaryText,
+                          color: AppColors.textgray,
                         ),
                         '25'.tr,
                       ),
@@ -161,7 +162,7 @@ class SignUpScreen extends GetView<SignUpController> {
                         child: Text(
                           '9'.tr,
                           style: const TextStyle(
-                            color: AppColors.darkPrimaryColor,
+                            color: AppColors.appColorPrimaryDark,
                           ),
                         ),
                       ),
@@ -203,9 +204,8 @@ class SingUpScreenJob extends GetView<SignUpController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: MyAppBar().myappbar('60'.tr),
-      body: Padding(
+    return AppScaffold(appBarTitle: AutofillHints.jobTitle,
+      child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
         child: SingleChildScrollView(
           child: Column(

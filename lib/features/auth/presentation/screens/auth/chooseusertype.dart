@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,11 +13,11 @@ class ChooseUserTypeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //  Get.lazyPut(() => ChooseUserTypeControllerImp());
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: MyAppBar().myappbar('52'.tr),
-      body: Padding(
+    return AppScaffold(
+      
+      appBarTitle: LocalizationString.usertype,
+      child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
         child: SingleChildScrollView(
           child: Column(
@@ -25,66 +26,44 @@ class ChooseUserTypeScreen extends StatelessWidget {
             children: [
               Text(
                 textAlign: TextAlign.center,
-                '51'.tr,
-                style: Theme.of(context).textTheme.displayMedium,
+               LocalizationString.chooseusertype,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(
                 height: 30,
               ),
               Text(
-                '53'.tr,
-                style: const TextStyle(color: AppColors.gray),
+                LocalizationString.chooseusertypebody,
+                style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 50),
-              // SvgPicture.asset(
-              //   'assets/images/Programmer-bro.svg',
-              //   height: size.height * 0.25,
-              // ),
+           
               MyGesterDedector(
-                text: '54'.tr,
+                text: LocalizationString.provider,
                 color: Theme.of(context).primaryColor,
                 onTap: () => Get.toNamed(AppRoutes.signUp,
                     arguments: {'isPorvider': true}),
               ),
               SizedBox(height: size.height * 0.03),
-              // SvgPicture.asset(
-              //   'assets/images/Businessman-amico.svg',
-              //   height: size.height * 0.25,
-              // ),
+         
               Text(
                 LocalizationString.or,
-                style: const TextStyle(color: AppColors.gray),
+                style: Theme.of(context).textTheme.labelSmall,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               MyGesterDedector(
-                text: '55'.tr,
+                text: LocalizationString.client,
                 color: Theme.of(context).primaryColor,
                 onTap: () => Get.toNamed(AppRoutes.signUp,
                     arguments: {'isPorvider': true}),
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     MyElevatedButton(
-              //       color: AppColors.PRIMARY_COLOR,
-              //       child: Text(
-              //         '54'.tr,
-              //       ),
-              //     ),
-              //     MyElevatedButton(
-              //         color: AppColors.PRIMARY_COLOR,
-              //       child: Text(
-              //         '55'.tr,
-              //       ),
-              //     ),
-              //   ],
-              // ),
+     
             ],
           ),
         ),
       ),
-    );
+ );
   }
 }

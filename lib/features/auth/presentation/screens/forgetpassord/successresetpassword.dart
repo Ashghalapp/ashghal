@@ -26,11 +26,11 @@ class SuccesResetPassword extends GetView<SuccessResetPasswordControllerImp> {
         backgroundColor: Colors.white,
         title: Text(
         LocalizationString.success,
-          style: const TextStyle(
+          style:  TextStyle(
             // fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
             fontSize: 22,
-            color: AppColors.gray,
+            color:AppColors.grey,
           ),
         ),
         leading: MyCircularIconButton(
@@ -38,7 +38,7 @@ class SuccesResetPassword extends GetView<SuccessResetPasswordControllerImp> {
             // Get.back();
           },
           iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.gray,
+          iconColor: AppColors.icongray,
         ),
       ),
       body: Padding(

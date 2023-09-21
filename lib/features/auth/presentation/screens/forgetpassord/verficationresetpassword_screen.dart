@@ -30,7 +30,7 @@ class VerficationResetpasswordScreen
             Get.back();
           },
           iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.gray,
+          iconColor: AppColors.grey,
         ),
       ),
       body: Container(
@@ -48,7 +48,7 @@ class VerficationResetpasswordScreen
               ),
                Text(
                LocalizationString.pleaseEnterOneTimePassword,
-                style: const TextStyle(color: AppColors.gray),
+                style:  TextStyle(color: AppColors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
@@ -98,7 +98,7 @@ class VerficationResetpasswordScreen
                       if (remainingSeconds.value > 0)
                        Obx(() =>  Text(
                           'Resend code in ${remainingSeconds.value} seconds',
-                          style: const TextStyle(color: AppColors.gray),
+                          style:  TextStyle(color: AppColors.grey),
                         ),)
                     ],
                   );
