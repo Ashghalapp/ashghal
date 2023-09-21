@@ -1,19 +1,17 @@
-import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-
+import 'package:flutter_svg/svg.dart';
 
 class MyTextFormField extends StatelessWidget {
   const MyTextFormField({
     Key? key,
     required this.hintText,
-    required this.iconData,
+    this.iconName,
     required this.lable,
     required this.obscureText,
     required this.controller,
     this.validator,
-    this.sufficxIconData,
+    this.sufficxIconDataName,
     this.onPressed,
     this.prefixtext,
     this.inputformater,
@@ -26,8 +24,8 @@ class MyTextFormField extends StatelessWidget {
   final String lable;
   final String? prefixtext;
   final String hintText;
-  final IconData iconData;
-  final IconData? sufficxIconData;
+  final String? iconName;
+  final String? sufficxIconDataName;
   final bool obscureText;
   final TextEditingController controller;
   final String? Function(String?)? validator;
@@ -35,7 +33,6 @@ class MyTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      
       keyboardType: textInputtype,
       inputFormatters: inputformater,
       validator: validator,
@@ -45,14 +42,14 @@ class MyTextFormField extends StatelessWidget {
       style: Theme.of(context).inputDecorationTheme.labelStyle,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.grey.shade200,
+        fillColor: Theme.of(context).inputDecorationTheme.fillColor,
         prefixText: prefixtext,
         border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(12),
-            ),
-            // borderSide: BorderSide.none
-            ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(12),
+          ),
+          // borderSide: BorderSide.none
+        ),
         enabledBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(12),
@@ -62,20 +59,41 @@ class MyTextFormField extends StatelessWidget {
             borderRadius: BorderRadius.all(
               Radius.circular(12),
             ),
-            
             borderSide: BorderSide.none),
         hintText: lable,
         hintStyle: Theme.of(context).textTheme.labelSmall,
-        prefixIcon: Icon(
-          iconData,
-          color: AppColors.grey,
-          // size: 22,
+        prefixIcon: IconButton(
+          onPressed: null,
+          icon: SvgPicture.asset(
+            fit: BoxFit.contain,
+            iconName!,
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).iconTheme.color!,
+              BlendMode.srcIn,
+            ),
+            // You can adjust the size as needed
+            // width: 14,
+            // height: 14,
+          ),
         ),
-        suffixIcon: IconButton(
-            onPressed: onPressed,
-            icon: Icon(sufficxIconData),
-            color: Theme.of(context).iconTheme.color,
-            iconSize: 22),
+        suffixIcon: sufficxIconDataName != null
+            ? IconButton(
+                onPressed: onPressed,
+                icon: SvgPicture.asset(
+                  fit: BoxFit.contain,
+                  sufficxIconDataName!,
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).iconTheme.color!,
+                    BlendMode.srcIn,
+                  ),
+                  // You can adjust the size as needed
+                  // width: 14,
+                  // height: 14,
+                ),
+                // Icon(sufficxIconDataName),
+                color: Theme.of(context).iconTheme.color,
+                iconSize: 22)
+            : null,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -83,7 +101,7 @@ class MyTextFormField extends StatelessWidget {
           "",
           style: Theme.of(context).textTheme.labelSmall,
         ),
-       
+
         // borderSide: const BorderSide(color: AppColors.gray),
       ),
     );

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../../config/app_colors.dart';
 
 import '../../../../config/app_routes.dart';
-import '../../../../core/localization/localization_strings.dart';
+import '../../../../core/localization/app_localization.dart';
 import '../../../../core/widget/app_buttons.dart';
 
 class SuccesResetPassword extends StatelessWidget {
@@ -19,7 +19,7 @@ class SuccesResetPassword extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
-          LocalizationString.success,
+          AppLocalization.success,
           style:  TextStyle(
             // fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
@@ -32,7 +32,7 @@ class SuccesResetPassword extends StatelessWidget {
             // Get.back();
           },
           iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.icongray,
+          iconColor: AppColors.iconColor,
         ),
       ),
       body: Padding(
@@ -60,7 +60,7 @@ class SuccesResetPassword extends StatelessWidget {
               height: 40,
             ),
             MyGesterDedector(
-              text: LocalizationString.signIn,
+              text: AppLocalization.signIn,
               onTap: () => Get.offAllNamed(AppRoutes.logIn),
             )
           ],

@@ -2,11 +2,10 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 
 import '../../../../../config/app_colors.dart';
 
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/widget/app_buttons.dart';
 
 
@@ -25,7 +24,7 @@ class SuccesResetPassword extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
-        LocalizationString.success,
+        AppLocalization.success,
           style:  TextStyle(
             // fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
@@ -38,7 +37,7 @@ class SuccesResetPassword extends StatelessWidget {
             // Get.back();
           },
           iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.icongray,
+          iconColor: AppColors.iconColor,
         ),
       ),
       body: Padding(
@@ -54,7 +53,7 @@ class SuccesResetPassword extends StatelessWidget {
             ),
             Text(
               textAlign: TextAlign.center,
-              LocalizationString.successResetPassword,
+              AppLocalization.successResetPassword,
               style: const TextStyle(
                   fontWeight: FontWeight.normal,
                   fontSize: 14,
@@ -65,7 +64,7 @@ class SuccesResetPassword extends StatelessWidget {
               height: 40,
             ),
             MyGesterDedector(
-              text: LocalizationString.signIn,
+              text: AppLocalization.signIn,
               onTap: () {
                 // controller.goToLogIn();
               },

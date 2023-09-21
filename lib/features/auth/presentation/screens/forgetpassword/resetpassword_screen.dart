@@ -1,9 +1,10 @@
+import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../config/app_colors.dart';
 
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
@@ -21,7 +22,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.white,
-        title:  Text(
+        title: Text(
           'Reset',
           style: TextStyle(
             // fontFamily: 'Cairo',
@@ -53,7 +54,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
               ),
               Text(
                 '43'.tr,
-                style:  TextStyle(color: AppColors.grey),
+                style: TextStyle(color: AppColors.grey),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
@@ -70,14 +71,17 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                           return Column(
                             children: [
                               MyTextFormField(
-                                sufficxIconData: controller.isVisible
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
+                                sufficxIconDataName: controller.isVisible
+                                    // ? Icons.visibility_off_outlined
+                                    // : Icons.visibility_outlined,
+                                    ? AppIcons.hide
+                                    : AppIcons.show,
                                 obscureText: controller.isVisible,
                                 onPressed: () => controller.changVisible(),
                                 hintText: '34'.tr,
-                                iconData: Icons.lock_clock_outlined,
-                                lable: '35'.tr,
+                                // iconName: Icons.lock_clock_outlined,
+                                iconName: AppIcons.lock,
+                                lable: AppLocalization.newPassword,
                                 controller: controller.passwordController,
                                 validator: (val) {
                                   return validInput(val!, 6, 50, 'password');
@@ -87,15 +91,18 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                                 height: 20,
                               ),
                               MyTextFormField(
-                                sufficxIconData: controller.isConfirmVisible
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
+                                sufficxIconDataName: controller.isConfirmVisible
+                                    // ? Icons.visibility_off_outlined
+                                    // : Icons.visibility_outlined,
+                                    ? AppIcons.hide
+                                    : AppIcons.show,
                                 obscureText: controller.isConfirmVisible,
                                 onPressed: () =>
                                     controller.changConfirmVisible(),
                                 hintText: '41'.tr,
-                                iconData: Icons.key_outlined,
-                                lable: '42'.tr,
+                                iconName: AppIcons.lock,
+                                // iconName: Icons.key_outlined,
+                                lable: AppLocalization.confirmPassword,
                                 controller:
                                     controller.confirmPasswordController,
                                 validator: (val) {
@@ -113,7 +120,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                         height: 20,
                       ),
                       MyGesterDedector(
-                        text: LocalizationString.submit,
+                        text: AppLocalization.submit,
                         color: Theme.of(context).primaryColor,
                         onTap: () => controller.checkResetPassword(),
                       ),

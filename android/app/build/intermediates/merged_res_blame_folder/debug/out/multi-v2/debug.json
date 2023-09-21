@@ -188,7 +188,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\MOHAMMED\\Desktop\\ashghal_app_frontend\\android\\app\\src\\main\\res\\values\\styles.xml",
+                    "source": "C:\\Users\\MOHAMMED\\Desktop\\Ashghalapp\\ashghal_app_frontend\\android\\app\\src\\main\\res\\values\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",
@@ -396,7 +396,7 @@
             "outputFile": "com.example.ashghal_app_frontend.app-merged_res-14:/values-night-v8_values-night-v8.arsc.flat",
             "map": [
                 {
-                    "source": "C:\\Users\\MOHAMMED\\Desktop\\ashghal_app_frontend\\android\\app\\src\\main\\res\\values-night\\styles.xml",
+                    "source": "C:\\Users\\MOHAMMED\\Desktop\\Ashghalapp\\ashghal_app_frontend\\android\\app\\src\\main\\res\\values-night\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

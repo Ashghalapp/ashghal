@@ -1,15 +1,13 @@
+import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 
-
-import '../../../../../config/app_colors.dart';
 
 import '../../../../../config/app_images.dart';
 import '../../../../../config/app_routes.dart';
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
@@ -28,14 +26,14 @@ class LoginScreen extends GetView<LoginController> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
         child: ListView(
-      
           children: [
-Image.asset(AppImages.logo,fit: BoxFit.contain,width: 200,height: 150,), const SizedBox(
+            const LogoWidget(),
+            const SizedBox(
               height: 30,
             ),
             Text(
               textAlign: TextAlign.center,
-              LocalizationString.logintoyouraccount,
+              AppLocalization.logintoyouraccount,
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(
@@ -46,7 +44,7 @@ Image.asset(AppImages.logo,fit: BoxFit.contain,width: 200,height: 150,), const S
             //   style:Theme.of(context).textTheme.bodyMedium,
             //   textAlign: TextAlign.center,
             // ),
-        
+
             Form(
               key: controller.loginFormKey,
               child: SizedBox(
@@ -54,18 +52,17 @@ Image.asset(AppImages.logo,fit: BoxFit.contain,width: 200,height: 150,), const S
                 child: Column(
                   children: [
                     MyTextFormField(
-                      hintText: LocalizationString.enterYourEmail,
-                      iconData:Icons.email_outlined,
-                      lable: LocalizationString.email,
+                      hintText: AppLocalization.enterYourEmail,
+                      // iconName:Icons.email_outlined,
+                      iconName: AppIcons.email,
+                      lable: AppLocalization.email,
                       obscureText: false,
                       controller: controller.emailController,
                       validator: (val) {
                         return validInput(val!, 10, 50, 'email');
                       },
-
-                      
                     ),
-                  
+
                     const SizedBox(
                       height: 20,
                     ),
@@ -74,14 +71,17 @@ Image.asset(AppImages.logo,fit: BoxFit.contain,width: 200,height: 150,), const S
                       initState: (_) {},
                       builder: (_) {
                         return MyTextFormField(
-                          sufficxIconData: controller.isVisible
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
+                          sufficxIconDataName: controller.isVisible
+                              // ? Icons.visibility_off_outlined
+                              // : Icons.visibility_outlined,
+                              ? AppIcons.hide
+                              : AppIcons.show,
                           obscureText: controller.isVisible,
                           onPressed: () => controller.changVisible(),
-                          hintText: LocalizationString.pleaseEnterPassword,
-                          iconData: Iconsax.lock,
-                          lable: LocalizationString.password,
+                          hintText: AppLocalization.pleaseEnterPassword,
+                          // iconName: Iconsax.lock,
+                          iconName: AppIcons.lock,
+                          lable: AppLocalization.password,
                           controller: controller.passwordController,
                           validator: (val) {
                             return validInput(val!, 6, 50, 'password');
@@ -99,7 +99,7 @@ Image.asset(AppImages.logo,fit: BoxFit.contain,width: 200,height: 150,), const S
                             onPressed: () =>
                                 Get.toNamed(AppRoutes.forgetPassword),
                             child: Text(
-                              LocalizationString.forgotPwd,
+                              AppLocalization.forgotPwd,
                               textAlign: TextAlign.end,
                               style: Theme.of(context).textTheme.labelMedium,
                             ))
@@ -107,50 +107,11 @@ Image.asset(AppImages.logo,fit: BoxFit.contain,width: 200,height: 150,), const S
                     ),
 
                     MyGesterDedector(
-                      text: LocalizationString.signIn,
+                      text: AppLocalization.signIn,
                       color: Theme.of(context).primaryColor,
                       onTap: () {
                         controller.login();
                       },
-                    ),
-
-                    SizedBox(
-                      height: size.height * 0.03,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          style: Theme.of(context).textTheme.labelSmall,
-                           LocalizationString.dontHaveAccount,
-                        ),
-                        TextButton(
-                          style:
-                              TextButton.styleFrom(shadowColor: Colors.white),
-                          onPressed: () =>
-                              Get.offNamed(AppRoutes.chooseUserTypeScreen),
-                          child: Text(
-                            LocalizationString.signUp,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: size.height * 0.03,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SocialIcons(
-                          icon: 'facebook',
-                          press: () {},
-                        ), SocialIcons(icon: 'google', press: () {}),
-                        SocialIcons(icon: 'apple', press: () {}),
-                       
-                      ],
                     ),
                     TextButton(
                       style: TextButton.styleFrom(shadowColor: Colors.white),
@@ -158,11 +119,42 @@ Image.asset(AppImages.logo,fit: BoxFit.contain,width: 200,height: 150,), const S
                         Get.offNamed(AppRoutes.mainScreen);
                       },
                       child: Text(
-                        "Guest",
+                        AppLocalization.enterAsGuest,
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                         ),
                       ),
+                    ),
+                    // SizedBox(
+                    //   height: size.height * 0.03,
+                    // ),
+               const OrContiueWithWidget(),
+
+
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    const SocialIconsWidget(),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          style: Theme.of(context).textTheme.labelSmall,
+                          AppLocalization.dontHaveAccount,
+                        ),
+                        TextButton(
+                         
+                          onPressed: () =>
+                              Get.offNamed(AppRoutes.chooseUserTypeScreen),
+                          child: Text(
+                            AppLocalization.signUp,
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -172,5 +164,76 @@ Image.asset(AppImages.logo,fit: BoxFit.contain,width: 200,height: 150,), const S
         ),
       ),
     );
+  }
+}
+
+class LogoWidget extends StatelessWidget {
+  const LogoWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      AppImages.logo,
+      fit: BoxFit.contain,
+      width: 150,
+      height: 150,
+    );
+  }
+}
+
+class SocialIconsWidget extends StatelessWidget {
+  const SocialIconsWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SocialIcons(
+          icon: 'facebook',
+          press: () {},
+        ),
+        SocialIcons(icon: 'google', press: () {}),
+        SocialIcons(icon: 'apple', press: () {},),
+      ],
+    );
+  }
+}
+
+class OrContiueWithWidget extends StatelessWidget {
+  const OrContiueWithWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+     Expanded(
+      child: Divider(
+
+    color: Theme.of(context).dividerColor,
+      ),
+    ),
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Text(
+        AppLocalization.orContinueWith,
+        style: Theme.of(context).textTheme.labelSmall,
+      ),
+    ),
+     Expanded(
+      child: Divider(
+     color: Theme.of(context).dividerColor,
+      
+      ),
+    ),
+  ],
+);
   }
 }

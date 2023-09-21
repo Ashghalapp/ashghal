@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../../../config/app_colors.dart';
 
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../core/localization/app_localization.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import '../widgets/my_appbartext.dart';
@@ -30,7 +30,7 @@ class ValidateScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.white,
         title: MyAppBarText(
-          text: LocalizationString.verify,
+          text: AppLocalization.verify,
         ),
         // ignore: prefer_const_constructors
         leading: MyCircularIconButton(
@@ -48,14 +48,14 @@ class ValidateScreen extends StatelessWidget {
             children: [
               Text(
                 textAlign: TextAlign.center,
-                LocalizationString.otpVerification,
+                AppLocalization.otpVerification,
                 style: Theme.of(context).textTheme.displayMedium,
               ),
               const SizedBox(
                 height: 30,
               ),
                Text(
-               LocalizationString.pleaseEnterOneTimePassword,
+               AppLocalization.pleaseEnterOneTimePassword,
                 style:  TextStyle(color: AppColors.grey),
                 textAlign: TextAlign.center,
               ),

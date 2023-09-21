@@ -4,7 +4,7 @@
             "outputFile": "com.example.ashghal_app_frontend.app-mergeDebugResources-12:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\MOHAMMED\\Desktop\\ashghal_app_frontend\\android\\app\\src\\main\\res\\values-night\\styles.xml",
+                    "source": "C:\\Users\\MOHAMMED\\Desktop\\Ashghalapp\\ashghal_app_frontend\\android\\app\\src\\main\\res\\values-night\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

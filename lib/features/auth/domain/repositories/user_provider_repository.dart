@@ -6,9 +6,7 @@ import 'package:ashghal_app_frontend/features/auth/domain/Requsets/check_email_r
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/register_user_provider_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/reset_password_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/login_request.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/Requsets/validate_email_verification_code_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/verify_email_request.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/entities/provider.dart';
 import 'package:dartz/dartz.dart';
 
 import '../entities/user.dart';

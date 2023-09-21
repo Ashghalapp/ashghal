@@ -8,4 +8,11 @@ class AppImages {
   static const String offline = 'assets/lottie/offline1.json';
   static const String noData = 'assets/lottie/no-data.json';
   static const String server = 'assets/lottie/servererror.json';
+
+  ////////////// ICONS LINKS ////////
+  
+  static const String lock = 'assets/icons/icons/Lock.svg';
+  static const String email = 'assets/icons/icons/Message.svg';
+  static const String hide = 'assets/icons/icons/Hide.svg';
+  static const String show = 'assets/icons/icons/Show.svg';
 }

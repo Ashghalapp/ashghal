@@ -5,9 +5,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import '../../../../../core/services/dependency_injection.dart' as di;
 
-import '../../../../../config/app_routes.dart';
 
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/app_util.dart';
 import '../../screens/success_screen.dart';
 
@@ -39,7 +38,7 @@ class ResetPasswordController extends GetxController {
     if (!(resetPasswordFormKey.currentState?.validate() ?? false)) return;
     Get.focusScope!.unfocus();
 
-    EasyLoading.show(status: LocalizationString.loading);
+    EasyLoading.show(status: AppLocalization.loading);
     final resetPasswordRequest = ResetPasswordRequest.withEmail(
       email: email,
       code: code,
@@ -54,7 +53,7 @@ class ResetPasswordController extends GetxController {
             prefixText: 'Reset Password failed:');
       },
       (success) {
-        AppUtil.showMessage(LocalizationString.success, Colors.greenAccent);
+        AppUtil.showMessage(AppLocalization.success, Colors.greenAccent);
         // go to successResetPassword screen
         Get.offAll(()=> const SuccesResetPassword(message: "Successfully reset password"));
       },

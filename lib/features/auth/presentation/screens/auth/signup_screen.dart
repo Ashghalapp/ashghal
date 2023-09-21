@@ -1,14 +1,13 @@
+import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../config/app_colors.dart';
 import '../../../../../config/app_routes.dart';
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
-import '../../../../../core/widget/custom_appbar.dart';
-import '../../../../../core/widget/loading_state.dart';
 import '../../getx/Auth/singup_controller.dart';
 import '../../widgets/social_icons.dart';
 
@@ -61,7 +60,7 @@ class SignUpScreen extends GetView<SignUpController> {
 
             Text(
               textAlign: TextAlign.center,
-              LocalizationString.signUpMessage,
+              AppLocalization.signUpMessage,
               style: Theme.of(context).textTheme.displayMedium,
             ),
             const SizedBox(
@@ -79,8 +78,9 @@ class SignUpScreen extends GetView<SignUpController> {
                 children: [
                   MyTextFormField(
                     hintText: '23'.tr,
-                    iconData: Icons.person_outline_outlined,
-                    lable: '20'.tr,
+                    // iconName: Icons.person_outline_outlined,
+                    iconName: AppIcons.user,
+                    lable: AppLocalization.fullName,
                     obscureText: false,
                     controller: controller.nameController,
                     validator: (val) {
@@ -108,7 +108,8 @@ class SignUpScreen extends GetView<SignUpController> {
 
                   MyTextFormField(
                     hintText: '12'.tr,
-                    iconData: Icons.email_outlined,
+                    // iconName: Icons.email_outlined,
+                    iconName: AppIcons.email,
                     lable: '18'.tr,
                     obscureText: false,
                     controller: controller.emailController,
@@ -123,13 +124,16 @@ class SignUpScreen extends GetView<SignUpController> {
                     initState: (_) {},
                     builder: (_) {
                       return MyTextFormField(
-                        sufficxIconData: controller.isVisible
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                        sufficxIconDataName: controller.isVisible
+                            // ? Icons.visibility_off_outlined
+                            // : Icons.visibility_outlined,
+                                 ? AppIcons.hide
+                            : AppIcons.show,
                         obscureText: controller.isVisible,
                         onPressed: () => controller.changVisible(),
                         hintText: '13'.tr,
-                        iconData: Icons.lock_open_outlined,
+                        // iconName: Icons.lock_open_outlined,
+                        iconName: AppIcons.lock,
                         lable: '19'.tr,
                         controller: controller.passwordController,
                         validator: (val) {
@@ -238,7 +242,8 @@ class SingUpScreenJob extends GetView<SignUpController> {
                     const SizedBox(height: 20),
                     MyTextFormField(
                       hintText: 'jobnamehint'.tr,
-                      iconData: Icons.work_outline_rounded,
+                      // iconName: Icons.work_outline_rounded,
+                      // iconName: Icons.work_outline_rounded,
                       lable: 'jobname'.tr,
                       obscureText: false,
                       controller: controller.jobNameController,
@@ -249,7 +254,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                     const SizedBox(height: 20),
                     MyTextFormField(
                       hintText: 'jobdescriptionhint'.tr,
-                      iconData: Icons.work_outline_rounded,
+                      // iconName: Icons.work_outline_rounded,
                       lable: 'jobdescription'.tr,
                       obscureText: false,
                       controller: controller.jobDescController,

@@ -1,11 +1,12 @@
 
+import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
 import '../../../../../config/app_colors.dart';
 
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
@@ -23,7 +24,7 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
         centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
-        LocalizationString.verify,
+        AppLocalization.verify,
           style:  TextStyle(
             // fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
@@ -46,14 +47,14 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
             children: [
               Text(
                 textAlign: TextAlign.center,
-               LocalizationString.checkEmail,
+               AppLocalization.checkEmail,
                 style: Theme.of(context).textTheme.displayMedium,
               ),
               const SizedBox(
                 height: 10,
               ),
               Text(
-               LocalizationString.enterYourEmailForOpt,
+               AppLocalization.enterYourEmailForOpt,
                 style:  TextStyle(color: AppColors.grey),
                 textAlign: TextAlign.center,
               ),
@@ -65,9 +66,10 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
                   child: Column(
                     children: [
                       MyTextFormField(
-                        hintText: LocalizationString.enterYourEmail,
-                        iconData: Icons.email_outlined,
-                        lable: LocalizationString.email,
+                        hintText: AppLocalization.enterYourEmail,
+                        // iconName: Icons.email_outlined,
+                        iconName:AppIcons.email,
+                        lable: AppLocalization.email,
                         obscureText: false,
                         controller: controller.emailController,
                         validator: (val) {
@@ -78,7 +80,7 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
                         height: 20,
                       ),
                       MyGesterDedector(
-                        text: LocalizationString.next,
+                        text: AppLocalization.next,
                         color:Theme.of(context).primaryColor,
                         onTap: () => controller.checkEmail(),
                       ),

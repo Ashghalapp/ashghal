@@ -1,5 +1,4 @@
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
-import 'package:ashghal_app_frontend/features/auth/presentation/screens/validate_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -44,6 +43,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AppLocallcontroller controller = Get.find();
     return GetMaterialApp(
+      themeMode: ThemeMode.system,
       darkTheme: AppTheme.darkTheme,
       builder: EasyLoading.init(),
       onInit: () {},

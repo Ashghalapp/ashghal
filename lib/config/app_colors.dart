@@ -21,18 +21,23 @@ class AppColors {
 // Tertiary
   static const bodyWhite = Color(0xFF6F7F92);
   static const bodyDark = Color(0xFFF5F5F5);
-  static const dividerColor = Color(0xFFF1F1F1);
+  static const dividerColorLight = Color(0xffEEEEEE);
   static const textgray = Color(0xFF9E9E9E);
-  static const icongray = Color(0xFF9E9E9E);
+  static const iconColor = Color(0xFF9E9E9E);
 
 // Dark Theme Colors
   static const appBackgroundColorDark = Color(0xFF121212);
   static const cardBackgroundBlackDark = Color(0xFF1F1F1F);
   static const colorPrimaryBlack = Color(0xFF131d25);
   static const appColorPrimaryDarkLight = Color(0xFFF9FAFF);
-  static const iconColorPrimaryDark = Color(0xFF212121);
+  static const iconColorPrimaryDark = Color(0xFF9E9E9E);
   static const iconColorSecondaryDark = Color(0xFFA8ABAD);
   static const appShadowColorDark = Color(0x1A3E3942);
+
+  
+  static const appFillColorDark = Color(0xff1F222A);
+  static const appFillColorlight = Color(0xffEEEEEE);
+  static const appDividerColorDark = Color(0xff35383F);
 
 //new colors
   static Color grey1 = const Color(0xff707070);

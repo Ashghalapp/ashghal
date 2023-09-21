@@ -28,10 +28,10 @@ class AppScaffold extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(appBarTitle?? "", style:Theme.of(context).textTheme.titleMedium),
-          elevation: 1,
+          elevation: 0,
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.icongray),
+            icon: const Icon(Icons.arrow_back_ios, color: AppColors.iconColor),
             onPressed: () {
               if (onBack != null) {
                 onBack?.call();
