@@ -1,6 +1,6 @@
 # Ashghal-App: Your Job Seeker Companion
 
-![Ashghal Logo](path/to/your/logo.png](https://github.com/Ashghalapp/ashghal_app_frontend/blob/mohammed/assets/images/logo.png)
+![Ashghal Logo](assets/images/logo.png)
 
 The **Ashghal-App** is a powerful Flutter-based job seeker application designed to simplify and enhance the job search experience for users. With Ashghal, job seekers can effortlessly discover a diverse range of employment opportunities across various industries and companies.
 
