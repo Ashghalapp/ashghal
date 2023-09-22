@@ -24,7 +24,7 @@ class LoginScreen extends GetView<LoginController> {
       // appBarTitle:  LocalizationString.signIn,
       onBack: () => AppUtil.exitApp(context),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: ListView(
           children: [
             const LogoWidget(),
@@ -125,9 +125,9 @@ class LoginScreen extends GetView<LoginController> {
                         ),
                       ),
                     ),
-                    // SizedBox(
-                    //   height: size.height * 0.03,
-                    // ),
+                    SizedBox(
+                      height: size.height * 0.03,
+                    ),
                const OrContiueWithWidget(),
 
 
@@ -177,8 +177,8 @@ class LogoWidget extends StatelessWidget {
     return Image.asset(
       AppImages.logo,
       fit: BoxFit.contain,
-      width: 150,
-      height: 150,
+      width: 120,
+      height: 120,
     );
   }
 }

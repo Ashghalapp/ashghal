@@ -86,7 +86,7 @@ class AppTheme {
             getRegularStyle(color: AppColors.textgray, fontSize: FontSize.s12),
         labelMedium:
             getRegularStyle(color: AppColors.appColorPrimary, fontSize: FontSize.s14),
-        bodyLarge: getRegularStyle(color: AppColors.grey1),
+        bodyLarge: getRegularStyle(color: AppColors.grey1,fontSize: FontSize.s16),
         bodySmall: getRegularStyle(color: AppColors.grey),
         bodyMedium: getRegularStyle(color: AppColors.darkGrey, fontSize: FontSize.s14),
         titleSmall:
@@ -99,6 +99,8 @@ iconTheme: const IconThemeData(color: AppColors.iconColorPrimaryDark,
 
     // input decoration theme (text form field)
     inputDecorationTheme: InputDecorationTheme(
+      
+      focusColor: AppColors.appColorPrimary,
        filled: true,
     fillColor: AppColors.appFillColorlight,
         // content padding
@@ -111,13 +113,14 @@ iconTheme: const IconThemeData(color: AppColors.iconColorPrimaryDark,
         errorStyle: getRegularStyle(color: AppColors.error),
 
         // enabled border style
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
             borderSide:
-                BorderSide(color: AppColors.grey, width: AppSize.s1_5),
-            borderRadius: const BorderRadius.all(Radius.circular(AppSize.s8))),
-
+                BorderSide(color: AppColors.appColorPrimary, width: AppSize.s1_5),
+            borderRadius: BorderRadius.all(Radius.circular(AppSize.s8))),
+border:InputBorder.none,
         // focused border style
         focusedBorder: const OutlineInputBorder(
+          
             borderSide:
                 BorderSide(color: AppColors.appColorPrimary, width: AppSize.s1_5),
             borderRadius: BorderRadius.all(Radius.circular(AppSize.s8))),
@@ -128,10 +131,10 @@ iconTheme: const IconThemeData(color: AppColors.iconColorPrimaryDark,
                 BorderSide(color: AppColors.error, width: AppSize.s1_5),
             borderRadius: const BorderRadius.all(Radius.circular(AppSize.s8))),
         // focused border style
-        focusedErrorBorder: const OutlineInputBorder(
+        focusedErrorBorder:  OutlineInputBorder(
             borderSide:
-                BorderSide(color: AppColors.appColorPrimary, width: AppSize.s1_5),
-            borderRadius: BorderRadius.all(Radius.circular(AppSize.s8)))),
+                BorderSide(color: AppColors.error, width: AppSize.s1_5),
+            borderRadius: const BorderRadius.all(Radius.circular(AppSize.s8)))),
     colorScheme: const ColorScheme.light(primary: AppColors.appColorPrimary)
         .copyWith(error: Colors.red),
   ).copyWith(

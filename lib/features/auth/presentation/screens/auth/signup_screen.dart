@@ -20,29 +20,9 @@ class SignUpScreen extends GetView<SignUpController> {
   Widget build(BuildContext context) {
     Get.lazyPut(() => SignUpController());
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        title: Text(
-          '17'.tr,
-          style:  TextStyle(
-            // fontFamily: 'Cairo',
-            fontWeight: FontWeight.bold,
-            // fontSize: 22,
-            color: AppColors.grey,
-          ),
-        ),
-        leading: MyCircularIconButton(
-          onPressed: () {
-            Get.back();
-          },
-          iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.grey,
-        ),
-      ),
-      body: Container(
+    return AppScaffold(
+      
+      child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
         child: ListView(
           children: [
@@ -184,11 +164,11 @@ class SignUpScreen extends GetView<SignUpController> {
                         press: () {},
                       ),
                       SocialIcons(
-                        icon: 'twitter',
+                        icon: 'google',
                         press: () {},
                       ),
                       SocialIcons(
-                        icon: 'google-plus',
+                        icon: 'apple',
                         press: () {},
                       ),
                     ],

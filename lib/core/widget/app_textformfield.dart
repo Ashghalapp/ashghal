@@ -50,16 +50,19 @@ class MyTextFormField extends StatelessWidget {
           ),
           // borderSide: BorderSide.none
         ),
+        
         enabledBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(12),
             ),
             borderSide: BorderSide.none),
-        focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
+        focusedBorder:  OutlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+            borderRadius: const BorderRadius.all(
               Radius.circular(12),
             ),
-            borderSide: BorderSide.none),
+            // borderSide: BorderSide.none
+            ),
         hintText: lable,
         hintStyle: Theme.of(context).textTheme.labelSmall,
         prefixIcon: IconButton(
@@ -95,7 +98,7 @@ class MyTextFormField extends StatelessWidget {
                 iconSize: 22)
             : null,
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+            const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         floatingLabelBehavior: FloatingLabelBehavior.always,
         label: Text(
           "",
@@ -104,6 +107,7 @@ class MyTextFormField extends StatelessWidget {
 
         // borderSide: const BorderSide(color: AppColors.gray),
       ),
+  
     );
   }
 }

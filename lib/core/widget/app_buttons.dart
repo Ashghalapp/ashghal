@@ -10,7 +10,7 @@ class MyGesterDedector extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
     
-      onTap: onTap,
+      onTap:()=> onTap,
       child: Container(
         height: 53,
         width: double.infinity,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-import '../../../../../config/app_colors.dart';
 
 import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
@@ -29,14 +28,14 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
               Text(
                 textAlign: TextAlign.center,
                AppLocalization.checkEmail,
-                style: Theme.of(context).textTheme.displayMedium,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(
                 height: 10,
               ),
               Text(
                AppLocalization.enterYourEmailForOpt,
-                style:  TextStyle(color: AppColors.grey),
+                style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
