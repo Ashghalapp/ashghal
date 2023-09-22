@@ -255,7 +255,10 @@ class MyTranslation extends Translations {
           "Successfull Logged In": "تـم تسجيل الدخول بنجاح, حياك الله",
           "Enter As Guest": "الدخول كضيف",
           "or contiue with":"او المتابعة بأستخدام",
-          "Don\"t have accont?":"ليس لديك حساب؟"
+          "Don\"t have accont?":"ليس لديك حساب؟",
+          "I want to find employees":"أريد العثور على عُمال",
+          "I want to find a job for me":"أريد العثور على عمل لي",
+          "Choose whether you are looking for a work or you are an organization/company that needs employees":"اختر ما إذا كنت تبحث عن عمل أو أنك مؤسسة/شركة تحتاج إلى موظفين",
           
         },
 

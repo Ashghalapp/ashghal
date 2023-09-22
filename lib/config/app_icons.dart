@@ -22,5 +22,12 @@ class AppIcons {
   static const String userBorder = 'assets/icons/icons/User_Border.svg';
 
 
+  static const String employees = 'assets/icons/icons/employees.svg';
+  static const String employeesBorder = 'assets/icons/icons/employees_Border.svg';
+
+  static const String work = 'assets/icons/icons/work.svg';
+  static const String workBorder = 'assets/icons/icons/work_Border.svg';
+
+
 
 }

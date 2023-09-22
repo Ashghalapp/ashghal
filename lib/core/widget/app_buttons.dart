@@ -12,6 +12,7 @@ class MyGesterDedector extends StatelessWidget {
     
       onTap:()=> onTap,
       child: Container(
+        
         height: 53,
         width: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 0),
@@ -31,7 +32,7 @@ class MyGesterDedector extends StatelessWidget {
           //   Colors.purple.shade900,
           // ],
           // ),
-          color: color ?? Theme.of(context).primaryColor,
+          color: color ?? Theme.of(context).primaryColorDark,
         ),
         child: Text(
           text,
@@ -51,7 +52,7 @@ class MyGesterDedector extends StatelessWidget {
 
 class MyElevatedButton extends StatelessWidget {
   const MyElevatedButton(
-      {this.child,
+      {this.text,
       this.color,
       this.onPressed,
       this.borderRadius = 6,
@@ -59,7 +60,7 @@ class MyElevatedButton extends StatelessWidget {
       Key? key})
       : super(key: key);
   final Color? color;
-  final Widget? child;
+  final String? text;
   final Function? onPressed;
   final double borderRadius;
   final EdgeInsetsGeometry padding;
@@ -68,6 +69,7 @@ class MyElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // ThemeData currentTheme = Theme.of(context);
     return ElevatedButton(
+      
       style: ElevatedButton.styleFrom(
         padding: padding,
         backgroundColor: color ?? Theme.of(context).primaryColor,
@@ -76,7 +78,8 @@ class MyElevatedButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed as void Function()?,
-      child: child,
+      child: Text(text!),
+      
     );
   }
 }

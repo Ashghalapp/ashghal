@@ -28,7 +28,7 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
               Text(
                 textAlign: TextAlign.center,
                AppLocalization.checkEmail,
-                style: Theme.of(context).textTheme.headlineMedium,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(
                 height: 10,

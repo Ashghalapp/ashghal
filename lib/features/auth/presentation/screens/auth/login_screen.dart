@@ -146,7 +146,7 @@ class LoginScreen extends GetView<LoginController> {
                         TextButton(
                          
                           onPressed: () =>
-                              Get.offNamed(AppRoutes.chooseUserTypeScreen),
+                              Get.toNamed(AppRoutes.chooseUserTypeScreen),
                           child: Text(
                             AppLocalization.signUp,
                             style: TextStyle(

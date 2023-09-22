@@ -23,7 +23,7 @@ class MyAppBarText extends StatelessWidget {
         // fontFamily: 'Cairo',
         fontWeight: FontWeight.bold,
         fontSize: 22,
-        color: AppColors.grey,
+        color: AppColors.bodyDark1,
       ),
     );
   }

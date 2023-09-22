@@ -87,7 +87,7 @@ class AppTheme {
         labelMedium:
             getRegularStyle(color: AppColors.appColorPrimary, fontSize: FontSize.s14),
         bodyLarge: getRegularStyle(color: AppColors.grey1,fontSize: FontSize.s16),
-        bodySmall: getRegularStyle(color: AppColors.grey),
+        bodySmall: getRegularStyle(color: AppColors.bodyDark1),
         bodyMedium: getRegularStyle(color: AppColors.darkGrey, fontSize: FontSize.s14),
         titleSmall:
             getBoldStyle(color: AppColors.appColorPrimary, fontSize: FontSize.s12),),
@@ -107,9 +107,9 @@ iconTheme: const IconThemeData(color: AppColors.iconColorPrimaryDark,
         contentPadding: const EdgeInsets.all(AppPadding.p8),
         // hint style
         hintStyle:
-            getRegularStyle(color: AppColors.grey, fontSize: FontSize.s14),
+            getRegularStyle(color: AppColors.bodyDark1, fontSize: FontSize.s14),
         labelStyle:
-            getMediumStyle(color: AppColors.grey, fontSize: FontSize.s14),
+            getMediumStyle(color: AppColors.bodyDark1, fontSize: FontSize.s14),
         errorStyle: getRegularStyle(color: AppColors.error),
 
         // enabled border style
@@ -215,8 +215,8 @@ static final ThemeData darkTheme = ThemeData(
     labelSmall: getRegularStyle(color: AppColors.textgray, fontSize: FontSize.s12),
     labelMedium: getRegularStyle(color: AppColors.appColorPrimary, fontSize: FontSize.s14),
     bodyLarge: getRegularStyle(color: AppColors.grey1),
-    bodySmall: getRegularStyle(color: AppColors.grey),
-    bodyMedium: getRegularStyle(color: AppColors.darkGrey, fontSize: FontSize.s14),
+    bodySmall: getRegularStyle(color: AppColors.bodyDark1,fontSize: AppSize.s12),
+    bodyMedium: getRegularStyle(color: AppColors.bodyDark, fontSize: FontSize.s14),
     titleSmall: getBoldStyle(color: AppColors.appColorPrimary, fontSize: FontSize.s12),
   ),
 
@@ -234,11 +234,11 @@ iconTheme: const IconThemeData(color: AppColors.iconColorPrimaryDark),
     filled: true,
     fillColor: AppColors.appFillColorDark,
     contentPadding: const EdgeInsets.all(AppPadding.p8),
-    hintStyle: getRegularStyle(color: AppColors.grey, fontSize: FontSize.s14),
-    labelStyle: getMediumStyle(color: AppColors.grey, fontSize: FontSize.s14),
+    hintStyle: getRegularStyle(color: AppColors.bodyDark1, fontSize: FontSize.s14),
+    labelStyle: getMediumStyle(color: AppColors.bodyDark1, fontSize: FontSize.s14),
     errorStyle: getRegularStyle(color: AppColors.error),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.grey, width: AppSize.s1_5),
+      borderSide: BorderSide(color: AppColors.bodyDark1, width: AppSize.s1_5),
       borderRadius: const BorderRadius.all(Radius.circular(AppSize.s8)),
     ),
     focusedBorder: const OutlineInputBorder(

@@ -38,7 +38,7 @@ class ValidateScreen extends StatelessWidget {
             Get.back();
           },
           iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.grey,
+          iconColor: AppColors.bodyDark1,
         ),
       ),
       body: Container(
@@ -56,7 +56,7 @@ class ValidateScreen extends StatelessWidget {
               ),
                Text(
                AppLocalization.pleaseEnterOneTimePassword,
-                style:  TextStyle(color: AppColors.grey),
+                style:  TextStyle(color: AppColors.bodyDark1),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
@@ -111,7 +111,7 @@ class ValidateScreen extends StatelessWidget {
                                   () => Text(
                                     'Resend code in ${remainingSeconds.value} seconds',
                                     style:
-                                         TextStyle(color: AppColors.grey),
+                                         TextStyle(color: AppColors.bodyDark1),
                                   ),
                                 )
                             ],

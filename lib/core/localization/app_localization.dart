@@ -38,7 +38,9 @@ class AppLocalization {
 //////////////
 
   static String provider = 'Provider'.tr;
+  static String providerDesc = 'I want to find employees'.tr;
   static String client = 'Client'.tr;
+  static String clientDesc = 'I want to find a job for me'.tr;
 
 /////////////////
   ///
@@ -91,7 +93,7 @@ class AppLocalization {
   static String emailOrUsername = 'emailOrUsername'.tr;
   static String usertype = 'usertype'.tr;
   static String chooseusertype = 'chooseusertype'.tr;
-  static String chooseusertypebody = 'chooseusertypebody'.tr;
+  static String chooseusertypebody = 'Choose whether you are looking for a work or you are an organization/company that needs employees'.tr;
 
   static String loginAnotherAccount = 'loginAnotherAccount'.tr;
   static String yourEmail = 'yourEmail'.tr;

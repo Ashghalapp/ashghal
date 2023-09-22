@@ -48,7 +48,7 @@ class SignUpScreen extends GetView<SignUpController> {
             ),
             Text(
               '11'.tr,
-              style:  TextStyle(color: AppColors.grey),
+              style:  TextStyle(color: AppColors.bodyDark1),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),

@@ -45,7 +45,7 @@ class AppColors {
   static Color white = const Color(0xffFFFFFF);
   static Color error = const Color(0xffe61f34);
   static Color darkGrey = const Color(0xff525252);
-  static Color grey = const Color(0xff737477);
+  static Color bodyDark1 = const Color(0xffE0E0E0);
   static Color lightGrey = const Color(0xccFAFAFA);
   static Color black = const Color(0xff000000);
   static Color blackHeadline = const Color(0xff212121);
