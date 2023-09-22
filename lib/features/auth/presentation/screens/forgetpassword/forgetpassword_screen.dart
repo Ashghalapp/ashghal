@@ -9,6 +9,7 @@ import '../../../../../config/app_colors.dart';
 import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
+import '../../../../../core/widget/app_scaffold_widget.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/forgetpwd/forgetpassword_controller.dart';
 
@@ -18,29 +19,9 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
   @override
   Widget build(BuildContext context) {
     print("<>>>>>>>>>>>>>>>>in forget screen>");
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        title: Text(
-        AppLocalization.verify,
-          style:  TextStyle(
-            // fontFamily: 'Cairo',
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-            color: AppColors.grey,
-          ),
-        ),
-        leading: MyCircularIconButton(
-          onPressed: () {
-            Get.back();
-          },
-          iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.grey,
-        ),
-      ),
-      body: Container(
+    return AppScaffold(
+      
+      child: Container(
         padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 35),
         child: SingleChildScrollView(
           child: Column(

@@ -44,7 +44,7 @@ List<BottomNavigationBarItem> getItems() {
         //   Iconsax.home_25,
         //   // Icons.home,
         // ),
-        icon: myIcons(svgAssetUrl: AppIcons.heartBorder),
+        icon: myIcons(svgAssetUrl: AppIcons.homeBorder),
         // Icon(
         //   Iconsax.home_24,
         //   // Icons.home_filled
