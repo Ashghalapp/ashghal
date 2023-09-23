@@ -110,10 +110,10 @@ class SignUpController extends GetxController {
           // : Get.toNamed(AppRoutes.verficationSignUp);
           : Get.to(
               () => ValidateScreen(
-                  message:
-                      "Please enter the code sent to your email to verify your account",
-                  resendCodeFunction: resendSignUpCode,
-                  submitCodeFunction: verifySignUpCode),
+                message: AppLocalization.pleaseEnterVerifyEmailCode,
+                resendCodeFunction: resendSignUpCode,
+                submitCodeFunction: verifySignUpCode,
+              ),
             );
     });
     EasyLoading.dismiss();
@@ -148,10 +148,10 @@ class SignUpController extends GetxController {
     // Get.toNamed(AppRoutes.verficationSignUp);
     Get.to(
       () => ValidateScreen(
-          message:
-              "Please enter the code sent to your email to verify your account",
-          resendCodeFunction: resendSignUpCode,
-          submitCodeFunction: verifySignUpCode),
+        message: AppLocalization.pleaseEnterVerifyEmailCode,
+        resendCodeFunction: resendSignUpCode,
+        submitCodeFunction: verifySignUpCode,
+      ),
     );
     EasyLoading.dismiss();
   }

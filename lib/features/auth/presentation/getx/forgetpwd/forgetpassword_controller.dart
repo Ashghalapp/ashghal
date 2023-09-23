@@ -49,7 +49,7 @@ class ForgetPasswordController extends GetxController {
         //     arguments: {'email': emailController.text});
         Get.to(
           () => ValidateScreen(
-            message: "Please enter the code sent to your email to change your password".tr,
+            message: AppLocalization.pleaseEnterVerifyPasswordCode,
               resendCodeFunction: resendResetPasswordCode,
               submitCodeFunction: verifyResetPasswordCode),
           arguments: {'email': emailController.text},

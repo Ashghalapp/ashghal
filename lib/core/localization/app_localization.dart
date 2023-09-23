@@ -110,7 +110,8 @@ class AppLocalization {
   static String resendOTP = 'resendOTP'.tr;
   static String checkOptCode = 'checkOptCode'.tr;
 
-  static String pleaseEnterOneTimePassword = "pleaseEnterOneTimePassword".tr;
+  static String pleaseEnterVerifyPasswordCode = "Please enter the code sent to change your password".tr;
+  static String pleaseEnterVerifyEmailCode = "Please enter the code sent to your email to verify your account".tr;
   static String pleaseEnterOneTimePasswordPhoneNumberChange =
       "pleaseEnterOneTimePasswordPhoneNumberChange".tr;
   static String helpToGetAccount = "helpToGetAccount".tr;

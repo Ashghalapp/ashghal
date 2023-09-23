@@ -54,7 +54,7 @@ class LoginController extends GetxController {
             AppLocalization.successloggedIn.tr, Colors.green);
         SharedPref.setUserLoggedIn(true);
         // go to home screen
-        Get.offAllNamed(AppRoutes.testScreen);
+        Get.offAllNamed(AppRoutes.mainScreen);
       },
     );
     EasyLoading.dismiss();

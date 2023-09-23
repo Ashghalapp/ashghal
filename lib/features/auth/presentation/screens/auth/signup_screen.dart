@@ -16,7 +16,7 @@ import 'login_screen.dart';
 class SignUpScreen extends GetView<SignUpController> {
   SignUpScreen({super.key});
   final RxBool isLoading = RxBool(false);
-  final bool? isProviderSignUp = Get.arguments?['isPorvider'] ?? false;
+  final bool? isProviderSignUp = Get.arguments?['isProvider'] ?? false;
 
   @override
   Widget build(BuildContext context) {
