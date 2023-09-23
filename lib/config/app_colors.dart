@@ -1,48 +1,52 @@
-
-
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
 
-
 class AppColors {
-  // static const Color primaryColor = Color(0xff407BFF);
-  // static const Color primaryColor = Color.fromRGBO(34, 34, 34, 1);
- static const Color primaryText = Color(0xff212121);
- static const Color gray = Colors.blueGrey;
- static const Color textColor =Color(0xff757575) ;
 
-  static const Color lightPrimaryColor = Color(0xffD1C4E9);
-  // static const Color darkPrimaryColor = Color(0xff303F9F);
-  static const Color darkPrimaryColor = Color(0x73888888);
+  static const appColorPrimary = Color(0xFF2F65B9);
+  static const appColorPrimaryDark = Color(0xCC2F65B9);
 
 
 
-  static const Color iconColor = Color(0xffFFFFFF);
-  // static const Color accentColor = Color.fromARGB(255, 0, 51, 255);
-  // static const Color accentColor =  Color(0x73888888);
+  static const appOrangeColor = Color(0xFFff6900);
+  static const appGreenColor = Color(0xFF00d084);
+  static const blueTickColor = Colors.blue;
+  static const starColor = Color(0xFFFFC840);
 
+//Section BG / page BG
+  static const appLayoutBackground = Color(0xFFF8F9FA);
+  static const appSectionBackground = Color(0xFFFFFFFF);
 
-  static const Color secondaryText = Color(0xff757575);
-  // static const Color  = Color(0xff757575);
-//  static const Color DARK_PRIMARY_COLOR =Color(0xff303F9F);
- static const Color DARK_PRIMARY_COLOR = Color(0x73888888);
-static const Color LIGHT_PRIMARY_COLOR =Color(0xffC5CAE9);
-// static const Color PRIMARY_COLOR =Color(0xff3F51B5);
-static const Color PRIMARY_COLOR = Color.fromRGBO(34, 34, 34, 1);
-static const Color TEXT_ICONS = Color(0xffFFFFFF);
-// static const Color ACCENT_COLOR=Color(0xff536DFE);
-static const Color ACCENT_COLOR =Color(0x73888888);
-static const Color PRIMARY_TEXT =Color(0xff212121);
-static const Color SECONDARY_TEXT= Color(0xff757575);
-static const Color DIVIDER_COLOR=Color(0xffBDBDBD);
+// Tertiary
+  static const bodyWhite = Color(0xFF6F7F92);
+  static const bodyDark = Color(0xFFF5F5F5);
+  static const dividerColorLight = Color(0xffEEEEEE);
+  static const textgray = Color(0xFF9E9E9E);
+  static const iconColor = Color(0xFF9E9E9E);
 
-static const primaryColor = Color(0xFF000000);
-static const secondaryColor = Color(0xFFFFFFFF);
-static const accentColor = Color(0xFA7473FF);
+// Dark Theme Colors
+  static const appBackgroundColorDark = Color(0xFF121212);
+  static const cardBackgroundBlackDark = Color(0xFF1F1F1F);
+  static const colorPrimaryBlack = Color(0xFF131d25);
+  static const appColorPrimaryDarkLight = Color(0xFFF9FAFF);
+  static const iconColorPrimaryDark = Color(0xFF9E9E9E);
+  static const iconColorSecondaryDark = Color(0xFFA8ABAD);
+  static const appShadowColorDark = Color(0x1A3E3942);
 
-static const whiteColor = Color(0xFFFFFFFF);
-static const darkColor = Color(0xFF000000);
-static const cardColor = Color(0xFFFFFFFF);
+  
+  static const appFillColorDark = Color(0xff1F222A);
+  static const appFillColorlight = Color(0xffEEEEEE);
+  static const appDividerColorDark = Color(0xff35383F);
 
+//new colors
+  static Color grey1 = const Color(0xff707070);
+  static Color grey2 = const Color(0xff797979);
+  static Color white = const Color(0xffFFFFFF);
+  static Color error = const Color(0xffe61f34);
+  static Color darkGrey = const Color(0xff525252);
+  static Color bodyDark1 = const Color(0xffE0E0E0);
+  static Color lightGrey = const Color(0xccFAFAFA);
+  static Color black = const Color(0xff000000);
+  static Color blackHeadline = const Color(0xff212121);
 }

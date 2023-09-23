@@ -1,7 +1,7 @@
 class LoginRequest {
-  final String password;
   final String? email;
   final String? phone;
+  final String password;
 
   LoginRequest._({required this.password, this.email, this.phone});
 
@@ -13,9 +13,8 @@ class LoginRequest {
 
   Map<String, String?> toJson() {
     return {
-      'password': password,
-      if (email != null) 'email': email,
-      if (phone != null) 'phone': phone,
+      'email_or_phone': email ?? phone,
+      'password': password,      
     };
   }
 }

@@ -8,12 +8,12 @@ class AppRoutes {
   static const String signUp = '/signup';
   static const String singUpScreenEmail = '/signupscreenemail';
   static const String singUpScreenLocation = '/signupscreenlocation';
-  static const String singUpScreenJob = '/signupscreenjob';
+  static const String singUpJobScreen = '/signupscreenjob';
   static const String succesSignUp = '/successignup';
   static const String verficationSignUp = '/verficationsignup';
 
-
   static const String forgetPassword = '/forgetpassword';
+  static const String validateScreen = '/validatescreen';
   static const String verficationResetPassword = '/verficationresetpassword';
   static const String resetPassword = '/resetpassword';
   static const String succesResetPassword = '/succesresetpassword';
