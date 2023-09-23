@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -27,7 +28,7 @@ void configLoading() {
     ..indicatorSize = 60.0 // Increase the size of the indicator
     ..radius = 10.0
     ..progressColor = Colors.white // Color for progress indicator if applicable
-    ..backgroundColor = Colors.transparent // Darker semi-transparent background
+    ..backgroundColor = AppColors.appColorPrimary// Darker semi-transparent background
     ..indicatorColor = Colors.white // Color of the loading indicator
     ..textColor = Colors.white // Color of the loading text
     ..textStyle = const TextStyle(fontSize: 16, color: Colors.white)
@@ -55,9 +56,12 @@ class MyApp extends StatelessWidget {
       // initialBinding: InitialBinding(),
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
+      initialRoute: AppRoutes.logIn,
+      // initialRoute: AppRoutes.singUpJobScreen,
+      // initialRoute: AppRoutes.chooseUserTypeScreen,
       // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
-      initialRoute: AppRoutes.mainScreen,
+      // initialRoute: AppRoutes.mainScreen,
       // home: ValidateScreen(),
       // initialRoute: '/tester',
       // initialRoute: AppRoutes.testScreen,

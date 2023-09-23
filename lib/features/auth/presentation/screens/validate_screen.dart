@@ -14,7 +14,6 @@ class ValidateScreen extends StatelessWidget {
   final String message;
   final Function resendCodeFunction;
   final Function submitCodeFunction;
-
   const ValidateScreen({
     super.key,
     required this.message,
