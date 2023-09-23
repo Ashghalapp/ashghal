@@ -1,5 +1,6 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -22,6 +23,9 @@ class LoginController extends GetxController {
   void onInit() {
     emailController = TextEditingController();
     passwordController = TextEditingController();
+
+    emailController.text = "hezbr2@gmail.com";
+    passwordController.text = "123456";
     super.onInit();
   }
 
@@ -32,8 +36,40 @@ class LoginController extends GetxController {
     super.onClose();
   }
 
+  getData() async {
+    // CancelToken c= CancelToken(); 
+    try {
+      Dio d = Dio(BaseOptions(
+          method: 'get',
+          // persistentConnection: false,
+          // connectTimeout: Duration(seconds: 15),
+          // receiveDataWhenStatusError: false,
+          // followRedirects: false,
+          contentType: "Application/json"));
+      d.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+      var result = await d.get(
+        "https://10.0.2.2:8000/user/get",
+      ).timeout(const Duration(seconds: 10));
+      // var result = await d.get(
+      //   "https://10.0.2.2:8000/user/get",
+      // ).timeout(Duration(seconds: 10));
+    } on DioExceptionType catch(e){
+      print("eeeeeeeeeeeeeeee$e");
+      throw Exception("eEEEEEEEEEEEEEEEEEEEEx");
+    } 
+    on DioException catch (e) {
+      print(">>>>>>>>>>>>>$e");
+      throw Exception("eEEEEEEEEEEEEEEEEEEEEx");
+    } catch (e) {
+      print("<<<<<<<<<<<<<<<$e>>>>>>>>>>>>>>>");
+      // throw Exception("eEEEEEEEEEEEEEEEEEEEEx$e");
+    }
+  }
+
   /// تسجيل الدخول
   void login() async {
+    // await getData();
+    // return;
     if (!(loginFormKey.currentState?.validate() ?? false)) return;
     Get.focusScope!.unfocus();
 
@@ -60,44 +96,13 @@ class LoginController extends GetxController {
     EasyLoading.dismiss();
   }
 
-  ///
-  // goToSignUp() {
-  //   Get.lazyPut(() => SignUpController());
-  //   Get.offNamed(AppRoutes.signUp);
-  // }
-
-  // goToForgetpassword() {
-  //   Get.lazyPut(() => ForgetPasswordController());
-  //   Get.toNamed(AppRoutes.forgetPassword);
-  // }
-
   changVisible() {
     isVisible = !isVisible;
     update();
   }
 
-  // goToHomeScreen() {
-  //   // Get.lazyPut<MainScreenControllerImp>(() => MainScreenControllerImp());
-  //   Get.toNamed(AppRoutes.testScreen);
-  //   // // changLoading();
-  //   //     print('home screen $isLoading');
-  // }
-
   changLoading() {
     isLoading = !isLoading;
     update();
   }
-
-  // goToChooseTypeUser() {
-  //   // Get.lazyPut(() => ChooseUserTypeControllerImp());
-  //   Get.offNamed(AppRoutes.chooseUserTypeScreen);
-  // }
-
-  // enterAsGuest() {
-  //   // SharedPrefs().setUserLoggedInAsGuest(true);
-  //   // SharedPrefs().setUserLoggedIn(true);
-
-  //   // Get.lazyPut(() => MainScreenController());
-  //   Get.offNamed(AppRoutes.mainScreen);
-  // }
 }
