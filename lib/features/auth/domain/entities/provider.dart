@@ -1,4 +1,3 @@
-import 'user.dart';
 
 class Provider {
   int pId;

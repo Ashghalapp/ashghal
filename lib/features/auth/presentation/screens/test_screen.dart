@@ -36,7 +36,7 @@ class TestScreen extends StatelessWidget {
                 label: ""),
             BottomNavigationBarItem(
                 icon: SvgPicture.asset(
-                  "assets/icons/icons/add.svg",
+                  "assets/icons/icons/plus.svg",
                   colorFilter:
                       ColorFilter.mode(Colors.grey.shade600, BlendMode.srcIn),
                 ),

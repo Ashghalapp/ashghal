@@ -13,6 +13,7 @@ class AppRoutes {
   static const String verficationSignUp = '/verficationsignup';
 
   static const String forgetPassword = '/forgetpassword';
+  static const String validateScreen = '/validatescreen';
   static const String verficationResetPassword = '/verficationresetpassword';
   static const String resetPassword = '/resetpassword';
   static const String succesResetPassword = '/succesresetpassword';

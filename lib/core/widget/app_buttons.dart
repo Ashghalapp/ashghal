@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
-
-
 class MyGesterDedector extends StatelessWidget {
   const MyGesterDedector(
       {super.key, required this.onTap, required this.text, this.color});
@@ -13,8 +9,10 @@ class MyGesterDedector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+    
       onTap: onTap,
       child: Container(
+        
         height: 53,
         width: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 0),
@@ -34,11 +32,12 @@ class MyGesterDedector extends StatelessWidget {
           //   Colors.purple.shade900,
           // ],
           // ),
-          color: color ??Theme.of(context).primaryColor,
+          color: color ?? Theme.of(context).primaryColorDark,
         ),
-        child: Text(text,
-            style: Theme.of(context).textTheme.labelSmall,
-                ),
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.displayLarge,
+        ),
       ),
       // style: ElevatedButton.styleFrom(
       //   backgroundColor: Colors.deepPurple,
@@ -53,7 +52,7 @@ class MyGesterDedector extends StatelessWidget {
 
 class MyElevatedButton extends StatelessWidget {
   const MyElevatedButton(
-      {this.child,
+      {this.text,
       this.color,
       this.onPressed,
       this.borderRadius = 6,
@@ -61,7 +60,7 @@ class MyElevatedButton extends StatelessWidget {
       Key? key})
       : super(key: key);
   final Color? color;
-  final Widget? child;
+  final String? text;
   final Function? onPressed;
   final double borderRadius;
   final EdgeInsetsGeometry padding;
@@ -70,6 +69,7 @@ class MyElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // ThemeData currentTheme = Theme.of(context);
     return ElevatedButton(
+      
       style: ElevatedButton.styleFrom(
         padding: padding,
         backgroundColor: color ?? Theme.of(context).primaryColor,
@@ -78,7 +78,8 @@ class MyElevatedButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed as void Function()?,
-      child: child,
+      child: Text(text!),
+      
     );
   }
 }
@@ -105,9 +106,10 @@ class MyOutlinedButton extends StatelessWidget {
     // ThemeData currentTheme = Theme.of(context);
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        foregroundColor: textColor ?? outlineColor ?? Theme.of(context).primaryColor,
+        foregroundColor:
+            textColor ?? outlineColor ?? Theme.of(context).primaryColor,
         padding: padding,
-        textStyle:  TextStyle(color: Theme.of(context).primaryColor),
+        textStyle: TextStyle(color: Theme.of(context).primaryColor),
         side: BorderSide(color: outlineColor ?? Theme.of(context).primaryColor),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
@@ -129,7 +131,7 @@ class MyElevatedButtonWithIcon extends StatelessWidget {
       this.padding = const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       Key? key})
       : super(key: key);
- final       Color? iconColor;
+  final Color? iconColor;
   final Widget label;
   final Color? color;
   final IconData? iconData;
@@ -140,7 +142,10 @@ class MyElevatedButtonWithIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: onPressed as void Function()?,
-      icon: Icon(iconData,color:Colors.indigo,),
+      icon: Icon(
+        iconData,
+        color: Colors.indigo,
+      ),
       label: label,
       style: ElevatedButton.styleFrom(backgroundColor: color, padding: padding),
     );

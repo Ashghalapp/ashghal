@@ -2,6 +2,7 @@
 
 class ApiConstants {
   static const String baseUrl = "http://10.0.2.2:8000/api/";
+  // static const String baseUrl = "http://localhost:8000/api/";
   // static const String baseUrl = "https://jsonplaceholder.typicode.com/";
 
   static const Map<String, String> headers = {

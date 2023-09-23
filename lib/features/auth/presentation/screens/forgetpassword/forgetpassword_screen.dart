@@ -1,13 +1,14 @@
 
+import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-import '../../../../../config/app_colors.dart';
 
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
+import '../../../../../core/widget/app_scaffold_widget.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/forgetpwd/forgetpassword_controller.dart';
 
@@ -17,44 +18,24 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
   @override
   Widget build(BuildContext context) {
     print("<>>>>>>>>>>>>>>>>in forget screen>");
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        title: Text(
-        LocalizationString.verify,
-          style: const TextStyle(
-            // fontFamily: 'Cairo',
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-            color: AppColors.gray,
-          ),
-        ),
-        leading: MyCircularIconButton(
-          onPressed: () {
-            Get.back();
-          },
-          iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.gray,
-        ),
-      ),
-      body: Container(
+    return AppScaffold(
+      
+      child: Container(
         padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 35),
         child: SingleChildScrollView(
           child: Column(
             children: [
               Text(
                 textAlign: TextAlign.center,
-               LocalizationString.checkEmail,
-                style: Theme.of(context).textTheme.displayMedium,
+               AppLocalization.checkEmail,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(
                 height: 10,
               ),
               Text(
-               LocalizationString.enterYourEmailForOpt,
-                style: const TextStyle(color: AppColors.gray),
+               AppLocalization.enterYourEmailForOpt,
+                style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
@@ -65,9 +46,10 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
                   child: Column(
                     children: [
                       MyTextFormField(
-                        hintText: LocalizationString.enterYourEmail,
-                        iconData: Icons.email_outlined,
-                        lable: LocalizationString.email,
+                        hintText: AppLocalization.enterYourEmail,
+                        // iconName: Icons.email_outlined,
+                        iconName:AppIcons.email,
+                        lable: AppLocalization.email,
                         obscureText: false,
                         controller: controller.emailController,
                         validator: (val) {
@@ -78,7 +60,7 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
                         height: 20,
                       ),
                       MyGesterDedector(
-                        text: LocalizationString.next,
+                        text: AppLocalization.next,
                         color:Theme.of(context).primaryColor,
                         onTap: () => controller.checkEmail(),
                       ),

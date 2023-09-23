@@ -1,10 +1,11 @@
+import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:ashghal_app_frontend/features/auth/presentation/getx/validate_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../config/app_colors.dart';
 
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../core/localization/app_localization.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import '../widgets/my_appbartext.dart';
@@ -13,7 +14,6 @@ class ValidateScreen extends StatelessWidget {
   final String message;
   final Function resendCodeFunction;
   final Function submitCodeFunction;
-  
   const ValidateScreen({
     super.key,
     required this.message,
@@ -24,39 +24,23 @@ class ValidateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("<<<<<<<<<<<<>>?????????>>>>>>>>>>>");
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        title: MyAppBarText(
-          text: LocalizationString.verify,
-        ),
-        // ignore: prefer_const_constructors
-        leading: MyCircularIconButton(
-          onPressed: () {
-            Get.back();
-          },
-          iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.gray,
-        ),
-      ),
-      body: Container(
+    return AppScaffold(
+      child: Container(
         padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 15),
         child: SingleChildScrollView(
           child: Column(
             children: [
               Text(
                 textAlign: TextAlign.center,
-                LocalizationString.otpVerification,
-                style: Theme.of(context).textTheme.displayMedium,
+                AppLocalization.otpVerification,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(
-                height: 30,
+                height: 30
               ),
               Text(
-                message.tr,
-                style: const TextStyle(color: AppColors.gray),
+                message,
+                style: Get.textTheme.labelSmall,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
@@ -111,7 +95,7 @@ class ValidateScreen extends StatelessWidget {
                                   () => Text(
                                     'Resend code in ${remainingSeconds.value} seconds',
                                     style:
-                                        const TextStyle(color: AppColors.gray),
+                                        TextStyle(color: AppColors.bodyDark1),
                                   ),
                                 )
                             ],
