@@ -1,26 +1,25 @@
 
 
+import 'package:ashghal_app_frontend/features/auth/presentation/screens/validate_screen.dart';
 import 'package:ashghal_app_frontend/main_screen.dart';
 import 'package:get/get.dart';
 
 import '../features/auth/presentation/screens/auth/chooseusertype.dart';
 import '../features/auth/presentation/screens/auth/login_screen.dart';
 import '../features/auth/presentation/screens/auth/signup_screen.dart';
-import '../features/auth/presentation/screens/auth/verficationsignup_screen.dart';
 import '../features/auth/presentation/screens/forgetpassword/forgetpassword_screen.dart';
 import '../features/auth/presentation/screens/forgetpassword/resetpassword_screen.dart';
-import '../features/auth/presentation/screens/forgetpassword/validateresetpassword_screen.dart';
 import '../features/auth/presentation/screens/test_screen.dart';
 import 'app_routes.dart';
 
 List<GetPage<dynamic>>? routes = [
-//   GetPage(
-//     name: '/',
-//     page: () => const LanguageScreen(),
-//     middlewares: [
-//       AppMiddleware(),
-//     ],
-//   ),
+  // GetPage(
+  //   name: '/',
+  //   page: () => const LanguageScreen(),
+  //   middlewares: [
+  //     AppMiddleware(),
+  //   ],
+  // ),
 //  GetPage(
 //     name: '/SignInGoogle',
 //     page: () =>   SignInGoogle(),
@@ -96,6 +95,10 @@ List<GetPage<dynamic>>? routes = [
     name: AppRoutes.forgetPassword,
     page: () => const ForgetPassword(),
   ),
+  // GetPage(
+  //   name: AppRoutes.validateScreen,
+  //   page: () =>  ValidateScreen(),
+  // ),
   // GetPage(
   //   name: AppRoutes.verficationResetPassword,
   //   page: () => const VerficationResetpasswordScreen(),

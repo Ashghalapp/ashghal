@@ -1,15 +1,17 @@
-import 'package:ashghal_app_frontend/config/app_routes.dart';
+import 'package:ashghal_app_frontend/config/app_icons.dart';
+import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
+import 'package:ashghal_app_frontend/features/auth/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../config/app_colors.dart';
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../../config/app_routes.dart';
+import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
-import '../../../../../core/widget/custom_appbar.dart';
-import '../../../../../core/widget/loading_state.dart';
 import '../../getx/Auth/singup_controller.dart';
 import '../../widgets/social_icons.dart';
+import 'login_screen.dart';
 
 class SignUpScreen extends GetView<SignUpController> {
   SignUpScreen({super.key});
@@ -20,66 +22,32 @@ class SignUpScreen extends GetView<SignUpController> {
   Widget build(BuildContext context) {
     Get.lazyPut(() => SignUpController());
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        title: Text(
-          '17'.tr,
-          style: const TextStyle(
-            // fontFamily: 'Cairo',
-            fontWeight: FontWeight.bold,
-            // fontSize: 22,
-            color: AppColors.gray,
-          ),
-        ),
-        leading: MyCircularIconButton(
-          onPressed: () {
-            Get.back();
-          },
-          iconData: Icons.arrow_back_ios,
-          iconColor: AppColors.gray,
-        ),
-      ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+    return AppScaffold(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: ListView(
           children: [
-            // Center(
-            //   child: SvgPicture.asset(
-            //     'assets/images/Personal site-rafiki.svg',
-            //     height: size.height * 0.35,
-            //   ),
-            // ),
-            // const Logo(),
-            //                 SizedBox(
-            //   height: size.height * 0.08,
-            // ),
-            // const Logo(),
-
+            const LogoWidget(),
+            const SizedBox(
+              height: 30,
+            ),
             Text(
               textAlign: TextAlign.center,
-              LocalizationString.signUpMessage,
-              style: Theme.of(context).textTheme.displayMedium,
+              AppLocalization.createNewAccount,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(
-              height: 10,
+              height: 30,
             ),
-            Text(
-              '11'.tr,
-              style: const TextStyle(color: AppColors.gray),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 30),
             Form(
               key: controller.signUpFormKey,
               child: Column(
                 children: [
                   MyTextFormField(
-                    hintText: '23'.tr,
-                    iconData: Icons.person_outline_outlined,
-                    lable: '20'.tr,
+                    hintText: AppLocalization.fullName,
+                    // iconName: Icons.person_outline_outlined,
+                    iconName: AppIcons.user,
+                    lable: AppLocalization.fullName,
                     obscureText: false,
                     controller: controller.nameController,
                     validator: (val) {
@@ -106,9 +74,10 @@ class SignUpScreen extends GetView<SignUpController> {
                   // const SizedBox(height: 20),
 
                   MyTextFormField(
-                    hintText: '12'.tr,
-                    iconData: Icons.email_outlined,
-                    lable: '18'.tr,
+                    hintText: AppLocalization.enterYourEmail,
+                    // iconName: Icons.email_outlined,
+                    iconName: AppIcons.email,
+                    lable: AppLocalization.enterYourEmail,
                     obscureText: false,
                     controller: controller.emailController,
                     validator: (val) {
@@ -122,14 +91,17 @@ class SignUpScreen extends GetView<SignUpController> {
                     initState: (_) {},
                     builder: (_) {
                       return MyTextFormField(
-                        sufficxIconData: controller.isVisible
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                        sufficxIconDataName: controller.isVisible
+                            // ? Icons.visibility_off_outlined
+                            // : Icons.visibility_outlined,
+                            ? AppIcons.hide
+                            : AppIcons.show,
                         obscureText: controller.isVisible,
                         onPressed: () => controller.changVisible(),
-                        hintText: '13'.tr,
-                        iconData: Icons.lock_open_outlined,
-                        lable: '19'.tr,
+                        hintText: AppLocalization.password,
+                        // iconName: Icons.lock_open_outlined,
+                        iconName: AppIcons.lock,
+                        lable: AppLocalization.password,
                         controller: controller.passwordController,
                         validator: (val) {
                           return validInput(val!, 6, 50, 'password');
@@ -140,34 +112,13 @@ class SignUpScreen extends GetView<SignUpController> {
                   const SizedBox(height: 20),
 
                   MyGesterDedector(
-                    text: '17'.tr,
+                    text: AppLocalization.signIn,
                     color: Theme.of(context).primaryColor,
                     onTap: () async => await controller
                         .submitEmailNamePass(isProviderSignUp ?? false),
                   ),
-                  SizedBox(height: size.height * 0.03),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        style: const TextStyle(
-                          color: AppColors.secondaryText,
-                        ),
-                        '25'.tr,
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(shadowColor: Colors.white),
-                        onPressed: () => Get.toNamed(AppRoutes.logIn),
-                        child: Text(
-                          '9'.tr,
-                          style: const TextStyle(
-                            color: AppColors.darkPrimaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  SizedBox(height: size.height * 0.04),
+                  const OrContiueWithWidget(),
                   SizedBox(
                     height: size.height * 0.03,
                   ),
@@ -179,15 +130,34 @@ class SignUpScreen extends GetView<SignUpController> {
                         press: () {},
                       ),
                       SocialIcons(
-                        icon: 'twitter',
+                        icon: 'google',
                         press: () {},
                       ),
                       SocialIcons(
-                        icon: 'google-plus',
+                        icon: 'apple',
                         press: () {},
                       ),
                     ],
-                  )
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        style: Theme.of(context).textTheme.labelSmall,
+                        AppLocalization.alreadyHaveAcc,
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(shadowColor: Colors.white),
+                        onPressed: () => Get.offAllNamed(AppRoutes.logIn,),
+                        child: Text(
+                          AppLocalization.login,
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -204,22 +174,30 @@ class SingUpScreenJob extends GetView<SignUpController> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: MyAppBar().myappbar('60'.tr),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+    return AppScaffold(
+      // appBarTitle: AutofillHints.jobTitle,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: SingleChildScrollView(
           child: Column(
-            children: [
-              const SizedBox(height: 20),
+            children: [  const SizedBox(
+              height: 50,
+            ),
+            Text(
+              textAlign: TextAlign.center,
+              AppLocalization.choosejobcategory,
+              style: Theme.of(context).textTheme.headlineLarge,
+            ),
+              const SizedBox(height: 50),
               Form(
                 key: controller.jobFormKey,
                 child: Column(
                   children: [
                     DropdownButtonFormField(
+                      borderRadius: const BorderRadius.all(Radius.zero),
+                      style: Theme.of(context).dropdownMenuTheme.textStyle,
                       isDense: true,
-                      hint: const Text("Select category"),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      hint:  Text(AppLocalization.selectCategory),
                       items: [
                         ...controller.categoriesList.map((e) {
                           return DropdownMenuItem(
@@ -228,6 +206,13 @@ class SingUpScreenJob extends GetView<SignUpController> {
                           );
                         }).toList()
                       ],
+                      decoration: const InputDecoration(
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderSide: BorderSide.none,
+                        ),
+                        // Set the border to none to remove the side border
+                        border: InputBorder.none,
+                      ),
                       validator: (value) => validInput(value?.toString() ?? "",
                           null, null, 'selectedCategory'),
                       onChanged: (value) {
@@ -235,11 +220,13 @@ class SingUpScreenJob extends GetView<SignUpController> {
                             value?.toString() ?? "";
                       },
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     MyTextFormField(
-                      hintText: 'jobnamehint'.tr,
-                      iconData: Icons.work_outline_rounded,
-                      lable: 'jobname'.tr,
+                      hintText: AppLocalization.jobname,
+                      // iconName: Icons.work_outline_rounded,
+
+                      iconName: AppIcons.work,
+                      lable: AppLocalization.jobname,
                       obscureText: false,
                       controller: controller.jobNameController,
                       validator: (val) {
@@ -248,9 +235,10 @@ class SingUpScreenJob extends GetView<SignUpController> {
                     ),
                     const SizedBox(height: 20),
                     MyTextFormField(
-                      hintText: 'jobdescriptionhint'.tr,
-                      iconData: Icons.work_outline_rounded,
-                      lable: 'jobdescription'.tr,
+                      hintText: AppLocalization.jobdesc,
+                      // iconName: Icons.work_outline_rounded,
+                      // iconName: AppIcons.work,
+                      lable: AppLocalization.jobdesc,
                       obscureText: false,
                       controller: controller.jobDescController,
                       validator: (val) {
@@ -261,9 +249,8 @@ class SingUpScreenJob extends GetView<SignUpController> {
                   ],
                 ),
               ),
-
               MyGesterDedector(
-                text: '61'.tr,
+                text: AppLocalization.next,
                 color: Theme.of(context).primaryColor,
                 onTap: () async => await controller.submitJobInfo(),
               ),

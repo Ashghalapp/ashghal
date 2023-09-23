@@ -1,5 +1,5 @@
+import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
-import 'package:ashghal_app_frontend/features/auth/presentation/screens/validate_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -28,7 +28,7 @@ void configLoading() {
     ..indicatorSize = 60.0 // Increase the size of the indicator
     ..radius = 10.0
     ..progressColor = Colors.white // Color for progress indicator if applicable
-    ..backgroundColor = Colors.transparent // Darker semi-transparent background
+    ..backgroundColor = AppColors.appColorPrimary// Darker semi-transparent background
     ..indicatorColor = Colors.white // Color of the loading indicator
     ..textColor = Colors.white // Color of the loading text
     ..textStyle = const TextStyle(fontSize: 16, color: Colors.white)
@@ -44,11 +44,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AppLocallcontroller controller = Get.find();
     return GetMaterialApp(
-      darkTheme: darkTheme,
+      themeMode: ThemeMode.system,
+      darkTheme: AppTheme.darkTheme,
       builder: EasyLoading.init(),
       onInit: () {},
       title: 'Ashghal App',
-      theme: controller.appTheme,
+      theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
       locale: controller.language,
       translations: MyTranslation(),
@@ -56,10 +57,10 @@ class MyApp extends StatelessWidget {
       // initialBinding: InitialBinding(),
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
+      initialRoute: AppRoutes.val,
+      // initialRoute: AppRoutes.singUpJobScreen,
+      // initialRoute: AppRoutes.chooseUserTypeScreen,
       // initialRoute: AppRoutes.mainScreen,
-      // initialRoute: AppRoutes.logIn,
-      initialRoute: AppRoutes.logIn,
-      // home: ValidateScreen(),
       // initialRoute: '/tester',
       // initialRoute: AppRoutes.testScreen,
       getPages: routes,

@@ -6,7 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 import '../../../../../config/app_routes.dart';
-import '../../../../../core/localization/localization_strings.dart';
+import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/services/dependency_injection.dart' as di;
 import '../../../domain/Requsets/login_request.dart';
 import '../../../domain/use_cases/login_uc.dart';
@@ -37,7 +37,7 @@ class LoginController extends GetxController {
     if (!(loginFormKey.currentState?.validate() ?? false)) return;
     Get.focusScope!.unfocus();
 
-    EasyLoading.show(status: LocalizationString.loading);
+    EasyLoading.show(status: AppLocalization.loading);
     final loginRequest = LoginRequest.withEmail(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
@@ -51,7 +51,7 @@ class LoginController extends GetxController {
       },
       (user) {
         AppUtil.showMessage(
-            LocalizationString.successloggedIn.tr, Colors.green);
+            AppLocalization.successloggedIn.tr, Colors.green);
         SharedPref.setUserLoggedIn(true);
         // go to home screen
         Get.offAllNamed(AppRoutes.testScreen);

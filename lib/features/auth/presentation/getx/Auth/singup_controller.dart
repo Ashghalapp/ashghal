@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
-import 'package:ashghal_app_frontend/core/localization/localization_strings.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/success/success.dart';
@@ -98,7 +98,7 @@ class SignUpController extends GetxController {
 
   Future<void> submitEmailNamePass(bool isProviderSignUp) async {
     if (!(signUpFormKey.currentState?.validate() ?? false)) return;
-    EasyLoading.show(status: LocalizationString.loading);
+    EasyLoading.show(status: AppLocalization.loading);
     Get.focusScope!.unfocus(); // اخفاء الكيبورد
 
     (await checkEmail()).fold((failure) {
@@ -143,7 +143,7 @@ class SignUpController extends GetxController {
 
   Future<void> submitJobInfo() async {
     if (!(jobFormKey.currentState?.validate() ?? false)) return;
-    EasyLoading.show(status: LocalizationString.loading);
+    EasyLoading.show(status: AppLocalization.loading);
     Get.focusScope!.unfocus(); // اخفاء الكيبورد
     // Get.toNamed(AppRoutes.verficationSignUp);
     Get.to(
@@ -169,14 +169,14 @@ class SignUpController extends GetxController {
   }
 
   Future<bool> resendSignUpCode() async {
-    EasyLoading.show(status: LocalizationString.loading);
+    EasyLoading.show(status: AppLocalization.loading);
     bool isResend = false;
 
     (await checkEmail()).fold((failure) {
       AppUtil.hanldeAndShowFailure(failure);
       isResend = false;
     }, (success) async {
-      AppUtil.showMessage(LocalizationString.success, Colors.green);
+      AppUtil.showMessage(AppLocalization.success, Colors.green);
       isResend = true;
     });
     EasyLoading.dismiss();
