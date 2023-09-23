@@ -12,6 +12,7 @@ import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/Auth/login_controller.dart';
+import '../../widgets/logo.dart';
 import '../../widgets/social_icons.dart';
 
 class LoginScreen extends GetView<LoginController> {
@@ -126,13 +127,13 @@ class LoginScreen extends GetView<LoginController> {
                       ),
                     ),
                     SizedBox(
-                      height: size.height * 0.03,
+                      height: size.height * 0.01,
                     ),
                const OrContiueWithWidget(),
 
 
                     SizedBox(
-                      height: size.height * 0.02,
+                      height: size.height * 0.04,
                     ),
                     const SocialIconsWidget(),
 
@@ -146,7 +147,7 @@ class LoginScreen extends GetView<LoginController> {
                         TextButton(
                          
                           onPressed: () =>
-                              Get.toNamed(AppRoutes.chooseUserTypeScreen),
+                              Get.offNamed(AppRoutes.chooseUserTypeScreen, ),
                           child: Text(
                             AppLocalization.signUp,
                             style: TextStyle(
@@ -167,21 +168,7 @@ class LoginScreen extends GetView<LoginController> {
   }
 }
 
-class LogoWidget extends StatelessWidget {
-  const LogoWidget({
-    super.key,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      AppImages.logo,
-      fit: BoxFit.contain,
-      width: 120,
-      height: 120,
-    );
-  }
-}
 
 class SocialIconsWidget extends StatelessWidget {
   const SocialIconsWidget({

@@ -36,39 +36,41 @@ class ChooseUserTypeScreen extends GetView<ChooseUserTypeController> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: size.height * 0.07),
-            Row(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Obx(() {
-                  return customCard(
-                    context: context,
-                    userType: AppLocalization.provider,
-                    desc: AppLocalization.providerDesc,
-                    avatarUrl: AppIcons.workBorder,
-                    isSelected: controller.isProviderSelected.value,
-                    onSelectionChanged: () {
-                      controller.toggleProvider();
-                      debugPrint(
-                          'provider ${controller.isProviderSelected.value}');
-                    },
-                  );
-                }),
-                Obx(() {
-                  return customCard(
-                    context: context,
-                    userType: AppLocalization.client,
-                    desc: AppLocalization.clientDesc,
-                    avatarUrl: AppIcons.employeesBorder,
-                    isSelected: controller.isClientSelected.value,
-                    onSelectionChanged: () {
-                      controller.toggleClient();
-                      debugPrint(
-                        'client ${controller.isClientSelected.value}',
-                      );
-                    },
-                  );
-                }),
-              ],
+            SingleChildScrollView(scrollDirection: Axis.horizontal,
+              child: Row(
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Obx(() {
+                    return customCard(
+                      context: context,
+                      userType: AppLocalization.provider,
+                      desc: AppLocalization.providerDesc,
+                      avatarUrl: AppIcons.workBorder,
+                      isSelected: controller.isProviderSelected.value,
+                      onSelectionChanged: () {
+                        controller.toggleProvider();
+                        debugPrint(
+                            'provider ${controller.isProviderSelected.value}');
+                      },
+                    );
+                  }),
+                  Obx(() {
+                    return customCard(
+                      context: context,
+                      userType: AppLocalization.client,
+                      desc: AppLocalization.clientDesc,
+                      avatarUrl: AppIcons.employeesBorder,
+                      isSelected: controller.isClientSelected.value,
+                      onSelectionChanged: () {
+                        controller.toggleClient();
+                        debugPrint(
+                          'client ${controller.isClientSelected.value}',
+                        );
+                      },
+                    );
+                  }),
+                ],
+              ),
             ),
             SizedBox(height: size.height * 0.03),
             Obx(
@@ -86,7 +88,7 @@ class ChooseUserTypeScreen extends GetView<ChooseUserTypeController> {
                             controller.isProviderSelected.value;
 
                         // Navigate to the next screen and pass the selected user type
-                        Get.offNamed(AppRoutes.signUp,
+                        Get.toNamed(AppRoutes.signUp,
                             arguments: {'isProvider': isProvider});
                       },
                     )
@@ -98,7 +100,6 @@ class ChooseUserTypeScreen extends GetView<ChooseUserTypeController> {
     );
   }
 }
-
 Widget customCard({
   required String userType,
   required String desc,
@@ -107,16 +108,20 @@ Widget customCard({
   required void Function() onSelectionChanged,
   required BuildContext context,
 }) {
+  final mediaQuery = MediaQuery.of(context);
+  final cardHeight = mediaQuery.size.height * 0.3; // Adjust the card height as needed
+  final borderRadius = BorderRadius.circular(20);
+
   return GestureDetector(
     onTap: () {
       onSelectionChanged();
     },
     child: Container(
-      height: 240,
-      margin: const EdgeInsets.all(5.0),
+      height: cardHeight,
+      margin: EdgeInsets.all(mediaQuery.size.width * 0.01), // Adjust margin based on screen width
       decoration: BoxDecoration(
         color: Theme.of(context).inputDecorationTheme.fillColor,
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        borderRadius: borderRadius,
         border: Border.all(
           color: isSelected
               ? Theme.of(context).primaryColor
@@ -128,28 +133,27 @@ Widget customCard({
         elevation: 0.0,
         shadowColor: Colors.transparent,
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: EdgeInsets.all(mediaQuery.size.width * 0.02), // Adjust padding based on screen width
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              const SizedBox(height: 15.0),
+              SizedBox(height: mediaQuery.size.height * 0.02), // Adjust spacing based on screen height
               CircleAvatar(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                radius: 50.0,
+                backgroundColor: Theme.of(context).inputDecorationTheme.fillColor,
+                radius: mediaQuery.size.width * 0.15, // Adjust the avatar size based on screen width
                 child: SvgPicture.asset(
-                  width: 70,
+                  width: mediaQuery.size.width * 0.20, // Adjust the image size based on screen width
                   avatarUrl,
                   colorFilter: ColorFilter.mode(
                     Theme.of(context).primaryColor,
                     BlendMode.srcIn,
                   ),
                 ),
-                // backgroundImage: AssetImage(avatarUrl),
               ),
-              const SizedBox(height: 16.0),
+              SizedBox(height: mediaQuery.size.height * 0.015), // Adjust spacing based on screen height
               Text(userType, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 12.0),
-              Text(desc, style: Theme.of(context).textTheme.bodySmall),
+              SizedBox(height: mediaQuery.size.height * 0.01), // Adjust spacing based on screen height
+              Text(desc, style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         ),

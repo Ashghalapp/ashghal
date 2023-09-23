@@ -39,7 +39,11 @@ class MyTextFormField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       cursorColor: Theme.of(context).primaryColor,
-      style: Theme.of(context).inputDecorationTheme.labelStyle,
+      // style: Theme.of(context).inputDecorationTheme.labelStyle,
+        style: const TextStyle(
+      decoration: TextDecoration.none,
+      decorationThickness: 0,
+    ),
       decoration: InputDecoration(
         filled: true,
         fillColor: Theme.of(context).inputDecorationTheme.fillColor,
@@ -67,7 +71,7 @@ class MyTextFormField extends StatelessWidget {
         hintStyle: Theme.of(context).textTheme.labelSmall,
         prefixIcon: IconButton(
           onPressed: null,
-          icon: SvgPicture.asset(
+          icon:iconName!=null? SvgPicture.asset(
             fit: BoxFit.contain,
             iconName!,
             colorFilter: ColorFilter.mode(
@@ -77,7 +81,7 @@ class MyTextFormField extends StatelessWidget {
             // You can adjust the size as needed
             // width: 14,
             // height: 14,
-          ),
+          ):const SizedBox()
         ),
         suffixIcon: sufficxIconDataName != null
             ? IconButton(

@@ -5,7 +5,7 @@ class AppIcons {
   static const String email = 'assets/icons/icons/Message.svg';
   static const String hide = 'assets/icons/icons/Hide.svg';
   static const String show = 'assets/icons/icons/Show.svg';
-  static const String user = 'assets/icons/icons/User.svg';
+  static const String user = 'assets/icons/icons/user.svg';
   static const String home = 'assets/icons/icons/Home.svg';
   static const String search = 'assets/icons/icons/Search.svg';
   static const String plus = 'assets/icons/icons/Plus.svg';

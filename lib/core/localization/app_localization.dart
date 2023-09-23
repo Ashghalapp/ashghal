@@ -73,15 +73,16 @@ class AppLocalization {
   static String termsOfService = "termsOfService".tr;
   static String welcome = 'welcome'.tr;
   static String hi = 'Hi'.tr;
+  static String login = 'Login'.tr;
 
   static String profile = 'profile'.tr;
   static String editProfile = 'editProfile'.tr;
   static String profileUpdated = 'profileUpdated'.tr;
 
   static String dontHaveAccount = 'Don\'t have accont?'.tr;
-  static String alreadyHaveAcc = 'alreadyHaveAcc'.tr;
+  static String alreadyHaveAcc = 'Already have an Account?'.tr;
   static String signUp = 'signUp'.tr;
-  static String signUpMessage = 'signUpMessage'.tr;
+  static String createNewAccount = 'Create New Account'.tr;
   static String createAnAccount = 'createAnAccount'.tr;
 
   static String signIn = 'signIn'.tr;
@@ -188,6 +189,11 @@ class AppLocalization {
   static String or = 'or'.tr;
   static String and = ' and '.tr;
 
+
+
+
+
+/////////////////////////
   static String password = 'password'.tr;
   static String newPassword = 'newPassword'.tr;
   static String confirmPassword = 'confirmPassword'.tr;
@@ -304,5 +310,9 @@ class AppLocalization {
   static String warning = 'Warning'.tr;
   static String orContinueWith = 'or contiue with'.tr;
   static String cancle = 'Cancel'.tr;
+  static String jobname = 'Job Name'.tr;
+  static String jobdesc = 'Job Description'.tr;
   static String doyouwanttoexitApp = 'Do you want exit the app?'.tr;
+  static String choosejobcategory = 'Choose Your Job Category'.tr;
+  static String selectCategory = 'Select Category'.tr;
 }

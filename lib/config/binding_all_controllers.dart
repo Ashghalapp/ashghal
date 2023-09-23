@@ -11,7 +11,7 @@ import '../features/auth/presentation/getx/forgetpwd/forgetpassword_controller.d
 class BindingAllControllers extends Bindings{
   @override
   void dependencies() {
-    Get.lazyPut(() => LoginController(), fenix: true);
+    Get.lazyPut(() => LoginController(), fenix: true,);
     // Get.lazyPut(() => SuccessResetPasswordControllerImp(), fenix: true);
     Get.lazyPut(() => ResetPasswordController(), fenix: true);
     // Get.lazyPut(() => ValidateResetPasswordController(), fenix: true);

@@ -12,7 +12,7 @@ class MyTranslation extends Translations {
           "6": "اختيار الأقرب اليك",
           "7": " واختيار الطريق الاقصر\n وايضا التتبع من خلال الخريطة",
           "8": "بدء",
-          "9": "تسجيل الدخول",
+          "Login": "تسجيل الدخول",
           "10": "مرحباً بعودتك",
           "11":
               "يمكنك تسجيل الدخول من خلال البريد وكلمة المرور او من خلال وسائل التواصل الاجتماعي",
@@ -72,10 +72,12 @@ class MyTranslation extends Translations {
           "61": "التالي",
           "jobnamehint": "ادخل هنا اسم مهنتك",
           "activity": "النشاطات",
-          "jobname": "اسم المهنة",
+          "Job Name": "اسم المهنة",
           "verfication": "تحقق",
-          "jobdescription": "وصف المهنة",
+          "Job Description": "وصف المهنة",
           "jobdescriptionhint": "ادخل وصف مهنتك",
+          "Choose Your Job Category": "اختر مجال عملك",
+          "Select Category": "اختر فئة",
           "notifications": "الاشعارات",
           "67": "",
           "68": "",
@@ -142,7 +144,7 @@ class MyTranslation extends Translations {
           "editProfile": "تعديل الملف الشخصي",
           "profileUpdated": "تم تحديث الملف الشخصي",
           "dontHaveAccount": "ليس لديك حساب؟",
-          "alreadyHaveAcc": "هل لديك حساب بالفعل؟",
+          "Already have an Account?": "هل لديك حساب بالفعل؟",
           "signUp": "التسجيل",
           "signUpMessage": "أنشئ حساب جديد",
           "createAnAccount": "أنشئ حسابًا جديدًا",
@@ -259,7 +261,7 @@ class MyTranslation extends Translations {
           "I want to find employees":"أريد العثور على عُمال",
           "I want to find a job for me":"أريد العثور على عمل لي",
           "Choose whether you are looking for a work or you are an organization/company that needs employees":"اختر ما إذا كنت تبحث عن عمل أو أنك مؤسسة/شركة تحتاج إلى موظفين",
-          
+          "Create New Account":"إنشاء حساب جديد",
         },
 
         ///========================English=====================///
@@ -277,7 +279,7 @@ class MyTranslation extends Translations {
           "7":
               "The order can be tracked at every stage \n until it reaches you",
           "8": "Start",
-          "9": "LOGIN",
+          "Login": "LOGIN",
           "10": "Welcome Back",
           "11": "",
           "12": "Enter Your Email",
@@ -336,9 +338,9 @@ class MyTranslation extends Translations {
           "doyouwanttoexitApp": "Do You Want Exit the app?",
 
           "jobnamehint": "Enter Your job Name",
-          "jobname": "Job Name",
+         
           "verfication": "Verfication",
-          "jobdescription": "Job jobdescription",
+        
           "jobdescriptionhint": "Enter Your Job jobdescription",
           "notifications": "Notifications",
           "back": "Back",
@@ -404,8 +406,8 @@ class MyTranslation extends Translations {
           "profile": "Profile",
           "editProfile": "Edit profile",
           "profileUpdated": "Profile updated",
-          "dontHaveAccount": "Don’t have an Account ? ",
-          "alreadyHaveAcc": "Already have an Account ? ",
+          "dontHaveAccount": "Don’t have an Account?",
+          "Already have an Account?": "Already have an Account?",
           "signUp": "Sign up",
           "signUpMessage": "Create a new account",
           "createAnAccount": "Create an account",

@@ -100,14 +100,16 @@ iconTheme: const IconThemeData(color: AppColors.iconColorPrimaryDark,
     // input decoration theme (text form field)
     inputDecorationTheme: InputDecorationTheme(
       
+      
       focusColor: AppColors.appColorPrimary,
        filled: true,
     fillColor: AppColors.appFillColorlight,
+    
         // content padding
         contentPadding: const EdgeInsets.all(AppPadding.p8),
         // hint style
         hintStyle:
-            getRegularStyle(color: AppColors.bodyDark1, fontSize: FontSize.s14),
+            getRegularStyle(color: AppColors.blackHeadline, fontSize: FontSize.s14),
         labelStyle:
             getMediumStyle(color: AppColors.bodyDark1, fontSize: FontSize.s14),
         errorStyle: getRegularStyle(color: AppColors.error),
@@ -209,7 +211,7 @@ static final ThemeData darkTheme = ThemeData(
   // text theme
   textTheme: TextTheme(
     displayLarge: getSemiBoldStyle(color: AppColors.bodyDark, fontSize: FontSize.s16),
-    headlineLarge: getBoldStyle(color: AppColors.bodyDark, fontSize: FontSize.s26),
+    headlineLarge: getBoldStyle(color: AppColors.bodyDark, fontSize: FontSize.s30),
     headlineMedium: getSemiBoldStyle(color: AppColors.blackHeadline, fontSize: FontSize.s24),
     titleMedium: getMediumStyle(color: AppColors.appColorPrimary, fontSize: FontSize.s16),
     labelSmall: getRegularStyle(color: AppColors.textgray, fontSize: FontSize.s12),

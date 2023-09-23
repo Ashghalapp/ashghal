@@ -1,5 +1,6 @@
 
 
+import 'package:ashghal_app_frontend/features/auth/presentation/screens/validate_screen.dart';
 import 'package:ashghal_app_frontend/main_screen.dart';
 import 'package:get/get.dart';
 
@@ -94,6 +95,10 @@ List<GetPage<dynamic>>? routes = [
     name: AppRoutes.forgetPassword,
     page: () => const ForgetPassword(),
   ),
+  // GetPage(
+  //   name: AppRoutes.validateScreen,
+  //   page: () =>  ValidateScreen(),
+  // ),
   // GetPage(
   //   name: AppRoutes.verficationResetPassword,
   //   page: () => const VerficationResetpasswordScreen(),
