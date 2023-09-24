@@ -49,7 +49,7 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
                         hintText: AppLocalization.enterYourEmail,
                         // iconName: Icons.email_outlined,
                         iconName:AppIcons.email,
-                        lable: AppLocalization.email,
+                        label: AppLocalization.email,
                         obscureText: false,
                         controller: controller.emailController,
                         validator: (val) {

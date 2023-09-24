@@ -37,4 +37,7 @@ class AppRoutes {
 
 
   static const String profileScreen= '/profilescreen';
+
+
+
 }

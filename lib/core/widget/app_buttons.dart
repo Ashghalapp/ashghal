@@ -78,7 +78,7 @@ class MyElevatedButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed as void Function()?,
-      child: Text(text!),
+      child: Text(text!,style: Theme.of(context).textTheme.titleLarge,),
       
     );
   }

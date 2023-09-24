@@ -27,7 +27,7 @@ class AppScaffold extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(appBarTitle?? "", style:Theme.of(context).textTheme.titleMedium),
+          title: Text(appBarTitle?? "", style:Theme.of(context).textTheme.displayMedium),
           elevation: 0,
           centerTitle: true,
           leading: IconButton(
