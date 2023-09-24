@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-import '../../../../../config/app_images.dart';
+
 import '../../../../../config/app_routes.dart';
 import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
@@ -52,7 +52,7 @@ class LoginScreen extends GetView<LoginController> {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    MyTextFormField(
+                    AppTextFormField(
                       hintText: AppLocalization.enterYourEmail,
                       // iconName:Icons.email_outlined,
                       iconName: AppIcons.email,
@@ -71,7 +71,7 @@ class LoginScreen extends GetView<LoginController> {
                       init: LoginController(),
                       initState: (_) {},
                       builder: (_) {
-                        return MyTextFormField(
+                        return AppTextFormField(
                           sufficxIconDataName: controller.isVisible
                               // ? Icons.visibility_off_outlined
                               // : Icons.visibility_outlined,
@@ -107,7 +107,7 @@ class LoginScreen extends GetView<LoginController> {
                       ],
                     ),
 
-                    MyGesterDedector(
+                    AppGesterDedector(
                       text: AppLocalization.signIn,
                       color: Theme.of(context).primaryColor,
                       onTap: () {

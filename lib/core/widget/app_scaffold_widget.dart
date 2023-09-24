@@ -30,15 +30,18 @@ class AppScaffold extends StatelessWidget {
           title: Text(appBarTitle?? "", style:Theme.of(context).textTheme.displayMedium),
           elevation: 0,
           centerTitle: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.iconColor),
-            onPressed: () {
-              if (onBack != null) {
-                onBack?.call();
-              } else {
-                Get.back();
-              }
-            },
+          leading: Visibility(
+            visible: Get.previousRoute.contains('null') ,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: AppColors.iconColor),
+              onPressed: () {
+                if (onBack != null) {
+                  onBack?.call();
+                } else {
+                  Get.back();
+                }
+              },
+            ),
           ),
           actions: actions,
         ),

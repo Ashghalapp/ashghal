@@ -59,7 +59,7 @@ class TestScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            MyGesterDedector(onTap: () => (), text: 'Click')
+            AppGesterDedector(onTap: () => (), text: 'Click')
           ],
         ),
       ),

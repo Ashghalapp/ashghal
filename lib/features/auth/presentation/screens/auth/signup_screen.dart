@@ -3,7 +3,7 @@ import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:ashghal_app_frontend/features/auth/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../config/app_colors.dart';
+
 import '../../../../../config/app_routes.dart';
 import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
@@ -43,7 +43,7 @@ class SignUpScreen extends GetView<SignUpController> {
               key: controller.signUpFormKey,
               child: Column(
                 children: [
-                  MyTextFormField(
+                  AppTextFormField(
                     hintText: AppLocalization.fullName,
                     // iconName: Icons.person_outline_outlined,
                     iconName: AppIcons.user,
@@ -73,7 +73,7 @@ class SignUpScreen extends GetView<SignUpController> {
                   // ),
                   // const SizedBox(height: 20),
 
-                  MyTextFormField(
+                  AppTextFormField(
                     hintText: AppLocalization.enterYourEmail,
                     // iconName: Icons.email_outlined,
                     iconName: AppIcons.email,
@@ -90,7 +90,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     init: SignUpController(),
                     initState: (_) {},
                     builder: (_) {
-                      return MyTextFormField(
+                      return AppTextFormField(
                         sufficxIconDataName: controller.isVisible
                             // ? Icons.visibility_off_outlined
                             // : Icons.visibility_outlined,
@@ -111,7 +111,7 @@ class SignUpScreen extends GetView<SignUpController> {
                   ),
                   const SizedBox(height: 20),
 
-                  MyGesterDedector(
+                  AppGesterDedector(
                     text: AppLocalization.signIn,
                     color: Theme.of(context).primaryColor,
                     onTap: () async => await controller
@@ -219,7 +219,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                       },
                     ),
                     const SizedBox(height: 10),
-                    MyTextFormField(
+                    AppTextFormField(
                       hintText: AppLocalization.jobname,
                       // iconName: Icons.work_outline_rounded,
 
@@ -232,7 +232,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    MyTextFormField(
+                    AppTextFormField(
                       hintText: AppLocalization.jobdesc,
                       // iconName: Icons.work_outline_rounded,
                       // iconName: AppIcons.work,
@@ -247,7 +247,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                   ],
                 ),
               ),
-              MyGesterDedector(
+              AppGesterDedector(
                 text: AppLocalization.next,
                 color: Theme.of(context).primaryColor,
                 onTap: () async => await controller.submitJobInfo(),

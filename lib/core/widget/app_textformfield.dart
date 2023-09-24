@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
-class MyTextFormField extends StatelessWidget {
-  const MyTextFormField({
+class AppTextFormField extends StatelessWidget {
+  const AppTextFormField({
     Key? key,
     required this.hintText,
     this.iconName,

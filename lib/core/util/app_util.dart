@@ -36,7 +36,7 @@ class AppUtil {
       ),
       confirm: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: MyGesterDedector(onTap: () => Get.back(), text: "Ok"),
+        child: AppGesterDedector(onTap: () => Get.back(), text: "Ok"),
       ),
     );
   }

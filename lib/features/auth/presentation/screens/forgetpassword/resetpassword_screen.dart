@@ -70,7 +70,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                         builder: (_) {
                           return Column(
                             children: [
-                              MyTextFormField(
+                              AppTextFormField(
                                 sufficxIconDataName: controller.isVisible
                                     // ? Icons.visibility_off_outlined
                                     // : Icons.visibility_outlined,
@@ -90,7 +90,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              MyTextFormField(
+                              AppTextFormField(
                                 sufficxIconDataName: controller.isConfirmVisible
                                     // ? Icons.visibility_off_outlined
                                     // : Icons.visibility_outlined,
@@ -119,7 +119,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                       const SizedBox(
                         height: 20,
                       ),
-                      MyGesterDedector(
+                      AppGesterDedector(
                         text: AppLocalization.submit,
                         color: Theme.of(context).primaryColor,
                         onTap: () => controller.checkResetPassword(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MyGesterDedector extends StatelessWidget {
-  const MyGesterDedector(
+class AppGesterDedector extends StatelessWidget {
+  const AppGesterDedector(
       {super.key, required this.onTap, required this.text, this.color});
   final void Function() onTap;
   final String text;
