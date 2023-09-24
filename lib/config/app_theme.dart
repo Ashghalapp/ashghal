@@ -76,6 +76,8 @@ class AppTheme {
     textTheme: TextTheme(
         displayLarge: getSemiBoldStyle(
             color: AppColors.bodyDark, fontSize: FontSize.s16),
+        displayMedium: getSemiBoldStyle(
+            color: AppColors.grey1, fontSize: FontSize.s20),
         headlineLarge: getBoldStyle(
             color: AppColors.blackHeadline, fontSize: FontSize.s26),
         headlineMedium: getSemiBoldStyle(
@@ -86,6 +88,8 @@ class AppTheme {
             getRegularStyle(color: AppColors.textgray, fontSize: FontSize.s12),
         labelMedium:
             getRegularStyle(color: AppColors.appColorPrimary, fontSize: FontSize.s14),
+        labelLarge:
+            getRegularStyle(color: AppColors.white, fontSize: FontSize.s18),
         bodyLarge: getRegularStyle(color: AppColors.grey1,fontSize: FontSize.s16),
         bodySmall: getRegularStyle(color: AppColors.bodyDark1),
         bodyMedium: getRegularStyle(color: AppColors.darkGrey, fontSize: FontSize.s14),

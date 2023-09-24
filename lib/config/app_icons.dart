@@ -6,8 +6,9 @@ class AppIcons {
   static const String hide = 'assets/icons/icons/Hide.svg';
   static const String show = 'assets/icons/icons/Show.svg';
   static const String user = 'assets/icons/icons/user.svg';
-  static const String home = 'assets/icons/icons/Home.svg';
-  static const String search = 'assets/icons/icons/Search.svg';
+  static const String home = 'assets/icons/icons/home.svg';
+  static const String chat = 'assets/icons/icons/chat.svg';
+  static const String search = 'assets/icons/icons/search.svg';
   static const String plus = 'assets/icons/icons/Plus.svg';
   static const String heart = 'assets/icons/icons/Heart.svg';
   static const String arrowLeft = 'assets/icons/icons/Arrow_Left.svg';
@@ -20,6 +21,7 @@ class AppIcons {
   static const String plusBorder = 'assets/icons/icons/Plus_Border.svg';
   static const String heartBorder = 'assets/icons/icons/Heart_Border.svg';
   static const String userBorder = 'assets/icons/icons/User_Border.svg';
+  static const String chatBorder = 'assets/icons/icons/chat_border.svg';
 
 
   static const String employees = 'assets/icons/icons/employees.svg';

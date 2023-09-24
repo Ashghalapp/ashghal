@@ -7,7 +7,7 @@ class MyTextFormField extends StatelessWidget {
     Key? key,
     required this.hintText,
     this.iconName,
-    required this.lable,
+    required this.label,
     required this.obscureText,
     required this.controller,
     this.validator,
@@ -21,7 +21,7 @@ class MyTextFormField extends StatelessWidget {
   final TextDirection? textDirection;
   final List<TextInputFormatter>? inputformater;
   final TextInputType? textInputtype;
-  final String lable;
+  final String label;
   final String? prefixtext;
   final String hintText;
   final String? iconName;
@@ -67,7 +67,7 @@ class MyTextFormField extends StatelessWidget {
             ),
             // borderSide: BorderSide.none
             ),
-        hintText: lable,
+        hintText: label,
         hintStyle: Theme.of(context).textTheme.labelSmall,
         prefixIcon: IconButton(
           onPressed: null,

@@ -81,7 +81,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                                 hintText: '34'.tr,
                                 // iconName: Icons.lock_clock_outlined,
                                 iconName: AppIcons.lock,
-                                lable: AppLocalization.newPassword,
+                                label: AppLocalization.newPassword,
                                 controller: controller.passwordController,
                                 validator: (val) {
                                   return validInput(val!, 6, 50, 'password');
@@ -102,7 +102,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                                 hintText: '41'.tr,
                                 iconName: AppIcons.lock,
                                 // iconName: Icons.key_outlined,
-                                lable: AppLocalization.confirmPassword,
+                                label: AppLocalization.confirmPassword,
                                 controller:
                                     controller.confirmPasswordController,
                                 validator: (val) {

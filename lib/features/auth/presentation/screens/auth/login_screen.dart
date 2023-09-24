@@ -56,7 +56,7 @@ class LoginScreen extends GetView<LoginController> {
                       hintText: AppLocalization.enterYourEmail,
                       // iconName:Icons.email_outlined,
                       iconName: AppIcons.email,
-                      lable: AppLocalization.email,
+                      label: AppLocalization.email,
                       obscureText: false,
                       controller: controller.emailController,
                       validator: (val) {
@@ -82,7 +82,7 @@ class LoginScreen extends GetView<LoginController> {
                           hintText: AppLocalization.pleaseEnterPassword,
                           // iconName: Iconsax.lock,
                           iconName: AppIcons.lock,
-                          lable: AppLocalization.password,
+                          label: AppLocalization.password,
                           controller: controller.passwordController,
                           validator: (val) {
                             return validInput(val!, 6, 50, 'password');
@@ -150,9 +150,7 @@ class LoginScreen extends GetView<LoginController> {
                               Get.offNamed(AppRoutes.chooseUserTypeScreen, ),
                           child: Text(
                             AppLocalization.signUp,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                            ),
+                               style:Get.textTheme.labelMedium
                           ),
                         ),
                       ],
