@@ -38,29 +38,28 @@ abstract class RemoteDataSource {
   /// دالة تستخدم للتحقق من الكود المرسل الى الايميل عند القيام بعملية تغيير ايميل المستخدم
   Future<Success> validateEmailVerificationCode(VerifyEmailRequest request);
 
-    /// ارسال طلب بتغيير كلمة السر وبناء عليه سيتم ارسال الكود الى الايميل او الهاتف
+  /// ارسال طلب بتغيير كلمة السر وبناء عليه سيتم ارسال الكود الى الايميل او الهاتف
   Future<Success> forgetPassword(ForgetPasswordRequest request);
 
   // Future<Success> verifyEmail(VerifyEmailRequest request);
 
   // Future<Success> resendEmailVerificationCode();
-  
 
-  Future<Success> validateResetPasswordByEmailCode(ValidateResetPasswordCodeRequest request);
-  
-  Future<Success> validateResetPasswordByPhoneCode(ValidateResetPasswordCodeRequest request);
-    
+  Future<Success> validateResetPasswordByEmailCode(
+      ValidateResetPasswordCodeRequest request);
+
+  Future<Success> validateResetPasswordByPhoneCode(
+      ValidateResetPasswordCodeRequest request);
+
   Future<Success> resetPassword(ResetPasswordRequest request);
-  
-  
 
   // Future<Success> resendForgetPasswordCode(ForgetPasswordRequest request);
 
   // Future<Success> verifyResetPasswordCode(ValidateResetPasswordCodeRequest request);
-  
+
   Future<Success> addOrChangePhone(AddOrChangePhoneRequest request);
 
-  /// تستخدم هذه الدالة لتغيير البريد الالكتروني للمستخدم بحيث يتم التاكد من البريد اولا والتاكد 
+  /// تستخدم هذه الدالة لتغيير البريد الالكتروني للمستخدم بحيث يتم التاكد من البريد اولا والتاكد
   /// من كود التاكد من البريد ثم بعدها يتم استخدام هذه الدالة
   Future<Success> addOrChangeEmail(AddOrChangeEmailRequest request);
   // Future<Success> resetPassword(ResetPasswordRequest resetPasswordRequest);
@@ -70,27 +69,31 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   static String authEndPoint = "user/";
   DioService dio = DioService();
 
-   @override
+  @override
   Future<Success> checkEmail(CheckEmailRequest request) async {
-    ApiResponseModel response = await dio.post(ApiConstants.CHECK_EMAIL, request.toJson());
+    ApiResponseModel response =
+        await dio.post(ApiConstants.CHECK_EMAIL, request.toJson());
     if (response.status) {
       print("::: S End checkEmail func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
   Future<User> registerUserWithEmail(RegisterUserRequest request) async {
     print(":::::::: in registerUserWithEmail");
 
-    ApiResponseModel response = await dio.post(ApiConstants.REGISTER_USER, request.toJson());
+    ApiResponseModel response =
+        await dio.post(ApiConstants.REGISTER_USER, request.toJson());
     if (response.status) {
       SharedPref.setUserToken(response.data['token']);
       print("::: S End registerUserWithEmail func in remote datasource");
       return UserModel.fromJson(response.data as Map<String, dynamic>);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
@@ -157,18 +160,23 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   //       ServerFailure(message: response.message, errors: response.errors));
   // }
 
-
-
   @override
   Future<User> login(LoginRequest request) async {
     print(">>>>>>>>>>>????????>${request.toJson()}");
-    ApiResponseModel response = await dio.post(ApiConstants.LOGIN, request.toJson());
+    ApiResponseModel response =
+        await dio.post(ApiConstants.LOGIN, request.toJson());
     if (response.status) {
       SharedPref.setUserToken(response.data['token']);
+      SharedPref.setUserId(response.data['id']);
+      SharedPref.setUserName(response.data['name']);
+      SharedPref.setUserEmail(response.data['email']);
+      SharedPref.setUserPhone(response.data['phone']);
+      SharedPref.setUserImageUrl(response.data['image_url']);
       print("::: S End login func in remote datasource");
       return UserModel.fromJson(response.data as Map<String, dynamic>);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
@@ -178,37 +186,46 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       print("::: S End logout func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
-  Future<Success> sendEmailVerificationCode(String email) async{
-    ApiResponseModel response= await dio.post(ApiConstants.SEND_EMAIL_VERIFICATION_CODE, email);
-    if (response.status){
+  Future<Success> sendEmailVerificationCode(String email) async {
+    ApiResponseModel response =
+        await dio.post(ApiConstants.SEND_EMAIL_VERIFICATION_CODE, email);
+    if (response.status) {
       print("::: S End sendEmailVerificationCode func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
-  
+
   @override
-  Future<Success> validateEmailVerificationCode(VerifyEmailRequest request) async{
-    ApiResponseModel response= await dio.post(ApiConstants.VALIDATE_EMAIL_VERIFICATION_CODE, request.toJson());
-    if (response.status){
-      print("::: S End validateEmailVerificationCode func in remote datasource");
+  Future<Success> validateEmailVerificationCode(
+      VerifyEmailRequest request) async {
+    ApiResponseModel response = await dio.post(
+        ApiConstants.VALIDATE_EMAIL_VERIFICATION_CODE, request.toJson());
+    if (response.status) {
+      print(
+          "::: S End validateEmailVerificationCode func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
   Future<Success> forgetPassword(ForgetPasswordRequest request) async {
-    ApiResponseModel response = await dio.post(ApiConstants.FORGET_PASSWORD, request.toJson());
+    ApiResponseModel response =
+        await dio.post(ApiConstants.FORGET_PASSWORD, request.toJson());
     if (response.status) {
       print("::: S End forgetPassword func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   // @override
@@ -225,47 +242,57 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   // }
 
   @override
-  Future<Success> validateResetPasswordByEmailCode(ValidateResetPasswordCodeRequest request) async {
-    ApiResponseModel response = await dio.post(ApiConstants.VALIDATE_RESET_PASSWORD_BY_EMAIL_CODE, request.toJson());
+  Future<Success> validateResetPasswordByEmailCode(
+      ValidateResetPasswordCodeRequest request) async {
+    ApiResponseModel response = await dio.post(
+        ApiConstants.VALIDATE_RESET_PASSWORD_BY_EMAIL_CODE, request.toJson());
     if (response.status) {
       print("::: S End verifyResetPasswordCode func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
-  Future<Success> validateResetPasswordByPhoneCode(ValidateResetPasswordCodeRequest request) {    
+  Future<Success> validateResetPasswordByPhoneCode(
+      ValidateResetPasswordCodeRequest request) {
     throw UnimplementedError();
   }
 
   @override
   Future<Success> resetPassword(ResetPasswordRequest request) async {
-    ApiResponseModel response = await dio.post(ApiConstants.RESET_PASSWORD, request.toJson());
+    ApiResponseModel response =
+        await dio.post(ApiConstants.RESET_PASSWORD, request.toJson());
     if (response.status) {
       print("::: S End forgetPassword func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
-  
+
   @override
-  Future<Success> addOrChangeEmail(AddOrChangeEmailRequest request) async{
-    ApiResponseModel response= await dio.post(ApiConstants.ADD_OR_CHANGE_EMAIL, request.toJson());
-    if (response.status){
+  Future<Success> addOrChangeEmail(AddOrChangeEmailRequest request) async {
+    ApiResponseModel response =
+        await dio.post(ApiConstants.ADD_OR_CHANGE_EMAIL, request.toJson());
+    if (response.status) {
       print("::: S End addOrChangeEmail func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
-  
+
   @override
   Future<Success> addOrChangePhone(AddOrChangePhoneRequest request) async {
-    ApiResponseModel response= await dio.post(ApiConstants.ADD_OR_CHANGE_PHONE, request.toJson());
-    if (response.status){
+    ApiResponseModel response =
+        await dio.post(ApiConstants.ADD_OR_CHANGE_PHONE, request.toJson());
+    if (response.status) {
       print("::: S End addOrChangePhone func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 }

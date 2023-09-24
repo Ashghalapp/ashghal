@@ -48,6 +48,10 @@ class AppUtil {
         connectivityResult == ConnectivityResult.wifi;
   }
 
+  static String editUrl(String url) {
+    return url.replaceAll(RegExp(r'localhost'), '10.0.2.2');
+  }
+
   static void showErrorToast(String title, String message) {
     Get.snackbar(title, message,
         duration: const Duration(seconds: 4),
@@ -59,11 +63,12 @@ class AppUtil {
         ));
   }
 
-  static void hanldeAndShowFailure(Failure failure, {String prefixText= ""}) {
+  static void hanldeAndShowFailure(Failure failure, {String prefixText = ""}) {
     if (failure is NotSpecificFailure) {
       buildErrorDialog("$prefixText ${failure.message}");
     } else {
-      showMessage("$prefixText ${failure.message}", Get.theme.colorScheme.error);
+      showMessage(
+          "$prefixText ${failure.message}", Get.theme.colorScheme.error);
     }
   }
 
@@ -83,7 +88,7 @@ class AppUtil {
 
   static Future<bool> exitApp(BuildContext context) {
     Get.defaultDialog(
-      backgroundColor: Theme.of(context).dialogBackgroundColor,
+        backgroundColor: Theme.of(context).dialogBackgroundColor,
         title: AppLocalization.warning,
         titleStyle: TextStyle(
             color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
@@ -96,9 +101,9 @@ class AppUtil {
             onPressed: () {
               exit(0);
             },
-            child:  Text(
+            child: Text(
               AppLocalization.submit,
-              style:Theme.of(context).primaryTextTheme.labelSmall,
+              style: Theme.of(context).primaryTextTheme.labelSmall,
             ),
           ),
           ElevatedButton(
@@ -108,9 +113,9 @@ class AppUtil {
               onPressed: () {
                 Get.back();
               },
-              child:  Text(
-              AppLocalization.cancle,
-                style:Theme.of(context).primaryTextTheme.labelSmall,
+              child: Text(
+                AppLocalization.cancle,
+                style: Theme.of(context).primaryTextTheme.labelSmall,
               ))
         ]);
     return Future.value(true);
