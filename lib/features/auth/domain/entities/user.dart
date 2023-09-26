@@ -8,7 +8,7 @@ class User {
   String name;
   String? email;
   String? phone;
-  String? imagePath;
+  String? imageUrl;
   DateTime birthDate;
   Gender gender;
   bool isBlocked;
@@ -26,7 +26,7 @@ class User {
     required this.name,
     this.email,
     this.phone,
-    this.imagePath,
+    this.imageUrl,
     required this.birthDate,
     required this.gender,
     required this.isBlocked,

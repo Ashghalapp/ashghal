@@ -16,7 +16,7 @@ class DioService{
       receiveDataWhenStatusError: true,                    
     ));
     _dio.interceptors.add(PublicInterceptor());
-    _dio.interceptors.add(LogInterceptor(responseBody: true));
+    _dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
   }
 
   // Future<ApiResponseModel>

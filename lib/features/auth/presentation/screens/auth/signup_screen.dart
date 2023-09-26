@@ -197,7 +197,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                       borderRadius: const BorderRadius.all(Radius.zero),
                       style: Theme.of(context).dropdownMenuTheme.textStyle,
                       isDense: true,
-                      hint:  Text(AppLocalization.selectCategory),
+                      hint:  Text(AppLocalization.NotFoundDataInOfflineMode),
                       items: [
                         ...controller.categoriesList.map((e) {
                           return DropdownMenuItem(

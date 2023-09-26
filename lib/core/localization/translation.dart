@@ -262,6 +262,7 @@ class MyTranslation extends Translations {
           "I want to find a job for me":"أريد العثور على عمل لي",
           "Choose whether you are looking for a work or you are an organization/company that needs employees":"اختر ما إذا كنت تبحث عن عمل أو أنك مؤسسة/شركة تحتاج إلى موظفين",
           "Create New Account":"إنشاء حساب جديد",
+          "Not found data in offline mode": "لا يوجد بيانات في وضع عدم الاتصال",
         },
 
         ///========================English=====================///

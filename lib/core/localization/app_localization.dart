@@ -316,4 +316,5 @@ class AppLocalization {
   static String doyouwanttoexitApp = 'Do you want exit the app?'.tr;
   static String choosejobcategory = 'Choose Your Job Category'.tr;
   static String selectCategory = 'Select Category'.tr;
+  static String NotFoundDataInOfflineMode = 'Not found data in offline mode'.tr;
 }

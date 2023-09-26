@@ -29,4 +29,22 @@ class ApiConstants {
     
   static String ADD_OR_CHANGE_PHONE = "${AUTH_ENDPOINT}add-or-change-phone";  
   static String ADD_OR_CHANGE_EMAIL = "${AUTH_ENDPOINT}add-or-change-email";  
+
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///=========================================   Post Urls ===============================================
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  static String POST_ENDPOINT = "post/";
+  static String  GET_ALL_POSTS= "${POST_ENDPOINT}get";
+  static String  GET_ALL_ALIVE_POSTS= "${POST_ENDPOINT}get-alive-posts";
+  static String  GET_ALL_COMPLETE_POSTS= "${POST_ENDPOINT}get-complete-posts";
+  static String  GET_CATEGORY_POSTS= "${POST_ENDPOINT}get-category-posts";
+  static String  GET_USER_POSTS= "${POST_ENDPOINT}get-user-posts";
+  static String  GET_CURRENT_USER_POSTS= "${POST_ENDPOINT}get-current-user-posts";
+  static String  GET_SPECIFIC_POST= "${POST_ENDPOINT}get/";
+  static String  ADD_POST= "${POST_ENDPOINT}add";
+  static String  UPDATE_POST= "${POST_ENDPOINT}update";
+  static String  SEARCH_FOR_POSTS= "${POST_ENDPOINT}search/";
+  static String  DELETE_POST= "${POST_ENDPOINT}delete/";
+  static String  DELETE_SOME_POST_MULTIMEDIA= "${POST_ENDPOINT}delete-some-multimedia";
 }

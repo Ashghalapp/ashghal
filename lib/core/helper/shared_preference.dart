@@ -55,4 +55,12 @@ class SharedPref {
   static String getLanguage() {
     return _appServices.prefs.get('language') as String? ?? 'en';
   }
+
+  static Future<bool> setString(String key, String value) {
+    return _appServices.prefs.setString(key, value);
+  }
+
+  static String? getString(String key) {
+    return _appServices.prefs.getString(key);
+  }
 }

@@ -1,5 +1,7 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
+import 'package:ashghal_app_frontend/features/auth/presentation/screens/test_screen.dart';
+import 'package:ashghal_app_frontend/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -56,7 +58,8 @@ class MyApp extends StatelessWidget {
       // initialBinding: InitialBinding(),
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
-      initialRoute: AppRoutes.logIn,
+      // initialRoute: AppRoutes.mainScreen,
+      home: Test(),
       // initialRoute: AppRoutes.singUpJobScreen,
       // initialRoute: AppRoutes.chooseUserTypeScreen,
       // initialRoute: AppRoutes.mainScreen,

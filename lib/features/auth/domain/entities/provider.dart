@@ -1,33 +1,47 @@
-
 class Provider {
-  int pId;
-  String jobName;
-  String? jobDesc;
-  int categoryId;
-  DateTime pCreatedAt;
-  DateTime pUpdatedAt;
+  final int? id;
+  final String? jobName;
+  final String? jobDesc;
+  final int? categoryId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  Provider({
-    required this.pId,
-    required this.jobName,
+  Provider._({
+    this.id,
+    this.jobName,
     this.jobDesc,
-    required this.categoryId,
-    required this.pCreatedAt,
-    required this.pUpdatedAt,
+    this.categoryId,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  factory Provider.fromJson(Map<String, dynamic> json){
-    return Provider(
-      pId: json['id'],
+  factory Provider.addRequest({
+    required String? jobName,
+    String? jobDesc,
+    required int? categoryId,
+  }) =>
+      Provider._(jobName: jobName, jobDesc: jobDesc, categoryId: categoryId);
+
+
+  factory Provider.updateRequest({
+    String? jobName,
+    String? jobDesc,
+   int? categoryId,
+  }) =>
+      Provider._(jobName: jobName, jobDesc: jobDesc, categoryId: categoryId);
+
+  factory Provider.fromJson(Map<String, dynamic> json) {
+    return Provider._(
+      id: json['id'],
       jobName: json['job_name'],
       jobDesc: json['job_desc'],
       categoryId: json['category_id'],
-      pCreatedAt: json['created_at'],
-      pUpdatedAt: json['updated_at'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
     );
   }
 
-  Map<String, Object?> toJson(){
+  Map<String, Object?> toJson() {
     return {
       'job_name': jobName,
       'job_desc': jobDesc,
