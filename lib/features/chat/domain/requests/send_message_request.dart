@@ -10,12 +10,14 @@ class SendMessageRequest {
   final int conversationId;
   final String? body;
   final String? filePath;
+  final CancelToken? cancelToken;
   final Function(int count, int total)? onSendProgress;
   SendMessageRequest._({
     required this.conversationId,
     this.body,
     this.filePath,
     this.onSendProgress,
+    this.cancelToken,
   });
 
   factory SendMessageRequest.withBody({
@@ -27,56 +29,67 @@ class SendMessageRequest {
         body: body,
       );
 
-  factory SendMessageRequest.withMultimedia(
-          {required int conversationId,
-          required String filePath,
-          required Function(int count, int total)? onSendProgress}) =>
+  factory SendMessageRequest.withMultimedia({
+    required int conversationId,
+    required String filePath,
+    required Function(int count, int total)? onSendProgress,
+    required CancelToken? cancelToken,
+  }) =>
       SendMessageRequest._(
         conversationId: conversationId,
         filePath: filePath,
         onSendProgress: onSendProgress,
+        cancelToken: cancelToken,
       );
 
-  factory SendMessageRequest.withBodyAndMultimedia(
-          {required int conversationId,
-          required String body,
-          required String filePath,
-          required Function(int count, int total)? onSendProgress}) =>
+  factory SendMessageRequest.withBodyAndMultimedia({
+    required int conversationId,
+    required String body,
+    required String filePath,
+    required Function(int count, int total)? onSendProgress,
+    required CancelToken? cancelToken,
+  }) =>
       SendMessageRequest._(
         conversationId: conversationId,
         body: body,
         filePath: filePath,
         onSendProgress: onSendProgress,
+        cancelToken: cancelToken,
       );
 
-  Map<String, dynamic> toJson() {
+  dynamic toJson() async {
+    if (filePath != null) {
+      return FormData.fromMap({
+        'conversation_id': conversationId,
+        if (body != null && body!.trim() != "") 'body': body,
+        'file': await MultipartFile.fromFile(
+          filePath!,
+          // filename: filePath!.split('/').last,
+        ),
+      }, ListFormat.multiCompatible);
+
+      ///data/user/0/com.example.ashghal_app_frontend/cache/01340b7f-c8c8-4b71-a5ca-c31888a7b242/IMG_20230622_025742.jpg
+    }
     return {
       'conversation_id': conversationId,
-      if (body != null) 'body': body,
-      if (filePath != null)
-        'multimedia': FormData.fromMap({
-          'file': MultipartFile.fromFile(
-            filePath!,
-            filename: filePath!.split('/').last,
-          )
-        })
+      if (body != null && body!.trim() != "") 'body': body,
     };
   }
 
   MessagesCompanion toLocal() {
     return MessagesCompanion(
       conversationId: Value(conversationId),
-      body: Value.ofNullable(body),
+      body: Value(body),
       senderId: Value(SharedPref.currentUserId!),
     );
   }
 
-  MultimediaCompanion toLocalMultimedia(int messageId) {
+  MultimediaCompanion toLocalMultimediaOnInsert(int messageId) {
     return MultimediaCompanion(
+      messageId: Value(messageId),
       type: Value(getFileType(filePath!)),
       path: Value(filePath),
       fileName: Value(filePath!.split('/').last),
-      messageId: Value(messageId),
     );
   }
 

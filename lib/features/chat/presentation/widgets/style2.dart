@@ -11,12 +11,12 @@ Color onlineIndicator = Color(0xff0ee50a);
 var softShadows = [
   BoxShadow(
       color: darkShadow,
-      offset: Offset(2.0, 2.0),
+      offset: const Offset(2.0, 2.0),
       blurRadius: 2.0,
       spreadRadius: 1.0),
   BoxShadow(
       color: lightShadow,
-      offset: Offset(-2.0, -2.0),
+      offset: const Offset(-2.0, -2.0),
       blurRadius: 2.0,
       spreadRadius: 1.0),
 ];
@@ -33,3 +33,8 @@ var softShadowsInvert = [
       blurRadius: 2.0,
       spreadRadius: 2.0),
 ];
+
+class ChatStyle {
+  static Color ownMessageColor = Colors.blue;
+  static Color? otherMessageColor = Colors.blue[200];
+}

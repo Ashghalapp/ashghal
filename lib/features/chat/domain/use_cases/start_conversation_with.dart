@@ -10,8 +10,7 @@ class StartConversationWith {
     required this.repository,
   });
 
-  Future<Either<Failure, LocalConversation>> call(
-      StartConversationRequest request) async {
+  Future<Either<Failure, bool>> call(StartConversationRequest request) async {
     return await repository.startConversationWith(request);
   }
 }

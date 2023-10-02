@@ -91,13 +91,14 @@ class RemoteConversationModel extends RemoteConversation {
   ConversationsCompanion toLocalConversation() {
     return ConversationsCompanion(
       remoteId: Value(id),
+      // isBlocked: Value(secondUse),
       userId: Value(secondUser.id),
       userName: Value(secondUser.name),
       userEmail: Value(secondUser.email),
       userPhone: Value(secondUser.phone),
       userImageUrl: Value(secondUser.imageUrl),
-      createdAt: Value(createdAt),
-      updatedAt: Value(DateTime.now()),
+      // createdAt: Value(createdAt),
+      // updatedAt: Value(DateTime.now()),
     );
   }
 

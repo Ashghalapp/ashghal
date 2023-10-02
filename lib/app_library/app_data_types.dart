@@ -12,7 +12,7 @@ Map<String, List<String>> allowedExtensionsByType = {
 };
 
 String getFileType(String fileName) {
-  String extension = fileName.split('.').first;
+  String extension = fileName.split('.').last;
   String type = "file";
   for (var entry in allowedExtensionsByType.entries) {
     if (entry.value.contains(extension)) {

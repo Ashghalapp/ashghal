@@ -16,6 +16,9 @@ class RemoteMessageModel extends RemoteMessage {
     required super.updatedAt,
   });
 
+  factory RemoteMessageModel.fromJson2(Map<String, dynamic> json) {
+    return RemoteMessageModel.fromJson(json['message']);
+  }
   factory RemoteMessageModel.fromJson(Map<String, dynamic> json) {
     return RemoteMessageModel(
       id: json['id'],
@@ -93,13 +96,13 @@ class RemoteMessageModel extends RemoteMessage {
     );
   }
 
-  MessagesCompanion toLocalMessageOnSend(int localId, int conversationLocalId) {
+  MessagesCompanion toLocalMessageOnSend() {
     return MessagesCompanion(
-      localId: Value(localId),
+      // localId: Value(localId),
       remoteId: Value(id),
       // body: Value.ofNullable(body),
-      senderId: Value(senderId),
-      conversationId: Value(conversationLocalId),
+      // senderId: Value(senderId),
+      // conversationId: Value(conversationLocalId),
       sentAt: Value(sentAt),
       // recievedAt: Value(DateTime.now()),
       // receivedLocally: const Value(true),

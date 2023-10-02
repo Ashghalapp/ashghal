@@ -24,53 +24,233 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
 
   ConversationLocalSource(this.db) : super(db);
 
-  Future<List<LocalConversation>> getLocalConversations() {
-    return (select(db.conversations)..where((c) => c.remoteId.equals(null)))
+  /// Retrieves a list of local conversations from the database, local conversations are conversations created
+  /// locally and is not sent yet to the remote server
+  ///
+  /// Returns a [Future] that resolves to a list of [LocalConversation] objects.
+  ///
+  /// Use this method to retrieve local conversations from the database.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final database = ChatDatabase(); // Initialize your database instance
+  /// final conversationLocalSource = ConversationLocalSource(database);
+  ///
+  /// final localConversations = await conversationLocalSource.getLocalConversations();
+  /// print("Local Conversations: $localConversations");
+  /// ```
+  Future<List<LocalConversation>> getLocalConversations() async {
+    return await (select(db.conversations)
+          ..where((c) => c.remoteId.equals(null)))
         .get();
   }
 
-  Future<List<LocalConversation>> getAllConversations() {
-    return (select(db.conversations)).get();
+  /// Streams updates to all unblocked local conversations from the local data source.
+  ///
+  /// Returns a [Stream] that emits a list of [LocalConversation] objects whenever there
+  /// is a change in the database. The stream filters out blocked conversations and ensures
+  /// that the most recently updated conversations are at the top of the list.
+  ///
+  /// Use this method to observe updates to unblocked conversations.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final conversationSource = ConversationLocalSource(chatDatabase);
+  /// final stream = conversationSource.watchAllConversations();
+  ///
+  /// stream.listen((conversations) {
+  ///   print("Updated Conversations: $conversations");
+  /// });
+  /// ```
+  Stream<List<LocalConversation>> watchAllConversations() async* {
+    yield* (select(db.conversations)
+          ..where((tbl) => tbl.isBlocked.equals(false))
+          ..orderBy(
+            [
+              (table) => OrderingTerm(
+                    expression: table.updatedAt,
+                    mode: OrderingMode.desc,
+                  )
+            ],
+          ))
+        .watch();
   }
 
-  Future<bool> updateConversation(Insertable<LocalConversation> conversation) =>
-      update(db.conversations).replace(conversation);
+  /// Retrieves a list of local conversations from the localdata source.
+  ///
+  /// Returns a [Future] that resolves to a list of [LocalConversation] objects.
+  ///
+  /// Use this method to retrieve a list of local conversations from the database.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final repository = ConversationRepository();
+  /// final conversations = await repository.getAllConversations();
+  /// print("Conversations: $conversations");
+  /// ```
+  Future<List<LocalConversation>> getAllConversations() async {
+    return await (select(db.conversations)).get();
+  }
 
-  Future<void> refreshConversationUpdatedAt(int conversationID) async {
+  /// Updates a conversation in the database based on the provided user ID.
+  ///
+  /// Returns a [Future] that resolves to the number of rows updated in the database.
+  ///
+  /// Use this method to update a conversation associated with a specific user.
+  ///
+  /// - [conversationCompanion]: An [Insertable<LocalConversation>] companion object
+  ///   containing the updated conversation data.
+  /// - [userId]: The user ID associated with the conversation.
+  Future<int> updateConversationWithUserId(
+      Insertable<LocalConversation> conversationCompanion, int userId) async {
+    return await (update(db.conversations)
+          ..where(
+            (conversation) => conversation.userId.equals(userId),
+          ))
+        .write(conversationCompanion);
+  }
+
+  /// Initiates a new conversation by inserting a [LocalConversation] into the data source.
+  ///
+  /// Returns a [Future] that resolves to a boolean `true` if the conversation initiation was successful,
+  /// or `false` if it failed. Conversation initiation may fail if a conversation with the same userId
+  /// already exists.
+  ///
+  /// Use this method to start a new conversation by inserting it into the local database.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final localSource = ConversationLocalSource(db);
+  /// final newConversation = LocalConversation(
+  ///   // Initialize conversation properties
+  /// );
+  /// final isStarted = await localSource.startConversation(newConversation);
+  ///
+  /// if (isStarted) {
+  ///   print("New conversation started successfully.");
+  /// } else {
+  ///   print("Failed to start a new conversation.");
+  /// }
+  /// ```
+  /// - [conversation]: An [Insertable] representation of the [LocalConversation] to insert.
+  Future<bool> startConversation(
+      Insertable<LocalConversation> conversation) async {
+    try {
+      await into(db.conversations).insert(
+          conversation); //maybe there is a conversation wih the same userId
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Refreshes the `updatedAt` timestamp for a conversation in the local database.
+  ///
+  /// This method takes a [conversationID] and updates the `updatedAt` timestamp
+  /// for the corresponding conversation to the current date and time.
+  ///
+  /// Use this method to update the `updatedAt` timestamp for a specific conversation.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final source = ConversationLocalSource(ChatDatabase());
+  /// final conversationID = 123;
+  ///
+  /// await source.refreshConversationUpdatedAt(conversationID);
+  /// ```
+  ///
+  /// - [conversationID]: The local ID of the conversation to refresh.
+  ///
+  Future<int> refreshConversationUpdatedAt(int conversationID) async {
     final query = select(db.conversations)
       ..where((c) => c.localId.equals(conversationID));
     LocalConversation conversation = await query.getSingle();
     print("refresh function");
-    updateConversation(conversation.copyWith(updatedAt: DateTime.now()));
-    //  (update(db.conversations)..where((tbl) => tbl.localId.equals(conversationID))).
+    return await (update(db.conversations)
+          ..where((tbl) => tbl.localId.equals(conversationID)))
+        .write(
+      ConversationsCompanion(updatedAt: Value(DateTime.now())),
+    );
   }
 
-  Future<LocalConversation> startConversation(
+  /// Inserts a conversation into the local database.
+  ///
+  /// This method takes an [Insertable<LocalConversation>] object representing a conversation
+  /// and inserts it into the local database.
+  ///
+  /// Use this method to insert a new conversation into the database.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final source = ConversationLocalSource(ChatDatabase());
+  /// final conversationToInsert = // Insertable<LocalConversation> object
+  ///
+  /// await source.insertConversation(conversationToInsert);
+  /// ```
+  ///
+  /// - [conversation]: An [Insertable<LocalConversation>] object representing the conversation to insert.
+  Future<int> insertConversation(
       Insertable<LocalConversation> conversation) async {
-    print("*****************before insert");
-    final localId = await into(db.conversations).insert(conversation);
-    print("*****************after insert");
-
-    final query = select(db.conversations)
-      ..where((c) => c.localId.equals(localId));
-    print("*****************after select");
-
-    return await query.getSingle();
+    return await into(db.conversations).insert(conversation);
   }
 
-  Future<int> insertConversation(Insertable<LocalConversation> conversation) =>
-      into(db.conversations).insert(conversation);
+  /// Retrieves a list of remote conversations from the local database.
+  ///
+  /// This method returns a [Future] that resolves to a list of [LocalConversation] objects
+  /// representing conversations where the [remoteId] is not null.
+  ///
+  /// Use this method to get a list of remote conversations from the database.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final source = ConversationLocalSource(ChatDatabase());
+  ///
+  /// final remoteConversations = await source.getRemoteConversations();
+  /// ```
+  Future<List<LocalConversation>> getRemoteConversations() async {
+    return await (select(db.conversations)
+          ..where((c) => c.remoteId.isNotNull()))
+        .get();
+  }
 
-  Future<LocalConversation?> getConversationWith(int userid) {
-    return (select(db.conversations)..where((c) => c.userId.equals(userid)))
+  /// Retrieves a local conversation based on the provided [remoteId] and [userId].
+  ///
+  /// Returns a [Future] that resolves to a [LocalConversation] if a matching conversation is found,
+  /// or `null` if no matching conversation exists.
+  ///
+  /// Use this method to retrieve a specific conversation by its [remoteId] and [userId].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final source = ConversationLocalSource(ChatDatabase());
+  /// final remoteId = 123;
+  /// final userId = 456;
+  ///
+  /// final conversation = await source.getConversationWith(remoteId, userId);
+  ///
+  /// if (conversation != null) {
+  ///   print("Found conversation: $conversation");
+  /// } else {
+  ///   print("No conversation found with remoteId $remoteId and userId $userId.");
+  /// }
+  /// ```
+  /// - [remoteId]: The remote ID associated with the conversation.
+  /// - [userId]: The user ID associated with the conversation.
+  Future<LocalConversation?> getConversationWith(
+      int remoteId, int userId) async {
+    return await (select(db.conversations)
+          ..where((c) => c.remoteId.equals(remoteId) | c.userId.equals(userId)))
         .getSingleOrNull();
   }
 
-  Future<LocalConversation?> getConversationWithRemoteId(int remoteId) {
-    return (select(db.conversations)..where((c) => c.remoteId.equals(remoteId)))
-        .getSingleOrNull();
-  }
-
+  /// Retrieves the remote ID of a conversation by its local ID.
+  ///
+  /// Returns a [Future] that resolves to the remote ID of the conversation with the specified
+  /// local ID if found, or `null` if no matching conversation is found.
+  ///
+  /// Use this method to retrieve the remote ID associated with a local conversation ID.
+  ///
+  /// - [localId]: The local ID of the conversation to find.
   Future<int?> getRemoteIdByLocalId(int localId) async {
     final query = select(db.conversations)
       ..where((c) => c.localId.equals(localId))
@@ -81,6 +261,26 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
     return result?.remoteId;
   }
 
+  /// Deletes a conversation from the local data source by its local ID.
+  ///
+  /// Returns a [Future] that resolves to a boolean `true` if the conversation was successfully deleted,
+  /// or `false` if the deletion failed.
+  ///
+  /// Use this method to delete a conversation by its local ID.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final localSource = ConversationLocalSource(databaseInstance);
+  /// final localIdToDelete = 123;
+  /// final isDeleted = await localSource.deleteConversationByLocalId(localIdToDelete);
+  ///
+  /// if (isDeleted) {
+  ///   print("Conversation with local ID $localIdToDelete deleted successfully.");
+  /// } else {
+  ///   print("Failed to delete conversation with local ID $localIdToDelete.");
+  /// }
+  /// ```
+  /// - [localId]: The local ID of the conversation to delete.
   Future<bool> deleteConversationByLocalId(int localId) async {
     final query = delete(db.conversations)
       ..where((c) => c.localId.equals(localId));
@@ -93,48 +293,24 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
     }
   }
 
-  /// A function to get all conversations from local storage.
+  /// Blocks or unblocks a conversation based on its local ID.
   ///
-  /// This function retrieves all conversations stored in the local
-  /// database and returns them as a list of [Conversation] objects.
+  /// - [conversationLocalId]: The local ID of the conversation to block or unblock.
+  /// - [block]: A boolean flag indicating whether to block (true) or unblock (false) the conversation.
   ///
-  /// Returns:
-  /// - A [Future] that completes with a list of [Conversation] objects
-  ///   representing all the conversations in the local database.
-
-  Future<List<LocalConversation>> findAllConversations() =>
-      select(db.conversations).get();
-
-  Future<LocalConversation?> getConversationByLocalId(int localId) {
-    return (select(db.conversations)..where((c) => c.localId.equals(localId)))
-        .getSingleOrNull();
-  }
-
-  Future<LocalConversation?> getConversationByRemoteId(int remoteId) {
-    return (select(db.conversations)..where((c) => c.remoteId.equals(remoteId)))
-        .getSingleOrNull();
-  }
-
-  Stream<List<LocalConversation>> watchAllConversations() {
-    return (select(db.conversations)
-          ..orderBy(
-            [
-              (table) => OrderingTerm(
-                    expression: table.updatedAt,
-                    mode: OrderingMode.desc,
-                  )
-            ],
-          ))
-        .watch();
-  }
-
-  Future<int> deleteConversation(LocalConversation conversation) async {
-    // final conversation = ConversationsCompanion(id: Value(conversationId));
-    return await delete(db.conversations).delete(conversation);
-  }
-
-  Future<void> blockUnblockConversation(int conversationLocalId, bool block) {
-    return (update(db.conversations)
+  /// Example usage:
+  /// ```dart
+  /// final conversationSource = ConversationLocalSource(chatDatabase);
+  /// // Block a conversation by its local ID
+  /// await conversationSource.blockUnblockConversation(123, true);
+  ///
+  /// // Unblock a conversation by its local ID
+  /// await conversationSource.blockUnblockConversation(123, false);
+  /// ```
+  ///
+  Future<int> blockUnblockConversation(
+      int conversationLocalId, bool block) async {
+    return await (update(db.conversations)
           ..where((conversation) =>
               conversation.localId.equals(conversationLocalId)))
         .write(
@@ -143,6 +319,33 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
       ),
     );
   }
+
+  // /// A function to get all conversations from local storage.
+  // ///
+  // /// This function retrieves all conversations stored in the local
+  // /// database and returns them as a list of [Conversation] objects.
+  // ///
+  // /// Returns:
+  // /// - A [Future] that completes with a list of [Conversation] objects
+  // ///   representing all the conversations in the local database.
+
+  // Future<List<LocalConversation>> findAllConversations() =>
+  //     select(db.conversations).get();
+
+  // Future<LocalConversation?> getConversationByLocalId(int localId) {
+  //   return (select(db.conversations)..where((c) => c.localId.equals(localId)))
+  //       .getSingleOrNull();
+  // }
+
+  // Future<LocalConversation?> getConversationByRemoteId(int remoteId) {
+  //   return (select(db.conversations)..where((c) => c.remoteId.equals(remoteId)))
+  //       .getSingleOrNull();
+  // }
+
+  // Future<int> deleteConversation(LocalConversation conversation) async {
+  //   // final conversation = ConversationsCompanion(id: Value(conversationId));
+  //   return await delete(db.conversations).delete(conversation);
+  // }
 
   // Future<int> getUniqueRandomNumber() async {
   //   final random = Random();
@@ -158,7 +361,12 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
 
   //   return randomValue;
   // }
-
+//
+  // Future<LocalConversation?> getConversationWithUserId(int userid) {
+  //   return (select(db.conversations)..where((c) => c.userId.equals(userid)))
+  //       .getSingleOrNull();
+  // }
+//
   /// A function to get a conversation by its associated user ID from local storage.
   ///
   /// This function retrieves a conversation from the local database

@@ -1,14 +1,22 @@
+import 'dart:convert';
+
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/services/app_services.dart';
 import 'package:ashghal_app_frontend/core_api/api_response_model.dart';
+import 'package:ashghal_app_frontend/core_api/errors/error_strings.dart';
 import 'package:ashghal_app_frontend/core_api/errors/exceptions.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
+import 'package:ashghal_app_frontend/core_api/pusher_service.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/receive_read_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_conversation_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/repositories/message_repository_imp.dart';
+import 'package:ashghal_app_frontend/features/chat/data/repositories/pusher_chat_helper.dart';
 import 'package:ashghal_app_frontend/features/chat/data/resources/local/conversation/conversation_local_source.dart';
 import 'package:ashghal_app_frontend/features/chat/data/resources/local/message/message_local_source.dart';
+import 'package:ashghal_app_frontend/features/chat/data/resources/local/multimedia/multimedia_local_source.dart';
 import 'package:ashghal_app_frontend/features/chat/data/resources/remote/conversation_remote_source.dart';
 import 'package:ashghal_app_frontend/features/chat/data/resources/remote/message_remote_source.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_last_message_and_count.dart';
@@ -19,6 +27,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_conver
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
 
 import 'package:dartz/dartz.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class ConversationRepositoryImp extends ConversationRepository {
   final ConversationRemoteSource _conversationRemoteSource =
@@ -26,13 +35,17 @@ class ConversationRepositoryImp extends ConversationRepository {
   final MessageRemoteSource _messageRemoteSource = MessageRemoteSourceImp();
   late final ConversationLocalSource _conversationLocalSource;
   late final MessageLocalSource _messageLocalSource;
+  late final MultimediaLocalSource _multimediaLocalSource;
   // late final MultimediaLocalSource _multimediaLocalSource;
   final ChatDatabase db = ChatDatabase();
   final NetworkInfo networkInfo = NetworkInfoImpl();
   final MessageRepositoryImp _messageRepository = MessageRepositoryImp();
+  final PusherChatHelper _pusherChatHelper = PusherChatHelper();
+  // List<LocalConversation> _remoteConversations = [];
   ConversationRepositoryImp() {
     _conversationLocalSource = ConversationLocalSource(db);
     _messageLocalSource = MessageLocalSource(db);
+    _multimediaLocalSource = MultimediaLocalSource(db);
   }
 
   @override
@@ -72,43 +85,30 @@ class ConversationRepositoryImp extends ConversationRepository {
   Future<Either<Failure, bool>> deleteConversation(
       DeleteConversationRequest request) async {
     try {
-      await _messageRepository.clearChat(
-          ClearChatRequest(conversationLocalId: request.conversationLocalId));
       bool deleted = await _conversationLocalSource
           .deleteConversationByLocalId(request.conversationLocalId);
 
       return Right(deleted);
     } catch (e) {
-      print(
-          ">>>>>>>>>>Exception:in ConversationRepositoryImp function deleteConversation $e");
       return Left(NotSpecificFailure(message: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, LocalConversation>> startConversationWith(
+  Future<Either<Failure, bool>> startConversationWith(
       StartConversationRequest request) async {
-    // bool createdLocal = false;
     try {
-      LocalConversation? localConversation =
-          await _conversationLocalSource.getConversationWith(request.userId);
-      // print(
-      //   localConversation == null
-      //       ? "1111111111111111111"
-      //       : localConversation.toString(),
-      // );
-      if (localConversation == null) {
-        // createdLocal = true;
-        localConversation =
-            await _conversationLocalSource.startConversation(request.toLocal());
-        // print("after ${localConversation.localId}");
-        if (await networkInfo.isConnected) {
-          _startAConversationRemotelyAndUpdateTheLocal(localConversation);
-        }
+      bool conversationCreated =
+          await _conversationLocalSource.startConversation(request.toLocal());
+      print("isconversation created: ${conversationCreated.toString()}");
+
+      // If the device is connected to the network, start the conversation remotely
+      if (await networkInfo.isConnected && conversationCreated) {
+        await _startAConversationRemotelyAndUpdateTheLocal(request);
       }
-      return Right(localConversation);
+
+      return Right(conversationCreated);
     } catch (e) {
-      // print(">>>>>>>>>>Exception: $e");
       return Left(NotSpecificFailure(message: e.toString()));
     }
   }
@@ -130,69 +130,79 @@ class ConversationRepositoryImp extends ConversationRepository {
           request.conversationId,
           request.block,
         );
-        return Right(response.status);
+        if (!response.status) {
+          return Left(NotSpecificFailure(message: response.message));
+        }
+        return const Right(true);
+      } else {
+        return Left(NotSpecificFailure(message: ErrorString.OFFLINE_ERROR));
       }
-
-      return const Right(false);
     } catch (e) {
-      // print(">>>>>>>>>>Exception: $e");
       return Left(NotSpecificFailure(message: e.toString()));
     }
   }
 
-  // Future<void>
-  //     _listenToMessagesGotReceiveResponseOnThemAndNotConfirmedYet() async {
-  //   _messageLocalSource
-  //       .watchReceivedAndNotConfirmedYet()
-  //       .listen((messsages) async {
-  //     if (await networkInfo.isConnected) {
-  //       List<int> ids = [];
-  //       for (var message in messsages) {
-  //         ids.add(message.remoteId!);
-  //       }
-  //       if (ids.isNotEmpty) {
-  //         RecieveReadGotConfirmationModel response =
-  //             await _messageRemoteSource.confirmGettenReceiveResponse(ids);
-  //         await _messageLocalSource
-  //             .updateConfirmGotReceiveToTrue(response.success);
-  //       }
-  //     }
-  //   });
-  // }
-  // Future<void>
-  //     _listenToMessagesGotReadResponseOnThemAndNotConfirmedYet() async {
-  //   _messageLocalSource.watchReadAndNotConfirmedYet().listen((messsages) async {
-  //     if (await networkInfo.isConnected) {
-  //       List<int> ids = [];
-  //       for (var message in messsages) {
-  //         ids.add(message.remoteId!);
-  //       }
-  //       if (ids.isNotEmpty) {
-  //         RecieveReadGotConfirmationModel response =
-  //             await _messageRemoteSource.confirmGettenReadResponse(ids);
-  //         await _messageLocalSource
-  //             .updateConfirmGotReadToTrue(response.success);
-  //       }
-  //     }
-  //   });
-  // }
+  @override
+  Future<void> subscribeToChatChannels() async {
+    try {
+      List<LocalConversation> conversations =
+          await _conversationLocalSource.getRemoteConversations();
+
+      await _pusherChatHelper.connect();
+      for (var conversation in conversations) {
+        await _pusherChatHelper.subscribeToChatChannels(
+          conversationRemoteId: conversation.remoteId!,
+          onNewMessage: (message) async {
+            await _messageRepository.insertNewMessageFromRemote(
+              message,
+              conversation.localId,
+            );
+          },
+          onMessageReceived: (receivedReadMessage) async {
+            // print("onMessageReceived///////////////////////");
+            // print(receivedReadMessage.toString());
+            await _messageRepository
+                .markMessagesAsReceived([receivedReadMessage]);
+          },
+          onMessageRead: (receivedReadMessage) async {
+            // print("onMessageReceived///////////////////////");
+            // print(receivedReadMessage.toString());
+            await _messageRepository.markMessagesAsRead([receivedReadMessage]);
+          },
+        );
+      }
+    } on AppException catch (e) {
+      print(
+          "**********MyException in ConversationRepositoryImp in subscribeToChatChannels: ${e.failure.toString()}");
+    } catch (e) {
+      print(
+          "**********Error in ConversationRepositoryImp in subscribeToChatChannels: ${e.toString()}");
+    }
+  }
+
+  @override
+  Future<void> unsubscribeFromChatChannels() async {
+    await _pusherChatHelper.unsubscribeFromChannels();
+  }
 
   @override
   Future<void> synchronizeConversations() async {
-    print("Syncronizing start before connection checked");
+    // print("Syncronizing start before connection checked");
     if (await networkInfo.isConnected) {
       try {
-        print("Syncronizing start with connection");
-        print("before Call Start Local Conversation Remotely");
-        // start coversations created locally on remote
+        // print("Syncronizing start with connection");
+        // print("before Call Start Local Conversation Remotely");
+
+        // start coversations created locally remotely
         await _startLocalConversationsRemotely();
-        print("after Call Start Local Conversation Remotely");
+        // print("after Call Start Local Conversation Remotely");
+
+        //Conferm any messages that is marked as received locally or read locally
+        await _messageRepository.confirmReceivedLocallyMessagesRemotely();
+        await _messageRepository.confermReadLocallyMessagesRemotely();
+
         // send unsent messages
         await _sendUnSentMessages();
-
-        //Conferm yany messages that is marked as received locally or read locally
-        await _messageRepository.confermReceivedLocallyMessagesRemotely();
-        await _messageRepository.confermReadLocallyMessagesRemotely();
 
         //  get conversations updates from remote surce
         List<RemoteConversationModel> remoteConversations =
@@ -201,17 +211,23 @@ class ConversationRepositoryImp extends ConversationRepository {
         // update local conversations according to updates comes from remote
         for (RemoteConversationModel remoteConversation
             in remoteConversations) {
-          int conversationLocalId =
-              await _insertOrUpdateLocalConversationFromRemote(
+          int? conversationLocalId =
+              await _insertLocalConversationFromRemoteIfNotExists(
                   remoteConversation);
-          print("After conversation Updates");
-
+          // print("After conversation Updates");
+          if (conversationLocalId == null) {
+            continue;
+          }
           //Save new messages into local db
           for (RemoteMessageModel message
               in remoteConversation.newMessages.cast<RemoteMessageModel>()) {
             await _messageRepository.insertNewMessageFromRemote(
-                message, conversationLocalId);
+              message,
+              conversationLocalId,
+            );
           }
+
+          //refresh the conversation as the last updated conversation
           _conversationLocalSource
               .refreshConversationUpdatedAt(conversationLocalId);
 
@@ -231,14 +247,8 @@ class ConversationRepositoryImp extends ConversationRepository {
               remoteConversation.readMessages.cast<ReceivedReadMessageModel>(),
             );
           }
-          //check if you received new messsaages to confirm that you recieved the new messages
-          if (remoteConversation.newMessages.isNotEmpty) {
-            await _messageRepository.confermReceivedLocallyMessagesRemotely();
-          }
         }
-        // _listenToReceivedLocallyMessages();
-
-        // _listenToReadLocallyMessages();
+        await subscribeToChatChannels();
       } on AppException catch (e) {
         print(
             "MyException in ConversationRepositoryImp in initializeConversations: ${e.failure.toString()}");
@@ -249,79 +259,104 @@ class ConversationRepositoryImp extends ConversationRepository {
     }
   }
 
+  /// Starts a conversation remotely and updates the local conversation data accordingly.
+  ///
+  /// This private method is used internally by [startConversationWith] and [_startLocalConversationsRemotely] to initiate a conversation
+  /// remotely and synchronize the local data with the remote data.
+  ///
+  /// - [request]: A [StartConversationRequest] object specifying the user to start a conversation with.
+  Future<void> _startAConversationRemotelyAndUpdateTheLocal(
+      StartConversationRequest request) async {
+    RemoteConversationModel remote =
+        await _conversationRemoteSource.startConversation(
+      request.toJson(),
+    );
+    await _conversationLocalSource.updateConversationWithUserId(
+      remote.toLocalConversation(),
+      remote.secondUser.id,
+    );
+  }
+
+  /// Starts local conversations remotely and updates them in the local database.
+  ///
+  /// This method fetches a list of the created local conversations and starts each conversation
+  /// remotely by sending a request to a remote server. After starting each conversation
+  /// remotely, it updates the local database with the newly created conversation.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final source = ConversationLocalSource(database);
+  /// await source._startLocalConversationsRemotely();
+  /// ```
   Future<void> _startLocalConversationsRemotely() async {
     List<LocalConversation> localConversations =
         await _conversationLocalSource.getLocalConversations();
     for (var localConversation in localConversations) {
-      await _startAConversationRemotelyAndUpdateTheLocal(localConversation);
+      try {
+        await _startAConversationRemotelyAndUpdateTheLocal(
+          StartConversationRequest(
+            userId: localConversation.userId,
+          ),
+        );
+      } catch (e) {
+        // if one conversation fails to be created remotely, its ok continue creating the others
+        continue;
+      }
     }
   }
 
-  Future<void> _startAConversationRemotelyAndUpdateTheLocal(
-      LocalConversation local) async {
-    RemoteConversationModel remote =
-        await _conversationRemoteSource.startConversation(
-      StartConversationRequest(userId: local.userId).toJson(),
-    );
-    await _conversationLocalSource.updateConversation(
-      remote.toLocalConversationWithId(local.localId),
-    );
-  }
-
+  /// Sends unsent messages to the remote server.
+  ///
+  /// Retrieves a list of unsent messages using [_messageLocalSource.getUnSentMessages()]
+  /// and attempts to send them to the remote server using [_messageRepository.sendLocalMessageToRemote()].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await _sendUnSentMessages();
+  /// ```
   Future<void> _sendUnSentMessages() async {
     List<LocalMessage> localMessages =
         await _messageLocalSource.getUnSentMessages();
     for (var localMessage in localMessages) {
-      await _messageRepository.sendLocalMessageToRemote(
-        localMessage,
-        localMessage.conversationId,
-      );
+      //exclude multimedia messages from being sent
+      //becuase they have to be sent exciplicitly by pressing upload
+      if (localMessage.senderId == SharedPref.currentUserId &&
+          await _multimediaLocalSource
+                  .getMessageMultimedia(localMessage.localId) !=
+              null) {
+        continue;
+        // LocalMultimedia? multimedia = await _multimediaLocalSource
+        //     .getMessageMultimedia(localMessage.localId);
+      }
+      await _messageRepository.sendLocalMessageToRemote(localMessage);
     }
   }
 
-  /// Inserts or updates a local conversation based on a remote conversation model.
+  /// Inserts a local conversation from a remote source if it doesn't already exist locally.
   ///
-  /// This function takes a [RemoteConversationModel] as input and attempts to
-  /// insert or update the corresponding local conversation in the local database.
+  /// This method checks if a local conversation with the same remote ID and user ID
+  /// already exists. If not, it inserts the conversation as a new local conversation based
+  /// on the provided [remote] data by converting it to a local conversation.
   ///
-  /// If a local conversation with the participant's ID does not exist, a new
-  /// conversation is started using the provided [remote] data, and its local ID
-  /// is returned.
+  /// Returns the local ID of the inserted conversation if it was inserted or if it already
+  /// exists locally, and `null` if there was an error during insertion.
   ///
-  /// If a local conversation with the participant's ID already exists, it is
-  /// updated with the latest data from the [remote] model.
+  /// - [remote]: A [RemoteConversationModel] representing the conversation data from the remote source.
   ///
-  /// Parameters:
-  ///   - [remote]: The remote conversation model to insert or update.
-  ///
-  /// Returns:
-  ///   - A [Future] that resolves to an [int] representing the local ID of the
-  ///     conversation.
-  ///
-  /// Example Usage:
-  /// ```dart
-  /// final remoteConversation = RemoteConversationModel(/* ... */);
-  /// final localConversationId =
-  ///     await _insertOrUpdateLocalConversationFromRemote(remoteConversation);
-  /// ```
-  ///
-  /// Note: This function assumes that you have a `_conversationLocalSource` with
-  /// methods like `getConversationWith`, `startConversation`, and `updateConversation`
-  /// for managing local conversations.
-  Future<int> _insertOrUpdateLocalConversationFromRemote(
+  Future<int?> _insertLocalConversationFromRemoteIfNotExists(
       RemoteConversationModel remote) async {
-    LocalConversation? local =
-        await _conversationLocalSource.getConversationWithRemoteId(remote.id);
+    LocalConversation? local = await _conversationLocalSource
+        .getConversationWith(remote.id, remote.secondUser.id);
     if (local == null) {
-      // print("Coversatio Not Exists");
-      return (await _conversationLocalSource
-              .startConversation(remote.toLocalConversation()))
-          .localId;
-    } else {
-      await _conversationLocalSource.updateConversation(
-        remote.toLocalConversationWithId(local.localId),
-      );
+      // print("Coversation Not Exists");
+      try {
+        return await _conversationLocalSource
+            .insertConversation(remote.toLocalConversation());
+      } catch (e) {
+        return null;
+      }
     }
+
     return local.localId;
   }
 
@@ -371,6 +406,42 @@ class ConversationRepositoryImp extends ConversationRepository {
   //               receivedReadMessages: recReadMeaages),
   //         );
   //         await _messageLocalSource.updateReadLocallyToFalse(response.success);
+  //       }
+  //     }
+  //   });
+  // }
+  // Future<void>
+  //     _listenToMessagesGotReceiveResponseOnThemAndNotConfirmedYet() async {
+  //   _messageLocalSource
+  //       .watchReceivedAndNotConfirmedYet()
+  //       .listen((messsages) async {
+  //     if (await networkInfo.isConnected) {
+  //       List<int> ids = [];
+  //       for (var message in messsages) {
+  //         ids.add(message.remoteId!);
+  //       }
+  //       if (ids.isNotEmpty) {
+  //         RecieveReadGotConfirmationModel response =
+  //             await _messageRemoteSource.confirmGettenReceiveResponse(ids);
+  //         await _messageLocalSource
+  //             .updateConfirmGotReceiveToTrue(response.success);
+  //       }
+  //     }
+  //   });
+  // }
+  // Future<void>
+  //     _listenToMessagesGotReadResponseOnThemAndNotConfirmedYet() async {
+  //   _messageLocalSource.watchReadAndNotConfirmedYet().listen((messsages) async {
+  //     if (await networkInfo.isConnected) {
+  //       List<int> ids = [];
+  //       for (var message in messsages) {
+  //         ids.add(message.remoteId!);
+  //       }
+  //       if (ids.isNotEmpty) {
+  //         RecieveReadGotConfirmationModel response =
+  //             await _messageRemoteSource.confirmGettenReadResponse(ids);
+  //         await _messageLocalSource
+  //             .updateConfirmGotReadToTrue(response.success);
   //       }
   //     }
   //   });

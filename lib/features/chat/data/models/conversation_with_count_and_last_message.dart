@@ -4,11 +4,16 @@ class ConversationWithCountAndLastMessage {
   LocalConversation conversation;
   int newMessagesCount;
   LocalMessage? lastMessage;
+  bool isActive; //defualt false and it will be updated by real time channels
+  DateTime?
+      lastSeen; //Handle last seen as request when the user connects to the internet and update it according to real time updates
 
   ConversationWithCountAndLastMessage({
     required this.conversation,
     this.newMessagesCount = 0,
     this.lastMessage,
+    this.isActive = true,
+    this.lastSeen,
   });
 
   // factory ConversationWithCountAndLastMessage.fromJson(
@@ -53,11 +58,15 @@ class ConversationWithCountAndLastMessage {
     LocalConversation? conversation,
     int? newMessagesCount,
     LocalMessage? lastMessage,
+    bool? isActive,
+    DateTime? lastSeen,
   }) {
     return ConversationWithCountAndLastMessage(
       conversation: conversation ?? this.conversation,
       newMessagesCount: newMessagesCount ?? this.newMessagesCount,
       lastMessage: lastMessage ?? this.lastMessage,
+      isActive: isActive ?? this.isActive,
+      lastSeen: lastSeen ?? this.lastSeen,
     );
   }
 }

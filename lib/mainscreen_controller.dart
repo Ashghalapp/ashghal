@@ -1,7 +1,8 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/ChatScreen/chat_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

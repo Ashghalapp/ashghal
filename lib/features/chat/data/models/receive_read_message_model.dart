@@ -9,7 +9,7 @@ class ReceivedReadMessageModel extends ReceivedReadMessage {
 
   factory ReceivedReadMessageModel.fromJson(Map<String, dynamic> json) {
     return ReceivedReadMessageModel(
-      id: json['id'],
+      id: int.parse(json['id'].toString()),
       at: DateTime.parse(json['at']),
     );
   }

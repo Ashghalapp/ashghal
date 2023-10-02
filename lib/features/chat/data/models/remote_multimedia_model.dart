@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/remote_multimedia.dart';
 
@@ -19,7 +20,7 @@ class RemoteMultimediaModel extends RemoteMultimedia {
       id: json['id'],
       type: json['type'],
       fileName: json['file_name'],
-      url: json['file_url'],
+      url: AppUtil.editUrl(json['file_url']),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -45,12 +46,14 @@ class RemoteMultimediaModel extends RemoteMultimedia {
   //   };
   // }
 
-  MultimediaCompanion toLocalMultimediaOnSend(int localId, int messageLocalId) {
+  MultimediaCompanion toLocalMultimediaOnSend() {
     return MultimediaCompanion(
-      localId: Value(localId),
+      // localId: Value(localId),
       remoteId: Value(id),
+      // type: Value(type),
+      // fileName: Value(fileName),
       url: Value(url),
-      messageId: Value(messageLocalId),
+      // messageId: Value(messageLocalId),
     );
   }
 
