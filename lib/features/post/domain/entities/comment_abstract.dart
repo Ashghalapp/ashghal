@@ -4,7 +4,8 @@ abstract class CommentAbstract extends Equatable{
   final int id;
   final String content;
   final String? imageUrl;
-  final int userId;
+  /// basic user data it come with the shape: {'id':..., 'name':..., 'image_url':...}
+  final Map<String, Object?> basicUserData;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -12,8 +13,8 @@ abstract class CommentAbstract extends Equatable{
     required this.id,
     required this.content,
     this.imageUrl,
-    required this.userId,
-    required this.updatedAt,
+    required this.basicUserData,
     required this.createdAt,
+    required this.updatedAt,
   });
 }

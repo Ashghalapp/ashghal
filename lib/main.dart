@@ -1,7 +1,11 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
 import 'package:ashghal_app_frontend/features/auth/presentation/screens/test_screen.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_card_widget.dart';
 import 'package:ashghal_app_frontend/test.dart';
+import 'package:ashghal_app_frontend/tester.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -44,6 +48,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final CommentInputController con = Get.put(CommentInputController(), permanent: true);
     AppLocallcontroller controller = Get.find();
     return GetMaterialApp(
       darkTheme: AppTheme.darkTheme,
@@ -52,23 +57,24 @@ class MyApp extends StatelessWidget {
       title: 'Ashghal App',
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-      locale: controller.language,
+      locale:  controller.language,
       translations: MyTranslation(),
       initialBinding: BindingAllControllers(),
       // initialBinding: InitialBinding(),
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
-      // initialRoute: AppRoutes.mainScreen,
-      home: Test(),
+      initialRoute: AppRoutes.mainScreen,
+      // home: CommentCardWidget(comment: CommentController().commentsListToTry[0]),
       // initialRoute: AppRoutes.singUpJobScreen,
       // initialRoute: AppRoutes.chooseUserTypeScreen,
       // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
       // initialRoute: AppRoutes.mainScreen,
-      // home: ValidateScreen(),
+      // home: Tester(),
       // initialRoute: '/tester',
       // initialRoute: AppRoutes.testScreen,
       getPages: routes,
+      themeMode: ThemeMode.light,
     );
   }
 }

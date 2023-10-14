@@ -1,16 +1,16 @@
 import 'dart:io';
 
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/get_posts_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
 import 'package:dio/dio.dart' as dio_p;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-import 'features/post/data/repositories/post_comment_repository_impl.dart';
-import 'features/post/domain/Requsets/add_update_post_request.dart';
-import 'features/post/domain/repositories/post_comment_repository.dart';
+import 'features/post/data/repositories/post_repository_impl.dart';
+import 'features/post/domain/Requsets/post_request/add_update_post_request.dart';
+import 'features/post/domain/repositories/post_repository.dart';
 
 class Test extends GetView<MainController> {
   const Test({super.key});
@@ -47,8 +47,8 @@ class Test extends GetView<MainController> {
                     // print("<<<<<<<<<<<<<<<<$paths>>>>>>>>>>>>>>>>");
                     // AppServices p= Get.find();
                     // p.prefs.clear();
-                    PostCommentRepository ds = PostCommentRepositoryImpl();
-                    var result = await  ds.getAllCompletePosts(GetPostsRequest(pageNumber: 1, perPage: 1));
+                    PostRepository ds = PostRepositoryImpl();
+                    var result = await  ds.getAllCompletePosts(PaginationRequest(pageNumber: 1, perPage: 1));
                     // var result = (await ds.addPost(
                     //   AddPostRequest(
                     //     title: "title",
@@ -332,7 +332,7 @@ class MainController extends GetxController {
       }
     } catch (e) {
       print("::::::::: Error: $e");
-      // AppUtil.showMessage("There is something error.. Try later", Colors.green);
+      // AppUtil.showMessage(AppLocalization.thereIsSomethingError, Colors.green);
     }
     return const Center(child: Text("Not fount Image"));
   }

@@ -2,15 +2,18 @@ import 'comment_abstract.dart';
 
 class Reply extends CommentAbstract {
   final int parentCommentId;
+  final int replyToCommentId;
 
   const Reply({
     required super.id,
     required this.parentCommentId,
     required super.content,
     super.imageUrl,
-    required super.userId,
+    required super.basicUserData,
+    required this.replyToCommentId,
     required super.updatedAt,
     required super.createdAt,
+    
   });
     // : createdAt = createdAt ?? DateTime.now(),
         // updatedAt = updatedAt ?? DateTime.now();
@@ -21,7 +24,8 @@ class Reply extends CommentAbstract {
         parentCommentId,
         content,
         imageUrl,
-        userId,
+        basicUserData,
+        replyToCommentId,
         createdAt,
         updatedAt,
       ];

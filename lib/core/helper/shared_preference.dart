@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 
 import '../services/app_services.dart';
@@ -62,5 +64,14 @@ class SharedPref {
 
   static String? getString(String key) {
     return _appServices.prefs.getString(key);
+  }
+
+  static setCurrentUserData(Map<String, dynamic> json){
+    SharedPref.setString("current_user_data", jsonEncode(json));
+  }
+
+  static Map<String, dynamic> getCurrentUserData() {
+    String data= SharedPref.getString("current_user_data")?? "";
+    return jsonDecode(data);
   }
 }

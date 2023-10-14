@@ -316,5 +316,25 @@ class AppLocalization {
   static String doyouwanttoexitApp = 'Do you want exit the app?'.tr;
   static String choosejobcategory = 'Choose Your Job Category'.tr;
   static String selectCategory = 'Select Category'.tr;
-  static String NotFoundDataInOfflineMode = 'Not found data in offline mode'.tr;
+  // static String NotFoundDataInOfflineMode = 'Not found data in offline mode'.tr;
+
+  ///////////////////////Post Messages/////////////////////////////////////
+  static String successAddPost= "The post has been added successfully";
+  static String thereIsSomethingError= "There is something error.. Try later";
+
+
+  ///////////////////////Comment and replies Messages/////////////////////////////////////
+  static String areYouSureToDeleteYourComment= "Are you sure to delete your comment?";
+  static String areYouSureToDeleteYourReply= "Are you sure to delete your reply?";
+  static String view = "View";
+  static String moreComments= "more comments";
+  static String moreReplies= "more replies";
+
+  static String editYourComment = "Edit your comment";
+  static String editYourReply = "Edit your reply";
+
+
+
+
+  
 }

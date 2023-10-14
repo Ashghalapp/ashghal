@@ -70,14 +70,14 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                         builder: (_) {
                           return Column(
                             children: [
-                              MyTextFormField(
+                              AppTextFormField(
                                 sufficxIconDataName: controller.isVisible
                                     // ? Icons.visibility_off_outlined
                                     // : Icons.visibility_outlined,
                                     ? AppIcons.hide
                                     : AppIcons.show,
                                 obscureText: controller.isVisible,
-                                onPressed: () => controller.changVisible(),
+                                onSuffixIconPressed: () => controller.changVisible(),
                                 hintText: '34'.tr,
                                 // iconName: Icons.lock_clock_outlined,
                                 iconName: AppIcons.lock,
@@ -90,14 +90,14 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              MyTextFormField(
+                              AppTextFormField(
                                 sufficxIconDataName: controller.isConfirmVisible
                                     // ? Icons.visibility_off_outlined
                                     // : Icons.visibility_outlined,
                                     ? AppIcons.hide
                                     : AppIcons.show,
                                 obscureText: controller.isConfirmVisible,
-                                onPressed: () =>
+                                onSuffixIconPressed: () =>
                                     controller.changConfirmVisible(),
                                 hintText: '41'.tr,
                                 iconName: AppIcons.lock,

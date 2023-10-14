@@ -13,14 +13,14 @@ class Post extends Equatable {
   final bool isComplete;
   /// basic user data it come with the shape: {'id':..., 'name':..., 'image_url':...}
   final Map<String, Object?> basicUserData;
-  final int commentsCount;
+  int commentsCount;
   final Address? address;
   final List<MultimediaModel>? multimedia;
   final int categoryId;
   final DateTime createdAt;
   final DateTime updatedAt;
   
-  const Post({
+  Post({
     required this.id,
     required this.title,
     required this.content,

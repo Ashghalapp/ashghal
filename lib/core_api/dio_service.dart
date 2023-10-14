@@ -1,69 +1,88 @@
 import 'package:ashghal_app_frontend/core_api/errors/error_strings.dart';
+import 'package:ashghal_app_frontend/core_api/errors/exceptions.dart';
+import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:dio/dio.dart';
 
 import 'api_constant.dart';
 import 'api_response_model.dart';
 import 'public_interceptor.dart';
 
-class DioService{
+class DioService {
+  final int connectTimeout= 15;
   late Dio _dio;
-  DioService(){
+  DioService() {
     _dio = Dio(BaseOptions(
       baseUrl: ApiConstants.baseUrl,
-      connectTimeout: const Duration(seconds: 60),
+      connectTimeout: Duration(seconds: connectTimeout + 5),
       receiveTimeout: const Duration(seconds: 60),
       sendTimeout: const Duration(seconds: 60),
-      receiveDataWhenStatusError: true,                    
+      receiveDataWhenStatusError: true,
     ));
     _dio.interceptors.add(PublicInterceptor());
-    _dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+    _dio.interceptors
+        .add(LogInterceptor(responseBody: true, requestBody: true));
   }
 
   // Future<ApiResponseModel>
-  Future<ApiResponseModel> get(String path, Object? data) async{
+  Future<ApiResponseModel> get(String path, Object? data) async {
+    CancelToken cancelToken = CancelToken();
     print("?????????????????Before send request??????????????????????");
-    Response response = await _dio.get(path, data: data);
+    Response response =
+        await _dio.get(path, data: data, cancelToken: cancelToken).timeout(
+      Duration(seconds: connectTimeout),
+      onTimeout: () {
+        cancelToken.cancel("error in dio service that the timeout");
+        throw AppException(const ServerFailure(
+            message: "The server was not ready or busy.. try again"));
+      },
+    );
+
     print("?????????????????after send request??????????????????????");
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       print("????????????????????Success status request???????????????????");
-      ApiResponseModel responseModel= ApiResponseModel.fromJson(response.data);
+      ApiResponseModel responseModel = ApiResponseModel.fromJson(response.data);
       return responseModel;
-    } else{
-      return ApiResponseModel(status: false, message: response.statusMessage?? ErrorString.SERVER_ERROR);
+    } else {
+      return ApiResponseModel(
+          status: false,
+          message: response.statusMessage ?? ErrorString.SERVER_ERROR);
     }
   }
 
-  Future<ApiResponseModel> post(String path, Object? data) async{
+  Future<ApiResponseModel> post(String path, Object? data) async {
     print("???????????????????????????????????????");
     Response response = await _dio.post(path, data: data);
     print("???????///////////?????????????????????????");
     print("?????????????????${response.statusCode}??${response.statusMessage}");
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       print("???????????????????????????????????????");
-      ApiResponseModel responseModel= ApiResponseModel.fromJson(response.data);
+      ApiResponseModel responseModel = ApiResponseModel.fromJson(response.data);
       return responseModel;
-    }
-    else{
-      return ApiResponseModel(status: false, message: response.statusMessage?? ErrorString.SERVER_ERROR);
+    } else {
+      return ApiResponseModel(
+          status: false,
+          message: response.statusMessage ?? ErrorString.SERVER_ERROR);
     }
   }
 
-  Future<ApiResponseModel> delete(String path) async{
+  Future<ApiResponseModel> delete(String path) async {
     Response response = await _dio.delete(path);
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       print("???????????????????????????????????????");
-      ApiResponseModel responseModel= ApiResponseModel.fromJson(response.data);
+      ApiResponseModel responseModel = ApiResponseModel.fromJson(response.data);
       return responseModel;
-    } else{
-      return ApiResponseModel(status: false, message: response.statusMessage?? ErrorString.SERVER_ERROR);
+    } else {
+      return ApiResponseModel(
+          status: false,
+          message: response.statusMessage ?? ErrorString.SERVER_ERROR);
     }
   }
 
-  Future<Response> getUsers()async {
+  Future<Response> getUsers() async {
     return await _dio.get("/user/get");
   }
 
-  Future<Response> getSpecificUser()async {
+  Future<Response> getSpecificUser() async {
     return await _dio.get("/user/get/5");
   }
 }

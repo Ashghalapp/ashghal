@@ -43,7 +43,7 @@ class SignUpScreen extends GetView<SignUpController> {
               key: controller.signUpFormKey,
               child: Column(
                 children: [
-                  MyTextFormField(
+                  AppTextFormField(
                     hintText: AppLocalization.fullName,
                     // iconName: Icons.person_outline_outlined,
                     iconName: AppIcons.user,
@@ -73,7 +73,7 @@ class SignUpScreen extends GetView<SignUpController> {
                   // ),
                   // const SizedBox(height: 20),
 
-                  MyTextFormField(
+                  AppTextFormField(
                     hintText: AppLocalization.enterYourEmail,
                     // iconName: Icons.email_outlined,
                     iconName: AppIcons.email,
@@ -90,14 +90,14 @@ class SignUpScreen extends GetView<SignUpController> {
                     init: SignUpController(),
                     initState: (_) {},
                     builder: (_) {
-                      return MyTextFormField(
+                      return AppTextFormField(
                         sufficxIconDataName: controller.isVisible
                             // ? Icons.visibility_off_outlined
                             // : Icons.visibility_outlined,
                             ? AppIcons.hide
                             : AppIcons.show,
                         obscureText: controller.isVisible,
-                        onPressed: () => controller.changVisible(),
+                        onSuffixIconPressed: () => controller.changVisible(),
                         hintText: AppLocalization.password,
                         // iconName: Icons.lock_open_outlined,
                         iconName: AppIcons.lock,
@@ -197,7 +197,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                       borderRadius: const BorderRadius.all(Radius.zero),
                       style: Theme.of(context).dropdownMenuTheme.textStyle,
                       isDense: true,
-                      hint:  Text(AppLocalization.NotFoundDataInOfflineMode),
+                      // hint:  Text(AppLocalization.NotFoundDataInOfflineMode),
                       items: [
                         ...controller.categoriesList.map((e) {
                           return DropdownMenuItem(
@@ -221,7 +221,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                       },
                     ),
                     const SizedBox(height: 10),
-                    MyTextFormField(
+                    AppTextFormField(
                       hintText: AppLocalization.jobname,
                       // iconName: Icons.work_outline_rounded,
 
@@ -234,7 +234,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    MyTextFormField(
+                    AppTextFormField(
                       hintText: AppLocalization.jobdesc,
                       // iconName: Icons.work_outline_rounded,
                       // iconName: AppIcons.work,

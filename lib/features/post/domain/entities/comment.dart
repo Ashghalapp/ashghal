@@ -2,15 +2,17 @@ import 'comment_abstract.dart';
 
 class Comment extends CommentAbstract {
   final int parentPostId;
+  final int repliesCount;
 
   const Comment({
     required super.id,
     required this.parentPostId,
     required super.content,
     super.imageUrl,
-    required super.userId,
-    required super.updatedAt,
+    required this.repliesCount,
+    required super.basicUserData,
     required super.createdAt,
+    required super.updatedAt,
   });
     // : createdAt = createdAt ?? DateTime.now(),
         // updatedAt = updatedAt ?? DateTime.now();
@@ -21,7 +23,8 @@ class Comment extends CommentAbstract {
         parentPostId,
         content,
         imageUrl,
-        userId,
+        basicUserData,
+        repliesCount,
         createdAt,
         updatedAt,
       ];

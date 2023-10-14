@@ -3,7 +3,7 @@ import '../../domain/entities/post.dart';
 import 'multimedia_model.dart';
 
 class PostModel extends Post {
-  const PostModel({
+  PostModel({
     required super.id,
     required super.title,
     required super.content,

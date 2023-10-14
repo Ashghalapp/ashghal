@@ -16,8 +16,8 @@ class MainScreen extends GetView<MainScreenController> {
       init: MainScreenController(),
       initState: (_) {},
       builder: (controller) {
-        return AppScaffold(
-          onBack: () => AppUtil.exitApp(context),
+        return Scaffold(
+          // onBack: () => AppUtil.exitApp(context),
           bottomNavigationBar: BottomNavigationBar(
             unselectedItemColor: Colors.grey.shade600,
             selectedItemColor: Theme.of(context).primaryColor,
@@ -29,7 +29,7 @@ class MainScreen extends GetView<MainScreenController> {
             iconSize: 30,
             items: controller.getItems(),
           ),
-          child: controller.listPage.elementAt(controller.currentIndex),
+          body: controller.listPage.elementAt(controller.currentIndex),
         );
       },
     );

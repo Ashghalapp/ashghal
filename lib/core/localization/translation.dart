@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:get/get.dart';
 
 class MyTranslation extends Translations {
@@ -263,6 +264,15 @@ class MyTranslation extends Translations {
           "Choose whether you are looking for a work or you are an organization/company that needs employees":"اختر ما إذا كنت تبحث عن عمل أو أنك مؤسسة/شركة تحتاج إلى موظفين",
           "Create New Account":"إنشاء حساب جديد",
           "Not found data in offline mode": "لا يوجد بيانات في وضع عدم الاتصال",
+          AppLocalization.successAddPost: "تم اضافة البوست بنجاح",
+          AppLocalization.thereIsSomethingError: "هناك خطأ ما.. اعد المحاولة",
+          AppLocalization.areYouSureToDeleteYourComment: "هل انت متأكد من حذف تعليقك؟",
+          AppLocalization.areYouSureToDeleteYourReply: "هل انت متأكد من حذف ردك؟",
+          AppLocalization.view: "عرض",
+          AppLocalization.moreComments: "تعليقات أخرى",
+          AppLocalization.moreReplies: "ردود أخرى",
+          AppLocalization.editYourComment: "تعديل تعليقك",
+          AppLocalization.editYourReply: "تعديل ردك"
         },
 
         ///========================English=====================///

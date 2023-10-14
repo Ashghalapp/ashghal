@@ -21,7 +21,7 @@ class AppTheme {
     primaryColor: AppColors.appColorPrimary,
     primaryColorDark: AppColors.appColorPrimaryDark,
     useMaterial3: true,
-    hoverColor: Colors.white54,
+    hoverColor: Colors.grey[350],
     // splashColor:AppColors.appColorPrimary,
     dividerColor: AppColors.dividerColorLight,
     // fontFamily: GoogleFonts.plusJakartaSans().fontFamily,

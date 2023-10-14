@@ -52,7 +52,7 @@ class LoginScreen extends GetView<LoginController> {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    MyTextFormField(
+                    AppTextFormField(
                       hintText: AppLocalization.enterYourEmail,
                       // iconName:Icons.email_outlined,
                       iconName: AppIcons.email,
@@ -71,14 +71,14 @@ class LoginScreen extends GetView<LoginController> {
                       init: LoginController(),
                       initState: (_) {},
                       builder: (_) {
-                        return MyTextFormField(
+                        return AppTextFormField(
                           sufficxIconDataName: controller.isVisible
                               // ? Icons.visibility_off_outlined
                               // : Icons.visibility_outlined,
                               ? AppIcons.hide
                               : AppIcons.show,
                           obscureText: controller.isVisible,
-                          onPressed: () => controller.changVisible(),
+                          onSuffixIconPressed: () => controller.changVisible(),
                           hintText: AppLocalization.pleaseEnterPassword,
                           // iconName: Iconsax.lock,
                           iconName: AppIcons.lock,

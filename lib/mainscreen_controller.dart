@@ -1,20 +1,24 @@
 import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
-import 'package:ashghal_app_frontend/features/post/data/data_sources/post_comment_remote_data_source.dart';
-import 'package:ashghal_app_frontend/features/post/data/repositories/post_comment_repository_impl.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/add_update_post_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/delete_some_post_multimedia_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/get_posts_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/repositories/post_comment_repository.dart';
+import 'package:ashghal_app_frontend/features/post/data/data_sources/post_remote_data_source.dart';
+import 'package:ashghal_app_frontend/features/post/data/repositories/post_repository_impl.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/delete_some_post_multimedia_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/repositories/post_repository.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
+import 'package:http/http.dart' as http;
 
 import 'package:get/get.dart';
 
 import 'config/app_icons.dart';
-import 'features/post/domain/Requsets/get_category_posts_request.dart';
-import 'features/post/domain/Requsets/get_user_posts_request.dart';
+import 'features/post/domain/Requsets/post_request/get_category_posts_request.dart';
+import 'features/post/domain/Requsets/post_request/get_user_posts_request.dart';
+import 'features/post/presentation/screen/add_post.dart';
 
 class MainScreenController extends GetxController {
   int currentIndex = 0;
@@ -125,56 +129,60 @@ class MainScreenController extends GetxController {
           ),
     ];
   }
+
+
   //===========================================//
 
   List<Widget> listPage = [
+    PostsScreen(),
     //  HomeScreen(),
-    Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Center(child: Text("Home screen")),
-        ElevatedButton(onPressed: () async{
-          try{
-          PostCommentRepository ds= PostCommentRepositoryImpl();
-          (await ds.addPost(AddPostRequest(title: "title", content: "Upload more one multimedia", categoryId: 1)));
-          } catch (e){
-            print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-          }
-        }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-        ElevatedButton(onPressed: () async{
-          try{
-          PostCommentRepository ds= PostCommentRepositoryImpl();
-          (await ds.updatePost(UpdatePostRequest(id: 8, allowComment: true, address: Address.updateRequest(city: 'taiz', street: "ss", lat: 10.2))));
-          } catch (e){
-            print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-          }
-        }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-        ElevatedButton(onPressed: () async{
-          try{
-          PostCommentRepository ds= PostCommentRepositoryImpl();
-          (await ds.deletePost(90));
-          } catch (e){
-            print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-          }
-        }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-        ElevatedButton(onPressed: () async{
-          try{
-          PostCommentRepository ds= PostCommentRepositoryImpl();
-          (await ds.deleteSomePostMultimedia(DeleteSomePostMultimediaRequest(postId: 93, multimediaIds: [0])));
-          } catch (e){
-            print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-          }
-        }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-      ],
-    ),
+    // Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [
+    //     const Center(child: Text("Home screen")),
+    //     ElevatedButton(onPressed: () async{
+    //       try{
+    //       PostCommentRepository ds= PostCommentRepositoryImpl();
+    //       (await ds.addPost(AddPostRequest(title: "title", content: "Upload more one multimedia", categoryId: 1)));
+    //       } catch (e){
+    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
+    //       }
+    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
+    //     ElevatedButton(onPressed: () async{
+    //       try{
+    //       PostCommentRepository ds= PostCommentRepositoryImpl();
+    //       (await ds.updatePost(UpdatePostRequest(id: 8, allowComment: true, address: Address.updateRequest(city: 'taiz', street: "ss", lat: 10.2))));
+    //       } catch (e){
+    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
+    //       }
+    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
+    //     ElevatedButton(onPressed: () async{
+    //       try{
+    //       PostCommentRepository ds= PostCommentRepositoryImpl();
+    //       (await ds.deletePost(90));
+    //       } catch (e){
+    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
+    //       }
+    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
+    //     ElevatedButton(onPressed: () async{
+    //       try{
+    //       PostCommentRepository ds= PostCommentRepositoryImpl();
+    //       (await ds.deleteSomePostMultimedia(DeleteSomePostMultimediaRequest(postId: 93, multimediaIds: [0])));
+    //       } catch (e){
+    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
+    //       }
+    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
+    //   ],
+    // ),
     const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [Center(child: Text("Search screen"))],
     ),
-    const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [Center(child: Text("Add Post"))],
-    ),
+    UploadPostPage(),
+    // const Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [Center(child: Text("Add Post"))],
+    // ),
     const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [Center(child: Text("Activity Screen"))],

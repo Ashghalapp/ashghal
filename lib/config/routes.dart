@@ -1,6 +1,5 @@
 
 
-import 'package:ashghal_app_frontend/features/auth/presentation/screens/validate_screen.dart';
 import 'package:ashghal_app_frontend/main_screen.dart';
 import 'package:get/get.dart';
 

@@ -57,6 +57,8 @@ class Address {
       if (lat != null) 'lat': lat,
       if (long != null) 'long': long,
       if (desc != null) 'desc': desc,
+      'created_at': createdAt.toString(),
+      'updated_at': updatedAt.toString(),
     };
   }
 }

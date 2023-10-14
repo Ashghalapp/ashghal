@@ -1,7 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
 class ApiConstants {
-  static const String baseUrl = "http://10.0.2.2:8000/api/";
+  // static const String baseUrl = "http://10.0.2.2:8000/api/";
+  static const String baseUrl = "http://192.168.240.219:8000/api/";
   // static const String baseUrl = "http://localhost:8000/api/";
   // static const String baseUrl = "https://jsonplaceholder.typicode.com/";
 
@@ -12,39 +13,58 @@ class ApiConstants {
   };
 
   static String AUTH_ENDPOINT = "auth/";
-   static String CHECK_EMAIL = "${AUTH_ENDPOINT}check-email";
+  static String CHECK_EMAIL = "${AUTH_ENDPOINT}check-email";
   static String REGISTER_USER = "${AUTH_ENDPOINT}register-user";
   // static String REGISTER_PROVIDER = "${AUTH_ENDPOINT}register-provider";
   static String LOGIN = "${AUTH_ENDPOINT}login";
   static String LOGOUT = "${AUTH_ENDPOINT}logout";
-  static String SEND_EMAIL_VERIFICATION_CODE = "${AUTH_ENDPOINT}send-email-verification-code";
-  static String VALIDATE_EMAIL_VERIFICATION_CODE = "${AUTH_ENDPOINT}validate-email-verification-code";
+  static String SEND_EMAIL_VERIFICATION_CODE =
+      "${AUTH_ENDPOINT}send-email-verification-code";
+  static String VALIDATE_EMAIL_VERIFICATION_CODE =
+      "${AUTH_ENDPOINT}validate-email-verification-code";
   // static String VERIFY_EMAIL = "${AUTH_ENDPOINT}verify-email";
   // static String RESEND_EMAIL_VERIFICATION_CODE = "${AUTH_ENDPOINT}resend-email-verification-code";
- 
+
   static String FORGET_PASSWORD = "${AUTH_ENDPOINT}forget-password";
   // static String RESEND_FORGET_PASSWORD_CODE = "${AUTH_ENDPOINT}resend-forget-password-code";
-  static String VALIDATE_RESET_PASSWORD_BY_EMAIL_CODE = "${AUTH_ENDPOINT}validate-reset-password-email-code";
-  static String RESET_PASSWORD = "${AUTH_ENDPOINT}reset-password";  
-    
-  static String ADD_OR_CHANGE_PHONE = "${AUTH_ENDPOINT}add-or-change-phone";  
-  static String ADD_OR_CHANGE_EMAIL = "${AUTH_ENDPOINT}add-or-change-email";  
+  static String VALIDATE_RESET_PASSWORD_BY_EMAIL_CODE =
+      "${AUTH_ENDPOINT}validate-reset-password-email-code";
+  static String RESET_PASSWORD = "${AUTH_ENDPOINT}reset-password";
 
+  static String ADD_OR_CHANGE_PHONE = "${AUTH_ENDPOINT}add-or-change-phone";
+  static String ADD_OR_CHANGE_EMAIL = "${AUTH_ENDPOINT}add-or-change-email";
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///=========================================   Post Urls ===============================================
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   static String POST_ENDPOINT = "post/";
-  static String  GET_ALL_POSTS= "${POST_ENDPOINT}get";
-  static String  GET_ALL_ALIVE_POSTS= "${POST_ENDPOINT}get-alive-posts";
-  static String  GET_ALL_COMPLETE_POSTS= "${POST_ENDPOINT}get-complete-posts";
-  static String  GET_CATEGORY_POSTS= "${POST_ENDPOINT}get-category-posts";
-  static String  GET_USER_POSTS= "${POST_ENDPOINT}get-user-posts";
-  static String  GET_CURRENT_USER_POSTS= "${POST_ENDPOINT}get-current-user-posts";
-  static String  GET_SPECIFIC_POST= "${POST_ENDPOINT}get/";
-  static String  ADD_POST= "${POST_ENDPOINT}add";
-  static String  UPDATE_POST= "${POST_ENDPOINT}update";
-  static String  SEARCH_FOR_POSTS= "${POST_ENDPOINT}search/";
-  static String  DELETE_POST= "${POST_ENDPOINT}delete/";
-  static String  DELETE_SOME_POST_MULTIMEDIA= "${POST_ENDPOINT}delete-some-multimedia";
+  static String GET_ALL_POSTS = "${POST_ENDPOINT}get";
+  static String GET_ALL_ALIVE_POSTS = "${POST_ENDPOINT}get-alive-posts";
+  static String GET_ALL_COMPLETE_POSTS = "${POST_ENDPOINT}get-complete-posts";
+  static String GET_CATEGORY_POSTS = "${POST_ENDPOINT}get-category-posts";
+  static String GET_USER_POSTS = "${POST_ENDPOINT}get-user-posts";
+  static String GET_CURRENT_USER_POSTS =
+      "${POST_ENDPOINT}get-current-user-posts";
+  static String GET_SPECIFIC_POST = "${POST_ENDPOINT}get/";
+  static String ADD_POST = "${POST_ENDPOINT}add";
+  static String UPDATE_POST = "${POST_ENDPOINT}update";
+  static String SEARCH_FOR_POSTS = "${POST_ENDPOINT}search/";
+  static String DELETE_POST = "${POST_ENDPOINT}delete/";
+  static String DELETE_SOME_POST_MULTIMEDIA =
+      "${POST_ENDPOINT}delete-some-multimedia";
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///============================== Comment and reply Urls =============================================
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  static String COMMENT_ENDPOINT = "comment/";
+  static String GET_COMMENTS_AND_REPLIES = "${COMMENT_ENDPOINT}get";
+  static String GET_POST_COMMENTS = "${COMMENT_ENDPOINT}get-post-comments";
+  static String GET_COMMENT_REPLIES = "${COMMENT_ENDPOINT}get-comment-replies";
+  static String GET_USER_COMMENTS = "${COMMENT_ENDPOINT}get-user-comments";
+  static String GET_USER_COMMENTS_ON_POST = "${COMMENT_ENDPOINT}get-user-comments-on-post";
+  static String GET_USER_REPLIES_ON_COMMENT = "${COMMENT_ENDPOINT}get-user-replies-on-comment";
+  static String ADD_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}add";
+  static String UPDATE_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}update";
+  static String DELETE_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}delete/";
+  static String DELETE_COMMENT_OR_REPLY_IMAGE = "${COMMENT_ENDPOINT}delete-image/";
 }
