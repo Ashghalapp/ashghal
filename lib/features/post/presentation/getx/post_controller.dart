@@ -38,6 +38,8 @@ class PostController extends GetxController {
   // جديدة من البوستات وذلك حتى لا يتم تكرار الطلب عدة مرات
   int lastIndexToGetNewPage = 0;
 
+    final scrollController = ScrollController();
+
   final GetAllAlivePostsUseCase _getAlivePostsUS = di.getIt();
 
   @override

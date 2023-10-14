@@ -42,6 +42,9 @@ class CommentController extends GetxController {
   // بعدد التعليقات للبوست عند اضافة تعليقات
   RxInt sentCommentCounts = 0.obs;
 
+  /// للتحكم في تمرير الشاشة
+  final commentScrollController = ScrollController();
+
   @override
   void onInit() {
     super.onInit();
@@ -130,11 +133,14 @@ class CommentController extends GetxController {
     sendingComments
         .removeWhere((element) => element.currentTimeWidget == widgetTime);
 
-    sendingComments.add(CommentWidget(
-      comment: comment,
-      status: status,
-      setCurrentTime: widgetTime,
-    ));
+    sendingComments.insert(
+      0,
+      CommentWidget(
+        comment: comment,
+        status: status,
+        setCurrentTime: widgetTime,
+      ),
+    );
   }
 
   /// function to submit the event of send commnet button
@@ -142,7 +148,8 @@ class CommentController extends GetxController {
       {String? imagePath, DateTime? widgetCreatedAt}) async {
     Get.focusScope?.unfocus();
     if (content.isNotEmpty && await NetworkInfoImpl().isConnected) {
-      Comment commentToSend = _getCommentInstance(postId, content, imagepath: imagePath);
+      Comment commentToSend =
+          _getCommentInstance(postId, content, imagepath: imagePath);
 
       // give the widget current datetime if the comment sending to first time
       // to controll it easily
@@ -153,6 +160,13 @@ class CommentController extends GetxController {
           widgetTime: widgetCreatedAt,
           comment: commentToSend,
           status: CommentStatus.sending);
+
+      // jump to top of scrren
+      commentScrollController.animateTo(
+        commentScrollController.position.minScrollExtent,
+        duration: const Duration(milliseconds: 5),
+        curve: Curves.fastOutSlowIn,
+      );
 
       sendComment(commentToSend, widgetCreatedAt: widgetCreatedAt);
       // commentTextEditingController.clear();
@@ -186,7 +200,7 @@ class CommentController extends GetxController {
       sentCommentCounts.value++;
       sendingComments.removeWhere(
           (element) => element.currentTimeWidget == widgetCreatedAt);
-      commentsList.add(comment);
+      commentsList.insert(0, comment);
       printInfo(info: "<<<<< Done add comment >>>>>>");
     });
   }
@@ -248,16 +262,17 @@ class CommentController extends GetxController {
 
   Future pickImage(int postId) async {
     final imagePicker = ImagePicker();
-    XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    XFile? pickedFile =
+        await imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       Get.to(() => DisplaySendingImageWidget(
-        imageUrl: pickedFile.path,
-        onSend: (String content, String imagePath) async {
-            submitSendCommentButton(postId, content, imagePath: imagePath);
-            Get.back();
-            // sendComment(_getCommentInstance(postId, content, imagepath: imagePath));
-        },
-      ));
+            imageUrl: pickedFile.path,
+            onSend: (String content, String imagePath) async {
+              submitSendCommentButton(postId, content, imagePath: imagePath);
+              Get.back();
+              // sendComment(_getCommentInstance(postId, content, imagepath: imagePath));
+            },
+          ));
     }
   }
 

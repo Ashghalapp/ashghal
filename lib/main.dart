@@ -16,6 +16,7 @@ import 'config/routes.dart';
 import 'core/localization/local_controller.dart';
 import 'core/localization/translation.dart';
 import 'core/services/app_services.dart';
+import 'custom_appBar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
       initialRoute: AppRoutes.mainScreen,
+      // home: PostsScreen(),
       // home: CommentCardWidget(comment: CommentController().commentsListToTry[0]),
       // initialRoute: AppRoutes.singUpJobScreen,
       // initialRoute: AppRoutes.chooseUserTypeScreen,

@@ -9,6 +9,7 @@ import 'package:ashghal_app_frontend/features/post/domain/use_cases/comment_use_
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/comment_use_case/update_reply_us.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -108,11 +109,16 @@ class ReplyController extends GetxController {
     // sendingReplies.removeAt(replyWidgetIndex);
 
     sendingReplies.add(ReplyWidget(
+      key: GlobalObjectKey(widgetTime),
       reply: reply,
       status: status,
       setCurrentTime: widgetTime,
       replyController: this,
     ));
+    SchedulerBinding.instance.addPostFrameCallback(
+      (_) =>
+          Scrollable.ensureVisible(GlobalObjectKey(widgetTime).currentContext!),
+    );
   }
 
   /// function to submit the event of send reply button
@@ -121,8 +127,9 @@ class ReplyController extends GetxController {
       {String? imagePath, DateTime? widgetCreatedAt}) async {
     Get.focusScope?.unfocus();
     if (content.isNotEmpty && await NetworkInfoImpl().isConnected) {
-      Reply replyToSend =
-          _getReplyInstance(commentId, content, replyToCommentId, imagePath: imagePath);
+      Reply replyToSend = _getReplyInstance(
+          commentId, content, replyToCommentId,
+          imagePath: imagePath);
 
       // give the widget current datetime if the comment sending to first time
       // to controll it easily
@@ -144,8 +151,7 @@ class ReplyController extends GetxController {
   }
 
   /// function to send the reply data to api
-  Future<void> sendReply(Reply replyToSend,
-      {DateTime? widgetCreatedAt}) async {
+  Future<void> sendReply(Reply replyToSend, {DateTime? widgetCreatedAt}) async {
     final AddReplyUseCase addComment = di.getIt();
     final result = addComment.call(AddReplyRequest(
       commentId: replyToSend.parentCommentId,
@@ -153,7 +159,7 @@ class ReplyController extends GetxController {
       replyToUserId: replyToSend.replyToCommentId,
       imagePath: replyToSend.imageUrl,
     ));
-     sentRepliesCounts.value++;
+    sentRepliesCounts.value++;
     (await result).fold((failure) {
       // remove tha sending widget to replace it with faild sending widget
       _replaceSendingReplyWidgetStatus(
@@ -163,8 +169,6 @@ class ReplyController extends GetxController {
       );
       AppUtil.hanldeAndShowFailure(failure);
     }, (comment) {
-     
-
       // remove tha sending widget to replace it with sent widget
       sendingReplies.removeWhere(
           (element) => element.currentTimeWidget == widgetCreatedAt);
@@ -225,9 +229,10 @@ class ReplyController extends GetxController {
           imageUrl: pickedFile.path,
           onSend: (String content, String imagePath) async {
             print("<<<<<<<<<<<<<<<<<<<<$imagePath>>>>>>>>>>>>>>>>>>>>");
-              submitAddReplyButton(parentCommentId,replyToCommentId, content, imagePath: imagePath);
-              Get.back();
-                  // _getReplyInstance(parentCommentId, content,replyToCommentId, imagePath: imagePath));
+            submitAddReplyButton(parentCommentId, replyToCommentId, content,
+                imagePath: imagePath);
+            Get.back();
+            // _getReplyInstance(parentCommentId, content,replyToCommentId, imagePath: imagePath));
           },
         ),
       );

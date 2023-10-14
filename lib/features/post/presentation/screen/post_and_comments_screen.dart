@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/ScrollerAppBar.dart';
 
 import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_input_widget.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/post_card_widget.dart';
@@ -9,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../getx/comment_input_controller.dart';
 import '../widget/comment_reply_widgets/comment_widget.dart';
+import '../widget/jump_to_top_or_bottom_Button.dart';
 
 // الصفحة الخاصة بعرض البوست والتعليقات الخاصه به
 // يتم استدعائها عندما يضغط المستخدم على زر تعليق في البوست
@@ -23,70 +27,83 @@ class PostCommentsScreen extends StatelessWidget {
   /// متحكم يتم استخدامه في صندوق ادخال الرد لكل تعليق حتى يتم الاحتفاظ بالقيمة
   final TextEditingController textInputController = TextEditingController();
 
+  final RxBool _showJumpTopButton = true.obs;
+  
   @override
   Widget build(BuildContext context) {
     commentController.getPostComments(post.id);
 
     return RefreshIndicator(
       onRefresh: () => commentController.getPostComments(post.id),
-      child: Scaffold(
-        backgroundColor: const Color(0xFFEDF0F6),
-        // appBar: AppBar(),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  // show the post
-                  Obx(() {
-                    post.commentsCount = post.commentsCount +
-                        commentController.sentCommentCounts.value;
-                    return PostCardWidget(post: post);
-                  }),
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: const Color(0xFFEDF0F6),
+          // appBar: AppBar(),
+          body: Column(
+            children: [
+              ScrollerAppBar(
+                controller: commentController.commentScrollController,
+                title: "Post Comments",
+                onScrollDirectionChange: (scrollDirection, isAppBarShow) {
+                  _showJumpTopButton.value = isAppBarShow;
+                  if (_showJumpTopButton.value){
+                    Timer(
+                      const Duration(seconds: 3),
+                      () {
+                        _showJumpTopButton.value = false;
+                      },
+                    );
+                  }
+                },
+              ),
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  controller: commentController.commentScrollController,
+                  children: [
+                    // show the post
+                    Obx(() {
+                      post.commentsCount = post.commentsCount +
+                          commentController.sentCommentCounts.value;
+                      return PostCardWidget(post: post);
+                    }),
 
-                  // show the post's comments
-                  _buildPostCommentsWidget(),
-                ],
+                    // show the post's comments
+                    _buildPostCommentsWidget(),
+                  ],
+                ),
+              ),
+
+              // صندوق ادخال التعليق
+              Obx(
+                () => focusedController.isAddCommentFocused.value
+                    ? CommentInputWidget(
+                        parentId: post.id,
+                        hintText: "Write a comment",
+                        textController: textInputController,
+                        onTapOutside: () {},
+                        onSend: (content) {
+                          commentController.submitSendCommentButton(
+                              post.id, content);
+                          textInputController.clear();
+                        },
+                        onPrefixIconPressed: () =>
+                            commentController.pickImage(post.id),
+                      )
+                    : const SizedBox(),
+              ),
+            ],
+          ),
+          floatingActionButton: Container(
+            margin: const EdgeInsets.only(bottom: 50),
+            child: Obx(
+              () => AnimatedJumpToTopOrBottomButton(
+                controller: commentController.commentScrollController,
+                height: _showJumpTopButton.value ? 40 : 0.0,
               ),
             ),
-
-            // صندوق ادخال التعليق
-            Obx(
-              () => focusedController.isAddCommentFocused.value
-                  ? CommentInputWidget(
-                      parentId: post.id,
-                      hintText: "Write a comment",
-                      textController:
-                          textInputController, //commentController.commentTextEditingController,
-                      onTapOutside: () {},
-                      onSend: (content) {
-                        commentController.submitSendCommentButton(
-                            post.id, content);
-                        textInputController.clear();
-                      },
-                      onPrefixIconPressed: () => commentController.pickImage(post.id),
-                    )
-                  : const SizedBox(),
-            ),
-          ],
+          ),
         ),
-
-        // floatingActionButton: FloatingActionButton(onPressed: () {
-        // final CommentInputController con = Get.find();
-        //   con.textFieldKey1.currentState?.didUpdateWidget(TextFormField(
-        //     readOnly: true,
-        //     // decoration: ,
-        //   ));// didChange('قيمة جديدة للحقل الأول');
-        //   //  // تحديث خصائص الـ TextFormField عند النقر على الزر
-        //   //           con.formKey.currentState?.setState(() {
-        //   //             con.formKey.currentState?.fields.child.
-        //   //           }); [con.formKey.toString()]?.decoration =
-        //   //               InputDecoration(
-        //   //             labelText: 'النص المحدث',
-        //   //             // يمكنك تعديل خصائص أخرى هنا
-        //   //           );
-        // },),
       ),
     );
   }
@@ -97,16 +114,6 @@ class PostCommentsScreen extends StatelessWidget {
               commentController.sendingComments.isNotEmpty
           ? Column(
               children: [
-                for (int i = 0; i < commentController.commentsList.length; i++)
-                  Container(
-                    margin: const EdgeInsets.only(top: 9),
-                    padding: const EdgeInsets.only(top: 9),
-                    decoration: const BoxDecoration(
-                        border: Border(top: BorderSide(color: Colors.white))),
-                    child: CommentWidget(
-                      comment: commentController.commentsList[i],
-                    ),
-                  ),
                 for (int i = 0;
                     i < commentController.sendingComments.length;
                     i++)
@@ -116,6 +123,17 @@ class PostCommentsScreen extends StatelessWidget {
                     decoration: const BoxDecoration(
                         border: Border(top: BorderSide(color: Colors.white))),
                     child: commentController.sendingComments[i],
+                  ),
+
+                for (int i = 0; i < commentController.commentsList.length; i++)
+                  Container(
+                    margin: const EdgeInsets.only(top: 9),
+                    padding: const EdgeInsets.only(top: 9),
+                    decoration: const BoxDecoration(
+                        border: Border(top: BorderSide(color: Colors.white))),
+                    child: CommentWidget(
+                      comment: commentController.commentsList[i],
+                    ),
                   ),
 
                 // عرض الزر الخاص بعرض المزيد من التعليقات

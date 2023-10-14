@@ -18,7 +18,7 @@ import 'package:get/get.dart';
 import 'config/app_icons.dart';
 import 'features/post/domain/Requsets/post_request/get_category_posts_request.dart';
 import 'features/post/domain/Requsets/post_request/get_user_posts_request.dart';
-import 'features/post/presentation/screen/add_post.dart';
+import 'features/post/presentation/screen/add_post_screen.dart';
 
 class MainScreenController extends GetxController {
   int currentIndex = 0;
@@ -178,7 +178,7 @@ class MainScreenController extends GetxController {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [Center(child: Text("Search screen"))],
     ),
-    UploadPostPage(),
+    AddPostScreen(),
     // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [Center(child: Text("Add Post"))],

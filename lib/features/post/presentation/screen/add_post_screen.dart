@@ -6,18 +6,15 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-class UploadPostPage extends StatelessWidget {
-  UploadPostPage({super.key});
+class AddPostScreen extends StatelessWidget {
+  AddPostScreen({super.key});
   final PostImageController postImageController =
       Get.put(PostImageController());
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create new Post', style: TextStyle(color: Colors.black87),),
-      ),
+      appBar: AppBar(title: const Text('Create new Post')),
       body: GetX<PostImageController>(
         builder: (controller) => Padding(
           padding: const EdgeInsets.all(16.0),
@@ -68,14 +65,18 @@ class UploadPostPage extends StatelessWidget {
               DropdownButtonFormField(
                 value: postImageController.selectedCategory.value,
                 onChanged: (newValue) {
-                  postImageController.selectedCategory.value = int.parse(newValue?.toString() ?? "1");
+                  postImageController.selectedCategory.value =
+                      int.parse(newValue?.toString() ?? "1");
                 },
-                items: postImageController.categoryItems.map(
-                    (category) => DropdownMenuItem(
-                    value: category['id'], // Ensure each value is unique
-                    child: Center(child: Text(category['value'].toString())),
-                  ),
-                ).toList(),
+                items: postImageController.categoryItems
+                    .map(
+                      (category) => DropdownMenuItem(
+                        value: category['id'], // Ensure each value is unique
+                        child:
+                            Center(child: Text(category['value'].toString())),
+                      ),
+                    )
+                    .toList(),
                 decoration: InputDecoration(
                   labelText: 'Select category',
                   border: OutlineInputBorder(

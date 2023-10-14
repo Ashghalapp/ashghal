@@ -2,7 +2,6 @@ import 'package:ashghal_app_frontend/features/post/data/models/multimedia_model.
 import 'package:equatable/equatable.dart';
 
 import '../../../../app_library/public_entities/address.dart';
-import 'multimedia.dart';
 
 class Post extends Equatable {
   final int id;
