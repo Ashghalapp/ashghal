@@ -1,7 +1,6 @@
 import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class SendingImageVideoButtonAndCaptionField extends StatelessWidget {
   const SendingImageVideoButtonAndCaptionField({

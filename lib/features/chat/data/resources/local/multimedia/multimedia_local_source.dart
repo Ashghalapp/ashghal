@@ -94,6 +94,7 @@ class MultimediaLocalSource extends DatabaseAccessor<ChatDatabase>
           type: row.read<String>('type'),
           path: row.read<String?>('path'),
           url: row.read<String?>('url'),
+          size: row.read<int>('size'),
           fileName: row.read<String>('file_name'),
           messageId: row.read<int>('message_id'),
           createdAt: row.read<DateTime>('created_at'),

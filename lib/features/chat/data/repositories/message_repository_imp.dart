@@ -7,6 +7,7 @@ import 'package:ashghal_app_frontend/features/chat/data/models/receive_read_conf
 import 'package:ashghal_app_frontend/features/chat/data/models/receive_read_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_multimedia_model.dart';
+import 'package:ashghal_app_frontend/features/chat/data/repositories/pusher_chat_helper.dart';
 import 'package:ashghal_app_frontend/features/chat/data/resources/local/conversation/conversation_local_source.dart';
 import 'package:ashghal_app_frontend/features/chat/data/resources/local/message/message_local_source.dart';
 import 'package:ashghal_app_frontend/features/chat/data/resources/local/multimedia/multimedia_local_source.dart';
@@ -14,6 +15,7 @@ import 'package:ashghal_app_frontend/features/chat/data/resources/remote/message
 import 'package:ashghal_app_frontend/features/chat/domain/repositories/message_repository.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/clear_chat_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_messages_request.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/requests/dispatch_typing_event_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/download_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/receive_read_confirmation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/send_message_request.dart';
@@ -29,10 +31,24 @@ class MessageRepositoryImp extends MessageRepository {
   //     ConversationRepositoryImp();
   final ChatDatabase db = ChatDatabase();
   final NetworkInfo networkInfo = NetworkInfoImpl();
+  final PusherChatHelper _pusherChatHelper = PusherChatHelper();
   MessageRepositoryImp() {
     _conversationLocalSource = ConversationLocalSource(db);
     _messageLocalSource = MessageLocalSource(db);
     _multimediaLocalSource = MultimediaLocalSource(db);
+  }
+
+  @override
+  Future<Either<Failure, List<LocalMessage>>> getCoversationMessages(
+      int conversationId) async {
+    try {
+      return Right(
+          await _messageLocalSource.getConversationMessages(conversationId));
+    } on AppException catch (e) {
+      return Left(e.failure as ServerFailure);
+    } catch (e) {
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
   }
 
   @override
@@ -54,6 +70,19 @@ class MessageRepositoryImp extends MessageRepository {
     } catch (e) {
       print("Error: " + e.toString());
       throw NotSpecificFailure(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> dispatchTypingEvent(DispatchTypingEventRequest request) async {
+    try {
+      await _pusherChatHelper.dispatchTypingEvent(
+        request.conversationId,
+        request.eventType,
+      );
+    } catch (e) {
+      print(
+          "**********Error in MessageRepositoryImp in dispatchTypingEvent: ${e.toString()}");
     }
   }
 
@@ -154,7 +183,7 @@ class MessageRepositoryImp extends MessageRepository {
           .insertMessageAndGetInstance(request.toLocal());
       if (request.filePath != null) {
         await _multimediaLocalSource.insertMultimedia(
-          request.toLocalMultimediaOnInsert(message.localId),
+          await request.toLocalMultimediaOnInsert(message.localId),
         );
       }
 

@@ -3,6 +3,7 @@ import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_d
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/conversation_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum ChatPopupMenuItemsValues { settings, blockedUsers, createConversation }
@@ -12,6 +13,7 @@ class ChatScreenController extends GetxController {
   //     _chatController.conversations;
   RxBool isLoaing = false.obs;
   final ChatController _chatController = Get.put(ChatController());
+  TextEditingController searchFeildController = TextEditingController();
 
   Future<void> startConversationWith(int userId) async {
     _chatController.startConversationWith(userId);
@@ -38,4 +40,6 @@ class ChatScreenController extends GetxController {
     Get.put(ConversationScreenController(conversation: conversation));
     Get.to(() => ConversationScreen(conversation: conversation));
   }
+
+  void search() {}
 }

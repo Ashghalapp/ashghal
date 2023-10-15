@@ -1,6 +1,10 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/widget/user_status_widgets.dart';
+import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/avatar.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
@@ -18,38 +22,41 @@ class ConversationWidget extends StatefulWidget {
 
 class _ConversationWidgetState extends State<ConversationWidget> {
   final ChatScreenController _controller = Get.find();
-
-  late Stream<void> _minuteStream;
+  final UsersStateController _stateController = Get.find();
+  final ChatController _chatController = Get.find();
+  // late Stream<void> _minuteStream;
   // late Stream<DateTime> MinuteStream;
   // late Stream<DateTime> _lastSeenMinuteStream;
   // late String _lastMessageDate;
-  String? _lastSeen;
+  // String? _lastSeen;
 
   String getLastMessageStringDate() {
+    print(widget.conversation.lastMessage?.createdAt.toString());
+    print(widget.conversation.lastMessage?.updatedAt.toString());
     return AppUtil.formatDateTime(widget.conversation.lastMessage?.createdAt ??
         widget.conversation.conversation.updatedAt);
   }
 
-  String? getLastSeenString() {
-    if (widget.conversation.lastSeen != null) {
-      return AppUtil.timeAgoSince(widget.conversation.lastSeen!);
-    }
-    return null;
-  }
+  // String? getLastSeenString() {
+  //   if (widget.conversation.lastSeen != null) {
+  //     return AppUtil.timeAgoSince(widget.conversation.lastSeen!);
+  //   }
+  //   return null;
+  // }
 
   @override
   void initState() {
     super.initState();
     // _lastMessageDate = getLastMessageStringDate();
-    if (_lastSeen != null) {
-      _lastSeen = getLastSeenString();
-      _minuteStream = Stream<void>.periodic(const Duration(minutes: 1), (_) {
-        setState(() {
-          // _lastMessageDate = getLastMessageStringDate();
-          _lastSeen = getLastSeenString();
-        });
-      });
-    }
+    // if (_lastSeen != null) {
+    //   _lastSeen = getLastSeenString();
+    //   _minuteStream = Stream<void>.periodic(const Duration(minutes: 1), (_) {
+    //     setState(() {
+    //       // _lastMessageDate = getLastMessageStringDate();
+    //       _lastSeen = getLastSeenString();
+    //     });
+    //   });
+    // }
   }
 
   bool get lastMessageMine => widget.conversation.lastMessage == null
@@ -66,7 +73,14 @@ class _ConversationWidgetState extends State<ConversationWidget> {
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           child: Row(
             children: [
-              _buildImageAvatar(context),
+              UserImageAvatarWithStatusWidget(
+                userId: widget.conversation.conversation.userId,
+                userName: widget.conversation.conversation.userName,
+                raduis: 26,
+                borderColor: Colors.blue,
+                imageUrl: widget.conversation.conversation.userImageUrl,
+              ),
+              // _buildImageAvatar(context),
               // const SizedBox(width: 10),
               Expanded(
                 child: Padding(
@@ -82,11 +96,29 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 7),
-                      Opacity(
-                        opacity: 0.6,
-                        child: buildLastMessageRow(),
+                      const SizedBox(height: 5),
+                      Obx(
+                        () {
+                          return _chatController.typingUsers.contains(
+                                  widget.conversation.conversation.userId)
+                              ? const Text(
+                                  "Typing Now...",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 16,
+                                  ),
+                                )
+                              : Opacity(
+                                  opacity: 0.8,
+                                  child: buildLastMessageRow(),
+                                );
+                        },
                       ),
+                      // if (widget.conversation.lastMessage != null)
+                      //   Opacity(
+                      //     opacity: 0.8,
+                      //     child: buildLastMessageRow(),
+                      //   ),
                     ],
                   ),
                 ),
@@ -99,69 +131,44 @@ class _ConversationWidgetState extends State<ConversationWidget> {
     );
   }
 
-  Stack _buildImageAvatar(BuildContext context) {
-    return Stack(
-      children: [
-        // User Image
-        InkWell(
-          onTap: () {
-            //TODO: Open the user image in a full screen
-          },
-          child: AvatarWithImageOrLetter(
-            userName: widget.conversation.conversation.userName,
-            imageUrl: widget.conversation.conversation.userImageUrl,
-            raduis: 25,
-            borderColor: Theme.of(context).primaryColor,
-          ),
-        ),
-        //online icon
-        if (widget.conversation.isActive)
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: Container(
-              width: 15,
-              height: 15,
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                // color: Colors.green,
-                borderRadius: BorderRadius.circular(50),
-              ),
-            ),
-          )
-      ],
-    );
-  }
+  // Stack _buildImageAvatar(BuildContext context) {
+  //   return UserImageAvatarWidget(widget: widget, widget: widget, widget: widget);
+  // }
 
-  Row buildLastMessageRow() {
-    return Row(
-      children: [
-        // lastMessageMine
-        //     ?
-        //     : const SizedBox(width: 2),
-        // const SizedBox(width: 7),
-        if (lastMessageMine)
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: MessageStatusIcon(message: widget.conversation.lastMessage!),
-          ),
-        Expanded(
-          flex: 1,
-          child: widget.conversation.lastMessage!.body == null
-              ? const Icon(Icons.image)
-              : Text(
-                  widget.conversation.lastMessage!.body!,
-                  // maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
+  Widget? buildLastMessageRow() {
+    return widget.conversation.lastMessage == null
+        ? null
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // lastMessageMine
+              //     ?
+              //     : const SizedBox(width: 2),
+              // const SizedBox(width: 7),
+              if (lastMessageMine)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: MessageStatusIcon(
+                    message: widget.conversation.lastMessage!,
                   ),
                 ),
-        ),
-      ],
-    );
+              widget.conversation.lastMessage!.body == null
+                  ? const Icon(Icons.file_present_sharp)
+                  : Expanded(
+                      flex: 1,
+                      child: Text(
+                        widget.conversation.lastMessage!.body!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+            ],
+          );
   }
 
   Column _buildTimeAgoAndNumberOfNewMessages() {
@@ -169,30 +176,35 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        if (_lastSeen == null)
-          Text(
-            getLastMessageStringDate(),
-            style: const TextStyle(),
-          ),
-        if (_lastSeen != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Text(
-              _lastSeen!,
-              style: const TextStyle(color: Colors.black),
-            ),
-          ),
-        const SizedBox(height: 7),
+        // if (_lastSeen == null)
+        Obx(
+          () {
+            return _stateController.onlineUsersIds
+                    .contains(widget.conversation.conversation.userId)
+                ? const Text(
+                    "Online",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16,
+                    ),
+                  )
+                : Text(
+                    getLastMessageStringDate(),
+                    style: const TextStyle(),
+                  );
+          },
+        ),
+        const SizedBox(height: 5),
         if (widget.conversation.newMessagesCount > 0)
           CircleAvatar(
             radius: 13,
-            backgroundColor: Colors.green,
+            backgroundColor: Theme.of(context).primaryColor,
             child: Text(
               widget.conversation.newMessagesCount.toString(),
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ),
@@ -211,7 +223,8 @@ class _ConversationWidgetState extends State<ConversationWidget> {
           //to prevent the widget from beeing deleted from the tree until it is updated
           //I will fire the updating action here and return false so the dissmisssble widget will not delete the wiget
           return AppUtil.showConfirmationDialog(
-              'Are you sure you want to archive this chat?');
+            'Are you sure you want to archive this chat?',
+          );
           //   .then((value) {
           // if (value != null && value) {
 
@@ -222,7 +235,8 @@ class _ConversationWidgetState extends State<ConversationWidget> {
         } else if (direction == DismissDirection.startToEnd) {
           // Widget dismissed from left to right
           return AppUtil.showConfirmationDialog(
-              'Are you sure you want to delete this chat?');
+            'Are you sure you want to delete this chat?',
+          );
         }
         return Future.value(false);
       },

@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:get/get.dart';
 
 class MyTranslation extends Translations {
@@ -256,12 +257,18 @@ class MyTranslation extends Translations {
           "Full name": "الأسم الكامل",
           "Successfull Logged In": "تـم تسجيل الدخول بنجاح, حياك الله",
           "Enter As Guest": "الدخول كضيف",
-          "or contiue with":"او المتابعة بأستخدام",
-          "Don\"t have accont?":"ليس لديك حساب؟",
-          "I want to find employees":"أريد العثور على عُمال",
-          "I want to find a job for me":"أريد العثور على عمل لي",
-          "Choose whether you are looking for a work or you are an organization/company that needs employees":"اختر ما إذا كنت تبحث عن عمل أو أنك مؤسسة/شركة تحتاج إلى موظفين",
-          "Create New Account":"إنشاء حساب جديد",
+          "or contiue with": "او المتابعة بأستخدام",
+          "Don\"t have accont?": "ليس لديك حساب؟",
+          "I want to find employees": "أريد العثور على عُمال",
+          "I want to find a job for me": "أريد العثور على عمل لي",
+          "Choose whether you are looking for a work or you are an organization/company that needs employees":
+              "اختر ما إذا كنت تبحث عن عمل أو أنك مؤسسة/شركة تحتاج إلى موظفين",
+          "Create New Account": "إنشاء حساب جديد",
+
+          //================================ Start chat messages ================================//
+          AppLocalization.conversationDeletedSuccess: "تم حذف المحادثة بنجاح",
+          AppLocalization.conversationDeletedFail: "فشل حذف المحادثة"
+          //================================ End chat messages ================================//
         },
 
         ///========================English=====================///
@@ -334,13 +341,13 @@ class MyTranslation extends Translations {
           "59": "Location",
           "60": "Job",
           "61": "Next",
-    
+
           "doyouwanttoexitApp": "Do You Want Exit the app?",
 
           "jobnamehint": "Enter Your job Name",
-         
+
           "verfication": "Verfication",
-        
+
           "jobdescriptionhint": "Enter Your Job jobdescription",
           "notifications": "Notifications",
           "back": "Back",

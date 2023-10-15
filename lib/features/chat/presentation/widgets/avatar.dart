@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:ashghal_app_frontend/core/widget/user_status_Widgets.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
 import 'package:flutter/material.dart';
 
@@ -101,5 +102,63 @@ class AvatarWithImageOrLetter extends StatelessWidget {
     //       backgroundImage: imageProvider,
     //     ),
     //   );
+  }
+}
+
+class UserImageAvatarWithStatusWidget extends StatelessWidget {
+  const UserImageAvatarWithStatusWidget({
+    super.key,
+    required this.userId,
+    required this.userName,
+    this.raduis = 25,
+    this.borderColor = Colors.transparent,
+    this.boderThickness = 2,
+    this.imageUrl,
+    this.statusRadius = 9,
+    this.statusActiveColor = Colors.blue,
+    this.statusUnactiveColor = Colors.grey,
+    this.statusBorderColor = Colors.white,
+  });
+
+  final int userId;
+  final String userName;
+  final double raduis;
+  final Color borderColor;
+  final int boderThickness;
+  final String? imageUrl;
+  final double statusRadius;
+  final Color statusActiveColor;
+  final Color statusUnactiveColor;
+  final Color statusBorderColor;
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        // User Image
+        InkWell(
+          onTap: () {
+            //TODO: Open the user image in a full screen
+          },
+          child: AvatarWithImageOrLetter(
+            userName: userName,
+            imageUrl: imageUrl,
+            raduis: raduis,
+            borderColor: borderColor,
+            boderThickness: boderThickness,
+          ),
+        ),
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: UserStatusAvatar(
+            userId: userId,
+            radius: statusRadius,
+            activeColor: statusActiveColor,
+            unactiveColor: statusUnactiveColor,
+            borderColor: statusBorderColor,
+          ),
+        )
+      ],
+    );
   }
 }

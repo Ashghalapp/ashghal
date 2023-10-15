@@ -6,10 +6,12 @@
 // PUSHER_SCHEME=https
 // PUSHER_APP_CLUSTER=ap2
 // import 'package:pusher_channels/pusher_channels.dart';
+import 'dart:collection';
+
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/dio_service.dart';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 
 import 'dart:convert';
 
@@ -44,30 +46,75 @@ class PusherService {
           useTLS: true,
           // onConnectionStateChange: (),
           // onError: onError,
-          // onSubscriptionSucceeded: onSubscriptionSucceeded,  //use this if you want to be informed of when a channel has successfully been subscribed to, which is useful if you want to perform actions that are only relevant after a subscription has succeeded. For example querying the members for presence channel.
+          onSubscriptionSucceeded:
+              onSubscriptionSucceeded, //use this if you want to be informed of when a channel has successfully been subscribed to, which is useful if you want to perform actions that are only relevant after a subscription has succeeded. For example querying the members for presence channel.
           onEvent:
               onEvent, //Called when a event is received by the client. The global event handler will trigger on events from any channel.
           // authEndpoint: ,  //The authEndpoint provides a URL that the Pusher client will call to authorize users for a presence channel.
-          // onSubscriptionError: onSubscriptionError,  //use this if you want to be informed of a failed subscription attempt, which you could use, for example, to then attempt another subscription or make a call to a service you use to track errors.
-          // onDecryptionFailure: onDecryptionFailure,  //only used with private encrypted channels - use this if you want to be notified if any messages fail to decrypt.
-          // onMemberAdded: onMemberAdded,
-          // onMemberRemoved: onMemberRemoved,
-          authEndpoint: "http://10.0.2.2/api/broadcasting/auth",
+          onSubscriptionError:
+              onSubscriptionError, //use this if you want to be informed of a failed subscription attempt, which you could use, for example, to then attempt another subscription or make a call to a service you use to track errors.
+          onDecryptionFailure:
+              onDecryptionFailure, //only used with private encrypted channels - use this if you want to be notified if any messages fail to decrypt.
+          onMemberAdded: onMemberAdded,
+          onMemberRemoved: onMemberRemoved,
+          authEndpoint: ApiConstants.channelsAutherizingUrl,
           onAuthorizer: onAuthorizer,
           authParams: {
             //The authEndpoint provides a URL that the Pusher client will call to authorize users for a presence channel. On how to implement an authorization service please check here: https://pusher.com/docs/channels/server_api/authenticating-users/
-            'params': {'foo': 'bar'}, //Query parameters  (AJAX only).
-            'headers': {'baz': 'boo'} //Headers parameters (AJAX only).
+            // 'params': {'foo': 'bar'}, //Query parameters  (AJAX only).
+            // 'headers': {'baz': 'boo'} //Headers parameters (AJAX only).
           });
     } catch (e) {
       print("ERROR: $e");
     }
   }
 
-  dynamic _authResponse;
+  // dynamic _authResponse;
   Future<void> initializePusher() async {
     await initialize();
     await connect();
+  }
+
+  Future<void> triggerEvent({
+    required String channelName,
+    required String eventName,
+    required Map<String, Object?> eventData,
+  }) async {
+    try {
+      // final channel =
+      //     pusher!.getChannel("${ChannelsEventsNames.chatChannelName}2");
+      final channel = pusher!.getChannel(channelName);
+
+      if (channel != null) {
+        // String data = jsonEncode({
+        //   'user_id': SharedPref.currentUserId,
+        //   'is_typing': true,
+        // });
+        String data = jsonEncode(eventData);
+        print("Triggering event started in the pusherService");
+        print(channelName);
+        await channel.trigger(
+          PusherEvent(
+            channelName: channelName,
+            eventName: eventName,
+            data: data,
+            // {
+            //   'broadcasted_by': SharedPref.currentUserId,
+            //   'message': {
+            //     "id": 15,
+            //     "at": DateTime.now().toIso8601String(),
+            //   },
+            // },
+          ),
+        );
+        print("Triggering event Finished success in the pusherService");
+      } else {
+        print("Coudn't get the pusherChannel");
+      }
+    } catch (e) {
+      print(
+          "<?><?> <?><?> <?><?> Trigger event failed : ${e.toString()} <?><?> <?><?> <?><?>");
+    }
   }
 
   Future<void> connect() async {
@@ -100,30 +147,44 @@ class PusherService {
   }
 
   void addNewChannelHandler(Channelhandler handler) {
-    Channelhandler? h = channelsHandlers.firstWhereOrNull((element) =>
+    int index = channelsHandlers.indexWhere((element) =>
         element.channel.channelName == handler.channel.channelName &&
         element.channel.eventName == handler.channel.eventName);
-    if (h == null) {
-      channelsHandlers.add(handler);
+    if (index != -1) {
+      channelsHandlers.removeAt(index);
     }
+    channelsHandlers.add(handler);
   }
 
   Future<void> subscribeToChannel(String channelName) async {
     if (pusher != null) {
-      final myPrivateChannel =
-          await pusher!.subscribe(channelName: channelName);
-    }
-  }
+      // final myPrivateChannel =
+      await pusher!.subscribe(
+        channelName: channelName,
 
-  Future<void> subscribeToPresenceChannel(
-      String channelName, Channelhandler handler) async {
-    if (pusher != null) {
-      addNewChannelHandler(handler);
-      final myPrivateChannel = await pusher!.subscribe(
-        channelName: handler.channel.channelName,
+        // onMemberAdded: (dynamic event) {
+        //   print("Private OnMemeber Added $event");
+        //   dynamic data = json.decode(event.toString());
+        //   print("Private OnMemeber Added $data");
+        // },
+        // onMemberRemoved: (dynamic event) {
+        //   print("Private OnMemeber Removed $event");
+        //   dynamic data = json.decode(event.toString());
+        //   print("Private OnMemeber Removed $data");
+        // },
       );
     }
   }
+
+  // Future<void> subscribeToPresenceChannel(
+  //     String channelName, Channelhandler handler) async {
+  //   if (pusher != null) {
+  //     addNewChannelHandler(handler);
+  //     final myPrivateChannel = await pusher!.subscribe(
+  //       channelName: handler.channel.channelName,
+  //     );
+  //   }
+  // }
 
   Map<String, dynamic> fromjson(Map<String, dynamic> data) {
     return {
@@ -155,13 +216,7 @@ class PusherService {
       print("channelName:${event.channelName}");
       print("channelName:${event.eventName}");
       print("event:${event.data}");
-      //  RemoteMessageModel message =  RemoteMessageModel.fromJson(event.data);
-      //   print(message.name)
-      //   Map<String, dynamic> data = event.data as Map<String, dynamic>;
-      //   print(data['message']);
     }
-
-    // print()
   }
 
   /// use this if you want to be informed of when a channel has successfully
@@ -170,7 +225,35 @@ class PusherService {
   ///
   /// For example querying the members for presence channel.
   void onSubscriptionSucceeded(String channelName, dynamic data) {
-    print("onSubscriptionSucceeded: $channelName data: $data");
+    print("puplic onSubscriptionSucceeded started");
+    Channelhandler? handler;
+    if (channelsHandlers.isNotEmpty) {
+      handler = channelsHandlers.firstWhereOrNull(
+          (element) => element.channel.channelName == channelName);
+    }
+    if (handler != null) {
+      // try {
+      // print("puplic onSubscriptionSucceeded handler exists  started");
+      List<int> ids = List<String>.from(data['presence']['ids'])
+          .map((e) => int.parse(e))
+          .toList();
+      // List<int> iids = ids.map<int>((e) => int.parse(e)).toList();
+      if (handler.onSubscriptionSucceeded != null) {
+        handler.onSubscriptionSucceeded!(ids);
+      }
+
+      //   print(
+      //       "puplic onSubscriptionSucceeded handler exists Finished:${ids.length} - ${ids.toString()}");
+      //   // print(
+      //   //     "puplic onSubscriptionSucceeded handler exists Finished:${iids.length} - ${iids.toString()}");
+      // } catch (e) {
+      //   print("puplic onSubscriptionSucceeded handler exists  error :$e");
+      // }
+    } else {
+      // print("puplic onSubscriptionSucceeded: $channelName data: $data");
+      // var d = data['presence']['ids'];
+      // print("puplic onSubscriptionSucceeded: $channelName data: $d");
+    }
   }
 
   /// use this if you want to be informed of a failed subscription attempt,
@@ -188,12 +271,36 @@ class PusherService {
 
   /// Called when a member is added to the presence channel.
   void onMemberAdded(String channelName, PusherMember member) {
-    print("onMemberAdded: $channelName member: $member");
+    Channelhandler? handler;
+    if (channelsHandlers.isNotEmpty) {
+      handler = channelsHandlers.firstWhereOrNull(
+          (element) => element.channel.channelName == channelName);
+    }
+    if (handler != null) {
+      if (handler.onMemeberAdded != null) {
+        handler.onMemeberAdded!(int.parse(member.userId));
+      }
+    } else {
+      // print("Global onMemberAdded: $channelName member: $member");
+      // print("Global onMemberAdded: ${member.userId} ");
+    }
   }
 
   /// Called when a member is removed to the presence channel.
   void onMemberRemoved(String channelName, PusherMember member) {
-    print("onMemberRemoved: $channelName member: $member");
+    Channelhandler? handler;
+    if (channelsHandlers.isNotEmpty) {
+      handler = channelsHandlers.firstWhereOrNull(
+          (element) => element.channel.channelName == channelName);
+    }
+    if (handler != null) {
+      if (handler.onMemeberRemoved != null) {
+        handler.onMemeberRemoved!(int.parse(member.userId));
+      }
+    } else {
+      // print("Global onMemberRemoved: $channelName member: $member");
+      // print("Global onMemberRemoved: ${member.userId}");
+    }
   }
 
   /// When passing the onAuthorizer() callback to the init() method,
@@ -275,10 +382,16 @@ class PusherService {
 class Channelhandler {
   final AppChannel channel;
   final Function(PusherEvent event) onEvent;
+  final Function(List<int> membersIds)? onSubscriptionSucceeded;
+  final Function(int memberId)? onMemeberAdded;
+  final Function(int memberId)? onMemeberRemoved;
 
   Channelhandler({
     required this.channel,
     required this.onEvent,
+    this.onSubscriptionSucceeded,
+    this.onMemeberAdded,
+    this.onMemeberRemoved,
   });
 }
 

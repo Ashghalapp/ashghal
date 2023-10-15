@@ -67,6 +67,21 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
         .watch();
   }
 
+  Future<List<LocalMessage>> getConversationMessages(
+      int conversationLocalId) async {
+    return (db.select(db.messages)
+          ..where((tbl) => tbl.conversationId.equals(conversationLocalId))
+          ..orderBy(
+            [
+              (table) => OrderingTerm(
+                    expression: table.createdAt,
+                    mode: OrderingMode.asc,
+                  )
+            ],
+          ))
+        .get();
+  }
+
   /// Inserts a new local message into the database and returns the resulting
   /// local ID.
   ///
@@ -124,8 +139,11 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
   ///
   /// - [conversationLocalId]: The local ID of the conversation for which messages should be deleted.
   Future<void> deleteAllMessagesInConversation(int conversationLocalId) async {
-    delete(db.messages)
-        .where((tbl) => tbl.conversationId.equals(conversationLocalId));
+    // print("conversationLocalId $conversationLocalId");
+    var query = delete(db.messages)
+      ..where((tbl) => tbl.conversationId.equals(conversationLocalId));
+    int m = await query.go();
+    print("Done delete umber of messages deleted= $m");
   }
 
   /// Inserts a new message into the database and retrieves its instance with the assigned local ID.
@@ -465,7 +483,7 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
         SELECT conversation_id,
               MAX(created_at) AS max_created_at,
               MAX(local_id) AS max_id,
-              SUM(CASE WHEN read_at IS NULL AND sender_id != ${SharedPref.currentUserId} THEN 1 ELSE 0 END) AS new_message_count
+              SUM(CASE WHEN read_at IS NULL AND read_locally IS false AND sender_id != ${SharedPref.currentUserId} THEN 1 ELSE 0 END) AS new_message_count
         FROM messages
         GROUP BY conversation_id
       ) latest_msg ON m.conversation_id = latest_msg.conversation_id
@@ -657,12 +675,12 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
         .watch();
   }
 
-  Future<List<LocalMessage>> getConversationMessages(
-      int conversationLocalId) async {
-    return await (db.select(messages)
-          ..where((tbl) => tbl.conversationId.equals(conversationLocalId)))
-        .get();
-  }
+  // Future<List<LocalMessage>> getConversationMessages(
+  //     int conversationLocalId) async {
+  //   return await (db.select(messages)
+  //         ..where((tbl) => tbl.conversationId.equals(conversationLocalId)))
+  //       .get();
+  // }
 
   Stream<List<LocalMessage>> watchReceivedLocallyMessages() {
     return (db.select(messages)

@@ -64,6 +64,7 @@ class Multimedia extends Table {
   TextColumn get type => text().customConstraint(
       'NOT NULL CHECK(type IN (\'image\', \'file\', \'video\', \'audio\', \'archive\'))')();
   TextColumn get path => text().nullable()();
+  IntColumn get size => integer()();
   TextColumn get url => text().nullable()();
   TextColumn get fileName => text().customConstraint('NOT NULL')();
   IntColumn get messageId => integer().customConstraint(

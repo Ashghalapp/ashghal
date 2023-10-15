@@ -1,6 +1,7 @@
 // لكل implement الكلاس الاساسي والي يحتوي العمليات الاساسية حتى يتم منه عمل
 // تقنية مستخدمة حتى تمثل مصدر البيانات، وهكذا تسهل عملية التعديل وايضا التغيير
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/api_response_model.dart';
 import 'package:ashghal_app_frontend/core_api/dio_service.dart';
@@ -168,10 +169,12 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     if (response.status) {
       SharedPref.setUserToken(response.data['token']);
       SharedPref.setUserId(response.data['id']);
+      print("User id Stored is:${response.data['id']}");
+      print("User id Stored is:${SharedPref.currentUserId}");
       SharedPref.setUserName(response.data['name']);
       SharedPref.setUserEmail(response.data['email']);
       SharedPref.setUserPhone(response.data['phone']);
-      SharedPref.setUserImageUrl(response.data['image_url']);
+      SharedPref.setUserImageUrl(AppUtil.editUrl(response.data['image_url']));
       print("::: S End login func in remote datasource");
       return UserModel.fromJson(response.data as Map<String, dynamic>);
     }

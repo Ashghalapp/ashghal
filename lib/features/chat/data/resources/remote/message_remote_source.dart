@@ -107,10 +107,11 @@ class MessageRemoteSourceImp extends MessageRemoteSource {
   @override
   Future<bool> downloadMultimedia(DownloadRequest request) async {
     Response response = await _service.download(
-        url: request.url,
-        savePath: request.savePath,
-        onReceiveProgress: request.onReceiveProgress,
-        cancelToken: request.cancelToken);
+      url: request.url,
+      savePath: request.savePath,
+      onReceiveProgress: request.onReceiveProgress,
+      cancelToken: request.cancelToken,
+    );
     if (response.statusCode == 200) {
       return true;
     }

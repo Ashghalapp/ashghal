@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
+import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'config/app_icons.dart';
 class MainScreenController extends GetxController {
   int currentIndex = 0;
   final search = TextEditingController();
+  final UsersStateController stateController = Get.put(UsersStateController());
 
   AppServices appServices = Get.find();
   var location = ''.obs;
@@ -127,10 +129,11 @@ class MainScreenController extends GetxController {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [Center(child: Text("Home screen"))],
     ),
-    const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [Center(child: Text("Search screen"))],
-    ),
+    HomeScreen(),
+    // const Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [Center(child: Text("Search screen"))],
+    // ),
     const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [Center(child: Text("Add Post"))],
@@ -149,7 +152,9 @@ class MainScreenController extends GetxController {
     ),
     const Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [Center(child: Text("Profile Screen"))],
+      children: [
+        Center(child: Text("Profile Screen")),
+      ],
     ),
   ];
 

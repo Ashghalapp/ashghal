@@ -25,6 +25,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/requests/block_unblock
 import 'package:ashghal_app_frontend/features/chat/domain/requests/clear_chat_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
@@ -85,9 +86,16 @@ class ConversationRepositoryImp extends ConversationRepository {
   Future<Either<Failure, bool>> deleteConversation(
       DeleteConversationRequest request) async {
     try {
+      // List<LocalMessage> messages = await _messageLocalSource
+      //     .getConversationMessages(request.conversationLocalId);
+      // print(
+      //     "Number of messages in the conversation before delete: ${messages.length}");
       bool deleted = await _conversationLocalSource
           .deleteConversationByLocalId(request.conversationLocalId);
-
+      // messages = await _messageLocalSource
+      //     .getConversationMessages(request.conversationLocalId);
+      // print(
+      //     "Number of messages in the conversation after delete: ${messages.length}");
       return Right(deleted);
     } catch (e) {
       return Left(NotSpecificFailure(message: e.toString()));
@@ -143,33 +151,48 @@ class ConversationRepositoryImp extends ConversationRepository {
   }
 
   @override
-  Future<void> subscribeToChatChannels() async {
+  Future<void> subscribeToChatChannels(
+      void Function(TypingEventType eventType, int userId)
+          onTypingEvent) async {
     try {
-      List<LocalConversation> conversations =
-          await _conversationLocalSource.getRemoteConversations();
+      if (await networkInfo.isConnected) {
+        List<LocalConversation> conversations =
+            await _conversationLocalSource.getRemoteConversations();
 
-      await _pusherChatHelper.connect();
-      for (var conversation in conversations) {
-        await _pusherChatHelper.subscribeToChatChannels(
-          conversationRemoteId: conversation.remoteId!,
-          onNewMessage: (message) async {
-            await _messageRepository.insertNewMessageFromRemote(
-              message,
-              conversation.localId,
-            );
-          },
-          onMessageReceived: (receivedReadMessage) async {
-            // print("onMessageReceived///////////////////////");
-            // print(receivedReadMessage.toString());
-            await _messageRepository
-                .markMessagesAsReceived([receivedReadMessage]);
-          },
-          onMessageRead: (receivedReadMessage) async {
-            // print("onMessageReceived///////////////////////");
-            // print(receivedReadMessage.toString());
-            await _messageRepository.markMessagesAsRead([receivedReadMessage]);
-          },
-        );
+        for (var conversation in conversations) {
+          await _pusherChatHelper.subscribeToChatChannels(
+            conversationRemoteId: conversation.remoteId!,
+            onNewMessage: (message) async {
+              await _messageRepository.insertNewMessageFromRemote(
+                message,
+                conversation.localId,
+              );
+            },
+            onMessageReceived: (receivedReadMessage) async {
+              // print("onMessageReceived///////////////////////");
+              print(receivedReadMessage.toString());
+              await _messageRepository
+                  .markMessagesAsReceived([receivedReadMessage]);
+            },
+            onMessageRead: (receivedReadMessage) async {
+              print("onMessageRead///////////////////////");
+              // print(receivedReadMessage.toString());
+              await _messageRepository
+                  .markMessagesAsRead([receivedReadMessage]);
+            },
+            onTypingEvent: onTypingEvent,
+          );
+          print("*********Subscrib to chat channls ok*********");
+        }
+
+        // Future.delayed(
+        //   const Duration(seconds: 10),
+        //   () async {
+        //     print("Trigger event started in Conversation Repository");
+        //     await _pusherChatHelper.triggerEvent();
+        //     print("Trigger event Finished in Conversation Repository");
+        //   },
+        // );
       }
     } on AppException catch (e) {
       print(
@@ -179,6 +202,12 @@ class ConversationRepositoryImp extends ConversationRepository {
           "**********Error in ConversationRepositoryImp in subscribeToChatChannels: ${e.toString()}");
     }
   }
+
+  // Future<void> subscribeT
+
+  // Future<void> subscribeToConversationChannel(LocalConversation conversation){
+
+  // }
 
   @override
   Future<void> unsubscribeFromChatChannels() async {
@@ -203,10 +232,11 @@ class ConversationRepositoryImp extends ConversationRepository {
 
         // send unsent messages
         await _sendUnSentMessages();
-
+        print("here0");
         //  get conversations updates from remote surce
         List<RemoteConversationModel> remoteConversations =
             await _conversationRemoteSource.getUserConversationsUpdates();
+        print("here0");
 
         // update local conversations according to updates comes from remote
         for (RemoteConversationModel remoteConversation
@@ -218,6 +248,8 @@ class ConversationRepositoryImp extends ConversationRepository {
           if (conversationLocalId == null) {
             continue;
           }
+          print("here1");
+
           //Save new messages into local db
           for (RemoteMessageModel message
               in remoteConversation.newMessages.cast<RemoteMessageModel>()) {
@@ -226,6 +258,7 @@ class ConversationRepositoryImp extends ConversationRepository {
               conversationLocalId,
             );
           }
+          print("here2");
 
           //refresh the conversation as the last updated conversation
           _conversationLocalSource
@@ -248,7 +281,11 @@ class ConversationRepositoryImp extends ConversationRepository {
             );
           }
         }
-        await subscribeToChatChannels();
+        // await subscribeToChatChannels((type, userid) {
+        //   print("Every thing works ok");
+        //   print("type: ${type == TypingEventType.start ? 'start' : 'stop'}");
+        //   print("userid: $userid");
+        // });
       } on AppException catch (e) {
         print(
             "MyException in ConversationRepositoryImp in initializeConversations: ${e.failure.toString()}");

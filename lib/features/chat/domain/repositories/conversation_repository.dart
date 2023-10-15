@@ -4,6 +4,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_
 import 'package:ashghal_app_frontend/features/chat/domain/requests/block_unblock_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ConversationRepository {
@@ -39,7 +40,8 @@ abstract class ConversationRepository {
   /// final repository = ConversationRepositoryImp();
   /// await repository.subscribeToChatChannels();
   /// ```
-  Future<void> subscribeToChatChannels();
+  Future<void> subscribeToChatChannels(
+      void Function(TypingEventType eventType, int userId) onTypingEvent);
 
   /// Starts a conversation with the specified user, both locally and remotely, based on the provided [StartConversationRequest].
   ///

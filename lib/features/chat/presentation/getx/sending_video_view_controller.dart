@@ -9,20 +9,29 @@ class SendingVideoViewController extends GetxController {
   String path;
   SendingVideoViewController({required String path}) : this.path = path;
   final ConversationController _conversationController = Get.find();
+  RxBool isInitialized = false.obs;
+  RxBool isPlaying = false.obs;
+
   @override
   void onInit() {
     super.onInit();
-    videoPlayerController = VideoPlayerController.file(File(path))
-      ..initialize().then((value) {
-        // Ensure the first frame is shown after the video is initialized,
-        //even before the play button has been pressed.
-      });
+    videoPlayerController = VideoPlayerController.file(File(path));
+    videoPlayerController.setLooping(true);
+    initializePlayer();
+  }
+
+  Future<void> initializePlayer() async {
+    await videoPlayerController.initialize();
+    isInitialized.value = true;
   }
 
   void playPauseVideo() {
-    videoPlayerController.value.isPlaying
-        ? videoPlayerController.pause()
-        : videoPlayerController.play();
+    if (isInitialized.value) {
+      isPlaying.value
+          ? videoPlayerController.pause()
+          : videoPlayerController.play();
+      isPlaying.value = !isPlaying.value;
+    }
   }
 
   Future<void> sendButtonPressed() async {

@@ -4,9 +4,9 @@ import 'package:ashghal_app_frontend/features/chat/domain/repositories/conversat
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
 import 'package:dartz/dartz.dart';
 
-class StartConversationWith {
+class StartConversationWithUseCase {
   final ConversationRepository repository;
-  StartConversationWith({
+  StartConversationWithUseCase({
     required this.repository,
   });
 

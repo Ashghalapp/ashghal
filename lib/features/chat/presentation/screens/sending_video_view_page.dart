@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/sending_video_view_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/multimedia/sending_image_video_button_and_caption_field.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/multimedia/video_view_top_row_widget.dart';
@@ -27,16 +28,21 @@ class SendingVideoViewPage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Visibility(
-              visible: _controller.videoPlayerController.value.isInitialized,
-              child: SizedBox(
-                width: double.infinity,
-                child: AspectRatio(
-                  aspectRatio:
-                      _controller.videoPlayerController.value.aspectRatio,
-                  child: VideoPlayer(_controller.videoPlayerController),
-                ),
-              ),
+            Obx(
+              () => _controller.isInitialized.value
+                  ? Center(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: AspectRatio(
+                          aspectRatio: _controller
+                              .videoPlayerController.value.aspectRatio,
+                          child: VideoPlayer(_controller.videoPlayerController),
+                        ),
+                      ),
+                    )
+                  : Center(
+                      child: AppUtil.addProgressIndicator(context, 50),
+                    ),
             ),
             playPauseButton(),
             const VideoViewTopRowWidget(),
@@ -64,11 +70,11 @@ class SendingVideoViewPage extends StatelessWidget {
         child: CircleAvatar(
           radius: 30,
           backgroundColor: Colors.black38,
-          child: Icon(
-            _controller.videoPlayerController.value.isPlaying
-                ? Icons.pause
-                : Icons.play_arrow,
-            color: Colors.white,
+          child: Obx(
+            () => Icon(
+              _controller.isPlaying.value ? Icons.pause : Icons.play_arrow,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

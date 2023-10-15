@@ -52,10 +52,9 @@ class TestScreen extends StatelessWidget {
                 icon: Icon(Icons.person_outline), label: ""),
           ]),
       body: SingleChildScrollView(
-
-        child: Column(mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             
             const SizedBox(
               height: 10,
             ),

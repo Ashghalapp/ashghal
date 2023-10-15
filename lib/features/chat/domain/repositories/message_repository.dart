@@ -3,6 +3,7 @@ import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_d
 import 'package:ashghal_app_frontend/features/chat/data/models/receive_read_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_messages_request.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/requests/dispatch_typing_event_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/download_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/send_message_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/upload_request.dart';
@@ -11,6 +12,9 @@ import 'package:dartz/dartz.dart';
 import '../requests/clear_chat_request.dart';
 
 abstract class MessageRepository {
+  Future<Either<Failure, List<LocalMessage>>> getCoversationMessages(
+      int conversationId);
+
   /// Streams updates to the messages in a conversation based on the provided [conversationId].
   ///
   /// Returns a [Stream] that emits a list of [LocalMessage] objects whenever there is a change
@@ -154,6 +158,8 @@ abstract class MessageRepository {
   ///
   /// - [remote]: A list of [ReceivedReadMessageModel] objects representing received messages.
   Future<void> markMessagesAsReceived(List<ReceivedReadMessageModel> remote);
+
+  Future<void> dispatchTypingEvent(DispatchTypingEventRequest request);
 
   /// Marks received messages as "read" and notifies the remote server of the read confirmation.
   ///

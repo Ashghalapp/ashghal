@@ -13,7 +13,7 @@ class ProfilePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
           ),
         ],
       ),
@@ -21,17 +21,17 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             const CircleAvatar(
               radius: 65,
               // backgroundImage: ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               user.username,
-              style: TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 24),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               user.phoneNumber,
               style: const TextStyle(
@@ -39,12 +39,12 @@ class ProfilePage extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               "Last seen ${lastSeenMessage(user.lastSeen)} ago",
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -53,7 +53,7 @@ class ProfilePage extends StatelessWidget {
                 iconWithText(icon: Icons.search, text: 'Search'),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             const ListTile(
               title: Text('Hey there! I am using WhatsApp'),
               subtitle: Text(
@@ -63,10 +63,10 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ListTile(
-              title: Text('Mute notification'),
-              leading: Icon(Icons.notifications),
+              title: const Text('Mute notification'),
+              leading: const Icon(Icons.notifications),
               trailing: Switch(
                 value: false,
                 onChanged: (value) {},
@@ -77,8 +77,8 @@ class ProfilePage extends StatelessWidget {
               leading: Icon(Icons.music_note),
             ),
             ListTile(
-              title: Text('Media visibility'),
-              leading: Icon(Icons.photo),
+              title: const Text('Media visibility'),
+              leading: const Icon(Icons.photo),
               trailing: Switch(
                 value: false,
                 onChanged: (value) {},
@@ -97,7 +97,7 @@ class ProfilePage extends StatelessWidget {
               subtitle: Text('Off'),
               leading: Icon(Icons.timer),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ListTile(
               leading: const Icon(
                 Icons.group,
@@ -105,7 +105,7 @@ class ProfilePage extends StatelessWidget {
               ),
               title: Text('Create group with ${user.username}'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ListTile(
               leading: const Icon(
                 Icons.block,
@@ -130,7 +130,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -148,10 +148,10 @@ class ProfilePage extends StatelessWidget {
             size: 30,
             color: Colors.green,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             text,
-            style: TextStyle(color: Colors.green),
+            style: const TextStyle(color: Colors.green),
           ),
         ],
       ),

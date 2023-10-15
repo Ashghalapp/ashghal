@@ -94,7 +94,9 @@ class AppLocalization {
   static String emailOrUsername = 'emailOrUsername'.tr;
   static String usertype = 'usertype'.tr;
   static String chooseusertype = 'chooseusertype'.tr;
-  static String chooseusertypebody = 'Choose whether you are looking for a work or you are an organization/company that needs employees'.tr;
+  static String chooseusertypebody =
+      'Choose whether you are looking for a work or you are an organization/company that needs employees'
+          .tr;
 
   static String loginAnotherAccount = 'loginAnotherAccount'.tr;
   static String yourEmail = 'yourEmail'.tr;
@@ -110,8 +112,10 @@ class AppLocalization {
   static String resendOTP = 'resendOTP'.tr;
   static String checkOptCode = 'checkOptCode'.tr;
 
-  static String pleaseEnterVerifyPasswordCode = "Please enter the code sent to change your password".tr;
-  static String pleaseEnterVerifyEmailCode = "Please enter the code sent to your email to verify your account".tr;
+  static String pleaseEnterVerifyPasswordCode =
+      "Please enter the code sent to change your password".tr;
+  static String pleaseEnterVerifyEmailCode =
+      "Please enter the code sent to your email to verify your account".tr;
   static String pleaseEnterOneTimePasswordPhoneNumberChange =
       "pleaseEnterOneTimePasswordPhoneNumberChange".tr;
   static String helpToGetAccount = "helpToGetAccount".tr;
@@ -189,10 +193,6 @@ class AppLocalization {
 
   static String or = 'or'.tr;
   static String and = ' and '.tr;
-
-
-
-
 
 /////////////////////////
   static String password = 'password'.tr;
@@ -316,4 +316,10 @@ class AppLocalization {
   static String doyouwanttoexitApp = 'Do you want exit the app?'.tr;
   static String choosejobcategory = 'Choose Your Job Category'.tr;
   static String selectCategory = 'Select Category'.tr;
+
+//================================ Start chat messages ================================//
+  static String conversationDeletedSuccess =
+      "Conversation deleted successfully";
+  static String conversationDeletedFail = "Failed to delete conversation";
+//================================ End chat messages ================================//
 }

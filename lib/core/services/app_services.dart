@@ -1,5 +1,7 @@
 import 'package:ashghal_app_frontend/config/app_theme.dart';
 import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
+import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
+
 import 'package:ashghal_app_frontend/core_api/pusher_service.dart';
 import 'package:camera/camera.dart';
 
@@ -13,6 +15,7 @@ class AppServices extends GetxService {
   late ThemeData apptheme;
   static late List<CameraDescription> cameras;
   static late PusherService pusher;
+  static late NetworkInfoImpl networkInfo;
 
   // late SharedPreferences sharedPref;
   Future<AppServices> init() async {
@@ -20,8 +23,21 @@ class AppServices extends GetxService {
     // Get.lazyPut(() => OnBoardingControllerImp());
     Get.lazyPut(() => AppLocallcontroller());
     cameras = await availableCameras();
+
     pusher = PusherService();
-    await pusher.initialize();
+
+    // await pusher.initializePusher();
+
+    networkInfo = NetworkInfoImpl();
+
+    networkInfo.onStatusChanged.listen((isConnected) async {
+      if (isConnected) {
+        print("On connection Pusher Initialized");
+        await pusher.initializePusher();
+      } else {
+        await pusher.disconnect();
+      }
+    });
 
     setupDependencies();
     apptheme = AppTheme.lightTheme;

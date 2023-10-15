@@ -4,8 +4,12 @@ import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multi
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/avatar.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/audio_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/file_message_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/image_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/message_text_status_icon.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/text_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/video_message_widget.dart';
 
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart'
     as style;
@@ -111,40 +115,104 @@ class MessageWidget extends StatelessWidget {
     // required this.index,
   });
 
-  Widget getMessageWidget() {
-    if (message.multimedia != null) {
-      return ImageMessage(
-        multimedia: message.multimedia!,
-        isMine: isMine,
-      );
-      // return ImageMessageWidget(message: message, isMine: isMine);
-    }
-    return TextMessageWidget(message: message.message, isMine: isMine);
-  }
+  // Widget getMessageWidget() {
+  // if (message.multimedia != null) {
+  //   return ImageMessage(
+  //     multimedia: message.multimedia!,
+  //     isMine: isMine,
+  //   );
+  //   // return ImageMessageWidget(message: message, isMine: isMine);
+  // }
+  // return TextMessageWidget(message: message, isMine: isMine);
+  // return MessageTextAndStatusIcon(message: message.message, isMine: isMine);
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      // height: 250,
-      // width: 150,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return
+        //  ConstrainedBox(
+        //   constraints: BoxConstraints(
+        //       // maxWidth: MediaQuery.sizeOf(context).width,
+        //       // maxHeight: 250,
+        //       // minWidth: 150,
+        //       ),
+        //   child:
+        Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment:
+          isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+      children: [
+        if (isMine)
+          MessageCtreatedAtTextWidget(date: message.message.createdAt),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           // mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment:
-              isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
+          // mainAxisAlignment:
+          //     isMine ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             if (!isMine)
-              Padding(
-                padding: const EdgeInsets.only(right: 4),
-                child: AvatarWithImageOrLetter(
-                  raduis: 18,
-                  userName: _screenController.conversation.userName,
-                  imageUrl: _screenController.conversation.userImageUrl,
-                ),
+              AvatarWithImageOrLetter(
+                raduis: 16,
+                boderThickness: 1,
+                borderColor: ChatStyle.otherMessageColor!,
+                userName: _screenController.conversation.userName,
+                imageUrl: _screenController.conversation.userImageUrl,
               ),
-            getMessageWidget(),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.sizeOf(context).width - 140,
+                // minWidth: 80,
+              ),
+              child: Card(
+                elevation: 1,
+                shadowColor: Colors.grey,
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                color: isMine
+                    ? ChatStyle.ownMessageColor
+                    : ChatStyle.otherMessageColor,
+                // color: isMine ? Colors.black87 : Colors.black54,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5))
+                    // borderRadius: BorderRadius.only(
+                    //   bottomLeft: Radius.circular(isMine ? 15.0 : 0),
+                    //   bottomRight: Radius.circular(isMine ? 0 : 15),
+                    //   topLeft: Radius.circular(15),
+                    //   topRight: Radius.circular(15),
+                    // ),
+                    ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 3.0,
+                    horizontal: 3.0,
+                  ),
+                  child: getMessageAndMultimedia(),
+                  // child: Text("message"),
+                ),
+                // margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                // child: Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.start,
+                //     crossAxisAlignment: CrossAxisAlignment.end,
+                //     children: [
+                //       if (message.message.body != null &&
+                //           message.message.body!.trim() != "")
+                //         getMessageBodyText(message.message.body),
+                //       // MessageTextAndStatusIcon(
+                //       //   message: message.message,
+                //       //   isMine: isMine,
+                //       // ),
+                //     ],
+                //   ),
+                // ),
+              ),
+            ),
+            if (isMine)
+              MessageStatusIcon(
+                message: message.message,
+              ),
+            // getMessageWidget(),
+
             // TextMessageWidget(message: message.message),
             // TextMessageWidget(
             //   message: message.message,
@@ -173,10 +241,77 @@ class MessageWidget extends StatelessWidget {
             //     ),
             //   ],
             // )
+            // SizedBox.shrink()
           ],
+          // ),
         ),
-      ),
+        if (!isMine)
+          MessageCtreatedAtTextWidget(date: message.message.createdAt),
+      ],
     );
+  }
+
+  Widget getMessageAndMultimedia() {
+    return message.multimedia != null &&
+            message.message.body != null &&
+            message.message.body?.trim() != ""
+        ? Column(
+            crossAxisAlignment:
+                isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              getMessage(),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5.0,
+                  horizontal: 7.0,
+                ),
+                child: MessageBodyTextWidget(
+                  body: message.message.body,
+                  isMine: isMine,
+                ),
+              ),
+            ],
+          )
+        : getMessage();
+  }
+
+  Widget getMessage() {
+    if (message.multimedia != null && message.multimedia!.type == "image") {
+      return ImageMessage(
+        multimedia: message.multimedia!,
+        isMine: isMine,
+      );
+      // ImageMessage
+    } else if (message.multimedia != null &&
+        message.multimedia!.type == "video") {
+      return VideoMessageWidget(
+        multimedia: message.multimedia!,
+        isMine: isMine,
+      );
+    } else if (message.multimedia != null &&
+        message.multimedia!.type == "audio") {
+      return AudioMessageWidget(
+        multimedia: message.multimedia!,
+        isMine: isMine,
+      );
+    } else if (message.multimedia != null &&
+        message.multimedia!.type == "file") {
+      return FileMessageWidget(
+        multimedia: message.multimedia!,
+        isMine: isMine,
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 2.0,
+          horizontal: 7.0,
+        ),
+        child: MessageBodyTextWidget(
+          body: message.message.body,
+          isMine: isMine,
+        ),
+      );
+    }
   }
 }
 

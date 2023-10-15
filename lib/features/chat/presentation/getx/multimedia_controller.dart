@@ -1,9 +1,17 @@
 // import 'package:ashghal/model/multimedea_model.dart';
+import 'dart:io';
+
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
+import 'package:ashghal_app_frontend/core/services/directory_path.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/requests/download_request.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/requests/upload_request.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/camera_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/sending_image_view_page.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/sending_video_view_page.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -45,6 +53,9 @@ extension AttachmentOptionExtension on AttachmentOption {
 
 class MultimediaController extends GetxController {
   ConversationScreenController _screenController = Get.find();
+  ConversationController _conversationController = Get.find();
+
+  DirectoryPath directoryPath = DirectoryPath();
 
   void handleAttachmentOption(AttachmentOption option) async {
     if (option == AttachmentOption.camera) {
@@ -52,7 +63,7 @@ class MultimediaController extends GetxController {
     } else if (option == AttachmentOption.gallery) {
       pickImagesFromGallery();
     } else if (option == AttachmentOption.video) {
-      await pickVideoFromGallery();
+      pickVideoFromGallery();
     } else if (option == AttachmentOption.file) {
       // ignore: unused_local_variable
       await pickFiles();
@@ -150,6 +161,86 @@ class MultimediaController extends GetxController {
     } catch (e) {
       return null;
     }
+  }
+
+  Future<bool> downloadFile({
+    required String fileUrl,
+    required String fileName,
+    required String fileType,
+    required int multimediaLocalId,
+    CancelToken? cancelToken,
+    void Function(int, int)? onReceiveProgress,
+  }) async {
+    try {
+      String storePath = await directoryPath.getPath(fileType);
+      String filePath = '$storePath/$fileName';
+      filePath = await getUniqueFileName(filePath);
+      DownloadRequest request = DownloadRequest(
+        url: fileUrl,
+        savePath: filePath,
+        multimediaLocalId: multimediaLocalId,
+        onReceiveProgress: onReceiveProgress,
+        cancelToken: cancelToken,
+      );
+      return await _conversationController.download(request);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> uploadFile({
+    // required String fileUrl,
+    required String filePath,
+    required String fileType,
+    required int messageLocalId,
+    CancelToken? cancelToken,
+    void Function(int, int)? onSendProgress,
+  }) async {
+    try {
+      // String storePath = await directoryPath.getPath("${fileType}s");
+      // String filePath = '$storePath/$fileName';
+      // filePath = await getUniqueFileName(filePath);
+      if (!await File(filePath).exists()) {
+        AppUtil.buildErrorDialog("File doesn't exists");
+        return false;
+      }
+      UploadRequest request = UploadRequest(
+        // url: fileUrl,
+        // savePath: filePath,
+        messageLocalId: messageLocalId,
+        onSendProgress: onSendProgress,
+        cancelToken: cancelToken,
+      );
+      // bool downloaded =
+      return await _conversationController.upload(request);
+      // return await _conversationController.download(request);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<String> getUniqueFileName(String filePath) async {
+    final originalFile = File(filePath);
+
+    if (!await originalFile.exists()) {
+      return filePath; // The file with the original name doesn't exist.
+    }
+
+    final directory = originalFile.parent;
+    final originalFileName = originalFile.path.split('/').last;
+    final originalFileNameWithoutExtension = originalFileName.split('.').first;
+    final originalFileExtension = originalFileName.split('.').last;
+    int suffix = 0;
+
+    String newFilePath;
+    do {
+      final newFileName =
+          '$originalFileNameWithoutExtension($suffix).$originalFileExtension';
+      newFilePath = '${directory.path}/$newFileName';
+      suffix++;
+    } while (await File(newFilePath).exists());
+
+    return newFilePath;
   }
 
   // Future<void> pickCameraImage() async {

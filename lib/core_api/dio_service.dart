@@ -13,8 +13,8 @@ class DioService {
     _dio = Dio(BaseOptions(
       baseUrl: ApiConstants.baseUrl,
       connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds: 60),
-      sendTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 240),
+      sendTimeout: const Duration(seconds: 240),
       receiveDataWhenStatusError: true,
     ));
     _dio.interceptors.add(PublicInterceptor());

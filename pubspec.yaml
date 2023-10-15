@@ -10,8 +10,10 @@ environment:
 
 dependencies:
   audio_waveforms: ^1.0.4
+  audioplayers: ^5.2.0
   cached_network_image: ^3.2.3
   camera: ^0.10.5+4
+  chewie: ^1.7.1
   connectivity_plus: null
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
@@ -21,6 +23,9 @@ dependencies:
   file_picker: ^5.5.0
   flutter:
     sdk: flutter
+  flutter_cache_manager: ^3.3.1
+  flutter_chat_types: ^3.6.2
+  flutter_chat_ui: ^1.6.9
   flutter_easyloading: ^3.0.5
   flutter_otp_text_field: ^1.1.1
   flutter_svg: ^2.0.7
@@ -32,6 +37,7 @@ dependencies:
   image_gallery_saver: ^2.0.3
   image_picker: ^1.0.4
   internet_connection_checker: ^1.0.0+1
+  intl: ^0.18.1
   introduction_screen: ^3.1.11
 
   moor_flutter: ^4.1.0
@@ -39,9 +45,11 @@ dependencies:
   path_provider: ^2.1.1
   permission_handler: ^11.0.0
   pusher_channels_flutter: ^2.2.0
+  record_mp3: ^3.0.0
   scrollable_positioned_list: ^0.3.8
   shared_preferences: ^2.2.0
   video_player: ^2.7.2
+  video_thumbnail: ^0.5.3
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -58,8 +66,9 @@ flutter:
     - assets/profiles/
     - assets/lottie/
     - assets/icons/
-    - assets/icons/icons/
+    - assets/sounds/
     - assets/json/user/
+    - assets/messages.json
 
   fonts:
     - family: Rubik

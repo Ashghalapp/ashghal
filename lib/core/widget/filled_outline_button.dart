@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class FillOutlineButton extends StatelessWidget {
-  const FillOutlineButton({
+class CustomOutlineButton extends StatelessWidget {
+  const CustomOutlineButton({
     Key? key,
     this.isFilled = true,
     required this.onPress,
@@ -25,7 +25,7 @@ class FillOutlineButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: isFilled ? Colors.blue : Colors.white,
+          color: isFilled ? Theme.of(context).primaryColor : Colors.white,
           fontSize: 15,
         ),
       ),

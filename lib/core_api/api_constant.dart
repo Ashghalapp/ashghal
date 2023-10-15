@@ -2,9 +2,8 @@
 
 class ApiConstants {
   static const String baseUrl = "http://10.0.2.2:8000/api/";
-  // static const String baseUrl = "http://192.168.0.192:8000/api/";
-  static const String channelsAutherizingUrl =
-      "http://10.0.2.2:8000/api/broadcasting/auth";
+  // static const String baseUrl = "http://192.168.128.175:8000/api/";
+  static const String channelsAutherizingUrl = "${baseUrl}broadcasting/auth";
   //   static const String channelsAutherizingUrl =
   // "http://192.168.0.192:8000/api/broadcasting/auth";
   // static const String baseUrl = "http://localhost:8000/api/";
@@ -37,4 +36,14 @@ class ApiConstants {
 
   static String ADD_OR_CHANGE_PHONE = "${AUTH_ENDPOINT}add-or-change-phone";
   static String ADD_OR_CHANGE_EMAIL = "${AUTH_ENDPOINT}add-or-change-email";
+}
+
+class ChannelsEventsNames {
+  static const String userStateUpdatedChannel = 'presence-user.state.updated';
+  static const String userStateUpdatedEvent = 'user.state.updated.event';
+  static const String chatChannelName = 'private-chat.';
+  static const String messageSentEventName = 'message.sent';
+  static const String messageReceivedEventName = 'message.received';
+  static const String messageReadEventName = 'message.read';
+  static const String typingEventName = 'client-user.typing.state';
 }

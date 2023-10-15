@@ -1,8 +1,11 @@
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/block_unblock_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/clear_chat_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_messages_request.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/requests/dispatch_typing_event_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/download_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/send_message_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/upload_request.dart';
@@ -10,13 +13,16 @@ import 'package:ashghal_app_frontend/features/chat/domain/use_cases/block_unbloc
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/clear_chat.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/conversation_messages_read.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_messages.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/dispatch_typing_event.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/download_multimedia.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_conversation_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/send_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/upload_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conversation_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conversation_messages_multimedia.dart';
 import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
     as di;
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
 import 'package:get/get.dart';
 
 class ConversationController extends GetxController {
@@ -36,17 +42,34 @@ class ConversationController extends GetxController {
     super.onInit();
     // di.setupChatDependencies();
 
-    _markConversationMessagesAsRead();
+    markConversationMessagesAsRead();
+    _getAllMessages().then((value) {
+      _listenToMultimedia();
+      _listenToAllMessages();
+    });
     // _listenToAllMessages();
     // _listenToMultimedia();
   }
 
-  Future<void> _markConversationMessagesAsRead() async {
+  Future<void> markConversationMessagesAsRead() async {
     // print("Conversation ID" + conversationId.toString());
     ConversationMessagesReadUseCase conversationMessagesRead = di.getIt();
-    conversationMessagesRead.call(conversationId).then((value) {
-      _listenToAllMessages();
-      _listenToMultimedia();
+    conversationMessagesRead.call(conversationId);
+    // .then((value) {
+    //   _getAllMessages().then((value) {
+    //     _listenToMultimedia();
+    //     _listenToAllMessages();
+    //   });
+    // });
+  }
+
+  Future<void> _getAllMessages() async {
+    // print("Conversation ID" + conversationId.toString());
+    GetConversationMessagesUsecase usecase = di.getIt();
+    (await usecase(conversationId)).fold((l) {}, (localMessages) {
+      for (var localMessage in localMessages) {
+        _insertOrReplaceMessage(localMessage);
+      }
     });
   }
 
@@ -76,7 +99,8 @@ class ConversationController extends GetxController {
     int index = messages
         .indexWhere((element) => element.message.localId == message.localId);
     if (index == -1) {
-      messages.add(MessageAndMultimediaModel(message: message));
+      messages.insert(
+          0, MessageAndMultimediaModel(message: message, multimedia: null));
     } else {
       messages[index] = messages[index].copyWith(message: message);
     }
@@ -86,12 +110,36 @@ class ConversationController extends GetxController {
     int index = messages.indexWhere(
         (element) => element.message.localId == multimedia.messageId);
     if (index == -1) {
-      // messages.add(MessageAndMultimediaModel(message: message));
+      // messages.add(
+      //   MessageAndMultimediaModel(
+      //     //we added a random message object with the real localId, and it will be replaced with the real message object when it comes in the messages listner
+      //     message: LocalMessage(
+      //       localId: multimedia.messageId,
+      //       senderId: -1,
+      //       conversationId: conversationId,
+      //       receivedLocally: false,
+      //       readLocally: false,
+      //       createdAt: DateTime.now(),
+      //       updatedAt: DateTime.now(),
+      //     ),
+      //     multimedia: multimedia,
+      //   ),
+      // );
     } else {
-      print("multimedia added");
+      // print("multimedia ${multimedia.toString()}");
       messages[index] = messages[index].copyWith(multimedia: multimedia);
     }
     messages.refresh();
+  }
+
+  Future<void> dispatchTypingEvent(TypingEventType eventType) async {
+    DispatchTypingEventUseCase useCase = di.getIt();
+    await useCase.call(
+      DispatchTypingEventRequest(
+        conversationId: conversationId,
+        eventType: eventType,
+      ),
+    );
   }
 
   Future<void> sendTextMessage(String body) async {
@@ -143,6 +191,11 @@ class ConversationController extends GetxController {
     return (await useCase.call(request)).fold<bool>(
       (failure) {
         print("download Request Fail ${failure.message}");
+        //     AppUtil.hanldeAndShowFailure(
+        // const NotSpecificFailure(message: "Downloading fails"));
+        if (request.cancelToken != null && !request.cancelToken!.isCancelled) {
+          AppUtil.hanldeAndShowFailure(failure);
+        }
         return false;
       },
       (state) {
@@ -159,6 +212,10 @@ class ConversationController extends GetxController {
     return (await useCase.call(request)).fold<bool>(
       (failure) {
         print("upload Request Fail ${failure.message}");
+        if (request.cancelToken != null && !request.cancelToken!.isCancelled) {
+          AppUtil.hanldeAndShowFailure(failure);
+        }
+
         return false;
       },
       (state) {

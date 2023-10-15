@@ -1069,6 +1069,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
   final int? remoteId;
   final String type;
   final String? path;
+  final int size;
   final String? url;
   final String fileName;
   final int messageId;
@@ -1079,6 +1080,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
       this.remoteId,
       required this.type,
       this.path,
+      required this.size,
       this.url,
       required this.fileName,
       required this.messageId,
@@ -1097,6 +1099,8 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
           .mapFromDatabaseResponse(data['${effectivePrefix}type'])!,
       path: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}path']),
+      size: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}size'])!,
       url: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}url']),
       fileName: const StringType()
@@ -1120,6 +1124,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
     if (!nullToAbsent || path != null) {
       map['path'] = Variable<String?>(path);
     }
+    map['size'] = Variable<int>(size);
     if (!nullToAbsent || url != null) {
       map['url'] = Variable<String?>(url);
     }
@@ -1138,6 +1143,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
           : Value(remoteId),
       type: Value(type),
       path: path == null && nullToAbsent ? const Value.absent() : Value(path),
+      size: Value(size),
       url: url == null && nullToAbsent ? const Value.absent() : Value(url),
       fileName: Value(fileName),
       messageId: Value(messageId),
@@ -1154,6 +1160,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
       remoteId: serializer.fromJson<int?>(json['remoteId']),
       type: serializer.fromJson<String>(json['type']),
       path: serializer.fromJson<String?>(json['path']),
+      size: serializer.fromJson<int>(json['size']),
       url: serializer.fromJson<String?>(json['url']),
       fileName: serializer.fromJson<String>(json['fileName']),
       messageId: serializer.fromJson<int>(json['messageId']),
@@ -1169,6 +1176,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
       'remoteId': serializer.toJson<int?>(remoteId),
       'type': serializer.toJson<String>(type),
       'path': serializer.toJson<String?>(path),
+      'size': serializer.toJson<int>(size),
       'url': serializer.toJson<String?>(url),
       'fileName': serializer.toJson<String>(fileName),
       'messageId': serializer.toJson<int>(messageId),
@@ -1182,6 +1190,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
           int? remoteId,
           String? type,
           String? path,
+          int? size,
           String? url,
           String? fileName,
           int? messageId,
@@ -1192,6 +1201,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
         remoteId: remoteId ?? this.remoteId,
         type: type ?? this.type,
         path: path ?? this.path,
+        size: size ?? this.size,
         url: url ?? this.url,
         fileName: fileName ?? this.fileName,
         messageId: messageId ?? this.messageId,
@@ -1205,6 +1215,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
           ..write('remoteId: $remoteId, ')
           ..write('type: $type, ')
           ..write('path: $path, ')
+          ..write('size: $size, ')
           ..write('url: $url, ')
           ..write('fileName: $fileName, ')
           ..write('messageId: $messageId, ')
@@ -1215,8 +1226,8 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
   }
 
   @override
-  int get hashCode => Object.hash(localId, remoteId, type, path, url, fileName,
-      messageId, createdAt, updatedAt);
+  int get hashCode => Object.hash(localId, remoteId, type, path, size, url,
+      fileName, messageId, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1225,6 +1236,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
           other.remoteId == this.remoteId &&
           other.type == this.type &&
           other.path == this.path &&
+          other.size == this.size &&
           other.url == this.url &&
           other.fileName == this.fileName &&
           other.messageId == this.messageId &&
@@ -1237,6 +1249,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
   final Value<int?> remoteId;
   final Value<String> type;
   final Value<String?> path;
+  final Value<int> size;
   final Value<String?> url;
   final Value<String> fileName;
   final Value<int> messageId;
@@ -1247,6 +1260,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
     this.remoteId = const Value.absent(),
     this.type = const Value.absent(),
     this.path = const Value.absent(),
+    this.size = const Value.absent(),
     this.url = const Value.absent(),
     this.fileName = const Value.absent(),
     this.messageId = const Value.absent(),
@@ -1258,12 +1272,14 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
     this.remoteId = const Value.absent(),
     required String type,
     this.path = const Value.absent(),
+    required int size,
     this.url = const Value.absent(),
     required String fileName,
     required int messageId,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   })  : type = Value(type),
+        size = Value(size),
         fileName = Value(fileName),
         messageId = Value(messageId);
   static Insertable<LocalMultimedia> custom({
@@ -1271,6 +1287,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
     Expression<int?>? remoteId,
     Expression<String>? type,
     Expression<String?>? path,
+    Expression<int>? size,
     Expression<String?>? url,
     Expression<String>? fileName,
     Expression<int>? messageId,
@@ -1282,6 +1299,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
       if (remoteId != null) 'remote_id': remoteId,
       if (type != null) 'type': type,
       if (path != null) 'path': path,
+      if (size != null) 'size': size,
       if (url != null) 'url': url,
       if (fileName != null) 'file_name': fileName,
       if (messageId != null) 'message_id': messageId,
@@ -1295,6 +1313,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
       Value<int?>? remoteId,
       Value<String>? type,
       Value<String?>? path,
+      Value<int>? size,
       Value<String?>? url,
       Value<String>? fileName,
       Value<int>? messageId,
@@ -1305,6 +1324,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
       remoteId: remoteId ?? this.remoteId,
       type: type ?? this.type,
       path: path ?? this.path,
+      size: size ?? this.size,
       url: url ?? this.url,
       fileName: fileName ?? this.fileName,
       messageId: messageId ?? this.messageId,
@@ -1327,6 +1347,9 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
     }
     if (path.present) {
       map['path'] = Variable<String?>(path.value);
+    }
+    if (size.present) {
+      map['size'] = Variable<int>(size.value);
     }
     if (url.present) {
       map['url'] = Variable<String?>(url.value);
@@ -1353,6 +1376,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
           ..write('remoteId: $remoteId, ')
           ..write('type: $type, ')
           ..write('path: $path, ')
+          ..write('size: $size, ')
           ..write('url: $url, ')
           ..write('fileName: $fileName, ')
           ..write('messageId: $messageId, ')
@@ -1396,6 +1420,11 @@ class $MultimediaTable extends Multimedia
   late final GeneratedColumn<String?> path = GeneratedColumn<String?>(
       'path', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _sizeMeta = const VerificationMeta('size');
+  @override
+  late final GeneratedColumn<int?> size = GeneratedColumn<int?>(
+      'size', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _urlMeta = const VerificationMeta('url');
   @override
   late final GeneratedColumn<String?> url = GeneratedColumn<String?>(
@@ -1436,6 +1465,7 @@ class $MultimediaTable extends Multimedia
         remoteId,
         type,
         path,
+        size,
         url,
         fileName,
         messageId,
@@ -1468,6 +1498,12 @@ class $MultimediaTable extends Multimedia
     if (data.containsKey('path')) {
       context.handle(
           _pathMeta, path.isAcceptableOrUnknown(data['path']!, _pathMeta));
+    }
+    if (data.containsKey('size')) {
+      context.handle(
+          _sizeMeta, size.isAcceptableOrUnknown(data['size']!, _sizeMeta));
+    } else if (isInserting) {
+      context.missing(_sizeMeta);
     }
     if (data.containsKey('url')) {
       context.handle(

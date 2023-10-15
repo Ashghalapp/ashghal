@@ -10,6 +10,7 @@ class RemoteMultimediaModel extends RemoteMultimedia {
     required super.type,
     required super.fileName,
     required super.url,
+    required super.size,
     required super.createdAt,
     required super.updatedAt,
   });
@@ -21,6 +22,7 @@ class RemoteMultimediaModel extends RemoteMultimedia {
       type: json['type'],
       fileName: json['file_name'],
       url: AppUtil.editUrl(json['file_url']),
+      size: int.parse(json['size'].toString()),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -63,6 +65,7 @@ class RemoteMultimediaModel extends RemoteMultimedia {
       type: Value(type),
       fileName: Value(fileName),
       url: Value(url),
+      size: Value(size),
       messageId: Value(messageLocalId),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
@@ -71,7 +74,7 @@ class RemoteMultimediaModel extends RemoteMultimedia {
 
   @override
   String toString() {
-    return 'MultimediaModel(id: $id, type: $type, fileName: $fileName, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'MultimediaModel(id: $id, type: $type,size $size, fileName: $fileName, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   // Function to create a copy of the current instance with some updated fields
@@ -81,6 +84,7 @@ class RemoteMultimediaModel extends RemoteMultimedia {
     String? path,
     String? url,
     String? fileName,
+    int? size,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -89,6 +93,7 @@ class RemoteMultimediaModel extends RemoteMultimedia {
       type: type ?? this.type,
       fileName: fileName ?? this.fileName,
       url: url ?? this.url,
+      size: size ?? this.size,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

@@ -5,6 +5,7 @@ class RemoteMultimedia extends Equatable {
   final String type;
   final String fileName;
   final String url;
+  final int size;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -13,6 +14,7 @@ class RemoteMultimedia extends Equatable {
     required this.type,
     required this.fileName,
     required this.url,
+    required this.size,
     required this.createdAt,
     required this.updatedAt,
   });

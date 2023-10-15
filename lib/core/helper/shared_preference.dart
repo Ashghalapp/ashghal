@@ -41,8 +41,8 @@ class SharedPref {
     _appServices.prefs.setInt('userId', id);
   }
 
-  // static int? get currentUserId => _appServices.prefs.get('userId') as int?;
-  static int? get currentUserId => 11;
+  static int? get currentUserId => _appServices.prefs.get('userId') as int?;
+  // static int? get currentUserId => 11;
 
   static setUserName(String name) {
     _appServices.prefs.setString('userName', name);

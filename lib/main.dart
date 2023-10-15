@@ -1,9 +1,5 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/home_screen.dart';
-import 'package:ashghal_app_frontend/main_screen.dart';
-import 'package:ashghal_app_frontend/test_doanloading.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -49,19 +45,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AppLocallcontroller controller = Get.find();
     return GetMaterialApp(
-      // darkTheme: AppTheme.darkTheme,
+      darkTheme: AppTheme.darkTheme,
       builder: EasyLoading.init(),
       onInit: () {},
       title: 'Ashghal App',
-      // theme: AppTheme.lightTheme,
+      theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
       locale: controller.language,
       translations: MyTranslation(),
       initialBinding: BindingAllControllers(),
-      theme: ThemeData(
-        primaryColor: Colors.blue,
-        useMaterial3: true,
-      ),
+      // theme: ThemeData(
+      //   primaryColor: Colors.blue,
+      //   useMaterial3: true,
+      // ),
 
       // initialBinding: InitialBinding(),
       // initialRoute: AppRoutes.singUpScreenJob,
@@ -69,7 +65,7 @@ class MyApp extends StatelessWidget {
       // initialRoute: HomeScreen(),
       // initialRoute: AppRoutes.singUpJobScreen,
       // initialRoute: AppRoutes.chooseUserTypeScreen,
-      // initialRoute: AppRoutes.mainScreen,
+      // initialRoute: AppRoutes.mainScreen-
       initialRoute: AppRoutes.logIn,
       // initialRoute: AppRoutes.mainScreen,
       // home: TestDownloading(),

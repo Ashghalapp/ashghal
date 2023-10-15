@@ -18,10 +18,13 @@ import 'package:ashghal_app_frontend/features/chat/domain/use_cases/block_unbloc
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/clear_chat.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/conversation_messages_read.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_conversation.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/dispatch_typing_event.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/download_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_conversations.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_conversation_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/send_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/start_conversation_with.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/subscribe_to_chat_channels.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/synchronize_conversations.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/unsubscribe_from_chat_channels.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/upload_multimedia.dart';
@@ -67,7 +70,8 @@ void setupDependencies() {
   //=============================End Post Dependencey Injection====================================//
 
   //=============================Start Chat Dependencey Injection==================================//
-  getIt.registerLazySingleton(() => StartConversationWith(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => StartConversationWithUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => WatchAllConversations(repository: getIt()));
   getIt.registerLazySingleton(
       () => WatchConversationMessages(repository: getIt()));
@@ -92,14 +96,18 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => ClearChatUseCase(repository: getIt()));
   getIt.registerLazySingleton(
       () => UnsubscribeFromRemoteChannelsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetConversationMessagesUsecase(repository: getIt()));
 
   getIt.registerLazySingleton(
       () => UploadMultimediaUseCase(repository: getIt()));
 
   getIt.registerLazySingleton(
       () => DownloadMultimediaUseCase(repository: getIt()));
-  // getIt.registerLazySingleton(
-  //     () => ConfirmGettenReadResponse(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => SubscribeToChatChannelsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => DispatchTypingEventUseCase(repository: getIt()));
 
   // repository injection
   getIt.registerLazySingleton<ConversationRepository>(

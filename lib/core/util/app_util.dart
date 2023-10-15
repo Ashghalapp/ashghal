@@ -149,16 +149,24 @@ class AppUtil {
     }
   }
 
+  static String getHourMinuteDateFormat(DateTime dateTime) {
+    final hour =
+        (dateTime.hour == 12 || dateTime.hour == 0 ? 12 : dateTime.hour % 12)
+            .toString()
+            .padLeft(2, '0');
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    print(minute);
+    final period = dateTime.hour < 12 ? 'AM' : 'PM';
+    return '$hour:$minute $period';
+  }
+
   static String formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inDays == 0) {
       // If the date is today, return the time (HH:mm a format).
-      final hour = dateTime.hour.toString().padLeft(2, '0');
-      final minute = dateTime.minute.toString().padLeft(2, '0');
-      final period = dateTime.hour < 12 ? 'AM' : 'PM';
-      return '$hour:$minute $period';
+      return getHourMinuteDateFormat(dateTime);
     } else if (difference.inDays == 1) {
       // If the date is yesterday, return "Yesterday".
       return 'Yesterday';
@@ -194,5 +202,87 @@ class AppUtil {
         ),
       ],
     );
+  }
+
+  static String getFormatedFileSize(int bytes) {
+    // final file = File(filePath);
+
+    // if (!file.existsSync()) {
+    //   // Handle the case where the file doesn't exist
+    //   return 'File not found';
+    // }
+
+    // final bytes = file.lengthSync();
+    if (bytes < 100) {
+      return '$bytes B';
+    }
+    // else if (bytes < 1024) {
+    //   return '$bytes B';
+    // }
+    // else if (bytes < 1024 * 1024) {
+    //   final fileSizeKB = (bytes / 1024).toStringAsFixed(2);
+    //   return '$fileSizeKB KB';
+    // }
+    else if (bytes < 1024 * 1024 * 1024) {
+      final fileSizeMB = (bytes / (1024 * 1024)).toStringAsFixed(2);
+      return '$fileSizeMB MB';
+    } else {
+      final fileSizeGB = (bytes / (1024 * 1024 * 1024)).toStringAsFixed(2);
+      return '$fileSizeGB GB';
+    }
+  }
+
+  static Future<int> getFileSize(String filePath) async {
+    try {
+      final file = File(filePath);
+      if (await file.exists()) {
+        final fileStat = await file.stat();
+        return fileStat.size;
+      } else {
+        return -1; // File doesn't exist
+      }
+    } catch (e) {
+      print('Error getting file size: $e');
+      return -1; // Error occurred
+    }
+  }
+
+  static String formatDateTimeyMMMd(DateTime dateTime) {
+    final String year = dateTime.year.toString();
+    final String month = _getMonthAbbreviation(dateTime.month);
+    final String day = dateTime.day.toString();
+
+    return '$year $month $day';
+  }
+
+  static String _getMonthAbbreviation(int month) {
+    switch (month) {
+      case DateTime.january:
+        return 'Jan';
+      case DateTime.february:
+        return 'Feb';
+      case DateTime.march:
+        return 'Mar';
+      case DateTime.april:
+        return 'Apr';
+      case DateTime.may:
+        return 'May';
+      case DateTime.june:
+        return 'Jun';
+      case DateTime.july:
+        return 'Jul';
+      case DateTime.august:
+        return 'Aug';
+      case DateTime.september:
+        return 'Sep';
+      case DateTime.october:
+        return 'Oct';
+      case DateTime.november:
+        return 'Nov';
+      case DateTime.december:
+        return 'Dec';
+      default:
+        return '';
+    }
   }
 }
