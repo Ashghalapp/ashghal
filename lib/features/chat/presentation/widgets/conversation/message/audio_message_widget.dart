@@ -77,9 +77,12 @@ class AudioMessageWidget extends StatelessWidget {
       children: [
         Card(
           elevation: 0,
-          color: Colors.black54,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5))),
+          color: isMine ? Colors.black54 : Colors.white70,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(5),
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(7.0),
             child: Row(
@@ -90,7 +93,7 @@ class AudioMessageWidget extends StatelessWidget {
                         ? DownloadinUploadingCicrularWidget(
                             controller: _controller)
                         : PressableCircularContianerWidget(
-                            childPadding: EdgeInsets.all(4),
+                            childPadding: const EdgeInsets.all(4),
                             onPress: _controller.toggleDownload,
                             child: DownloadUploadIconWidget(
                               isMine: isMine,
@@ -104,6 +107,8 @@ class AudioMessageWidget extends StatelessWidget {
                     () => Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: LinearProgressIndicator(
+                        backgroundColor:
+                            isMine ? Colors.white70 : Colors.black45,
                         color: Colors.lightBlue,
                         value: (audioController.currentId == multimedia.localId
                             //     &&
@@ -141,9 +146,17 @@ class AudioMessageWidget extends StatelessWidget {
     );
   }
 
+  Color _getContentColor() {
+    return isMine
+        ? ChatStyle.ownMessageTextColor
+        : Get.isPlatformDarkMode
+            ? ChatStyle.otherMessageTextDarkColor
+            : ChatStyle.otherMessageTextLightColor;
+  }
+
   PressableCircularContianerWidget buildSpeadText() {
     return PressableCircularContianerWidget(
-      color: Colors.white30,
+      color: isMine ? Colors.white30 : Colors.black38,
       childPadding: const EdgeInsets.all(6),
       onPress: audioController.increasePlayingSpeed,
       child: Obx(
@@ -155,55 +168,55 @@ class AudioMessageWidget extends StatelessWidget {
     );
   }
 
-  Expanded buildSlider() {
-    return Expanded(
-      child: Obx(
-        () => Slider(
-          // divisions: 100,
-          min: 0,
-          max: audioController.totalDuration.value.toDouble(),
-          // max: 101,
-          // min: 0,
-          value:
-              // isSliding
-              //     ? sliderValue
-              //     :
-              (audioController.currentId == multimedia.localId
-                  //     &&
-                  // !audioController.isLoading.value
-                  // audioController.isRecordPlaying
-                  )
-                  ? audioController.currentDuration.value.toDouble()
-                  : 0.0,
-          // onChangeEnd: (value) {
-          //   print((value * audioController.totalDuration.value)
-          //       .toInt());
-          //   audioController.seekTo(value);
-          //   setState(() {
-          //     isSliding = false;
-          //   });
-          // },
-          // onChangeStart: (value) {
-          //   setState(() {
-          //     isSliding = true;
-          //   });
-          // },
-          onChanged: (value) {
-            // setState(() {
-            //   sliderValue = value;
-            // });
-            // print((value * audioController.totalDuration.value)
-            // .toInt());
-            audioController.seekTo(value);
-            // print(value);
-            // print(audioController.completedPercentage.value);
-            // audioController.completedPercentage.value =
-            //     value;
-          },
-        ),
-      ),
-    );
-  }
+  // Expanded buildSlider() {
+  //   return Expanded(
+  //     child: Obx(
+  //       () => Slider(
+  //         // divisions: 100,
+  //         min: 0,
+  //         max: audioController.totalDuration.value.toDouble(),
+  //         // max: 101,
+  //         // min: 0,
+  //         value:
+  //             // isSliding
+  //             //     ? sliderValue
+  //             //     :
+  //             (audioController.currentId == multimedia.localId
+  //                 //     &&
+  //                 // !audioController.isLoading.value
+  //                 // audioController.isRecordPlaying
+  //                 )
+  //                 ? audioController.currentDuration.value.toDouble()
+  //                 : 0.0,
+  //         // onChangeEnd: (value) {
+  //         //   print((value * audioController.totalDuration.value)
+  //         //       .toInt());
+  //         //   audioController.seekTo(value);
+  //         //   setState(() {
+  //         //     isSliding = false;
+  //         //   });
+  //         // },
+  //         // onChangeStart: (value) {
+  //         //   setState(() {
+  //         //     isSliding = true;
+  //         //   });
+  //         // },
+  //         onChanged: (value) {
+  //           // setState(() {
+  //           //   sliderValue = value;
+  //           // });
+  //           // print((value * audioController.totalDuration.value)
+  //           // .toInt());
+  //           audioController.seekTo(value);
+  //           // print(value);
+  //           // print(audioController.completedPercentage.value);
+  //           // audioController.completedPercentage.value =
+  //           //     value;
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget buildPlayPuaseRow() {
     return Obx(
@@ -220,7 +233,7 @@ class AudioMessageWidget extends StatelessWidget {
                   : "0:0",
               style: TextStyle(
                 fontSize: 14,
-                color: isMine ? Colors.white : Colors.white70,
+                color: _getContentColor(),
               ),
             ),
 
@@ -241,8 +254,8 @@ class AudioMessageWidget extends StatelessWidget {
                   child: Icon(
                     Icons.fast_rewind_outlined,
                     color: audioController.currentId == multimedia.localId
-                        ? Colors.white
-                        : Colors.white70,
+                        ? _getContentColor().withOpacity(0.7)
+                        : _getContentColor().withOpacity(0.6),
                     size: 28,
                   ),
                   //  Image.asset(
@@ -263,8 +276,8 @@ class AudioMessageWidget extends StatelessWidget {
                         ? Icons.pause_circle
                         : Icons.play_circle,
                     color: audioController.currentId == multimedia.localId
-                        ? Colors.white
-                        : Colors.white70,
+                        ? _getContentColor().withOpacity(0.7)
+                        : _getContentColor().withOpacity(0.6),
                     size: 28,
                   ),
                 ),
@@ -278,8 +291,8 @@ class AudioMessageWidget extends StatelessWidget {
                       Icons.fast_forward_outlined,
                       // Icons.keyboard_double_arrow_right_sharp,
                       color: audioController.currentId == multimedia.localId
-                          ? Colors.white
-                          : Colors.white70,
+                          ? _getContentColor().withOpacity(0.7)
+                          : _getContentColor().withOpacity(0.6),
                       size: 28,
                     )
                     // Image.asset(
@@ -305,7 +318,7 @@ class AudioMessageWidget extends StatelessWidget {
                     : "0:0",
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white70,
+                  color: _getContentColor(),
                 ),
               ),
             ),
@@ -322,41 +335,41 @@ class AudioMessageWidget extends StatelessWidget {
     // audioController.currentDuration>
   }
 
-  Padding buildIcon() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 5.0),
-      child: (multimedia.path == null && multimedia.url != null
-              // !widget.isMine)
-              ||
-              (multimedia.path != null && multimedia.url == null))
-          ? PressableCircularContianerWidget(
-              childPadding: EdgeInsets.all(4),
-              onPress: _controller.toggleDownload,
-              child: DownloadUploadIconWidget(
-                isMine: isMine,
-              ),
-            )
-          : PressableCircularContianerWidget(
-              childPadding: EdgeInsets.all(4),
-              onPress: () => audioController.onPressedPlayButton(
-                multimedia.localId,
-                multimedia.path!,
-              ),
-              child: (audioController.isRecordPlaying &&
-                      audioController.currentId == multimedia.localId)
-                  ? Icon(
-                      Icons.pause,
-                      color: isMine ? Colors.white : ChatStyle.ownMessageColor,
-                      size: 25,
-                    )
-                  : Icon(
-                      Icons.play_arrow,
-                      color: isMine ? Colors.white : ChatStyle.ownMessageColor,
-                      size: 30,
-                    ),
-            ),
-    );
-  }
+  // Padding buildIcon() {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(right: 5.0),
+  //     child: (multimedia.path == null && multimedia.url != null
+  //             // !widget.isMine)
+  //             ||
+  //             (multimedia.path != null && multimedia.url == null))
+  //         ? PressableCircularContianerWidget(
+  //             childPadding: EdgeInsets.all(4),
+  //             onPress: _controller.toggleDownload,
+  //             child: DownloadUploadIconWidget(
+  //               isMine: isMine,
+  //             ),
+  //           )
+  //         : PressableCircularContianerWidget(
+  //             childPadding: EdgeInsets.all(4),
+  //             onPress: () => audioController.onPressedPlayButton(
+  //               multimedia.localId,
+  //               multimedia.path!,
+  //             ),
+  //             child: (audioController.isRecordPlaying &&
+  //                     audioController.currentId == multimedia.localId)
+  //                 ? Icon(
+  //                     Icons.pause,
+  //                     color: isMine ? Colors.white : ChatStyle.ownMessageColor,
+  //                     size: 25,
+  //                   )
+  //                 : Icon(
+  //                     Icons.play_arrow,
+  //                     color: isMine ? Colors.white : ChatStyle.ownMessageColor,
+  //                     size: 30,
+  //                   ),
+  //           ),
+  //   );
+  // }
 }
 
 // child: Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomOutlineButton extends StatelessWidget {
   const CustomOutlineButton({
@@ -17,15 +18,15 @@ class CustomOutlineButton extends StatelessWidget {
     return MaterialButton(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
-        side: const BorderSide(color: Colors.white),
+        side: BorderSide(color: Get.theme.primaryColor),
       ),
       elevation: isFilled ? 2 : 0,
-      color: isFilled ? Colors.white : Colors.transparent,
+      color: isFilled ? Get.theme.primaryColor : null,
       onPressed: onPress,
       child: Text(
         text,
         style: TextStyle(
-          color: isFilled ? Theme.of(context).primaryColor : Colors.white,
+          color: isFilled ? Colors.white : null,
           fontSize: 15,
         ),
       ),

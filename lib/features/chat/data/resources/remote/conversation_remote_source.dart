@@ -99,6 +99,10 @@ abstract class ConversationRemoteSource {
   /// ```
   ///
   Future<ApiResponseModel> unblockConversation(Map<String, dynamic> data);
+
+  Future<ApiResponseModel> confirmGotConversationData(
+      Map<String, dynamic> data);
+  Future<ApiResponseModel> deleteConversation(Map<String, dynamic> data);
 }
 
 class ConversationRemoteSourceImp extends ConversationRemoteSource {
@@ -128,10 +132,10 @@ class ConversationRemoteSourceImp extends ConversationRemoteSource {
     throw AppException(ServerFailure(message: response.message));
   }
 
-  @override
-  Future<ApiResponseModel> blockConversation(Map<String, dynamic> data) async {
+  Future<ApiResponseModel> _handleSimpleRequest(
+      {required Map<String, dynamic> data, required String requestUrl}) async {
     ApiResponseModel response =
-        await _service.post("${endPoint}block-conversation", data);
+        await _service.post("$endPoint$requestUrl", data);
     if (response.status) {
       // debugPrint("::: S End getAllPosts func in remote datasource");
       return response;
@@ -140,14 +144,32 @@ class ConversationRemoteSourceImp extends ConversationRemoteSource {
   }
 
   @override
+  Future<ApiResponseModel> blockConversation(Map<String, dynamic> data) async {
+    return await _handleSimpleRequest(
+        data: data, requestUrl: "block-conversation");
+  }
+
+  @override
   Future<ApiResponseModel> unblockConversation(
       Map<String, dynamic> data) async {
-    ApiResponseModel response =
-        await _service.post("${endPoint}unblock-conversation", data);
-    if (response.status) {
-      // debugPrint("::: S End getAllPosts func in remote datasource");
-      return response;
-    }
-    throw AppException(ServerFailure(message: response.message));
+    return await _handleSimpleRequest(
+        data: data, requestUrl: "unblock-conversation");
+  }
+
+  @override
+  Future<ApiResponseModel> confirmGotConversationData(
+      Map<String, dynamic> data) async {
+    return await _handleSimpleRequest(
+      data: data,
+      requestUrl: "confirm-got-conversation",
+    );
+  }
+
+  @override
+  Future<ApiResponseModel> deleteConversation(Map<String, dynamic> data) async {
+    return await _handleSimpleRequest(
+      data: data,
+      requestUrl: "delete-conversation",
+    );
   }
 }

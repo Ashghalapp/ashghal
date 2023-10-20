@@ -169,7 +169,7 @@ class AppUtil {
       return getHourMinuteDateFormat(dateTime);
     } else if (difference.inDays == 1) {
       // If the date is yesterday, return "Yesterday".
-      return 'Yesterday';
+      return AppLocalization.yesterday;
     } else {
       // If more than one day has passed, return the date in "dd/MM/yy" format.
       final day = dateTime.day.toString().padLeft(2, '0');

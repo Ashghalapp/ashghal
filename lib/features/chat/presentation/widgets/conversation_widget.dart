@@ -1,87 +1,55 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
-import 'package:ashghal_app_frontend/core/widget/user_status_widgets.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/avatar.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/highlightable_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ConversationWidget extends StatefulWidget {
+class ConversationWidget extends StatelessWidget {
   final ConversationWithCountAndLastMessage conversation;
 
-  const ConversationWidget({super.key, required this.conversation});
+  ConversationWidget({super.key, required this.conversation});
 
-  @override
-  State<ConversationWidget> createState() => _ConversationWidgetState();
-}
+  final ChatScreenController _screenController = Get.find();
 
-class _ConversationWidgetState extends State<ConversationWidget> {
-  final ChatScreenController _controller = Get.find();
   final UsersStateController _stateController = Get.find();
+
   final ChatController _chatController = Get.find();
-  // late Stream<void> _minuteStream;
-  // late Stream<DateTime> MinuteStream;
-  // late Stream<DateTime> _lastSeenMinuteStream;
-  // late String _lastMessageDate;
-  // String? _lastSeen;
 
   String getLastMessageStringDate() {
-    print(widget.conversation.lastMessage?.createdAt.toString());
-    print(widget.conversation.lastMessage?.updatedAt.toString());
-    return AppUtil.formatDateTime(widget.conversation.lastMessage?.createdAt ??
-        widget.conversation.conversation.updatedAt);
+    return AppUtil.formatDateTime(conversation.lastMessage?.createdAt ??
+        conversation.conversation.updatedAt);
   }
 
-  // String? getLastSeenString() {
-  //   if (widget.conversation.lastSeen != null) {
-  //     return AppUtil.timeAgoSince(widget.conversation.lastSeen!);
-  //   }
-  //   return null;
-  // }
-
-  @override
-  void initState() {
-    super.initState();
-    // _lastMessageDate = getLastMessageStringDate();
-    // if (_lastSeen != null) {
-    //   _lastSeen = getLastSeenString();
-    //   _minuteStream = Stream<void>.periodic(const Duration(minutes: 1), (_) {
-    //     setState(() {
-    //       // _lastMessageDate = getLastMessageStringDate();
-    //       _lastSeen = getLastSeenString();
-    //     });
-    //   });
-    // }
-  }
-
-  bool get lastMessageMine => widget.conversation.lastMessage == null
+  bool get lastMessageMine => conversation.lastMessage == null
       ? false
-      : widget.conversation.lastMessage!.senderId == SharedPref.currentUserId;
+      : conversation.lastMessage!.senderId == SharedPref.currentUserId;
 
   @override
   Widget build(BuildContext context) {
     return _buildDismissibleWidget(
       child: InkWell(
-        onTap: () => _controller
-            .goToConversationScreen(widget.conversation.conversation),
+        onTap: () =>
+            _screenController.goToConversationScreen(conversation.conversation),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           child: Row(
             children: [
               UserImageAvatarWithStatusWidget(
-                userId: widget.conversation.conversation.userId,
-                userName: widget.conversation.conversation.userName,
+                userId: conversation.conversation.userId,
+                userName: conversation.conversation.userName,
                 raduis: 26,
-                borderColor: Colors.blue,
-                imageUrl: widget.conversation.conversation.userImageUrl,
+                boderThickness: 1,
+                borderColor: Get.theme.primaryColor,
+                // borderColor: Theme.of(context).primaryColor,
+                imageUrl: conversation.conversation.userImageUrl,
               ),
-              // _buildImageAvatar(context),
-              // const SizedBox(width: 10),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -89,36 +57,47 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.conversation.conversation.userName,
-                        style: const TextStyle(
-                            fontSize: 19, fontWeight: FontWeight.w500),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 5),
                       Obx(
                         () {
-                          return _chatController.typingUsers.contains(
-                                  widget.conversation.conversation.userId)
-                              ? const Text(
-                                  "Typing Now...",
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 16,
-                                  ),
+                          return _screenController.isSearching.value
+                              ? HighlightableTextWidget(
+                                  text: conversation.conversation.userName,
+                                  searchText: _screenController
+                                      .searchFeildController.text,
+                                  fontSize: 20,
+                                  // textColor: Colors.black,
                                 )
-                              : Opacity(
-                                  opacity: 0.8,
-                                  child: buildLastMessageRow(),
+                              : Text(
+                                  conversation.conversation.userName,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 );
                         },
                       ),
-                      // if (widget.conversation.lastMessage != null)
-                      //   Opacity(
-                      //     opacity: 0.8,
-                      //     child: buildLastMessageRow(),
-                      //   ),
+                      const SizedBox(height: 7),
+                      Obx(
+                        () {
+                          return _chatController.typingUsers
+                                  .contains(conversation.conversation.userId)
+                              ? Text(
+                                  "${AppLocalization.typingNow}...",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontSize: 16,
+                                  ),
+                                )
+                              : conversation.lastMessage != null
+                                  ? Opacity(
+                                      opacity: 0.9,
+                                      child: buildLastMessageRow(),
+                                    )
+                                  : const SizedBox.shrink();
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -131,39 +110,39 @@ class _ConversationWidgetState extends State<ConversationWidget> {
     );
   }
 
-  // Stack _buildImageAvatar(BuildContext context) {
-  //   return UserImageAvatarWidget(widget: widget, widget: widget, widget: widget);
-  // }
-
   Widget? buildLastMessageRow() {
-    return widget.conversation.lastMessage == null
+    return conversation.lastMessage == null
         ? null
         : Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // lastMessageMine
-              //     ?
-              //     : const SizedBox(width: 2),
-              // const SizedBox(width: 7),
               if (lastMessageMine)
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
+                  padding: const EdgeInsets.only(left: 5, right: 10.0),
                   child: MessageStatusIcon(
-                    message: widget.conversation.lastMessage!,
+                    message: conversation.lastMessage!,
                   ),
                 ),
-              widget.conversation.lastMessage!.body == null
-                  ? const Icon(Icons.file_present_sharp)
+              conversation.lastMessage!.body == null
+                  ? Icon(
+                      Icons.file_present_sharp,
+                      color: conversation.newMessagesCount > 0
+                          ? Get.theme.primaryColor
+                          : null,
+                    )
                   : Expanded(
                       flex: 1,
                       child: Text(
-                        widget.conversation.lastMessage!.body!,
+                        conversation.lastMessage!.body!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
+                          color: conversation.newMessagesCount > 0
+                              ? Get.theme.primaryColor
+                              : null,
                         ),
                       ),
                     ),
@@ -176,35 +155,38 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        // if (_lastSeen == null)
         Obx(
           () {
             return _stateController.onlineUsersIds
-                    .contains(widget.conversation.conversation.userId)
-                ? const Text(
-                    "Online",
+                    .contains(conversation.conversation.userId)
+                ? Text(
+                    AppLocalization.online,
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Get.theme.primaryColor,
                       fontSize: 16,
                     ),
                   )
                 : Text(
                     getLastMessageStringDate(),
-                    style: const TextStyle(),
                   );
           },
         ),
-        const SizedBox(height: 5),
-        if (widget.conversation.newMessagesCount > 0)
-          CircleAvatar(
-            radius: 13,
-            backgroundColor: Theme.of(context).primaryColor,
-            child: Text(
-              widget.conversation.newMessagesCount.toString(),
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
+        const SizedBox(height: 10),
+        if (conversation.newMessagesCount > 0)
+          Container(
+            decoration: BoxDecoration(
+              color: Get.theme.primaryColor,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+              child: Text(
+                conversation.newMessagesCount.toString(),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -214,7 +196,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
 
   _buildDismissibleWidget({required Widget child}) {
     return Dismissible(
-      key: Key(widget.conversation.conversation.localId
+      key: Key(conversation.conversation.localId
           .toString()), //?? DateTime.now().microsecondsSinceEpoch.toString()),
       direction: DismissDirection.horizontal,
       confirmDismiss: (direction) {
@@ -223,7 +205,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
           //to prevent the widget from beeing deleted from the tree until it is updated
           //I will fire the updating action here and return false so the dissmisssble widget will not delete the wiget
           return AppUtil.showConfirmationDialog(
-            'Are you sure you want to archive this chat?',
+            AppLocalization.cofirmArchiveConversationMessage,
           );
           //   .then((value) {
           // if (value != null && value) {
@@ -235,7 +217,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
         } else if (direction == DismissDirection.startToEnd) {
           // Widget dismissed from left to right
           return AppUtil.showConfirmationDialog(
-            'Are you sure you want to delete this chat?',
+            AppLocalization.cofirmDeleteConversationMessage,
           );
         }
         return Future.value(false);
@@ -246,8 +228,8 @@ class _ConversationWidgetState extends State<ConversationWidget> {
           // TODO: Archive chat
         } else if (direction == DismissDirection.startToEnd) {
           // Widget dismissed from left to right
-          _controller
-              .deleteConversation(widget.conversation.conversation.localId);
+          _screenController
+              .deleteConversation(conversation.conversation.localId);
         }
       },
       //left to right container
@@ -262,7 +244,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
               const Icon(Icons.delete, color: Colors.white),
               const SizedBox(width: 10),
               Text(
-                'Delete'.tr,
+                AppLocalization.delete,
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
             ],
@@ -279,7 +261,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                'Archive'.tr,
+                AppLocalization.archive,
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
               const SizedBox(width: 10),
@@ -290,12 +272,5 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       ),
       child: child,
     );
-  }
-
-  @override
-  void dispose() {
-    // Cancel the stream subscription when the widget is disposed.
-    // _minuteStream.drain();
-    super.dispose();
   }
 }

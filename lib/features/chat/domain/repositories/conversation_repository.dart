@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_last_message_and_count.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/block_unblock_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
@@ -41,7 +42,14 @@ abstract class ConversationRepository {
   /// await repository.subscribeToChatChannels();
   /// ```
   Future<void> subscribeToChatChannels(
-      void Function(TypingEventType eventType, int userId) onTypingEvent);
+    void Function(
+      TypingEventType eventType,
+      int userId,
+    ) onTypingEvent,
+  );
+
+  Future<Either<Failure, List<LocalMessage>>> searchInConversations(
+      String searchText);
 
   /// Starts a conversation with the specified user, both locally and remotely, based on the provided [StartConversationRequest].
   ///
@@ -146,8 +154,7 @@ abstract class ConversationRepository {
   /// }
   /// ```
   /// - [request]: A [DeleteConversationRequest] object specifying the conversation to delete.
-  Future<Either<Failure, bool>> deleteConversation(
-      DeleteConversationRequest request);
+  Future<Either<Failure, bool>> deleteConversation(int conversationLocalId);
 
   /// Blocks or unblocks a conversation based on the provided [BlockUnblockConversationRequest].
   ///

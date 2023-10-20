@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
@@ -8,9 +10,15 @@ import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class UsersStateController extends GetxController {
   RxList<int> onlineUsersIds = <int>[].obs;
+  final StreamController<List<int>> _onlineUsersController =
+      StreamController<List<int>>.broadcast();
+  Stream<List<int>> get onlineUsersStream => _onlineUsersController.stream;
 
   @override
   void onInit() {
+    onlineUsersIds.listen((onlineIds) {
+      _onlineUsersController.add(onlineIds);
+    });
     super.onInit();
     subscribeToOnlineUsersChannel();
     AppServices.networkInfo.onStatusChanged.listen((isConnected) async {

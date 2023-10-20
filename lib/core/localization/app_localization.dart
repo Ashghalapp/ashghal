@@ -319,7 +319,37 @@ class AppLocalization {
 
 //================================ Start chat messages ================================//
   static String conversationDeletedSuccess =
-      "Conversation deleted successfully";
-  static String conversationDeletedFail = "Failed to delete conversation";
+      "Conversation deleted successfully".tr;
+  static String conversationDeletedFail = "Failed to delete conversation".tr;
+  static String noRecentsMessages = "No recents messages in your chats".tr;
+  static String noActiveUsers = "No active users in your chats".tr;
+  static String noFavoriteChats = "No favorite chats".tr;
+  static String noConversationsYet = "No Conversations Yet".tr;
+
+  static String conversations = "Conversations".tr;
+  static String noConversationsMatchedSearch =
+      "No conversations matched the search text".tr;
+  static String messages = "Messages".tr;
+  static String noMessagesMatchedSearch =
+      "No messages matched the search text".tr;
+  static String all = "All".tr;
+  static String recentMessages = "Recent Messages".tr;
+  static String active = "Active".tr;
+  static String favorite = "Favorite".tr;
+  static String blockedUsers = "Blocked Users".tr;
+  static String online = "Online".tr;
+  static String offline = "Offline".tr;
+  static String typingNow = "Typing Now".tr;
+  static String archive = "Archive".tr;
+  static String delete = "Delete".tr;
+  static String cofirmDeleteConversationMessage =
+      "Are you sure you want to delete this chat?".tr;
+  static String cofirmArchiveConversationMessage =
+      "Are you sure you want to archive this chat?".tr;
+
+  static String media = "Media".tr;
+  static String goToFirstMessage = "Go To First Message".tr;
+  static String clearChat = "Clear Chat".tr;
+
 //================================ End chat messages ================================//
 }

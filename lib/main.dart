@@ -46,10 +46,13 @@ class MyApp extends StatelessWidget {
     AppLocallcontroller controller = Get.find();
     return GetMaterialApp(
       darkTheme: AppTheme.darkTheme,
+      // darkTheme: AppServices.apptheme,
       builder: EasyLoading.init(),
       onInit: () {},
       title: 'Ashghal App',
       theme: AppTheme.lightTheme,
+      // theme: AppServices.apptheme,
+      // themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       locale: controller.language,
       translations: MyTranslation(),

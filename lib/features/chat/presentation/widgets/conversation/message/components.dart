@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/config/app_images.dart';
+import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
@@ -7,12 +8,85 @@ import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.d
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 enum MessageStatus {
   notSent,
   sent,
   received,
   read,
+}
+
+class IconBorder extends StatelessWidget {
+  const IconBorder({
+    Key? key,
+    required this.icon,
+    required this.onTap,
+  }) : super(key: key);
+
+  final Widget icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(6),
+      splashColor: ChatColors.secondary,
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            width: 2,
+            color: Theme.of(context).cardColor,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: icon,
+        ),
+      ),
+    );
+  }
+}
+
+class PressableIconBackground extends StatelessWidget {
+  const PressableIconBackground({
+    Key? key,
+    this.icon,
+    this.child,
+    required this.onTap,
+    this.borderRadius = 6,
+    this.padding = 6,
+  }) : super(key: key);
+  final double borderRadius;
+  final IconData? icon;
+  final Widget? child;
+  final VoidCallback onTap;
+  final double padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Theme.of(context).cardColor,
+      // color: Colors.white,
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(borderRadius),
+        splashColor: ChatColors.secondary,
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.all(padding),
+          child: icon != null
+              ? Icon(
+                  icon,
+                  size: 22,
+                )
+              : child,
+        ),
+      ),
+    );
+  }
 }
 
 class MessageStatusIcon extends StatelessWidget {
@@ -89,7 +163,9 @@ class MessageBodyTextWidget extends StatelessWidget {
         fontSize: 17,
         color: isMine
             ? ChatStyle.ownMessageTextColor
-            : ChatStyle.otherMessageTextColor,
+            : Get.isPlatformDarkMode
+                ? ChatStyle.otherMessageTextDarkColor
+                : ChatStyle.otherMessageTextLightColor,
       ),
     );
   }
@@ -124,7 +200,10 @@ class DownloadUploadIconWithSizeWidget extends StatelessWidget {
         children: [
           DownloadUploadIconWidget(isMine: isMine),
           const SizedBox(width: 5),
-          MultimediaSizeTextWidget(size: size)
+          MultimediaSizeTextWidget(
+            size: size,
+            isMine: isMine,
+          )
         ],
       ),
       // borderRaduis: 50,
@@ -136,16 +215,25 @@ class MultimediaSizeTextWidget extends StatelessWidget {
   const MultimediaSizeTextWidget({
     super.key,
     required this.size,
+    required this.isMine,
     this.fontSize = 14,
   });
 
   final int size;
   final double fontSize;
+  final bool isMine;
   @override
   Widget build(BuildContext context) {
     return Text(
       AppUtil.getFormatedFileSize(size),
-      style: TextStyle(color: Colors.white70, fontSize: fontSize),
+      style: TextStyle(
+        color: isMine
+            ? ChatStyle.ownMessageTextColor.withOpacity(0.7)
+            : Get.isPlatformDarkMode
+                ? ChatStyle.otherMessageTextDarkColor.withOpacity(0.7)
+                : ChatStyle.otherMessageTextLightColor.withOpacity(0.7),
+        fontSize: fontSize,
+      ),
     );
   }
 }
@@ -154,16 +242,25 @@ class MultimediaExtentionTextWidget extends StatelessWidget {
   const MultimediaExtentionTextWidget({
     super.key,
     required this.path,
+    required this.isMine,
     this.fontSize = 14,
   });
 
   final String path;
   final double fontSize;
+  final bool isMine;
   @override
   Widget build(BuildContext context) {
     return Text(
       path.split('.').last,
-      style: TextStyle(color: Colors.white70, fontSize: fontSize),
+      style: TextStyle(
+        color: isMine
+            ? ChatStyle.ownMessageTextColor.withOpacity(0.7)
+            : Get.isPlatformDarkMode
+                ? ChatStyle.otherMessageTextDarkColor.withOpacity(0.7)
+                : ChatStyle.otherMessageTextLightColor.withOpacity(0.7),
+        fontSize: fontSize,
+      ),
     );
   }
 }

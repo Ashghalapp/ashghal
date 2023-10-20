@@ -22,6 +22,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/use_cases/dispatch_typ
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/download_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_conversations.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_conversation_messages.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/search_in_conversations.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/send_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/start_conversation_with.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/subscribe_to_chat_channels.dart';
@@ -109,6 +110,8 @@ void setupDependencies() {
   getIt.registerLazySingleton(
       () => DispatchTypingEventUseCase(repository: getIt()));
 
+  getIt.registerLazySingleton(
+      () => SearchInConversationsUseCase(repository: getIt()));
   // repository injection
   getIt.registerLazySingleton<ConversationRepository>(
       () => ConversationRepositoryImp());

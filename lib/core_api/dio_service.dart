@@ -37,6 +37,18 @@ class DioService {
     }
   }
 
+  Future<bool> head(String path) async {
+    try {
+      final response = await _dio.head(path);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<ApiResponseModel> post(String path, Object? data) async {
     // print("???????????????????????????????????????");
     Response response = await _dio.post(path, data: data);

@@ -6,6 +6,7 @@ import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/pusher_service.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/receive_read_message_model.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/remote_conversation_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
@@ -32,22 +33,26 @@ class PusherChatHelper {
   }
 
 // ReceivedReadMessageModel
-  Future<void> subscribeToChatChannels(
-      {required int conversationRemoteId,
-      required Function(RemoteMessageModel message) onNewMessage,
-      required Function(ReceivedReadMessageModel receivedReadMessage)
-          onMessageReceived,
-      required Function(ReceivedReadMessageModel receivedReadMessage)
-          onMessageRead,
-      required void Function(TypingEventType eventType, int userId)
-          onTypingEvent}) async {
-    String chanelName =
+  Future<void> subscribeToChatChannels({
+    required int conversationRemoteId,
+    required Function(RemoteMessageModel message) onNewMessage,
+    required void Function(RemoteConversationModel remoteConversation)
+        onNewMessageUnknownConversation,
+    required Function(ReceivedReadMessageModel receivedReadMessage)
+        onMessageReceived,
+    required Function(ReceivedReadMessageModel receivedReadMessage)
+        onMessageRead,
+    required void Function(TypingEventType eventType, int userId) onTypingEvent,
+  }) async {
+    String chatChannelName =
         '${ChannelsEventsNames.chatChannelName}$conversationRemoteId';
+    String userChannelName =
+        '${ChannelsEventsNames.userChannelName}${SharedPref.currentUserId}';
 
     //message sent event
     Channelhandler handler = Channelhandler(
       channel: AppChannel(
-        channelName: chanelName,
+        channelName: chatChannelName,
         eventName: ChannelsEventsNames.messageSentEventName,
       ),
       onEvent: (PusherEvent event) async {
@@ -63,10 +68,27 @@ class PusherChatHelper {
     );
     AppServices.pusher.addNewChannelHandler(handler);
 
+    //message sent on unknown conversation
+    handler = Channelhandler(
+      channel: AppChannel(
+        channelName: userChannelName,
+        eventName: ChannelsEventsNames.newMessageUnknownConversationEvent,
+      ),
+      onEvent: (PusherEvent event) async {
+        print("Pusher event received: $event");
+        dynamic data = json.decode(event.data);
+        RemoteConversationModel conversation = RemoteConversationModel.fromJson(
+          data['conversation'],
+        );
+        onNewMessageUnknownConversation(conversation);
+      },
+    );
+    AppServices.pusher.addNewChannelHandler(handler);
+
     //message received event
     handler = Channelhandler(
       channel: AppChannel(
-        channelName: chanelName,
+        channelName: chatChannelName,
         eventName: ChannelsEventsNames.messageReceivedEventName,
       ),
       onEvent: (PusherEvent event) async {
@@ -87,7 +109,7 @@ class PusherChatHelper {
     //message read event
     handler = Channelhandler(
       channel: AppChannel(
-        channelName: chanelName,
+        channelName: chatChannelName,
         eventName: ChannelsEventsNames.messageReadEventName,
       ),
       onEvent: (PusherEvent event) async {
@@ -108,7 +130,7 @@ class PusherChatHelper {
     //Typing event
     handler = Channelhandler(
       channel: AppChannel(
-        channelName: chanelName,
+        channelName: chatChannelName,
         eventName: ChannelsEventsNames.typingEventName,
       ),
       onEvent: (PusherEvent event) async {
@@ -136,9 +158,12 @@ class PusherChatHelper {
     // await AppServices.pusher.subscribeToChannel(chanelName);
     // subscribedChannels.add(chanelName);
 
-    await AppServices.pusher.subscribeToChannel(chanelName);
-    if (!subscribedChannels.contains(chanelName)) {
-      subscribedChannels.add(chanelName);
+    await AppServices.pusher.subscribeToChannel(chatChannelName);
+    if (!subscribedChannels.contains(chatChannelName)) {
+      subscribedChannels.add(chatChannelName);
+    }
+    if (!subscribedChannels.contains(userChannelName)) {
+      subscribedChannels.add(userChannelName);
     }
   }
 

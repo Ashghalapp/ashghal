@@ -4,13 +4,16 @@ import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
     as di;
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
+import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_last_message_and_count_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_conversation.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_conversations.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/search_in_conversations.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/start_conversation_with.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/subscribe_to_chat_channels.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/synchronize_conversations.dart';
@@ -22,15 +25,76 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+enum ChatFilters {
+  all,
+  recentMessages,
+  active,
+  favorite,
+}
+
+extension ChatFiltersExtension on ChatFilters {
+  String get value {
+    switch (this) {
+      case ChatFilters.all:
+        return AppLocalization.all;
+      case ChatFilters.recentMessages:
+        return AppLocalization.recentMessages;
+      case ChatFilters.active:
+        return AppLocalization.active;
+      case ChatFilters.favorite:
+        return AppLocalization.favorite;
+    }
+  }
+}
+
 class ChatController extends GetxController {
   RxList<ConversationWithCountAndLastMessage> conversations =
       <ConversationWithCountAndLastMessage>[].obs;
+
+  List<LocalMessage> searchMatchedMessages = <LocalMessage>[];
+
+  RxList<ConversationWithCountAndLastMessage> searchMatchedConversations =
+      <ConversationWithCountAndLastMessage>[].obs;
+  RxList<MatchedConversationsAndMessage> searchMatchedConversationMessages =
+      <MatchedConversationsAndMessage>[].obs;
+  // String searchText = "";
+
+  // RxList<MatchedConversationsAndMessage> get searchMatchedConversationMessages {
+  //   RxList<MatchedConversationsAndMessage> matched =
+  //       <MatchedConversationsAndMessage>[].obs;
+  //   for (var message in searchMatchedMessages) {
+  //     int index = conversations
+  //         .indexWhere((c) => c.conversation.localId == message.conversationId);
+  //     if (index != -1) {
+  //       matched.add(MatchedConversationsAndMessage(
+  //         conversation: conversations[index].conversation,
+  //         message: message,
+  //       ));
+  //     }
+  //   }
+  //   return matched;
+  // }
+
+  // RxList<ConversationWithCountAndLastMessage> get searchMatchedConversations {
+  //   if (searchText.trim() == "") {
+  //     return <ConversationWithCountAndLastMessage>[].obs;
+  //   } else {
+  //     return conversations
+  //         .where((c) => c.conversation.userName.contains(searchText))
+  //         .toList()
+  //         .obs;
+  //   }
+  // }
+
+  UsersStateController stateController = Get.find();
 
   RxList<int> typingUsers = <int>[].obs;
 
   RxBool isLoaing = false.obs;
 
   bool isSubscribed = false;
+
+  Rx<ChatFilters> appliedFilter = ChatFilters.all.obs;
 
   @override
   void onInit() {
@@ -54,6 +118,50 @@ class ChatController extends GetxController {
     _listenToConversationsLastMessageAndCount();
     _syncronizeConversations();
   }
+
+  void _startOnlineUsersListener() {
+    stateController.onlineUsersStream.listen(
+      (event) {
+        if (appliedFilter.value == ChatFilters.active) {
+          filteredConversations.refresh();
+        }
+      },
+    );
+  }
+
+  RxList<ConversationWithCountAndLastMessage> get filteredConversations {
+    switch (appliedFilter.value) {
+      case ChatFilters.all:
+        return conversations;
+      case ChatFilters.recentMessages:
+        return conversations
+            .where((c) => c.lastMessage != null && c.newMessagesCount > 0)
+            .toList()
+            .obs;
+      case ChatFilters.active:
+        _startOnlineUsersListener();
+        return conversations
+            .where((c) =>
+                stateController.onlineUsersIds.contains(c.conversation.userId))
+            .toList()
+            .obs;
+      case ChatFilters.favorite:
+        return conversations;
+      default:
+        return conversations;
+    }
+  }
+
+  void applyFilter(ChatFilters filter) {
+    if (filter != appliedFilter.value) {
+      appliedFilter.value = filter;
+      filteredConversations.refresh();
+    }
+  }
+
+  // void _filterData() {
+
+  // }
 
   Future<void> getAllConversations() async {
     GetAllConversationsUseCase useCase = di.getIt();
@@ -146,6 +254,7 @@ class ChatController extends GetxController {
         conversation: conversation,
       );
     }
+    filteredConversations.refresh();
   }
 
   void _listenToConversationsLastMessageAndCount() {
@@ -171,6 +280,7 @@ class ChatController extends GetxController {
         lastMessage: message.lastMessage,
         newMessagesCount: message.newMessagesCount,
       );
+      filteredConversations.refresh();
     } else {}
   }
 
@@ -184,20 +294,21 @@ class ChatController extends GetxController {
   }
 
   Future<void> deleteConversation(int conversationId) async {
-    DeleteConversationRequest request = DeleteConversationRequest(
-      conversationLocalId: conversationId,
-    );
+    // DeleteConversationRequest request = DeleteConversationRequest(
+    //   conversationLocalId: conversationId,
+    // );
     DeleteConversationUseCase deleteConversationUseCase = di.getIt();
-    (await deleteConversationUseCase(request)).fold(
+    (await deleteConversationUseCase(conversationId)).fold(
       (failure) {
         AppUtil.showMessage(
-            AppLocalization.conversationDeletedFail.tr, Colors.green);
+            AppLocalization.conversationDeletedFail.tr, Colors.red);
       },
       (success) {
         if (success) {
           conversations.removeWhere(
             (element) => element.conversation.localId == conversationId,
           );
+          filteredConversations.refresh();
           AppUtil.showMessage(
               AppLocalization.conversationDeletedSuccess.tr, Colors.green);
 
@@ -209,10 +320,83 @@ class ChatController extends GetxController {
           // }
         } else {
           AppUtil.showMessage(
-              AppLocalization.conversationDeletedFail.tr, Colors.green);
+              AppLocalization.conversationDeletedFail.tr, Colors.red);
         }
       },
     );
+  }
+
+  Future<void> search(String searchText) async {
+    print("Search starrted");
+    print(searchText);
+    refreshSearchMatchedConversations(searchText);
+    SearchInConversationsUseCase useCase = di.getIt();
+    (await useCase(searchText)).fold(
+      (failure) {
+        // print("Search Finished with failure");
+        // searchMatchedMessages.clear();
+        searchMatchedConversationMessages.clear();
+
+        AppUtil.showMessage(
+          AppLocalization.conversationDeletedFail.tr,
+          Colors.red,
+        );
+      },
+      (matchedData) {
+        print("Search Finished with Success ${matchedData.length}");
+        refreshSearchMatchedConversationMessages(matchedData);
+        // searchMatchedMessages.clear();
+
+        // searchMatchedMessages.addAll(matchedData);
+        // searchMatchedConversationMessages.refresh();
+        // List<int> ids = matchedData.map((e) => e.conversation.localId).toList();
+
+        // List<ConversationWithCountAndLastMessage> matchedConversation =
+        //     conversations
+        //         .where((c) => !ids.contains(c.conversation.localId))
+        //         .toList();
+        // // .map((e) => e.conversation)
+        // // .toList();
+        // searchMatchesMessages.insertAll(
+        //   0,
+        //   matchedConversation.map(
+        //     (e) => MatchedConversationsAndMessage(conversation: e.conversation),
+        //   ),
+        // );
+      },
+    );
+  }
+
+  void refreshSearchMatchedConversations(searchText) {
+    if (searchText.trim() == "") {
+      searchMatchedConversations.clear();
+    } else {
+      searchMatchedConversations.clear();
+      searchMatchedConversations.addAll(conversations
+          .where((c) => c.conversation.userName.contains(searchText))
+          .toList());
+    }
+  }
+
+  void refreshSearchMatchedConversationMessages(List<LocalMessage> messages) {
+    searchMatchedConversationMessages.clear();
+    for (var message in messages) {
+      int index = conversations
+          .indexWhere((c) => c.conversation.localId == message.conversationId);
+      if (index != -1) {
+        searchMatchedConversationMessages.add(
+          MatchedConversationsAndMessage(
+            conversation: conversations[index].conversation,
+            message: message,
+          ),
+        );
+      }
+    }
+  }
+
+  void stopSearchMode() {
+    searchMatchedConversationMessages.clear();
+    searchMatchedConversations.clear();
   }
 
   Future<void> unsubscribeFromChatChannels() async {

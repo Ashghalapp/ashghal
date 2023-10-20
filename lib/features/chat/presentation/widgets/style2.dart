@@ -35,10 +35,18 @@ var softShadowsInvert = [
 ];
 
 class ChatStyle {
-  static const Color ownMessageColor = Colors.blueGrey;
-  static const Color otherMessageColor = Color.fromARGB(255, 62, 92, 108);
+  // static const Color ownMessageColor = Colors.blueGrey;
+  static const Color ownMessageColor = Color.fromRGBO(0, 144, 127, 1);
+
+  // static const Color otherMessageColor = Color.fromARGB(255, 62, 92, 108);
+  static const Color otherMessageLightColor = Color.fromRGBO(238, 237, 235, 1);
+  static const Color otherMessageDarkColor = Color.fromRGBO(69, 70, 69, 1);
+
   static const Color ownMessageTextColor = Colors.white;
-  static const Color otherMessageTextColor = Colors.white;
+  // static const Color ownMessageTextLightColor = Colors.white;
+  static const Color otherMessageTextDarkColor = Colors.white;
+  static const Color otherMessageTextLightColor = Colors.black;
+
   static const Color iconsBackColor = Colors.black38;
 
   // static const Color ownMessageColor = Colors.blueAccent;

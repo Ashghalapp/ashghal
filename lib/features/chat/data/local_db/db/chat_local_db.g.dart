@@ -17,6 +17,8 @@ class LocalConversation extends DataClass
   final String? userPhone;
   final String? userImageUrl;
   final bool isBlocked;
+  final bool isFavorite;
+  final bool isDeletedLocally;
   final DateTime createdAt;
   final DateTime updatedAt;
   LocalConversation(
@@ -28,6 +30,8 @@ class LocalConversation extends DataClass
       this.userPhone,
       this.userImageUrl,
       required this.isBlocked,
+      required this.isFavorite,
+      required this.isDeletedLocally,
       required this.createdAt,
       required this.updatedAt});
   factory LocalConversation.fromData(
@@ -51,6 +55,10 @@ class LocalConversation extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}user_image_url']),
       isBlocked: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_blocked'])!,
+      isFavorite: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_favorite'])!,
+      isDeletedLocally: const BoolType().mapFromDatabaseResponse(
+          data['${effectivePrefix}is_deleted_locally'])!,
       createdAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
@@ -76,6 +84,8 @@ class LocalConversation extends DataClass
       map['user_image_url'] = Variable<String?>(userImageUrl);
     }
     map['is_blocked'] = Variable<bool>(isBlocked);
+    map['is_favorite'] = Variable<bool>(isFavorite);
+    map['is_deleted_locally'] = Variable<bool>(isDeletedLocally);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -99,6 +109,8 @@ class LocalConversation extends DataClass
           ? const Value.absent()
           : Value(userImageUrl),
       isBlocked: Value(isBlocked),
+      isFavorite: Value(isFavorite),
+      isDeletedLocally: Value(isDeletedLocally),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -116,6 +128,8 @@ class LocalConversation extends DataClass
       userPhone: serializer.fromJson<String?>(json['userPhone']),
       userImageUrl: serializer.fromJson<String?>(json['userImageUrl']),
       isBlocked: serializer.fromJson<bool>(json['isBlocked']),
+      isFavorite: serializer.fromJson<bool>(json['isFavorite']),
+      isDeletedLocally: serializer.fromJson<bool>(json['isDeletedLocally']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -132,6 +146,8 @@ class LocalConversation extends DataClass
       'userPhone': serializer.toJson<String?>(userPhone),
       'userImageUrl': serializer.toJson<String?>(userImageUrl),
       'isBlocked': serializer.toJson<bool>(isBlocked),
+      'isFavorite': serializer.toJson<bool>(isFavorite),
+      'isDeletedLocally': serializer.toJson<bool>(isDeletedLocally),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -146,6 +162,8 @@ class LocalConversation extends DataClass
           String? userPhone,
           String? userImageUrl,
           bool? isBlocked,
+          bool? isFavorite,
+          bool? isDeletedLocally,
           DateTime? createdAt,
           DateTime? updatedAt}) =>
       LocalConversation(
@@ -157,6 +175,8 @@ class LocalConversation extends DataClass
         userPhone: userPhone ?? this.userPhone,
         userImageUrl: userImageUrl ?? this.userImageUrl,
         isBlocked: isBlocked ?? this.isBlocked,
+        isFavorite: isFavorite ?? this.isFavorite,
+        isDeletedLocally: isDeletedLocally ?? this.isDeletedLocally,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -171,6 +191,8 @@ class LocalConversation extends DataClass
           ..write('userPhone: $userPhone, ')
           ..write('userImageUrl: $userImageUrl, ')
           ..write('isBlocked: $isBlocked, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('isDeletedLocally: $isDeletedLocally, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -178,8 +200,19 @@ class LocalConversation extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(localId, remoteId, userId, userName,
-      userEmail, userPhone, userImageUrl, isBlocked, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+      localId,
+      remoteId,
+      userId,
+      userName,
+      userEmail,
+      userPhone,
+      userImageUrl,
+      isBlocked,
+      isFavorite,
+      isDeletedLocally,
+      createdAt,
+      updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -192,6 +225,8 @@ class LocalConversation extends DataClass
           other.userPhone == this.userPhone &&
           other.userImageUrl == this.userImageUrl &&
           other.isBlocked == this.isBlocked &&
+          other.isFavorite == this.isFavorite &&
+          other.isDeletedLocally == this.isDeletedLocally &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -205,6 +240,8 @@ class ConversationsCompanion extends UpdateCompanion<LocalConversation> {
   final Value<String?> userPhone;
   final Value<String?> userImageUrl;
   final Value<bool> isBlocked;
+  final Value<bool> isFavorite;
+  final Value<bool> isDeletedLocally;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const ConversationsCompanion({
@@ -216,6 +253,8 @@ class ConversationsCompanion extends UpdateCompanion<LocalConversation> {
     this.userPhone = const Value.absent(),
     this.userImageUrl = const Value.absent(),
     this.isBlocked = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.isDeletedLocally = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -228,6 +267,8 @@ class ConversationsCompanion extends UpdateCompanion<LocalConversation> {
     this.userPhone = const Value.absent(),
     this.userImageUrl = const Value.absent(),
     this.isBlocked = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.isDeletedLocally = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   })  : userId = Value(userId),
@@ -241,6 +282,8 @@ class ConversationsCompanion extends UpdateCompanion<LocalConversation> {
     Expression<String?>? userPhone,
     Expression<String?>? userImageUrl,
     Expression<bool>? isBlocked,
+    Expression<bool>? isFavorite,
+    Expression<bool>? isDeletedLocally,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -253,6 +296,8 @@ class ConversationsCompanion extends UpdateCompanion<LocalConversation> {
       if (userPhone != null) 'user_phone': userPhone,
       if (userImageUrl != null) 'user_image_url': userImageUrl,
       if (isBlocked != null) 'is_blocked': isBlocked,
+      if (isFavorite != null) 'is_favorite': isFavorite,
+      if (isDeletedLocally != null) 'is_deleted_locally': isDeletedLocally,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -267,6 +312,8 @@ class ConversationsCompanion extends UpdateCompanion<LocalConversation> {
       Value<String?>? userPhone,
       Value<String?>? userImageUrl,
       Value<bool>? isBlocked,
+      Value<bool>? isFavorite,
+      Value<bool>? isDeletedLocally,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
     return ConversationsCompanion(
@@ -278,6 +325,8 @@ class ConversationsCompanion extends UpdateCompanion<LocalConversation> {
       userPhone: userPhone ?? this.userPhone,
       userImageUrl: userImageUrl ?? this.userImageUrl,
       isBlocked: isBlocked ?? this.isBlocked,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isDeletedLocally: isDeletedLocally ?? this.isDeletedLocally,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -310,6 +359,12 @@ class ConversationsCompanion extends UpdateCompanion<LocalConversation> {
     if (isBlocked.present) {
       map['is_blocked'] = Variable<bool>(isBlocked.value);
     }
+    if (isFavorite.present) {
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
+    }
+    if (isDeletedLocally.present) {
+      map['is_deleted_locally'] = Variable<bool>(isDeletedLocally.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -330,6 +385,8 @@ class ConversationsCompanion extends UpdateCompanion<LocalConversation> {
           ..write('userPhone: $userPhone, ')
           ..write('userImageUrl: $userImageUrl, ')
           ..write('isBlocked: $isBlocked, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('isDeletedLocally: $isDeletedLocally, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -393,6 +450,23 @@ class $ConversationsTable extends Conversations
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (is_blocked IN (0, 1))',
       defaultValue: const Constant(false));
+  final VerificationMeta _isFavoriteMeta = const VerificationMeta('isFavorite');
+  @override
+  late final GeneratedColumn<bool?> isFavorite = GeneratedColumn<bool?>(
+      'is_favorite', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_favorite IN (0, 1))',
+      defaultValue: const Constant(false));
+  final VerificationMeta _isDeletedLocallyMeta =
+      const VerificationMeta('isDeletedLocally');
+  @override
+  late final GeneratedColumn<bool?> isDeletedLocally = GeneratedColumn<bool?>(
+      'is_deleted_locally', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_deleted_locally IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
@@ -417,6 +491,8 @@ class $ConversationsTable extends Conversations
         userPhone,
         userImageUrl,
         isBlocked,
+        isFavorite,
+        isDeletedLocally,
         createdAt,
         updatedAt
       ];
@@ -466,6 +542,18 @@ class $ConversationsTable extends Conversations
     if (data.containsKey('is_blocked')) {
       context.handle(_isBlockedMeta,
           isBlocked.isAcceptableOrUnknown(data['is_blocked']!, _isBlockedMeta));
+    }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+          _isFavoriteMeta,
+          isFavorite.isAcceptableOrUnknown(
+              data['is_favorite']!, _isFavoriteMeta));
+    }
+    if (data.containsKey('is_deleted_locally')) {
+      context.handle(
+          _isDeletedLocallyMeta,
+          isDeletedLocally.isAcceptableOrUnknown(
+              data['is_deleted_locally']!, _isDeletedLocallyMeta));
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,

@@ -154,7 +154,7 @@ class MessageWidget extends StatelessWidget {
               AvatarWithImageOrLetter(
                 raduis: 16,
                 boderThickness: 1,
-                borderColor: ChatStyle.otherMessageColor!,
+                borderColor: ChatStyle.ownMessageColor!,
                 userName: _screenController.conversation.userName,
                 imageUrl: _screenController.conversation.userImageUrl,
               ),
@@ -167,9 +167,13 @@ class MessageWidget extends StatelessWidget {
                 elevation: 1,
                 shadowColor: Colors.grey,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
+                // color: isMine ? Color.fromRGBO(0, 144, 127, 1) : Colors.grey,
                 color: isMine
                     ? ChatStyle.ownMessageColor
-                    : ChatStyle.otherMessageColor,
+                    : Get.isPlatformDarkMode
+                        ? ChatStyle.otherMessageDarkColor
+                        : ChatStyle.otherMessageLightColor,
+
                 // color: isMine ? Colors.black87 : Colors.black54,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5))

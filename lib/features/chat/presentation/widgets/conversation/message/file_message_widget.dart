@@ -2,6 +2,7 @@ import 'package:ashghal_app_frontend/config/app_images.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -86,17 +87,26 @@ class FileMessageWidget extends StatelessWidget {
                     textAlign: TextAlign.right,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontSize: 17),
+                    style: TextStyle(
+                      color: isMine
+                          ? ChatStyle.ownMessageTextColor
+                          : Get.isPlatformDarkMode
+                              ? ChatStyle.otherMessageTextDarkColor
+                              : ChatStyle.otherMessageTextLightColor,
+                      fontSize: 17,
+                    ),
                   ),
                   const SizedBox(height: 5),
                   Row(
                     children: [
                       MultimediaSizeTextWidget(
                         size: multimedia.size,
+                        isMine: isMine,
                       ),
                       const SizedBox(width: 5),
                       MultimediaExtentionTextWidget(
                         path: multimedia.path ?? multimedia.url ?? " . ",
+                        isMine: isMine,
                       ),
                     ],
                   )

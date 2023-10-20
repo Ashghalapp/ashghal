@@ -1,7 +1,7 @@
-class DeleteConversationRequest {
+class ConfirmGotConversationDataRequest {
   final int conversationRemoteId;
 
-  DeleteConversationRequest({required this.conversationRemoteId});
+  ConfirmGotConversationDataRequest({required this.conversationRemoteId});
 
   Map<String, dynamic> toJson() {
     return {'conversation_id': conversationRemoteId};

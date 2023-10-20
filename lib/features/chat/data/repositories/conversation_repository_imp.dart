@@ -20,9 +20,11 @@ import 'package:ashghal_app_frontend/features/chat/data/resources/local/multimed
 import 'package:ashghal_app_frontend/features/chat/data/resources/remote/conversation_remote_source.dart';
 import 'package:ashghal_app_frontend/features/chat/data/resources/remote/message_remote_source.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_last_message_and_count.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/repositories/conversation_repository.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/block_unblock_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/clear_chat_request.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/requests/confirm_got_conversation_data_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
@@ -84,21 +86,58 @@ class ConversationRepositoryImp extends ConversationRepository {
 
   @override
   Future<Either<Failure, bool>> deleteConversation(
-      DeleteConversationRequest request) async {
+      int conversationLocalId) async {
     try {
-      // List<LocalMessage> messages = await _messageLocalSource
-      //     .getConversationMessages(request.conversationLocalId);
-      // print(
-      //     "Number of messages in the conversation before delete: ${messages.length}");
-      bool deleted = await _conversationLocalSource
-          .deleteConversationByLocalId(request.conversationLocalId);
-      // messages = await _messageLocalSource
-      //     .getConversationMessages(request.conversationLocalId);
-      // print(
-      //     "Number of messages in the conversation after delete: ${messages.length}");
+      bool deleted = false;
+      if (await networkInfo.isConnected) {
+        int? conversationRemoteId = await _conversationLocalSource
+            .getRemoteIdByLocalId(conversationLocalId);
+        if (conversationRemoteId != null) {
+          deleted = await _deleteConversationRemotelyAndlocally(
+              conversationRemoteId, conversationLocalId);
+        }
+      }
+      if (!deleted) {
+        deleted = (await _conversationLocalSource
+                .deleteConversationLocally(conversationLocalId)) >
+            0;
+      }
       return Right(deleted);
     } catch (e) {
       return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
+
+  Future<bool> _deleteConversationRemotelyAndlocally(
+      int conversationRemoteId, int conversationLocalId) async {
+    try {
+      bool deleted = false;
+      DeleteConversationRequest request =
+          DeleteConversationRequest(conversationRemoteId: conversationRemoteId);
+      bool ok =
+          (await _conversationRemoteSource.deleteConversation(request.toJson()))
+              .status;
+      if (ok) {
+        deleted = await _conversationLocalSource
+            .deleteConversationByLocalId(conversationLocalId);
+      }
+      return deleted;
+    } catch (e) {
+      print(
+          "**********Error in ConversationRepositoryImp in _deleteConversationRemotely: ${e.toString()}");
+      return false;
+    }
+  }
+
+  // Future<void> _deleteConversation
+
+  Future<void> cofirmGotConversationData(int conversationRemoteId) async {
+    if (await networkInfo.isConnected) {
+      await _conversationRemoteSource.confirmGotConversationData(
+        ConfirmGotConversationDataRequest(
+          conversationRemoteId: conversationRemoteId,
+        ).toJson(),
+      );
     }
   }
 
@@ -168,6 +207,21 @@ class ConversationRepositoryImp extends ConversationRepository {
                 conversation.localId,
               );
             },
+            onNewMessageUnknownConversation: (remoteConversation) async {
+              int? conversationLocalId =
+                  await _insertLocalConversationFromRemoteIfNotExists(
+                remoteConversation,
+              );
+              if (conversationLocalId != null) {
+                for (var remoteMessage in remoteConversation.newMessages
+                    .cast<RemoteMessageModel>()) {
+                  await _messageRepository.insertNewMessageFromRemote(
+                    remoteMessage,
+                    conversationLocalId,
+                  );
+                }
+              }
+            },
             onMessageReceived: (receivedReadMessage) async {
               // print("onMessageReceived///////////////////////");
               print(receivedReadMessage.toString());
@@ -186,11 +240,17 @@ class ConversationRepositoryImp extends ConversationRepository {
         }
 
         // Future.delayed(
-        //   const Duration(seconds: 10),
+        //   const Duration(seconds: 3),
         //   () async {
-        //     print("Trigger event started in Conversation Repository");
-        //     await _pusherChatHelper.triggerEvent();
-        //     print("Trigger event Finished in Conversation Repository");
+        //     print("************Search starts************");
+        //     List<MatchedConversationsAndMessages> matchedes =
+        //         await _conversationLocalSource
+        //             .searchConversationsAndMessages("how");
+        //     for (var match in matchedes) {
+        //       print(
+        //           "Conversation: ${match.conversation.localId} - messages: ${match.messages.length}");
+        //     }
+        //     print("************Search Ends************");
         //   },
         // );
       }
@@ -203,11 +263,17 @@ class ConversationRepositoryImp extends ConversationRepository {
     }
   }
 
-  // Future<void> subscribeT
-
-  // Future<void> subscribeToConversationChannel(LocalConversation conversation){
-
-  // }
+  @override
+  Future<Either<Failure, List<LocalMessage>>> searchInConversations(
+      String searchText) async {
+    try {
+      List<LocalMessage> matchedes = await _conversationLocalSource
+          .searchConversationsAndMessages(searchText);
+      return right(matchedes);
+    } catch (e) {
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
 
   @override
   Future<void> unsubscribeFromChatChannels() async {
@@ -224,6 +290,17 @@ class ConversationRepositoryImp extends ConversationRepository {
 
         // start coversations created locally remotely
         await _startLocalConversationsRemotely();
+
+        List<LocalConversation> deletedConversations =
+            await _conversationLocalSource.getDeletedLocallyConversations();
+        for (var conversation in deletedConversations) {
+          if (conversation.remoteId != null) {
+            await _deleteConversationRemotelyAndlocally(
+              conversation.remoteId!,
+              conversation.localId,
+            );
+          }
+        }
         // print("after Call Start Local Conversation Remotely");
 
         //Conferm any messages that is marked as received locally or read locally
@@ -387,8 +464,10 @@ class ConversationRepositoryImp extends ConversationRepository {
     if (local == null) {
       // print("Coversation Not Exists");
       try {
-        return await _conversationLocalSource
+        int? c = await _conversationLocalSource
             .insertConversation(remote.toLocalConversation());
+        await cofirmGotConversationData(remote.id);
+        return c;
       } catch (e) {
         return null;
       }

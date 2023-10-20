@@ -15,6 +15,9 @@ class Conversations extends Table {
   TextColumn get userPhone => text().nullable()();
   TextColumn get userImageUrl => text().nullable()();
   BoolColumn get isBlocked => boolean().withDefault(const Constant(false))();
+  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
+  BoolColumn get isDeletedLocally =>
+      boolean().withDefault(const Constant(false))();
   // BoolColumn get isUserProvider =>
   //     boolean().withDefault(const Constant(false))();
   // BoolColumn get isLocal => boolean().withDefault(const Constant(true))();

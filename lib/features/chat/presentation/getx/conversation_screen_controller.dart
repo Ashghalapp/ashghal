@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/message_and_multimedia.dart';
@@ -18,6 +19,24 @@ enum ConversationPopupMenuItemsValues {
   goToFirstMessage,
   clearChat,
   block
+}
+
+extension ConversationPopupMenuItemsValuesExtension
+    on ConversationPopupMenuItemsValues {
+  String get value {
+    switch (this) {
+      case ConversationPopupMenuItemsValues.search:
+        return AppLocalization.search;
+      case ConversationPopupMenuItemsValues.media:
+        return AppLocalization.media;
+      case ConversationPopupMenuItemsValues.goToFirstMessage:
+        return AppLocalization.goToFirstMessage;
+      case ConversationPopupMenuItemsValues.clearChat:
+        return AppLocalization.clearChat;
+      case ConversationPopupMenuItemsValues.block:
+        return AppLocalization.block;
+    }
+  }
 }
 
 class ConversationScreenController extends GetxController {
@@ -41,6 +60,9 @@ class ConversationScreenController extends GetxController {
 
   /// A controller for the search text field
   final TextEditingController searchFeildController = TextEditingController();
+
+  /// A focusnode for the search text field
+  final FocusNode searchFeildFocusNode = FocusNode();
 
   /// indicates if messages selection enabled or not
   RxBool selectionEnabled = false.obs;
@@ -155,7 +177,7 @@ class ConversationScreenController extends GetxController {
   void toggleSelectionMode() {
     selectionEnabled.value = !selectionEnabled.value;
     if (!selectionEnabled.value) {
-      resetToNormalMode();
+      selectedMessagesIds.clear();
     }
   }
 
@@ -171,7 +193,7 @@ class ConversationScreenController extends GetxController {
 
   void deleteSelectedMessages() {
     //deleteMessageOrMessages(messagesIds, conversationId);
-    conversationController.deleteMessages(selectedMessagesIds.value.toList());
+    conversationController.deleteMessages(selectedMessagesIds.toList());
     resetToNormalMode();
   }
 
@@ -198,19 +220,22 @@ class ConversationScreenController extends GetxController {
 
   //============================ Start Searching functions ============================//
   void toggleSearchingMode() {
+    print("toggleSearchingMode");
+    print(isSearching.value);
     isSearching.value = !isSearching.value;
-    if (!isSearching.value) {
+    if (isSearching.value) {
+      searchFeildFocusNode.requestFocus();
+    } else {
       resetToNormalMode();
     }
   }
 
-  void searchInMessages() {
-    if (searchFeildController.text.trim().isNotEmpty) {
-      String searchText = searchFeildController.text;
+  void onSearchTextFieldChanged(String text) {
+    matchedMsgIndixes.clear();
+    if (text.trim().isNotEmpty) {
       for (int i = 0; i < conversationController.messages.length; i++) {
         if (conversationController.messages[i].message.body != null &&
-            conversationController.messages[i].message.body!
-                .contains(searchText)) {
+            conversationController.messages[i].message.body!.contains(text)) {
           matchedMsgIndixes.add(i);
         }
       }
@@ -222,7 +247,14 @@ class ConversationScreenController extends GetxController {
         scrollToPosition(matchedMsgIndixes[0]);
         searchSelectedMessage.value = matchedMsgIndixes[0];
         // return RxList<int>.from(reversedIndices);
+      } else {
+        mathedCurrentIndex.value = -1;
+        searchSelectedMessage.value = -1;
       }
+    } else {
+      mathedCurrentIndex.value = -1;
+      searchSelectedMessage.value = -1;
+      scrollToPosition(0);
     }
   }
 
@@ -257,7 +289,7 @@ class ConversationScreenController extends GetxController {
       index: targetIndex,
       // alignment: 0,
       duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
+      curve: Curves.easeIn,
     );
   }
 

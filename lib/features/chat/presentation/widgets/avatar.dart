@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:ashghal_app_frontend/core/widget/user_status_Widgets.dart';
+import 'package:ashghal_app_frontend/core_api/services/image_checker_cacher.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
 import 'package:flutter/material.dart';
 
@@ -57,7 +59,7 @@ class AvatarWithImageOrLetter extends StatelessWidget {
     this.imageUrl,
     required this.userName,
     this.raduis = 25,
-    this.borderColor = Colors.transparent,
+    this.borderColor = Colors.blue,
     this.boderThickness = 2,
   });
 
@@ -69,10 +71,47 @@ class AvatarWithImageOrLetter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-        // imageUrl == null
-        //     ?
-        CircleAvatar(
+    return imageUrl == null
+        ? _buildLetterCircleAvatar()
+        : FutureBuilder<String?>(
+            future: ImageCheckerAndCacher().loadImage(imageUrl!),
+            builder: (_, snapshot) {
+              if (snapshot.hasData && snapshot.data != null) {
+                return _buildImageCirculAvatar(snapshot.data!);
+              }
+              return _buildLetterCircleAvatar();
+            },
+          );
+  }
+
+  Container _buildImageCirculAvatar(String path) {
+    return Container(
+      // padding: EdgeInsets.all(2),
+      height: raduis * 2,
+      width: raduis * 2,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(raduis),
+        // color: borderColor,
+        border: Border.all(
+          color: borderColor,
+          width: boderThickness.toDouble(),
+        ),
+      ),
+
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(raduis - boderThickness),
+        ),
+        child: Image.file(
+          File(path),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  CircleAvatar _buildLetterCircleAvatar() {
+    return CircleAvatar(
       backgroundColor: borderColor,
       radius: raduis,
       child: CircleAvatar(
@@ -86,22 +125,6 @@ class AvatarWithImageOrLetter extends StatelessWidget {
         ),
       ),
     );
-    // :
-    // CachedNetworkImage(
-    //     imageUrl: imageUrl ?? "",
-    //     placeholder: (context, url) => const CircularProgressIndicator(),
-    //     errorWidget: (context, url, error) => CircleAvatar(
-    //       backgroundColor: _getRandomColor(),
-    //       child: Text(
-    //         userName.substring(0, 1),
-    //         // "1",
-    //         style: const TextStyle(color: Colors.white, fontSize: 20),
-    //       ),
-    //     ),
-    //     imageBuilder: (context, imageProvider) => CircleAvatar(
-    //       backgroundImage: imageProvider,
-    //     ),
-    //   );
   }
 }
 

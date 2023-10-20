@@ -48,6 +48,7 @@ class VideoMessageWidget extends StatelessWidget {
         () => Stack(
           alignment: Alignment.center,
           children: [
+            //if the file is mine, and the file exists value is false, and the path exists
             if (multimedia.path != null &&
                 !_uploadDownloadController.fileExists.value &&
                 isMine)
@@ -58,6 +59,7 @@ class VideoMessageWidget extends StatelessWidget {
                   : const ImageVideoDeletedPlaceHolderWidget(
                       message: "Video deleted from your local device",
                     ),
+
             if ((multimedia.path != null &&
                     _uploadDownloadController.fileExists.value) ||
                 (multimedia.url != null))
@@ -90,9 +92,6 @@ class VideoMessageWidget extends StatelessWidget {
   Widget buildVideoContianer() {
     return !_videoMessageController.thumbnailReady.value
         ? const ImageVideoPlaceHolderWidget()
-        // ? const Center(
-        //     child: CircularProgressIndicator(),
-        //   )
         : Opacity(
             opacity: isMine ? 1 : 0.5,
             child: InkWell(
@@ -102,15 +101,11 @@ class VideoMessageWidget extends StatelessWidget {
                 child: _videoMessageController.memoryThumbnail != null
                     ? Image.memory(
                         _videoMessageController.memoryThumbnail!,
-                        // width: double.infinity,
-                        // height: double.infinity,
                         fit: BoxFit.contain,
                       )
                     : _videoMessageController.urlThumbnail != null
                         ? Image.file(
                             File(_videoMessageController.urlThumbnail!),
-                            // width: double.infinity,
-                            // height: double.infinity,
                             fit: BoxFit.contain,
                           )
                         : const ImageVideoPlaceHolderWidget(),
@@ -120,67 +115,30 @@ class VideoMessageWidget extends StatelessWidget {
   }
 
   Widget buildDownloadContainer() {
-    return
-        //  IconButton(
-        // onPressed: _uploadDownloadController.toggleDownload,
-        // icon:
-        _uploadDownloadController.dowloading.value
-            ? PressableCircularContianerWidget(
-                onPress: _uploadDownloadController.cancelDownload,
-                childPadding:
-                    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    DownloadinUploadingCicrularWidget(
-                        controller: _uploadDownloadController),
-//                   Stack(
-//                     alignment: Alignment.center,
-//                     children: [
-//                       Transform.scale(
-//                         scale: 0.7,
-//                         child: CircularProgressIndicator(
-//                           // strokeWidth: ,
-//                           // value: _uploadDownloadController.progress.value,
-// // backgroundColor: ChatStyle.iconsBackColor,
-//                           // backgroundColor: ChatStyle.iconsBackColor,
-//                           backgroundColor: Colors.blueGrey,
-//                           // color: Colors.blue,
-//                           // color: Color.,
-//                           // valueColor: const AlwaysStoppedAnimation<Color>(
-//                           //   Colors.blue,
-//                           // ),
-//                         ),
-//                       ),
-//                       // CircularProgressIndicator(
-//                       //   value: _uploadDownloadController.progress.value,
-//                       //   strokeWidth: 1,
-//                       //   backgroundColor: ChatStyle.iconsBackColor,
-//                       //   valueColor: const AlwaysStoppedAnimation<Color>(
-//                       //     Colors.blue,
-//                       //   ),
-//                       // ),
-
-//                       const Icon(
-//                         Icons.cancel,
-//                         color: Colors.white,
-//                         size: 18,
-//                       ),
-//                     ],
-//                   ),
-
-                    const SizedBox(width: 5),
-                    Text(
-                      "${(_uploadDownloadController.progress.value * 100).toStringAsFixed(2)}%",
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ))
-            : DownloadUploadIconWithSizeWidget(
-                isMine: isMine,
-                controller: _uploadDownloadController,
-                size: multimedia.size);
-    // );
+    return _uploadDownloadController.dowloading.value
+        ? PressableCircularContianerWidget(
+            onPress: _uploadDownloadController.cancelDownload,
+            childPadding:
+                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                DownloadinUploadingCicrularWidget(
+                  controller: _uploadDownloadController,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  "${(_uploadDownloadController.progress.value * 100).toStringAsFixed(2)}%",
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          )
+        : DownloadUploadIconWithSizeWidget(
+            isMine: isMine,
+            controller: _uploadDownloadController,
+            size: multimedia.size,
+          );
   }
 
   // Widget buildNoVideoContianer(String? message) {

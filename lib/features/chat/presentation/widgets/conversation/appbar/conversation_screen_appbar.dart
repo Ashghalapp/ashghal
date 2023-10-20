@@ -1,5 +1,7 @@
+import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/search_textformfield.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/user_status_text_widget.dart';
 
@@ -30,19 +32,10 @@ class ConversationScreenAppBar extends StatelessWidget
 
   AppBar buildSelectionAppBar() {
     return AppBar(
-      // backgroundColor: ChatStyle.ownMessageColor,
-      backgroundColor: Color.fromRGBO(25, 39, 52, 1),
-
-      centerTitle: true,
       leading: IconButton(
-        onPressed: () {
-          _screenController.selectedMessagesIds.clear();
-          _screenController.selectionEnabled.value = false;
-          // toggleAppBar();
-        },
+        onPressed: _screenController.toggleSelectionMode,
         icon: const Icon(
           Icons.close,
-          color: Colors.white,
         ),
       ),
       title: Text(
@@ -57,11 +50,8 @@ class ConversationScreenAppBar extends StatelessWidget
           child: IconButton(
             icon: const Icon(
               Icons.copy_outlined,
-              color: Colors.white,
             ),
-            onPressed: () {
-              _screenController.copyToClipboard();
-            },
+            onPressed: _screenController.copyToClipboard,
           ),
         ),
         Visibility(
@@ -69,11 +59,8 @@ class ConversationScreenAppBar extends StatelessWidget
           child: IconButton(
             icon: const Icon(
               Icons.delete,
-              color: Colors.white,
             ),
-            onPressed: () {
-              _screenController.deleteSelectedMessages();
-            },
+            onPressed: _screenController.deleteSelectedMessages,
           ),
         ),
         Visibility(
@@ -81,11 +68,8 @@ class ConversationScreenAppBar extends StatelessWidget
           child: IconButton(
             icon: const Icon(
               Icons.info_outlined,
-              color: Colors.white,
             ),
-            onPressed: () {
-              _screenController.viewMessageInfo();
-            },
+            onPressed: _screenController.viewMessageInfo,
           ),
         ),
         IconButton(
@@ -93,98 +77,139 @@ class ConversationScreenAppBar extends StatelessWidget
                 Icons.select_all,
                 color: _screenController.selectedMessagesIds.length ==
                         _screenController.conversationController.messages.length
-                    ? Colors.black87
-                    : Colors.white,
+                    ? Get.theme.primaryColor
+                    : null,
               )),
-          onPressed: () {
-            _screenController.selectAllMessages();
-          },
+          onPressed: _screenController.selectAllMessages,
         ),
       ],
     );
   }
 
-  PreferredSize buildSearchAppbar() {
-    return PreferredSize(
-      preferredSize: Size(Get.width, 260),
-      child: Container(
-        // color: ChatStyle.ownMessageColor,
-        color: Color.fromRGBO(25, 39, 52, 1),
-        padding: const EdgeInsets.only(top: 53),
-        child: Row(
-          children: [
-            const SizedBox(width: 7),
-            InkWell(
-              onTap: _screenController.toggleSearchingMode,
-              child: const Icon(
-                Icons.arrow_back,
-                size: 22,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(width: 5),
-            Expanded(
-              child: SearchInputField(
-                controller: _screenController.searchFeildController,
-                onSearchPressed: _screenController.searchInMessages,
-              ),
-            ),
-            const SizedBox(width: 5),
-            InkWell(
-              onTap: _screenController.incrementIndex,
-              child: const Icon(
-                Icons.arrow_drop_up,
-                color: Colors.white,
-                size: 27,
-              ),
-            ),
-            const SizedBox(width: 7),
-            InkWell(
-              onTap: _screenController.decrementIndex,
-              child: const Icon(
-                Icons.arrow_drop_down,
-                color: Colors.white,
-                size: 27,
-              ),
-            ),
-            const SizedBox(width: 7),
-          ],
+  AppBar buildSearchAppbar() {
+    return AppBar(
+      leadingWidth: 50,
+      leading: InkWell(
+        onTap: _screenController.toggleSearchingMode,
+        child: const Icon(
+          Icons.arrow_back,
+          size: 22,
+          // color: Colors.white,
         ),
       ),
+      title: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: SearchTextField(
+          controller: _screenController.searchFeildController,
+          onTextChanged: (value) =>
+              _screenController.onSearchTextFieldChanged(value),
+          focusNode: _screenController.searchFeildFocusNode,
+          // onSearchPressed: _screenController.searchInMessages,
+        ),
+      ),
+      actions: [
+        const SizedBox(width: 5),
+        InkWell(
+          onTap: _screenController.incrementIndex,
+          child: const Icon(
+            Icons.arrow_drop_up,
+            // color: Colors.white,
+            size: 30,
+          ),
+        ),
+        const SizedBox(width: 8),
+        InkWell(
+          onTap: _screenController.decrementIndex,
+          child: const Icon(
+            Icons.arrow_drop_down,
+            // color: Colors.white,
+            size: 30,
+          ),
+        ),
+        const SizedBox(width: 10),
+      ],
     );
+
+    // PreferredSize(
+    //   preferredSize: Size(Get.width, 300),
+    //   child: Card(
+    //     color: Get.isDarkMode ? ChatColors.appBarDark : ChatColors.appBarLight,
+    //     // color: ChatStyle.ownMessageColor,
+    //     // color: Color.fromRGBO(25, 39, 52, 1),
+    //     margin: const EdgeInsets.only(top: 53, bottom: 10),
+    //     child: Row(
+    //       children: [
+    //         const SizedBox(width: 7),
+    //         InkWell(
+    //           onTap: _screenController.toggleSearchingMode,
+    //           child: const Icon(
+    //             Icons.arrow_back,
+    //             size: 22,
+    //             // color: Colors.white,
+    //           ),
+    //         ),
+    //         const SizedBox(width: 5),
+    //         Padding(
+    //           padding: const EdgeInsets.all(8.0),
+    //           child: Expanded(
+    //             child: SearchTextField(
+    //               controller: _screenController.searchFeildController,
+    //               // onSearchPressed: _screenController.searchInMessages,
+    //             ),
+    //           ),
+    //         ),
+    //         const SizedBox(width: 5),
+    //         InkWell(
+    //           onTap: _screenController.incrementIndex,
+    //           child: const Icon(
+    //             Icons.arrow_drop_up,
+    //             // color: Colors.white,
+    //             size: 27,
+    //           ),
+    //         ),
+    //         const SizedBox(width: 7),
+    //         InkWell(
+    //           onTap: _screenController.decrementIndex,
+    //           child: const Icon(
+    //             Icons.arrow_drop_down,
+    //             // color: Colors.white,
+    //             size: 27,
+    //           ),
+    //         ),
+    //         const SizedBox(width: 7),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 
   AppBar buildNormalAppBar(LocalConversation conversation) {
     return AppBar(
       centerTitle: false,
       // backgroundColor: ChatStyle.ownMessageColor,
-      backgroundColor: Color.fromRGBO(25, 39, 52, 1),
+      // backgroundColor: Color.fromRGBO(25, 39, 52, 1),
       elevation: 2,
-      leadingWidth: 83,
-      leading: InkWell(
-        onTap: () {
-          Get.back();
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(width: 9),
-            const Icon(
+      leadingWidth: 100,
+      leading: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(width: 9),
+          PressableIconBackground(
+            child: const Icon(
               Icons.arrow_back_ios_new,
-              size: 20,
-              color: Colors.white,
             ),
-            const SizedBox(width: 8),
-            UserImageAvatarWithStatusWidget(
-              userId: conversation.userId,
-              userName: conversation.userName,
-              raduis: 23,
-              boderThickness: 0,
-              imageUrl: conversation.userImageUrl,
-              statusBorderColor: Colors.white54,
-            ),
-          ],
-        ),
+            onTap: () => Get.back(),
+          ),
+          const SizedBox(width: 8),
+          UserImageAvatarWithStatusWidget(
+            userId: conversation.userId,
+            userName: conversation.userName,
+            raduis: 23,
+            boderThickness: 0,
+            imageUrl: conversation.userImageUrl,
+            statusBorderColor: Colors.white54,
+          ),
+        ],
       ),
       title: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -192,16 +217,17 @@ class ConversationScreenAppBar extends StatelessWidget
         children: [
           Text(
             conversation.userName,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
-              // color: Colors.white,
-            ),
+            // style: const TextStyle(
+            //   fontWeight: FontWeight.w500,
+            //   fontSize: 20,
+            //   // color: Colors.white,
+            // ),
           ),
           const SizedBox(height: 5),
           UserStatusTextWidget(
             userId: conversation.userId,
-            offlineColor: Colors.white70,
+            offlineColor:
+                Get.isPlatformDarkMode ? Colors.white70 : Colors.black45,
           )
         ],
       ),
@@ -209,7 +235,7 @@ class ConversationScreenAppBar extends StatelessWidget
         IconButton(
           icon: const Icon(
             Icons.search,
-            color: Colors.white,
+            // color: Colors.white,
           ),
           onPressed: _screenController.toggleSearchingMode,
         ),
@@ -221,29 +247,29 @@ class ConversationScreenAppBar extends StatelessWidget
   PopupMenuButton<ConversationPopupMenuItemsValues>
       buildAppbarDropDownMenuOptions() {
     return PopupMenuButton<ConversationPopupMenuItemsValues>(
-      color: Colors.white,
       onSelected: _screenController.popupMenuButtonOnSelected,
       itemBuilder: (BuildContext ctx) {
         return [
-          const PopupMenuItem(
+          PopupMenuItem(
             value: ConversationPopupMenuItemsValues.search,
-            child: Text("Search"),
+            child: Text(ConversationPopupMenuItemsValues.search.value),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: ConversationPopupMenuItemsValues.media,
-            child: Text("Media"),
+            child: Text(ConversationPopupMenuItemsValues.media.value),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: ConversationPopupMenuItemsValues.goToFirstMessage,
-            child: Text("Go To First Message"),
+            child:
+                Text(ConversationPopupMenuItemsValues.goToFirstMessage.value),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: ConversationPopupMenuItemsValues.clearChat,
-            child: Text("Clear Chat"),
+            child: Text(ConversationPopupMenuItemsValues.clearChat.value),
           ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: ConversationPopupMenuItemsValues.block,
-            child: Text("Block"),
+            child: Text(ConversationPopupMenuItemsValues.block.value),
           ),
         ];
       },

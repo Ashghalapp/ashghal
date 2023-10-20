@@ -485,6 +485,7 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
               MAX(local_id) AS max_id,
               SUM(CASE WHEN read_at IS NULL AND read_locally IS false AND sender_id != ${SharedPref.currentUserId} THEN 1 ELSE 0 END) AS new_message_count
         FROM messages
+        where conversation_id not in(select local_id from conversations where is_blocked is true or is_deleted_locally is true)
         GROUP BY conversation_id
       ) latest_msg ON m.conversation_id = latest_msg.conversation_id
                 AND m.created_at = latest_msg.max_created_at
@@ -626,54 +627,55 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
   // }
 //
 //
-  Stream<List<LocalMessage>> watchLastMessageInEachConversation() {
-    return (db.customSelect(
-      '''
-        SELECT m.*, latest_msg.new_message_count
-        FROM messages m
-        JOIN (
-          SELECT conversation_id,
-                MAX(created_at) AS max_created_at,
-                MAX(local_id) AS max_id,
-                SUM(CASE WHEN read_at IS NULL THEN 1 ELSE 0 END) AS new_message_count
-          FROM messages
-          GROUP BY conversation_id
-        ) latest_msg ON m.conversation_id = latest_msg.conversation_id
-                  AND m.created_at = latest_msg.max_created_at
-                  AND m.local_id = latest_msg.max_id;
-    ''',
-      readsFrom: {db.messages},
-    )).watch().map((rows) {
-      return rows.map((row) {
-        return LocalMessage(
-          localId: row.read<int>('local_id'),
-          remoteId: row.read<int>('remote_id'),
-          senderId: row.read<int>('sender_id'),
-          conversationId: row.read<int>('conversation_id'),
-          body: row.read<String?>('body'),
-          sentAt: row.read<DateTime?>('sent_at'),
-          recievedAt: row.read<DateTime?>('recieved_at'),
-          receivedLocally: row.read<bool>('received_locally'),
-          // confirmGotReceive: row.read<bool>('confirm_got_receive'),
-          readAt: row.read<DateTime?>('read_at'),
-          readLocally: row.read<bool>('read_locally'),
-          // confirmGotRead: row.read<bool>('confirm_got_read'),
-          createdAt: row.read<DateTime>('created_at'),
-          updatedAt: row.read<DateTime>('updated_at'),
-        );
-      }).toList();
-    });
-  }
 
-  Stream<List<LocalMessage>> watchReadLocallyMessages() {
-    return (db.select(messages)
-          ..where(
-            (tbl) =>
-                tbl.readLocally.equals(true) &
-                tbl.senderId.isNotIn([SharedPref.currentUserId]),
-          ))
-        .watch();
-  }
+  // Stream<List<LocalMessage>> watchLastMessageInEachConversation() {
+  //   return (db.customSelect(
+  //     '''
+  //       SELECT m.*, latest_msg.new_message_count
+  //       FROM messages m
+  //       JOIN (
+  //         SELECT conversation_id,
+  //               MAX(created_at) AS max_created_at,
+  //               MAX(local_id) AS max_id,
+  //               SUM(CASE WHEN read_at IS NULL THEN 1 ELSE 0 END) AS new_message_count
+  //         FROM messages
+  //         GROUP BY conversation_id
+  //       ) latest_msg ON m.conversation_id = latest_msg.conversation_id
+  //                 AND m.created_at = latest_msg.max_created_at
+  //                 AND m.local_id = latest_msg.max_id;
+  //   ''',
+  //     readsFrom: {db.messages},
+  //   )).watch().map((rows) {
+  //     return rows.map((row) {
+  //       return LocalMessage(
+  //         localId: row.read<int>('local_id'),
+  //         remoteId: row.read<int>('remote_id'),
+  //         senderId: row.read<int>('sender_id'),
+  //         conversationId: row.read<int>('conversation_id'),
+  //         body: row.read<String?>('body'),
+  //         sentAt: row.read<DateTime?>('sent_at'),
+  //         recievedAt: row.read<DateTime?>('recieved_at'),
+  //         receivedLocally: row.read<bool>('received_locally'),
+  //         // confirmGotReceive: row.read<bool>('confirm_got_receive'),
+  //         readAt: row.read<DateTime?>('read_at'),
+  //         readLocally: row.read<bool>('read_locally'),
+  //         // confirmGotRead: row.read<bool>('confirm_got_read'),
+  //         createdAt: row.read<DateTime>('created_at'),
+  //         updatedAt: row.read<DateTime>('updated_at'),
+  //       );
+  //     }).toList();
+  //   });
+  // }
+
+  // Stream<List<LocalMessage>> watchReadLocallyMessages() {
+  //   return (db.select(messages)
+  //         ..where(
+  //           (tbl) =>
+  //               tbl.readLocally.equals(true) &
+  //               tbl.senderId.isNotIn([SharedPref.currentUserId]),
+  //         ))
+  //       .watch();
+  // }
 
   // Future<List<LocalMessage>> getConversationMessages(
   //     int conversationLocalId) async {
@@ -682,20 +684,20 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
   //       .get();
   // }
 
-  Stream<List<LocalMessage>> watchReceivedLocallyMessages() {
-    return (db.select(messages)
-          ..where(
-            (tbl) =>
-                tbl.receivedLocally.equals(true) &
-                tbl.senderId.isNotIn([SharedPref.currentUserId]),
-          ))
-        .watch();
-  }
+  // Stream<List<LocalMessage>> watchReceivedLocallyMessages() {
+  //   return (db.select(messages)
+  //         ..where(
+  //           (tbl) =>
+  //               tbl.receivedLocally.equals(true) &
+  //               tbl.senderId.isNotIn([SharedPref.currentUserId]),
+  //         ))
+  //       .watch();
+  // }
 
-  Stream<List<LocalMessage>> watchMessagesNotSent() {
-    return (select(db.messages)..where((tbl) => tbl.sentAt.equals(null)))
-        .watch();
-  }
+  // Stream<List<LocalMessage>> watchMessagesNotSent() {
+  //   return (select(db.messages)..where((tbl) => tbl.sentAt.equals(null)))
+  //       .watch();
+  // }
 
   /// A function to generate a unique random number that is not present in the table before.
   ///
@@ -705,17 +707,17 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
   ///
   /// Returns:
   /// - A `Future<int>` representing the generated unique random number.
-  Future<int> getUniqueRandomNumber() async {
-    final random = Random();
-    int randomValue;
-    // Retrieve all existing IDs from the `moor_conversations` table and create a set of existing IDs.
-    final existingIds = await select(db.conversations).get().then(
-        (list) => list.map((conversation) => conversation.localId).toSet());
-    // Generate a random number and check if it is not present in the existing IDs set.
-    do {
-      randomValue = random.nextInt(1000000);
-    } while (existingIds.contains(randomValue));
+  // Future<int> getUniqueRandomNumber() async {
+  //   final random = Random();
+  //   int randomValue;
+  //   // Retrieve all existing IDs from the `moor_conversations` table and create a set of existing IDs.
+  //   final existingIds = await select(db.conversations).get().then(
+  //       (list) => list.map((conversation) => conversation.localId).toSet());
+  //   // Generate a random number and check if it is not present in the existing IDs set.
+  //   do {
+  //     randomValue = random.nextInt(1000000);
+  //   } while (existingIds.contains(randomValue));
 
-    return randomValue;
-  }
+  //   return randomValue;
+  // }
 }

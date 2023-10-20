@@ -9,7 +9,7 @@ class DeleteConversationUseCase {
     required this.repository,
   });
 
-  Future<Either<Failure, bool>> call(DeleteConversationRequest request) async {
-    return await repository.deleteConversation(request);
+  Future<Either<Failure, bool>> call(int conversationLocalId) async {
+    return await repository.deleteConversation(conversationLocalId);
   }
 }
