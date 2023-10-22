@@ -1,5 +1,7 @@
 import 'package:ashghal_app_frontend/features/auth/data/repositories/user_provider_repository_impl.dart';
+import 'package:ashghal_app_frontend/features/auth/data/repositories/user_repository_impl.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/repositories/user_provider_repository.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/repositories/user_repository.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/check_email_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/forget_password_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/login_uc.dart';
@@ -7,11 +9,13 @@ import 'package:ashghal_app_frontend/features/auth/domain/use_cases/logout_uc.da
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_user_with_email_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_user_with_phone_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/reset_password_uc.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecases/get_current_user_data_uc.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecases/get_specific_user_data_uc.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecases/update_user_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_email_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_reset_password_code_uc.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/comment_repository_impl.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/post_repository_impl.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/get_user_comments_on_post_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/repositories/comment_repository.dart';
 import 'package:ashghal_app_frontend/features/post/domain/repositories/post_repository.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/comment_use_case/add_comment_us.dart';
@@ -45,12 +49,14 @@ void setupDependencies() {
   //// core injection
 
   ///=============================================================================================//
-  //=============================Start Auth Dependencey Injection==================================//
+  //=============================Start Auth and User Dependencey Injection==================================//
   //// Data sources injection
 
   //// repository injection
   getIt.registerLazySingleton<UserProviderRepository>(
       () => UserProviderRepositoryImpl());
+  getIt.registerLazySingleton<UserRepository>(
+      () => UserRepositoryImpl());
 
   //// usecases injection
   getIt.registerLazySingleton(() => RegisterUserWithEmailUseCase(getIt()));
@@ -62,6 +68,11 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => ForgetPasswordUseCase(getIt()));
   getIt.registerLazySingleton(() => ValidateResetPasswordByEmailCode(getIt()));
   getIt.registerLazySingleton(() => ResetPasswordUseCase(getIt()));
+  
+  getIt.registerLazySingleton(() => GetCurrentUserDataUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetSpecificUserDataUseCase(getIt()));
+  getIt.registerLazySingleton(() => UpdateUserUseCase(getIt()));
+
   //=============================End Auth Dependencey Injection==================================//
   ///=============================================================================================//
 
@@ -82,7 +93,7 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => GetCategoryPostsUseCase(getIt()));
   getIt.registerLazySingleton(() => SearchForPostsUseCase(getIt()));
   getIt.registerLazySingleton(() => DeletePostUseCase(getIt()));
-  getIt.registerLazySingleton(() => DeleteSomeMultimediaUseCase(getIt()));
+  getIt.registerLazySingleton(() => DeleteSomePostMultimediaUseCase(getIt()));
   //=============================End Post Dependencey Injection====================================//
   ///=============================================================================================//
 

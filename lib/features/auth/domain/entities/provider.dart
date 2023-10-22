@@ -16,7 +16,7 @@ class Provider {
   });
 
   factory Provider.addRequest({
-    required String? jobName,
+    required String jobName,
     String? jobDesc,
     required int? categoryId,
   }) =>
@@ -26,7 +26,7 @@ class Provider {
   factory Provider.updateRequest({
     String? jobName,
     String? jobDesc,
-   int? categoryId,
+    int? categoryId,
   }) =>
       Provider._(jobName: jobName, jobDesc: jobDesc, categoryId: categoryId);
 
@@ -36,8 +36,8 @@ class Provider {
       jobName: json['job_name'],
       jobDesc: json['job_desc'],
       categoryId: json['category_id'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 
@@ -46,6 +46,8 @@ class Provider {
       'job_name': jobName,
       'job_desc': jobDesc,
       'category_id': categoryId,
+      'created_at': createdAt.toString(),
+      'updated_at': updatedAt.toString(),
     };
   }
 }

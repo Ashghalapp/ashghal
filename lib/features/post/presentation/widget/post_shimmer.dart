@@ -19,7 +19,7 @@ class PostShimmer extends StatelessWidget {
 
   Widget buildPostShimmer() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 2.5 , vertical: 5),
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       decoration: BoxDecoration(
         color: Colors.white,

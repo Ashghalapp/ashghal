@@ -26,7 +26,8 @@ class AppTheme {
     useMaterial3: true,
     hoverColor: Colors.grey[350],
     // splashColor:AppColors.appColorPrimary,
-    dividerColor: AppColors.dividerColorLight,
+    // dividerColor: AppColors.dividerColorLight,
+    dividerColor: AppColors.appDividerColorDark,
     // fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
     fontFamily: GoogleFonts.urbanist().fontFamily,
     // app bar theme
@@ -156,7 +157,8 @@ class AppTheme {
     useMaterial3: true,
     hoverColor: Colors.black54,
     // splashColor: AppColors.appColorPrimary,
-    dividerColor: AppColors.appDividerColorDark,
+    // dividerColor: AppColors.appDividerColorDark,
+    dividerColor: AppColors.dividerColorLight,
     // fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
     fontFamily: GoogleFonts.urbanist().fontFamily,
     // app bar theme

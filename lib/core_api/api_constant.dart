@@ -1,8 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
 class ApiConstants {
-  static const String baseUrl = "http://10.0.2.2:8000/api/";
-  // static const String baseUrl = "http://192.168.240.219:8000/api/";
+  // static const String baseUrl = "http://10.0.2.2:8000/api/";
+  static const String baseUrl = "http://192.168.43.20:8000/api/";
   // static const String baseUrl = "http://localhost:8000/api/";
   // static const String baseUrl = "https://jsonplaceholder.typicode.com/";
 
@@ -67,4 +67,13 @@ class ApiConstants {
   static String UPDATE_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}update";
   static String DELETE_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}delete/";
   static String DELETE_COMMENT_OR_REPLY_IMAGE = "${COMMENT_ENDPOINT}delete-image/";
+
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///============================== User Urls =============================================
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  static String USER_ENDPOINT = "user/";
+  static String GET_CURRENT_USER = "${USER_ENDPOINT}current-user";
+  static String GET_SPECIFIC_USER = "${USER_ENDPOINT}get/";
+  static String uPDATE_USER = "${USER_ENDPOINT}update";
 }

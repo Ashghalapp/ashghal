@@ -1,8 +1,10 @@
+import 'package:ashghal_app_frontend/features/account/getx/edit_profile_controller.dart';
 import 'package:ashghal_app_frontend/features/auth/presentation/getx/Auth/login_controller.dart';
 // import 'package:ashghal_app_frontend/features/auth/presentation/getx/forgetpwd/forgetpassword_controller.dart';
 import 'package:ashghal_app_frontend/features/auth/presentation/getx/forgetpwd/resetpassword_controller.dart';
 
 import 'package:ashghal_app_frontend/features/auth/presentation/getx/validate_controller.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/getx/add_post_controller.dart';
 import 'package:get/get.dart';
 
 import '../features/auth/presentation/getx/Auth/singup_controller.dart';
@@ -21,5 +23,10 @@ class BindingAllControllers extends Bindings{
     Get.lazyPut(() => SignUpController(), fenix: true);
     // Get.lazyPut(() => VerficationSignUpController(), fenix: true);
     // Get.lazyPut(() => SuccessSignUpControllerImp(), fenix: true);
+
+
+    /////////////////////////////////////
+    Get.lazyPut(() => AddPostController(), fenix: true);
+    Get.lazyPut(() => EditProfileController(), fenix: true);
   }
 }

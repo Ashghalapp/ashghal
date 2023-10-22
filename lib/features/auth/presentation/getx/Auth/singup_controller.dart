@@ -164,7 +164,7 @@ class SignUpController extends GetxController {
     }, (user) {
       AppUtil.showMessage('Successfully Registered', Colors.green);
       Get.offAll(
-          () => const SuccesResetPassword(message: 'Successfully Registered'));
+          () => const SuccessScreen(message: 'Successfully Registered'));
       // Get.offNamed(AppRoutes.succesSignUp);
     });
   }

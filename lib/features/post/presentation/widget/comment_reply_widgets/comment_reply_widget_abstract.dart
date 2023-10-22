@@ -4,27 +4,18 @@ import 'package:ashghal_app_frontend/core/app_functions.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
-import 'package:ashghal_app_frontend/features/post/domain/entities/comment.dart';
-import 'package:ashghal_app_frontend/features/post/domain/entities/reply.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_input_controller.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/circle_cached_networkimage.dart';
+import 'package:ashghal_app_frontend/core/widget/circle_cached_networkimage.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_input_widget.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../../app_library/app_data_types.dart';
-import '../../../../../core/localization/app_localization.dart';
-import '../../getx/comment_controller.dart';
-import '../../getx/reply_controller.dart';
 import '../display_image_on_tap.dart';
 import '../display_sending_image_widget.dart';
-import '../downalod_cashed_image_widget.dart';
-
-/// نوع بيانات يحتوي على العمليات التي يمكن عملها على التعليق
-enum OperationsOnCommentPopupMenuValues { edit, delete, report }
+import '../../../../../core/widget/cashed_image_widget.dart';
 
 // ignore: must_be_immutable
 abstract class CommentReplyWidgetAbstract extends StatelessWidget {
@@ -75,6 +66,7 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
     // ":::comment user id: $userId :::and current user data are: $currentUserData");
 
     // getMentionUserData();
+    print("<<<<<<<<<<<<<<<<<<<<<<$userImageUrl>>>>>>>>>>>>>>>>>>>>>>");
     return Column(
       children: [
         Row(
@@ -84,7 +76,7 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
             Container(
               // color: Colors.amber,
               margin: const EdgeInsets.symmetric(horizontal: 5),
-              child: buildCircleCachedNetworkImage(
+              child: CircleCachedNetworkImageWidget(
                 imageUrl: userImageUrl,
                 radius: 46,
               ),
@@ -97,7 +89,7 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
                 children: [
                   Container(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
@@ -158,7 +150,8 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
   }
 
   Widget _buildTitleWidget() {
-    Map<String, dynamic> currentUserData = SharedPref.getCurrentUserData();
+    // Map<String, dynamic> currentUserData = SharedPref.getCurrentUserData() ?? {};
+    Map<String, dynamic> currentUserData = SharedPref.getCurrentUserBasicData();
     return SizedBox(
       height: 25,
       child: Row(
@@ -172,7 +165,7 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
             ),
             overflow: TextOverflow.fade,
           ),
-          if (userId == int.parse(currentUserData['id']))
+          if (userId == int.parse(currentUserData['id'].toString()))
             PopupMenuButtonWidget(
               onSelected: _onPopupItemSelected,
               values: OperationsOnCommentPopupMenuValues.values
@@ -224,8 +217,8 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
     // else url= imageUrl;
     return Container(
       constraints: const BoxConstraints(maxHeight: 250),
-      child: DownloadCashedImage(
-        imageUrl: handleImagesToEmulator(imageUrl!),
+      child: CashedNetworkImageWidget(
+        imageUrl: AppFunctions.handleImagesToEmulator(imageUrl!),
         onTap: () => Get.to(() => ImagePage(imageUrl: imageUrl!)),
         errorAssetImagePath: "assets/images/unKnown.jpg",
         fit: BoxFit.fill,
@@ -289,7 +282,7 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
     }
     return Container(
       margin: const EdgeInsets.only(top: 5),
-      padding: const EdgeInsets.only(top: 3, right: 5, left: 5),
+      padding: const EdgeInsets.only(right: 5, left: 5),
       decoration: const BoxDecoration(
         border: Border(top: BorderSide(color: Colors.black26)),
       ),

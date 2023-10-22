@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_all_alive_post_us.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_current_user_posts_uc.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/custom_report_buttomsheet.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/post_card_widget.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/post_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,29 +19,24 @@ import '../../../../core/services/dependency_injection.dart' as di;
 
 import '../../domain/entities/post.dart';
 
-/// نوع بيانات يحتوي على العمليات التي يمكن عملها على البوست
-enum OperationsOnPostPopupMenuValues { save, report, copy }
-
 class PostController extends GetxController {
-  List<String> postsOptions = ['Save', 'Report', 'Copy'];
-  RxBool isimageUrlValid = true.obs;
-  RxString trueUrlOrReturnBlank = "".obs;
+  // List<String> postsOptions = ['Save', 'Report', 'Copy'];
+  // RxBool isimageUrlValid = true.obs;
+  // RxString trueUrlOrReturnBlank = "".obs;
   RxBool isFavorite = false.obs;
   RxList<Post> postList = <Post>[].obs;
-  final title = ''.obs;
-  final content = ''.obs;
+  // final title = ''.obs;
+  // final content = ''.obs;
 
   int pageNumber = 1;
   int perPage = 15;
-  List<Post> alivesPosts = [];
+  // List<Post> alivesPosts = [];
 
   bool isRequestFinishWithoutData = false;
 
   // اخر بوست تم من عنده عمل طلب لجلب صفحة index متغير لتخزين
   // جديدة من البوستات وذلك حتى لا يتم تكرار الطلب عدة مرات
   int lastIndexToGetNewPage = 0;
-
-    final scrollController = ScrollController();
 
   final GetAllAlivePostsUseCase _getAlivePostsUS = di.getIt();
 
@@ -48,10 +46,10 @@ class PostController extends GetxController {
     pageNumber = 1;
     perPage = 15;
     isRequestFinishWithoutData = false;
-    alivesPosts = [];
+    // alivesPosts = [];
     getAlivePosts();
 
-    trueUrlOrReturnBlank = "".obs;
+    // trueUrlOrReturnBlank = "".obs;
   }
 
   /// function to refresh the posts and get it from api
@@ -73,8 +71,8 @@ class PostController extends GetxController {
     }, (posts) {
       isRequestFinishWithoutData = posts.isEmpty;
       postList.value = posts;
+      print(">>>>>>>>>>>>>>>>>Done get alive Posts>>>>>>>>>>>>>>>");
     });
-    print(">>>>>>>>>>>>>>>>>Done get alive Posts>>>>>>>>>>>>>>>");
   }
 
   Future<void> loadNextPageOfPosts() async {
@@ -97,51 +95,16 @@ class PostController extends GetxController {
     }
   }
 
-  // trying() async{
-  //   GetSpecificPostUseCase t = di.getIt();
-  //   var r = await (t.call(95));
-  //   r.fold((l) => print("..............${l.message}"), (r) => print(">>>>>>>>>>>>>>>${r.toString()}"));
-  // }
-
-  /// creating a list of PostCardWidget elements from a list of Posts and then placing them in a Column.
-  List<Widget> fillPostIntoList() {
-    List<Widget> postListElements = [];
-    postListElements.add(PostCardWidget(
-        post: Post(
-      id: 1,
-      // userName: "ابراهيم علوان",
-      title: "شخص يبحث عن مبرمج لتطوير تطبيق موبايل",
-      content:
-          "أنا أبحث عن مبرمج محترف يمكنه تطوير تطبيق موبايل لنظام Android و iOS. يجب أن يكون لديك خبرة في Flutter و Dart. يرجى التواصل معي إذا كنت مهتمًا.",
-      // imageUrl:
-      //     "https://images.unsplash.com/photo-1545996124-0501ebae84d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhY2V8ZW58MHx8MHx8fDA=&w=1000&q=80",
-      // userId: 1,
-      categoryId: 1,
-      allowComment: true,
-      basicUserData: const {
-        'id': 1,
-        'name': "ابراهيم علوان",
-        'image_url':
-            "https://images.unsplash.com/photo-1545996124-0501ebae84d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhY2V8ZW58MHx8MHx8fDA=&w=1000&q=80",
+  PopupMenuButtonWidget getPostMenuButtonValuesWidget(int postId) {
+    return PopupMenuButtonWidget(
+      values: OperationsOnPostPopupMenuValues.values.asNameMap().keys.toList(),
+      onSelected: (value) {
+        return postPopupMenuButtonOnSelected(value, postId);
       },
-      commentsCount: 10,
-      createdAt: DateTime.now(),
-      expireDate: DateTime.now(),
-      isComplete: false,
-      updatedAt: DateTime.now(),
-    )));
-
-    for (int index = 0; index < postList.length; index++) {
-      postListElements.add(PostCardWidget(post: postList[index]));
-    }
-
-    // return Column(
-    // children:
-    return postListElements;
-    // );
+    );
   }
 
-  postPopupMenuButtonOnSelected(String value, int postId) async {
+  void postPopupMenuButtonOnSelected(String value, int postId) async {
     if (value == OperationsOnPostPopupMenuValues.save.name) {
     } else if (value == OperationsOnPostPopupMenuValues.report.name) {
       Get.bottomSheet(CustomBottomSheet());
@@ -151,6 +114,52 @@ class PostController extends GetxController {
       await Clipboard.setData(clipboardData);
     }
   }
+
+  // trying() async{
+  //   GetSpecificPostUseCase t = di.getIt();
+  //   var r = await (t.call(95));
+  //   r.fold((l) => print("..............${l.message}"), (r) => print(">>>>>>>>>>>>>>>${r.toString()}"));
+  // }
+
+  /// creating a list of PostCardWidget elements from a list of Posts and then placing them in a Column.
+  // List<Widget> fillPostIntoList() {
+  //   List<Widget> postListElements = [];
+  //   postListElements.add(PostWidget(
+  //       post: Post(
+  //     id: 1,
+  //     // userName: "ابراهيم علوان",
+  //     title: "شخص يبحث عن مبرمج لتطوير تطبيق موبايل",
+  //     content:
+  //         "أنا أبحث عن مبرمج محترف يمكنه تطوير تطبيق موبايل لنظام Android و iOS. يجب أن يكون لديك خبرة في Flutter و Dart. يرجى التواصل معي إذا كنت مهتمًا.",
+  //     // imageUrl:
+  //     //     "https://images.unsplash.com/photo-1545996124-0501ebae84d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhY2V8ZW58MHx8MHx8fDA=&w=1000&q=80",
+  //     // userId: 1,
+  //     categoryId: 1,
+  //     allowComment: true,
+  //     basicUserData: const {
+  //       'id': 1,
+  //       'name': "ابراهيم علوان",
+  //       'image_url':
+  //           "https://images.unsplash.com/photo-1545996124-0501ebae84d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhY2V8ZW58MHx8MHx8fDA=&w=1000&q=80",
+  //     },
+  //     commentsCount: 10,
+  //     createdAt: DateTime.now(),
+  //     expireDate: DateTime.now(),
+  //     isComplete: false,
+  //     updatedAt: DateTime.now(),
+  //   )));
+
+  //   for (int index = 0; index < postList.length; index++) {
+  //     postListElements.add(PostWidget(post: postList[index]));
+  //   }
+
+  //   // return Column(
+  //   // children:
+  //   return postListElements;
+  //   // );
+  // }
+
+
 
   // postPopupMenuButtonOnSelected(
   //     PostPopupMenuItemsValues value, int postId) async {

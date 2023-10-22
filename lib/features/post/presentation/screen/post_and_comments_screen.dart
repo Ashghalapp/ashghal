@@ -1,17 +1,20 @@
 import 'dart:async';
 
+import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
-import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/getx/post_controller.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/ScrollerAppBar.dart';
 
 import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_input_widget.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/post_card_widget.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/post_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../getx/comment_input_controller.dart';
 import '../widget/comment_reply_widgets/comment_widget.dart';
+import '../widget/functoin_widgets/functions_widgets.dart';
 import '../widget/jump_to_top_or_bottom_Button.dart';
 
 // الصفحة الخاصة بعرض البوست والتعليقات الخاصه به
@@ -27,8 +30,8 @@ class PostCommentsScreen extends StatelessWidget {
   /// متحكم يتم استخدامه في صندوق ادخال الرد لكل تعليق حتى يتم الاحتفاظ بالقيمة
   final TextEditingController textInputController = TextEditingController();
 
-  final RxBool _showJumpTopButton = true.obs;
-  
+  final RxBool _showJumpTopButton = false.obs;
+
   @override
   Widget build(BuildContext context) {
     commentController.getPostComments(post.id);
@@ -65,7 +68,7 @@ class PostCommentsScreen extends StatelessWidget {
                     Obx(() {
                       post.commentsCount = post.commentsCount +
                           commentController.sentCommentCounts.value;
-                      return PostCardWidget(post: post);
+                      return PostWidget(post: post, postMenuButton: PostController().getPostMenuButtonValuesWidget(post.id),);
                     }),
 
                     // show the post's comments
@@ -106,6 +109,8 @@ class PostCommentsScreen extends StatelessWidget {
         ),
       ),
     );
+
+    
   }
 
   Widget _buildPostCommentsWidget() {
@@ -156,10 +161,12 @@ class PostCommentsScreen extends StatelessWidget {
   Widget _buildShowMoreCommentsButton() {
     int moreCommentCounts =
         post.commentsCount - commentController.commentsList.length;
-    return AppUtil.buildShowMoreCommentsRepliesButton(
+    return PostCommentsFunctionWidgets.buildShowMoreTextButton(
       moreCounts: moreCommentCounts,
       onTap: () => commentController.loadNextPageOfComments(post.id),
       isReply: false,
     );
   }
+
+    
 }

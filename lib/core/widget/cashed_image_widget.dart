@@ -6,19 +6,20 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 
-class DownloadCashedImage extends StatelessWidget {
+class CashedNetworkImageWidget extends StatelessWidget {
   final String imageUrl;
   final String errorAssetImagePath;
   final void Function()? onTap;
   final Widget Function()? onWaiting;
   final BoxFit? fit;
-  const DownloadCashedImage({
+  final double? height;
+  const CashedNetworkImageWidget({
     super.key,
     required this.imageUrl,
     required this.errorAssetImagePath,
     this.fit = BoxFit.fill,
     this.onTap,
-    this.onWaiting,
+    this.onWaiting, this.height,
   });
 
   @override
@@ -48,8 +49,10 @@ class DownloadCashedImage extends StatelessWidget {
                 imageErrorBuilder: (context, error, stackTrace) {
                   return Image.asset(errorAssetImagePath, fit: BoxFit.fitWidth);
                 },
-                fit: fit,
+                fit: BoxFit.cover,
+                height: height,
               ),
+              
             );
             // : Image.asset(errorAssetImagePath);
           } catch (e) {

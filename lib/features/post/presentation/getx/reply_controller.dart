@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/config/app_routes.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
@@ -84,12 +85,17 @@ class ReplyController extends GetxController {
   /// function to get object of Comment class by only post id and content
   Reply _getReplyInstance(int parentId, String content, int replyToCommentId,
       {String? imagePath}) {
+    //  Map<String, dynamic>? currentUserData= SharedPref.getCurrentUserData();
+    // if (currentUserData == null){
+    //   Get.offAllNamed(AppRoutes.logIn);
+    // }
+    Map<String, dynamic>? currentUserData= SharedPref.getCurrentUserBasicData();
     return Reply(
       id: 0,
       parentCommentId: parentId,
       content: content,
       imageUrl: imagePath,
-      basicUserData: SharedPref.getCurrentUserData(),
+      basicUserData: currentUserData,
       replyToCommentId: replyToCommentId,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),

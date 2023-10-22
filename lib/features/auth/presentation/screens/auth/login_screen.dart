@@ -52,6 +52,7 @@ class LoginScreen extends GetView<LoginController> {
                 width: double.infinity,
                 child: Column(
                   children: [
+                    // text
                     AppTextFormField(
                       hintText: AppLocalization.enterYourEmail,
                       // iconName:Icons.email_outlined,
@@ -60,7 +61,7 @@ class LoginScreen extends GetView<LoginController> {
                       obscureText: false,
                       controller: controller.emailController,
                       validator: (val) {
-                        return validInput(val!, 10, 50, 'email');
+                        return validInput(val?.trim(), 10, 50, 'email');
                       },
                     ),
 

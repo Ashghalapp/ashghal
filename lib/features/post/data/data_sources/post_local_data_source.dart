@@ -40,7 +40,7 @@ abstract class PostCommentLocalDataSource {
 
 class PostCommentLocalDataSourceImpl implements PostCommentLocalDataSource {
   DioService dio = DioService();
-  static String postsKey= "cached_posts";
+  static String allPostsKey= "cached_posts";
   static String alivePostsKey= "cached_alive_posts";
   static String completePostsKey= "cached_complete_posts";
   static String currentUserPostsKey= "cached_current_user_posts";
@@ -92,12 +92,12 @@ class PostCommentLocalDataSourceImpl implements PostCommentLocalDataSource {
   
   @override
   void cashePosts(List<PostModel> posts) {
-    _cashedPosts(posts, postsKey);
+    _cashedPosts(posts, allPostsKey);
   }
  
   @override
   List<PostModel> getCashedPosts() {
-    return _getCashedPosts(postsKey);
+    return _getCashedPosts(allPostsKey);
   }
   
   @override

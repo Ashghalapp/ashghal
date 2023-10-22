@@ -1,6 +1,5 @@
 import 'package:ashghal_app_frontend/features/post/presentation/getx/image_display_controller.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/cached_networkimage.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/downalod_cashed_image_widget.dart';
+import 'package:ashghal_app_frontend/core/widget/cashed_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -44,7 +43,7 @@ class ImagePage extends StatelessWidget {
             ),
             Expanded(
               flex: 8,
-              child: DownloadCashedImage(
+              child: CashedNetworkImageWidget(
                 imageUrl: imageUrl,
                 fit: BoxFit.cover,
                 onTap: () => Get.to(() => ImagePage(imageUrl: imageUrl)),

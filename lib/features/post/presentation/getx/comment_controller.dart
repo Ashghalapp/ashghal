@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/config/app_routes.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
@@ -99,7 +100,7 @@ class CommentController extends GetxController {
 
   List<Comment> filterComments(List<Comment> comments) {
     String currentUserId =
-        SharedPref.getCurrentUserData()['id']?.toString() ?? "";
+        SharedPref.getCurrentUserBasicData()['id']?.toString() ?? "";
     for (var element in comments) {
       if (element.basicUserData['id'] == currentUserId) {
         comments.insert(0, element);
@@ -111,12 +112,17 @@ class CommentController extends GetxController {
 
   /// function to get object of Comment class by only post id and content
   Comment _getCommentInstance(int postId, String content, {String? imagepath}) {
+    // Map<String, dynamic>? currentUserData= SharedPref.getCurrentUserData();
+    // if (currentUserData == null){
+    //   Get.offAllNamed(AppRoutes.logIn);
+    // }
+    Map<String, dynamic>? currentUserData= SharedPref.getCurrentUserBasicData();
     return Comment(
       id: 0,
       parentPostId: postId,
       content: content,
       imageUrl: imagepath,
-      basicUserData: SharedPref.getCurrentUserData(),
+      basicUserData: currentUserData?? {},
       repliesCount: 0,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),

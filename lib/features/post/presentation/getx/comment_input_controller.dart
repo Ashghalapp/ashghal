@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 
 
 class CommentInputController extends GetxController {
-  RxBool isAddReplyFocused = false.obs;
+  // RxBool isAddReplyFocused = false.obs;
   RxBool isAddCommentFocused = true.obs;
 
-  TextEditingController textController = TextEditingController();
+  // TextEditingController textController = TextEditingController();
 }

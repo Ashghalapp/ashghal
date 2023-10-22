@@ -42,8 +42,12 @@ class Address {
       id: json['id'],
       city: json['city'],
       street: json['street'],
-      lat: json['lat'],
-      long: json['long'],
+      lat: json['lat'] is double
+          ? json['lat']
+          : (json['lat'] is int ? (json['lat'] as int).toDouble() : null),
+      long: json['long'] is double
+          ? json['long']
+          : (json['long'] is int ? (json['long'] as int).toDouble() : null),
       desc: json['desc'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),

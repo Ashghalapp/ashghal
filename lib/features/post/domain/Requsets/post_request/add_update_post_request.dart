@@ -75,9 +75,9 @@ class AddPostRequest extends _AddUpdatePostRequestAbstract {
 
 /// request that use to update post
 class UpdatePostRequest extends _AddUpdatePostRequestAbstract {
-  final int id;
+  final int postId;
   UpdatePostRequest({
-    required this.id,
+    required this.postId,
     super.title,
     super.content,
     super.categoryId,
@@ -99,7 +99,7 @@ class UpdatePostRequest extends _AddUpdatePostRequestAbstract {
     }
 
     return FormData.fromMap({
-      'post_id': id,
+      'post_id': postId,
       ...(super.getDataAsMap()),
       if (multimedia.isNotEmpty) 'multimedia': multimedia,
     }, ListFormat.multiCompatible);

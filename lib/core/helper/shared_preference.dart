@@ -1,5 +1,11 @@
 import 'dart:convert';
 
+import 'package:ashghal_app_frontend/config/app_routes.dart';
+import 'package:ashghal_app_frontend/core/app_functions.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/features/auth/data/models/user_model.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/entities/user.dart';
 import 'package:get/get.dart';
 
 import '../services/app_services.dart';
@@ -66,12 +72,41 @@ class SharedPref {
     return _appServices.prefs.getString(key);
   }
 
-  static setCurrentUserData(Map<String, dynamic> json){
-    SharedPref.setString("current_user_data", jsonEncode(json));
+  static setCurrentUserBasicData(Map<String, dynamic> json) {
+    SharedPref.setString("current_user_basic_data", jsonEncode(json));
   }
 
-  static Map<String, dynamic> getCurrentUserData() {
-    String data= SharedPref.getString("current_user_data")?? "";
-    return jsonDecode(data);
+  static Map<String, dynamic> getCurrentUserBasicData() {
+    String? data = SharedPref.getString("current_user_basic_data");
+    if (data != null) return jsonDecode(data);
+   else {
+      AppUtil.showMessage(
+          AppLocalization.thereIsSomethingError, Get.theme.colorScheme.error);
+      Get.offAllNamed(AppRoutes.logIn);
+      return {'id': 0, 'name': "name", 'image_url': ""};
+    }
+  }
+
+  static setCurrentUserData(UserModel user) {
+    SharedPref.setString("current_user_data", jsonEncode(user.toJson()));
+    setCurrentUserBasicData(
+      {'id': user.id, 'name': user.name, 'image_url': user.imageUrl},
+    );
+  }
+
+  static User getCurrentUserData() {
+    String? data = SharedPref.getString("current_user_data");
+    if (data != null) {
+      // print("<<<<<<<<<<<<<<<<<<<$data)}>>>>>>>>>>>>>>>>>>>"); 
+      print("<<<<<<<<<<<<<<<<<<<${jsonDecode(data)}>>>>>>>>>>>>>>>>>>>"); 
+      var user = UserModel.fromJson(jsonDecode(data));
+      print("<<<<<<<<<<<<<<<<<<<$user>>>>>>>>>>>>>>>>>>>");
+      return user;
+    } else {
+      AppUtil.showMessage(
+          AppLocalization.thereIsSomethingError, Get.theme.colorScheme.error);
+      Get.offAllNamed(AppRoutes.logIn);
+      return AppFunctions.fakeUserData;
+    }
   }
 }

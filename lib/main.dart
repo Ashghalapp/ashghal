@@ -1,5 +1,8 @@
+import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
+import 'package:ashghal_app_frontend/features/account/widgets/header_widgets/profile_account_header_widget.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/entities/user.dart';
 import 'package:ashghal_app_frontend/features/auth/presentation/screens/test_screen.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
@@ -16,7 +19,6 @@ import 'config/routes.dart';
 import 'core/localization/local_controller.dart';
 import 'core/localization/translation.dart';
 import 'core/services/app_services.dart';
-import 'custom_appBar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,17 +63,17 @@ class MyApp extends StatelessWidget {
       locale:  controller.language,
       translations: MyTranslation(),
       initialBinding: BindingAllControllers(),
-      // initialBinding: InitialBinding(),
+
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
-      initialRoute: AppRoutes.mainScreen,
-      // home: PostsScreen(),
+      // initialRoute: AppRoutes.logIn,
+      // home: ProfileAccountHeaderWidget(user: User(id: 1, name: "name", birthDate: DateTime.now(), gender: Gender.male, isBlocked: true, createdAt: DateTime.now(), updatededAt: DateTime.now(), followersUsers: [], followingUsers: [], followersRequestsWait: [], followRequestsSent: []),),
       // home: CommentCardWidget(comment: CommentController().commentsListToTry[0]),
       // initialRoute: AppRoutes.singUpJobScreen,
       // initialRoute: AppRoutes.chooseUserTypeScreen,
       // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
-      // initialRoute: AppRoutes.mainScreen,
+      initialRoute: AppRoutes.logIn,
       // home: Tester(),
       // initialRoute: '/tester',
       // initialRoute: AppRoutes.testScreen,

@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/features/auth/domain/entities/user.dart';
+import 'package:get/get.dart';
 
 import '../../../../app_library/app_data_types.dart';
 import '../../../../app_library/public_entities/address.dart';
@@ -17,7 +18,7 @@ class UserModel extends User {
     super.address,
     super.provider,
     required super.createdAt,
-    required super.updatededAt,
+    required super.updatedAt,
     required super.followersUsers,
     required super.followingUsers,
     required super.followersRequestsWait,
@@ -53,7 +54,7 @@ class UserModel extends User {
       birthDate: birthDate,
       gender: gender,
       createdAt: createdAt,
-      updatededAt: updatededAt,
+      updatedAt: updatedAt,
       address: address,
       provider: provider,
       followersUsers: followersUsers,
@@ -64,35 +65,35 @@ class UserModel extends User {
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    List<dynamic> followersUsersJson = json['followers_users'] ?? [];
-    List<dynamic> followingUsersJson = json['following_users'] ?? [];
-    List<dynamic> followersRequestsWaitJson =
-        json['followers_requests_wait'] ?? [];
-    List<dynamic> followRequestsSentJson = json['follow_requests_sent'] ?? [];
-    
+    List<int> followersUsersJson = (json['followers_users'] as List).cast<int>();
+    List<int> followingUsersJson = (json['following_users'] as List).cast<int>();
+    // List<int> followersRequestsWaitJson =
+    //     (json['followers_requests_wait'] as List).cast<int>();
+    // List<int> followRequestsSentJson = (json['follow_requests_sent'] as List).cast<int>();
+    //  print("<<<<<<<<<<<<<<<<USerModel after lists");
     return UserModel(
       id: json['id'],
       name: json['name'],
-      phone: json['phone'],
+      phone:  json['phone'],
       email: json['email'],
       isBlocked: json['is_blocked'],
-      imageUrl: json['image_path'],
+      imageUrl: json['image_url'],
       birthDate: DateTime.parse(json['birth_date']),
-      gender: json['gender']=='male'? Gender.male: Gender.female,
+      gender: Gender.values.byName(json['gender']),// json['gender']=='male'? Gender.male: Gender.female,
       createdAt: DateTime.parse(json['created_at']),
-      updatededAt: DateTime.parse(json['updated_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
       address: json['address'] != null? Address.fromJson(json['address']): null,
       provider: json['provider'] != null? Provider.fromJson(json['provider']): null,
-      followersUsers:
-          List<int>.from(followersUsersJson.map((x) => int.parse(x))).toList(),
-      followingUsers:
-          List<int>.from(followingUsersJson.map((x) => int.parse(x))).toList(),
-      followersRequestsWait:
-          List<int>.from(followersRequestsWaitJson.map((x) => int.parse(x)))
-              .toList(),
-      followRequestsSent:
-          List<int>.from(followRequestsSentJson.map((x) => int.parse(x)))
-              .toList(),
+      followersUsers: followersUsersJson,
+          // List<int>.from(followersUsersJson.map((x) => int.parse(x))).toList(),
+      followingUsers: followingUsersJson,
+          // List<int>.from(followingUsersJson.map((x) => int.parse(x))).toList(),
+      followersRequestsWait: [],
+          // List<int>.from(followersRequestsWaitJson.map((x) => int.parse(x)))
+              // .toList(),
+      followRequestsSent: [],
+          // List<int>.from(followersRequestsWaitJson.map((x) => int.parse(x)))
+              // .toList(),
     );
   }
 
@@ -100,15 +101,15 @@ class UserModel extends User {
         'id': id,
         'name': name,
         'phone': phone,
-        'email': email,        
-        'image_path': imageUrl,
-        'birth_date': birthDate,
-        'gender': gender,
-        'is_blocked': isBlocked,
+        'email': email,    
+        'is_blocked': isBlocked,    
+        'image_url': imageUrl,
+        'birth_date': birthDate.toString(),
+        'gender': gender.name,
+        'created_at': createdAt.toString(),
+        'updated_at': updatedAt.toString(),        
         'address': address?.toJson(),
         'provider': provider?.toJson(),
-        'created_at': createdAt,
-        'updateded_at': updatededAt,        
         'followers_users': followersUsers,
         'following_users': followingUsers,
         'followers_requests_wait': followersRequestsWait,

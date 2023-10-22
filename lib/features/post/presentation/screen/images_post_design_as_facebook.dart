@@ -3,7 +3,7 @@ import 'package:ashghal_app_frontend/features/post/domain/entities/multimedia.da
 import 'package:ashghal_app_frontend/features/post/presentation/getx/image_display_controller.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/screen/desplay_images.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/blurring_image_stack.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/downalod_cashed_image_widget.dart';
+import 'package:ashghal_app_frontend/core/widget/cashed_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +22,7 @@ class ImagesPostDesignAsFacebook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var imagePaths = multimedia
-        .map((e) => handleImagesToEmulator(e.url.toString()))
+        .map((e) => AppFunctions.handleImagesToEmulator(e.url.toString()))
         .toList();
 
     if (imagePaths.isEmpty) {
@@ -98,11 +98,12 @@ class ImagesPostDesignAsFacebook extends StatelessWidget {
 
   Widget showOneImage(String path) {
     return Expanded(
-      child: DownloadCashedImage(
+      child: CashedNetworkImageWidget(
         imageUrl: path,
         onTap: () => Get.to(() => ImagePage(imageUrl: path)),
         errorAssetImagePath: "assets/images/unKnown.jpg",
-        fit: BoxFit.cover,
+        fit: BoxFit.fitHeight,
+        height: rowHeightConstant,
       ),
     );
   }

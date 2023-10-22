@@ -1,5 +1,7 @@
 // لكل implement الكلاس الاساسي والي يحتوي العمليات الاساسية حتى يتم منه عمل
 // تقنية مستخدمة حتى تمثل مصدر البيانات، وهكذا تسهل عملية التعديل وايضا التغيير
+import 'dart:convert';
+
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/api_response_model.dart';
@@ -8,7 +10,7 @@ import 'package:ashghal_app_frontend/core_api/errors/exceptions.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/success/success.dart';
 import 'package:ashghal_app_frontend/features/auth/data/models/user_model.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/Requsets/add_or_change_email_request%20.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/Requsets/add_or_change_email_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/add_or_change_phone_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/check_email_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/login_request.dart';
@@ -85,7 +87,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
     ApiResponseModel response = await dio.post(ApiConstants.REGISTER_USER, request.toJson());
     if (response.status) {
-      SharedPref.setUserToken(response.data['token']);
+      // SharedPref.setUserToken(response.data['token']);
       print("::: S End registerUserWithEmail func in remote datasource");
       return UserModel.fromJson(response.data as Map<String, dynamic>);
     }
@@ -163,8 +165,19 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     ApiResponseModel response = await dio.post(ApiConstants.LOGIN, request.toJson());
     if (response.status) {
       SharedPref.setUserToken(response.data['token']);
+      var userModel = UserModel.fromJson(response.data as Map<String, dynamic>);
+      
+      SharedPref.setCurrentUserData(userModel);
+      // SharedPref.setCurrentUserData({
+      //   'id': userModel.id,
+      //   'name': userModel.name,
+      //   'image_url': userModel.imageUrl,
+      //   'email': userModel.email,
+      //   'phone': userModel.phone,
+      // });
+      SharedPref.setUserLoggedIn(true);
       print("::: S End login func in remote datasource");
-      return UserModel.fromJson(response.data as Map<String, dynamic>);
+      return userModel;
     }
     throw AppException(ServerFailure(message: response.message, errors: response.errors));
   }

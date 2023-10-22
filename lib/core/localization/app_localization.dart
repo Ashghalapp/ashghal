@@ -1,3 +1,4 @@
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 class AppLocalization {
@@ -9,7 +10,7 @@ class AppLocalization {
   static String ended = 'ended'.tr;
   static String ago = 'ago'.tr;
   static String current = 'current'.tr;
-  static String completed = 'completed'.tr;
+  
   static String selected = 'selected'.tr;
   static String you = 'you'.tr;
   static String successResetPassword = 'successResetPassword'.tr;
@@ -37,7 +38,7 @@ class AppLocalization {
 
 //////////////
 
-  static String provider = 'Provider'.tr;
+  static String provider = 'Provider';
   static String providerDesc = 'I want to find employees'.tr;
   static String client = 'Client'.tr;
   static String clientDesc = 'I want to find a job for me'.tr;
@@ -90,11 +91,13 @@ class AppLocalization {
 
   static String userName = 'Username'.tr;
   static String changeUserName = 'Change user name'.tr;
-  static String email = 'email'.tr;
+  static String email = 'Email';
   static String emailOrUsername = 'emailOrUsername'.tr;
   static String usertype = 'usertype'.tr;
   static String chooseusertype = 'chooseusertype'.tr;
-  static String chooseusertypebody = 'Choose whether you are looking for a work or you are an organization/company that needs employees'.tr;
+  static String chooseusertypebody =
+      'Choose whether you are looking for a work or you are an organization/company that needs employees'
+          .tr;
 
   static String loginAnotherAccount = 'loginAnotherAccount'.tr;
   static String yourEmail = 'yourEmail'.tr;
@@ -110,8 +113,10 @@ class AppLocalization {
   static String resendOTP = 'resendOTP'.tr;
   static String checkOptCode = 'checkOptCode'.tr;
 
-  static String pleaseEnterVerifyPasswordCode = "Please enter the code sent to change your password".tr;
-  static String pleaseEnterVerifyEmailCode = "Please enter the code sent to your email to verify your account".tr;
+  static String pleaseEnterVerifyPasswordCode =
+      "Please enter the code sent to change your password".tr;
+  static String pleaseEnterVerifyEmailCode =
+      "Please enter the code sent to your email to verify your account".tr;
   static String pleaseEnterOneTimePasswordPhoneNumberChange =
       "pleaseEnterOneTimePasswordPhoneNumberChange".tr;
   static String helpToGetAccount = "helpToGetAccount".tr;
@@ -190,12 +195,8 @@ class AppLocalization {
   static String or = 'or'.tr;
   static String and = ' and '.tr;
 
-
-
-
-
 /////////////////////////
-  static String password = 'password'.tr;
+  static String password = 'Password';
   static String newPassword = 'newPassword'.tr;
   static String confirmPassword = 'confirmPassword'.tr;
 
@@ -246,7 +247,7 @@ class AppLocalization {
 
   static String notifications = 'Notifications'.tr;
 
-  static String settings = 'Settings'.tr;
+  static String settings = 'Settings';
   static String notificationSettings = 'Notification Settings'.tr;
   static String darkMode = 'Dark mode'.tr;
 
@@ -319,22 +320,53 @@ class AppLocalization {
   // static String NotFoundDataInOfflineMode = 'Not found data in offline mode'.tr;
 
   ///////////////////////Post Messages/////////////////////////////////////
-  static String successAddPost= "The post has been added successfully";
-  static String thereIsSomethingError= "There is something error.. Try later";
-
+  static String successAddPost = "The post has been added successfully";
+  static String thereIsSomethingError = "There is something error.. Try later";
 
   ///////////////////////Comment and replies Messages/////////////////////////////////////
-  static String areYouSureToDeleteYourComment= "Are you sure to delete your comment?";
-  static String areYouSureToDeleteYourReply= "Are you sure to delete your reply?";
+  static String areYouSureToDeleteYourComment =
+      "Are you sure to delete your comment?";
+  static String areYouSureToDeleteYourReply =
+      "Are you sure to delete your reply?";
   static String view = "View";
-  static String moreComments= "more comments";
-  static String moreReplies= "more replies";
+  static String moreComments = "more comments";
+  static String moreReplies = "more replies";
 
   static String editYourComment = "Edit your comment";
   static String editYourReply = "Edit your reply";
 
+  static String youHaveNotPostsYet = "You have not any posts yet";
+  static String tapPlusButtonToShareYourFirstPost =
+      "tap plus button to share your first post";
 
+  static String addNewPost = "Add new post";
+  static String requiredField = "Required field";
+  static String addMedia = 'add Media';
+  static String createNewPost = 'Create new Post';
+  static String updatePost = 'Update post';
+  static String areYouSureToDelete = "Are you sure to delete?";
+  static String photo = "Photo";
+  static String photoVideo = "Photo/Video";
 
+  static String providerData = "Provider data";
+  static String gender = 'Gender';
+  static String name = "Name";
+  static String birthDate = "Birth date";
+  static String joinAt = "Join at";
+  static String personalInfo = "Personal info";
+  static String address = "Address";
+  static String street = "Street";
+  static String description = "Description";
 
-  
+  static String comment = "Comment";
+  static String completed = 'Completed';
+  static String incomplete = "Incomplete";
+  static String theme = 'Theme';
+
+  static String save = "Save";
+  static String male= "male";
+  static String female = "female";
+  static String addressDescription = "Address description";
+  static String tapToAdd = "Address description";
+  static String successModifyYourData = "Your data has been successfully modified";
 }

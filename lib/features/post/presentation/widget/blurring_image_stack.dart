@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'downalod_cashed_image_widget.dart';
+import '../../../../core/widget/cashed_image_widget.dart';
 
 class BlurringImageStackWidget extends StatelessWidget {
   final int totalImages;
@@ -16,7 +16,7 @@ class BlurringImageStackWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        DownloadCashedImage(
+        CashedNetworkImageWidget(
           imageUrl: fourthImageUrl,
           errorAssetImagePath: "assets/images/unKnown.jpg",
           fit: BoxFit.cover,

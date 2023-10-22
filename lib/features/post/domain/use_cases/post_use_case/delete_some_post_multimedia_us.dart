@@ -5,10 +5,10 @@ import '../../../../../core_api/success/success.dart';
 import '../../Requsets/post_request/delete_some_post_multimedia_request.dart';
 import '../../repositories/post_repository.dart';
 
-class DeleteSomeMultimediaUseCase {
+class DeleteSomePostMultimediaUseCase {
   final PostRepository repository;
 
-  DeleteSomeMultimediaUseCase(this.repository);
+  DeleteSomePostMultimediaUseCase(this.repository);
 
   Future<Either<Failure, Success>> call(DeleteSomePostMultimediaRequest request) async {
     return await repository.deleteSomePostMultimedia(request);

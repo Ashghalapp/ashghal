@@ -67,7 +67,7 @@ class CustomTextAndIconButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.icon,
-    this.height = 20,
+    this.height = 30,
     this.width,
   });
 
@@ -85,7 +85,8 @@ class CustomTextAndIconButton extends StatelessWidget {
           backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
           elevation: const MaterialStatePropertyAll(0),
           iconColor: MaterialStatePropertyAll(Get.textTheme.bodyMedium?.color),
-          padding: const MaterialStatePropertyAll(EdgeInsets.all(0)),
+          padding: const MaterialStatePropertyAll(
+              EdgeInsets.symmetric(horizontal: 0)),
         ),
       ),
     );
@@ -109,7 +110,7 @@ class CustomTextAndIconAndCircleCounterButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.icon,
-    this.height = 20,
+    this.height = 30,
     this.width,
     required this.count,
     this.countTextColor = Colors.white,
@@ -128,23 +129,30 @@ class CustomTextAndIconAndCircleCounterButton extends StatelessWidget {
             : MainAxisAlignment.center;
     return CustomTextAndIconButton(
       onPressed: onPressed,
-      icon: const Icon(null, size: 0),
+      icon: icon, //const Icon(null, size: 0),
       height: height,
       width: width,
       text: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: alignment,
         children: <Widget>[
-          icon,
           text,
-          CircleAvatar(
-            // radius: 8,
-            backgroundColor: countBackColor,
+          // CircleAvatar(
+          // radius: 8,
+          // backgroundColor: countBackColor,
+          // child:
+          Padding(
+            padding: EdgeInsets.only(
+              left: Get.locale?.languageCode == 'en' ? 8 : 0,
+              right: Get.locale?.languageCode == 'ar' ? 4 : 0,
+            ),
             child: Text(
               count,
-              style: Get.textTheme.bodySmall?.copyWith(color: countTextColor),
+              style: Get.textTheme.bodySmall
+                  ?.copyWith(color: Get.theme.primaryColor),
             ),
           ),
+          // ),
         ],
       ),
     );

@@ -14,18 +14,23 @@ class AppMiddleware extends GetMiddleware {
     debugPrint('Redirect middleware executed for route: $route');
   
     debugPrint(myServices.prefs.getString('language'));
-    if (myServices.prefs.getString('language') == null) {
-      return const RouteSettings(name: AppRoutes.languageScreen);
-    }
-    if (SharedPref.getintroductionScreenSeen()) {
+    // if (myServices.prefs.getString('language') == null) {
+    //   return const RouteSettings(name: AppRoutes.languageScreen);
+    // }
+
+    // if (SharedPref.getintroductionScreenSeen()) {
+      printError(info: "hhhhhhhhhhhhhhhhhh${SharedPref.isUserLoggedIn()}");
       if (SharedPref.isUserLoggedIn()) {
         return const RouteSettings(name: AppRoutes.mainScreen);
+      } else{
+      // return const RouteSettings(name: AppRoutes.logIn);
+      
       }
-      return const RouteSettings(name: AppRoutes.logIn);
-    }
-    if (!SharedPref.getintroductionScreenSeen()) {
-      return const RouteSettings(name: AppRoutes.onBoarding);
-    }
+    // }
+     printError(info: "mmmmmmmmmmmm${SharedPref.isUserLoggedIn()}");
+    // if (!SharedPref.getintroductionScreenSeen()) {
+    //   return const RouteSettings(name: AppRoutes.onBoarding);
+    // }
 
     return null;
   }

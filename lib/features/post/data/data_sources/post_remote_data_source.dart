@@ -162,7 +162,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   
   @override
   Future<PostModel> updatePost(UpdatePostRequest request) async {
-    ApiResponseModel response = await dio.post(ApiConstants.UPDATE_POST, request.toJson());
+    ApiResponseModel response = await dio.post(ApiConstants.UPDATE_POST, await request.toJson());
     if (response.status){
        print("::: S End updatePost func in post_comment_remote_datasource");
        return PostModel.fromJson(response.data);

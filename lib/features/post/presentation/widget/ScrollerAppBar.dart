@@ -19,7 +19,7 @@ class ScrollerAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     controller.addListener(() {
-      printError(info: "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+      // printError(info: "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
       if (controller.offset < 100) {
         _showAppbar.value = true;
         return;

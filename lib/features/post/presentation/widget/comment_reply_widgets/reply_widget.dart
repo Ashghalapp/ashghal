@@ -6,7 +6,6 @@ import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/app_util.dart';
 import '../../../domain/entities/reply.dart';
 import '../../getx/reply_controller.dart';
-import '../buttomsheet_widget.dart';
 import 'comment_reply_widget_abstract.dart';
 
 ///////////////////////////Reply Widget ////////////////////////
@@ -26,7 +25,7 @@ class ReplyWidget extends CommentReplyWidgetAbstract {
   }) : super(
           userId: int.parse(reply.basicUserData['id'].toString()),
           userName: reply.basicUserData['name'].toString(),
-          userImageUrl: reply.imageUrl,
+          userImageUrl: reply.basicUserData['image_url'].toString(),
           content: reply.content,
           // replyController: replyController,
           imageUrl: reply.imageUrl,
@@ -89,10 +88,10 @@ class ReplyWidget extends CommentReplyWidgetAbstract {
 
   @override
   void onEdit() {
-    buildButtomSheetToEditField(
+    AppUtil.buildButtomSheetToEditField(
       title: AppLocalization.editYourReply,
       initialValue: reply.content,
-      onSendFunc: (newContent) async {
+      onSave: (newContent) async {
         if (await replyController.updateReply(reply.id, newContent)) {
           Get.back();
         }

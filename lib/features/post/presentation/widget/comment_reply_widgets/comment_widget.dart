@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:ashghal_app_frontend/features/post/domain/entities/comment.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +7,7 @@ import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/app_util.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../getx/reply_controller.dart';
-import '../buttomsheet_widget.dart';
+import '../functoin_widgets/functions_widgets.dart';
 import 'comment_reply_widget_abstract.dart';
 import 'reply_widget.dart';
 
@@ -24,7 +22,7 @@ class CommentWidget extends CommentReplyWidgetAbstract {
   }) : super(
           userId: int.parse(comment.basicUserData['id'].toString()),
           userName: comment.basicUserData['name'].toString(),
-          userImageUrl: comment.imageUrl,
+          userImageUrl: comment.basicUserData['image_url'].toString(),
           content: comment.content,
           imageUrl: comment.imageUrl,
         );
@@ -119,10 +117,10 @@ class CommentWidget extends CommentReplyWidgetAbstract {
 
   @override
   void onEdit() {
-    buildButtomSheetToEditField(
+     AppUtil.buildButtomSheetToEditField(
       title: AppLocalization.editYourComment,
       initialValue: comment.content,
-      onSendFunc: (newContent) async {
+      onSave: (newContent) async {
         if (await commentController.updateComment(comment.id, newContent)) {
           Get.back();
         }
@@ -156,7 +154,7 @@ class CommentWidget extends CommentReplyWidgetAbstract {
   Widget _buildShowMoreRepliesButton() {
     int moreCommentCounts =
         comment.repliesCount - replyController.repliesList.length;
-    return AppUtil.buildShowMoreCommentsRepliesButton(
+    return PostCommentsFunctionWidgets.buildShowMoreTextButton(
       moreCounts: moreCommentCounts,
       onTap: () => replyController.loadNextPageOfCommentReplies(comment.id),
       isReply: false,

@@ -13,7 +13,7 @@ class User {
   Gender gender;
   bool isBlocked;
   DateTime createdAt;
-  DateTime updatededAt;
+  DateTime updatedAt;
   Address? address;
   Provider? provider;
   List<int> followersUsers;
@@ -33,7 +33,7 @@ class User {
     this.address,
     this.provider,
     required this.createdAt,
-    required this.updatededAt,    
+    required this.updatedAt,    
     required this.followersUsers,
     required this.followingUsers,
     required this.followersRequestsWait,

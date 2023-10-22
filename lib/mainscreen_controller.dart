@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
+import 'package:ashghal_app_frontend/features/account/Screen/account_screen.dart';
 import 'package:ashghal_app_frontend/features/post/data/data_sources/post_remote_data_source.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/post_repository_impl.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
@@ -16,12 +17,10 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
 import 'config/app_icons.dart';
-import 'features/post/domain/Requsets/post_request/get_category_posts_request.dart';
-import 'features/post/domain/Requsets/post_request/get_user_posts_request.dart';
 import 'features/post/presentation/screen/add_post_screen.dart';
 
 class MainScreenController extends GetxController {
-  int currentIndex = 0;
+  int currentIndex = 4;
   final search = TextEditingController();
 
   AppServices appServices = Get.find();
@@ -134,7 +133,7 @@ class MainScreenController extends GetxController {
   //===========================================//
 
   List<Widget> listPage = [
-    PostsScreen(),
+     PostsScreen(),
     //  HomeScreen(),
     // Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
@@ -187,10 +186,11 @@ class MainScreenController extends GetxController {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [Center(child: Text("Activity Screen"))],
     ),
-    const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [Center(child: Text("Profile Screen"))],
-    ),
+    AccountScreen(),
+    // const Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [Center(child: Text("Profile Screen"))],
+    // ),
   ];
 
   List<IconData> bottomappbar = [
