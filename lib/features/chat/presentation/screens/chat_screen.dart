@@ -38,7 +38,7 @@ class ChatScreen extends StatelessWidget {
               child: Obx(
                 () {
                   if (_chatController.isLoaing.value) {
-                    return AppUtil.addProgressIndicator(context, 50);
+                    return AppUtil.addProgressIndicator(50);
                   } else if (_chatController.filteredConversations.isEmpty &&
                       !_screenController.isSearching.value) {
                     return _buildNoConversationsyet();

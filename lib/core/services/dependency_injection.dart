@@ -67,22 +67,20 @@ import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conver
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conversations_last_message_and_count.dart';
 import 'package:get_it/get_it.dart';
 
-
 final getIt = GetIt.instance;
 
 void setupDependencies() {
   //// core injection
- getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
+  getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
+
   ///=============================================================================================//
   //=============================Start Auth and User Dependencey Injection==================================//
   //// Data sources injection
 
   //// repository injection
   getIt.registerLazySingleton<UserProviderRepository>(
-      
       () => UserProviderRepositoryImpl());
-  getIt.registerLazySingleton<UserRepository>(
-      () => UserRepositoryImpl());
+  getIt.registerLazySingleton<UserRepository>(() => UserRepositoryImpl());
 
   //// usecases injection
   getIt.registerLazySingleton(() => RegisterUserWithEmailUseCase(getIt()));
@@ -94,7 +92,7 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => ForgetPasswordUseCase(getIt()));
   getIt.registerLazySingleton(() => ValidateResetPasswordByEmailCode(getIt()));
   getIt.registerLazySingleton(() => ResetPasswordUseCase(getIt()));
-  
+
   getIt.registerLazySingleton(() => GetCurrentUserDataUseCase(getIt()));
   getIt.registerLazySingleton(() => GetSpecificUserDataUseCase(getIt()));
   getIt.registerLazySingleton(() => UpdateUserUseCase(getIt()));
@@ -120,6 +118,26 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => DeletePostUseCase(getIt()));
   getIt.registerLazySingleton(() => DeleteSomePostMultimediaUseCase(getIt()));
   //=============================End Post Dependencey Injection====================================//
+
+  ///=============================================================================================//
+  //=============================Start Comment Dependencey Injection==================================//
+  //// repository injection
+  getIt.registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl());
+
+  //// usecases injection
+  getIt.registerLazySingleton(() => GetPostCommentUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetCommentRepliesUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetUserCommentsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetUserCommentsOnPostUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetUserRepliesOnCommentsUseCase(getIt()));
+  getIt.registerLazySingleton(() => AddCommentUseCase(getIt()));
+  getIt.registerLazySingleton(() => AddReplyUseCase(getIt()));
+  getIt.registerLazySingleton(() => UpdateCommentUseCase(getIt()));
+  getIt.registerLazySingleton(() => UpdateReplyUseCase(getIt()));
+  getIt.registerLazySingleton(() => DeleteCommentOrReplyUseCase(getIt()));
+  getIt.registerLazySingleton(() => DeleteCommentOrReplyImageUseCase(getIt()));
+  //=============================End Comment Dependencey Injection====================================//
+  ///=============================================================================================//
 
   //=============================Start Chat Dependencey Injection==================================//
   getIt.registerLazySingleton(
@@ -168,27 +186,6 @@ void setupDependencies() {
       () => ConversationRepositoryImp());
   getIt.registerLazySingleton<MessageRepository>(() => MessageRepositoryImp());
   //=============================End Chat Dependencey Injection====================================//
-}
 
-  ///=============================================================================================//
-
-  ///=============================================================================================//
-  //=============================Start Comment Dependencey Injection==================================//
-  //// repository injection
-  getIt.registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl());
-
-  //// usecases injection
-  getIt.registerLazySingleton(() => GetPostCommentUseCase(getIt()));
-  getIt.registerLazySingleton(() => GetCommentRepliesUseCase(getIt()));
-  getIt.registerLazySingleton(() => GetUserCommentsUseCase(getIt()));
-  getIt.registerLazySingleton(() => GetUserCommentsOnPostUseCase(getIt()));
-  getIt.registerLazySingleton(() => GetUserRepliesOnCommentsUseCase(getIt()));
-  getIt.registerLazySingleton(() => AddCommentUseCase(getIt()));
-  getIt.registerLazySingleton(() => AddReplyUseCase(getIt()));
-  getIt.registerLazySingleton(() => UpdateCommentUseCase(getIt()));
-  getIt.registerLazySingleton(() => UpdateReplyUseCase(getIt()));
-  getIt.registerLazySingleton(() => DeleteCommentOrReplyUseCase(getIt()));
-  getIt.registerLazySingleton(() => DeleteCommentOrReplyImageUseCase(getIt()));
-  //=============================End Comment Dependencey Injection====================================//
   ///=============================================================================================//
 }

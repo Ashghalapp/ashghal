@@ -46,7 +46,7 @@ class DisplaySendingImageWidget extends StatelessWidget {
         child: Stack(
           children: [
             Positioned(
-              top:  MediaQuery.of(context).viewPadding.top,
+              top: MediaQuery.of(context).viewPadding.top,
               child: IconButton(
                 onPressed: () async {
                   final imagePicker = ImagePicker();
@@ -59,7 +59,6 @@ class DisplaySendingImageWidget extends StatelessWidget {
                 icon: Icon(
                   languageCode == 'ar' ? Icons.arrow_forward : Icons.arrow_back,
                   color: Colors.white,
-
                 ),
               ),
             ),
@@ -100,7 +99,7 @@ class DisplaySendingImageWidget extends StatelessWidget {
               child: AppTextFormField(
                 controller: captionController,
                 hintText: 'caption',
-                lable: 'caption',
+                label: 'caption',
                 obscureText: false,
                 // onSuffixIconPressed: () {},
                 padding:

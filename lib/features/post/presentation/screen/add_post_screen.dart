@@ -45,11 +45,11 @@ class AddPostScreen extends StatelessWidget {
                   // Title Input Field
                   AppTextFormField(
                     hintText: "Enter title",
-                    lable: "Enter title",
+                    label: "Enter title",
                     obscureText: false,
                     controller: addPostController.titleController,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 0, horizontal: 15),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     validator: (newValue) {
                       if (newValue?.isEmpty ?? true) {
@@ -62,11 +62,11 @@ class AddPostScreen extends StatelessWidget {
                   // Content Input Field
                   AppTextFormField(
                     hintText: "Enter content",
-                    lable: "Enter content",
+                    label: "Enter content",
                     obscureText: false,
                     controller: addPostController.contentController,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 0, horizontal: 15),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     minLines: 4,
                     maxLines: 6,
@@ -86,7 +86,7 @@ class AddPostScreen extends StatelessWidget {
             // Category Selection Dropdown
             _buildCategoryDropdownButton(),
 
-            Obx(()=> _buildImagesWidget()),
+            Obx(() => _buildImagesWidget()),
 
             // Create Post Button
             // PostButton(
@@ -100,10 +100,9 @@ class AddPostScreen extends StatelessWidget {
             // ?
 
             const SizedBox(height: 10),
-            MyGesterDedector(
-              text: isUpdatePost
-                  ? AppLocalization.update
-                  : AppLocalization.send,
+            AppGesterDedector(
+              text:
+                  isUpdatePost ? AppLocalization.update : AppLocalization.send,
               color: Get.theme.primaryColor,
               onTap: () async {
                 if (isUpdatePost && post != null) {

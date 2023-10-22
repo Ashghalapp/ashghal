@@ -83,7 +83,6 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoutes.logIn,
       // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
-      initialRoute: AppRoutes.logIn,
       // home: Tester(),
       // home: TestDownloading(),
       // home: Center(

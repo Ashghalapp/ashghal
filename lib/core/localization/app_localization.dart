@@ -98,9 +98,6 @@ class AppLocalization {
   static String chooseusertypebody =
       'Choose whether you are looking for a work or you are an organization/company that needs employees'
           .tr;
-  static String chooseusertypebody =
-      'Choose whether you are looking for a work or you are an organization/company that needs employees'
-          .tr;
 
   static String loginAnotherAccount = 'loginAnotherAccount'.tr;
   static String yourEmail = 'yourEmail'.tr;

@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import '../widget/app_buttons.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class AppUtil {

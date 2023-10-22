@@ -52,19 +52,6 @@ class MainScreenController extends GetxController {
     );
   }
 
-  Widget myIcons(
-      {String? svgAssetUrl, double? width, double? height, Color? color}) {
-    return SvgPicture.asset(
-      svgAssetUrl!,
-      // AppIcons.email,
-      width: width ?? 30,
-      height: height ?? 30,
-
-      colorFilter:
-          ColorFilter.mode(color ?? AppColors.iconColor, BlendMode.srcIn),
-    );
-  }
-
   List<BottomNavigationBarItem> getItems() {
     return [
       BottomNavigationBarItem(
@@ -199,7 +186,7 @@ class MainScreenController extends GetxController {
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [Center(child: Text("Add Post"))],
     // ),
-    const Column(
+    Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton(

@@ -41,7 +41,7 @@ class SendingVideoViewPage extends StatelessWidget {
                       ),
                     )
                   : Center(
-                      child: AppUtil.addProgressIndicator(context, 50),
+                      child: AppUtil.addProgressIndicator(50),
                     ),
             ),
             playPauseButton(),
