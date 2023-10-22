@@ -26,7 +26,7 @@ class HighlightableTextWidget extends StatelessWidget {
       text: TextSpan(
         style: TextStyle(
           fontSize: fontSize,
-          color: Get.isDarkMode ? null : Colors.black87,
+          color: Get.isPlatformDarkMode ? null : Colors.black87,
         ),
         children: <TextSpan>[
           for (var i = 0; i < textParts.length - 1; i++)
