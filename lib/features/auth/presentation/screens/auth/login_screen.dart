@@ -4,8 +4,6 @@ import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
-import '../../../../../config/app_images.dart';
 import '../../../../../config/app_routes.dart';
 import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
@@ -57,7 +55,7 @@ class LoginScreen extends GetView<LoginController> {
                       hintText: AppLocalization.enterYourEmail,
                       // iconName:Icons.email_outlined,
                       iconName: AppIcons.email,
-                      lable: AppLocalization.email,
+                      label: AppLocalization.email,
                       obscureText: false,
                       controller: controller.emailController,
                       validator: (val) {
@@ -83,7 +81,7 @@ class LoginScreen extends GetView<LoginController> {
                           hintText: AppLocalization.pleaseEnterPassword,
                           // iconName: Iconsax.lock,
                           iconName: AppIcons.lock,
-                          lable: AppLocalization.password,
+                          label: AppLocalization.password,
                           controller: controller.passwordController,
                           validator: (val) {
                             return validInput(val!, 6, 50, 'password');
@@ -108,7 +106,7 @@ class LoginScreen extends GetView<LoginController> {
                       ],
                     ),
 
-                    MyGesterDedector(
+                    AppGesterDedector(
                       text: AppLocalization.signIn,
                       color: Theme.of(context).primaryColor,
                       onTap: () {
@@ -130,8 +128,7 @@ class LoginScreen extends GetView<LoginController> {
                     SizedBox(
                       height: size.height * 0.01,
                     ),
-               const OrContiueWithWidget(),
-
+                    const OrContiueWithWidget(),
 
                     SizedBox(
                       height: size.height * 0.04,
@@ -146,15 +143,11 @@ class LoginScreen extends GetView<LoginController> {
                           AppLocalization.dontHaveAccount,
                         ),
                         TextButton(
-                         
-                          onPressed: () =>
-                              Get.toNamed(AppRoutes.chooseUserTypeScreen, ),
-                          child: Text(
-                            AppLocalization.signUp,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                            ),
+                          onPressed: () => Get.toNamed(
+                            AppRoutes.chooseUserTypeScreen,
                           ),
+                          child: Text(AppLocalization.signUp,
+                              style: Get.textTheme.labelMedium),
                         ),
                       ],
                     ),
@@ -168,8 +161,6 @@ class LoginScreen extends GetView<LoginController> {
     );
   }
 }
-
-
 
 class SocialIconsWidget extends StatelessWidget {
   const SocialIconsWidget({
@@ -186,7 +177,10 @@ class SocialIconsWidget extends StatelessWidget {
           press: () {},
         ),
         SocialIcons(icon: 'google', press: () {}),
-        SocialIcons(icon: 'apple', press: () {},),
+        SocialIcons(
+          icon: 'apple',
+          press: () {},
+        ),
       ],
     );
   }
@@ -200,28 +194,26 @@ class OrContiueWithWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-     Expanded(
-      child: Divider(
-
-    color: Theme.of(context).dividerColor,
-      ),
-    ),
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Text(
-        AppLocalization.orContinueWith,
-        style: Theme.of(context).textTheme.labelSmall,
-      ),
-    ),
-     Expanded(
-      child: Divider(
-     color: Theme.of(context).dividerColor,
-      
-      ),
-    ),
-  ],
-);
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Divider(
+            color: Theme.of(context).dividerColor,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            AppLocalization.orContinueWith,
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
+        ),
+        Expanded(
+          child: Divider(
+            color: Theme.of(context).dividerColor,
+          ),
+        ),
+      ],
+    );
   }
 }

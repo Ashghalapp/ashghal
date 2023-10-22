@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/api_response_model.dart';
 import 'package:ashghal_app_frontend/core_api/dio_service.dart';
@@ -41,6 +42,7 @@ abstract class RemoteDataSource {
   Future<Success> validateEmailVerificationCode(VerifyEmailRequest request);
 
   /// ارسال طلب بتغيير كلمة السر وبناء عليه سيتم ارسال الكود الى الايميل او الهاتف
+  /// ارسال طلب بتغيير كلمة السر وبناء عليه سيتم ارسال الكود الى الايميل او الهاتف
   Future<Success> forgetPassword(ForgetPasswordRequest request);
 
   // Future<Success> verifyEmail(VerifyEmailRequest request);
@@ -73,25 +75,29 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<Success> checkEmail(CheckEmailRequest request) async {
-    ApiResponseModel response = await dio.post(ApiConstants.CHECK_EMAIL, request.toJson());
+    ApiResponseModel response =
+        await dio.post(ApiConstants.CHECK_EMAIL, request.toJson());
     if (response.status) {
       print("::: S End checkEmail func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
   Future<User> registerUserWithEmail(RegisterUserRequest request) async {
     print(":::::::: in registerUserWithEmail");
 
-    ApiResponseModel response = await dio.post(ApiConstants.REGISTER_USER, request.toJson());
+    ApiResponseModel response =
+        await dio.post(ApiConstants.REGISTER_USER, request.toJson());
     if (response.status) {
       // SharedPref.setUserToken(response.data['token']);
       print("::: S End registerUserWithEmail func in remote datasource");
       return UserModel.fromJson(response.data as Map<String, dynamic>);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
@@ -158,15 +164,15 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   //       ServerFailure(message: response.message, errors: response.errors));
   // }
 
-
   @override
   Future<User> login(LoginRequest request) async {
     print(">>>>>>>>>>>????????>${request.toJson()}");
-    ApiResponseModel response = await dio.post(ApiConstants.LOGIN, request.toJson());
+    ApiResponseModel response =
+        await dio.post(ApiConstants.LOGIN, request.toJson());
     if (response.status) {
       SharedPref.setUserToken(response.data['token']);
       var userModel = UserModel.fromJson(response.data as Map<String, dynamic>);
-      
+
       SharedPref.setCurrentUserData(userModel);
       // SharedPref.setCurrentUserData({
       //   'id': userModel.id,
@@ -179,7 +185,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       print("::: S End login func in remote datasource");
       return userModel;
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
@@ -189,17 +196,20 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       print("::: S End logout func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
-  Future<Success> sendEmailVerificationCode(String email) async{
-    ApiResponseModel response= await dio.post(ApiConstants.SEND_EMAIL_VERIFICATION_CODE, email);
-    if (response.status){
+  Future<Success> sendEmailVerificationCode(String email) async {
+    ApiResponseModel response =
+        await dio.post(ApiConstants.SEND_EMAIL_VERIFICATION_CODE, email);
+    if (response.status) {
       print("::: S End sendEmailVerificationCode func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override
@@ -242,13 +252,16 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   // }
 
   @override
-  Future<Success> validateResetPasswordByEmailCode(ValidateResetPasswordCodeRequest request) async {
-    ApiResponseModel response = await dio.post(ApiConstants.VALIDATE_RESET_PASSWORD_BY_EMAIL_CODE, request.toJson());
+  Future<Success> validateResetPasswordByEmailCode(
+      ValidateResetPasswordCodeRequest request) async {
+    ApiResponseModel response = await dio.post(
+        ApiConstants.VALIDATE_RESET_PASSWORD_BY_EMAIL_CODE, request.toJson());
     if (response.status) {
       print("::: S End verifyResetPasswordCode func in remote datasource");
       return ServerSuccess(response.message);
     }
-    throw AppException(ServerFailure(message: response.message, errors: response.errors));
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
   }
 
   @override

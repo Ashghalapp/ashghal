@@ -57,7 +57,7 @@ class Restert_Email_Screen extends StatelessWidget {
                                   child: AppTextFormField(
                                     controller: controller.Email,
                                     hintText: '',
-                                    lable: 'New Email',
+                                    label: 'New Email',
                                     obscureText: true,
                                     textInputtype: TextInputType.phone,
                                     // onPressed: () {},
@@ -107,7 +107,7 @@ class Restert_Email_Screen extends StatelessWidget {
                                     AppTextFormField(
                                       controller: restartpassword.Email,
                                       hintText: '',
-                                      lable: 'Password',
+                                      label: 'Password',
                                       obscureText: true,
                                       textInputtype: TextInputType.phone,
                                       onSuffixIconPressed: () {

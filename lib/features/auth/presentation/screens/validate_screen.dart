@@ -6,9 +6,9 @@ import 'package:get/get.dart';
 import '../../../../../config/app_colors.dart';
 
 import '../../../../core/localization/app_localization.dart';
-import '../../../../../core/widget/app_buttons.dart';
+
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import '../widgets/my_appbartext.dart';
+
 
 class ValidateScreen extends StatelessWidget {
   final String message;

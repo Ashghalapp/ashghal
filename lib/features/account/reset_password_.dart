@@ -9,9 +9,6 @@ import '../../core/widget/app_buttons.dart';
 import '../../core/widget/app_textformfield.dart';
 import 'getx/resetpassword_controller.dart';
 
-
-
-
 class ResetertPasswordScreen extends GetView<ResetertPasswordController> {
   const ResetertPasswordScreen({
     super.key,
@@ -126,7 +123,7 @@ class ResetertPasswordScreen extends GetView<ResetertPasswordController> {
                                   child: AppTextFormField(
                                     controller: controller.Email,
                                     hintText: '',
-                                    lable: 'New Password',
+                                    label: 'New Password',
                                     obscureText: true,
                                     textInputtype: TextInputType.phone,
                                     // onPressed: () {},
@@ -135,8 +132,10 @@ class ResetertPasswordScreen extends GetView<ResetertPasswordController> {
                                 const SizedBox(width: 10),
                                 ElevatedButton(
                                   onPressed: () {
-                                    print("${controller.Email.text}********************");
-                                    controller.check_email(controller.Email.text);
+                                    print(
+                                        "${controller.Email.text}********************");
+                                    controller
+                                        .check_email(controller.Email.text);
                                   },
                                   child: const Text(
                                     "Check ",
@@ -163,7 +162,7 @@ class ResetertPasswordScreen extends GetView<ResetertPasswordController> {
                                       hintText: '34'.tr,
                                       // iconName: Icons.lock_clock_outlined,
                                       iconName: AppIcons.lock,
-                                      lable: AppLocalization.newPassword,
+                                      label: AppLocalization.newPassword,
                                       controller: controller.passwordController,
                                       validator: (val) {
                                         return validInput(
@@ -186,7 +185,7 @@ class ResetertPasswordScreen extends GetView<ResetertPasswordController> {
                                       hintText: '41'.tr,
                                       iconName: AppIcons.lock,
                                       // iconName: Icons.key_outlined,
-                                      lable: AppLocalization.confirmPassword,
+                                      label: AppLocalization.confirmPassword,
                                       controller:
                                           controller.confirmPasswordController,
                                       validator: (val) {
@@ -199,7 +198,7 @@ class ResetertPasswordScreen extends GetView<ResetertPasswordController> {
                                     const SizedBox(
                                       height: 20,
                                     ),
-                                    MyGesterDedector(
+                                    AppGesterDedector(
                                       text: AppLocalization.submit,
                                       color: Theme.of(context).primaryColor,
                                       onTap: () =>

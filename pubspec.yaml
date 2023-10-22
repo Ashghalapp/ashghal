@@ -9,15 +9,23 @@ environment:
   sdk: ">=3.0.2 <4.0.0"
 
 dependencies:
+  audio_waveforms: ^1.0.4
+  audioplayers: ^5.2.0
   cached_network_image: ^3.2.3
+  camera: ^0.10.5+4
+  chewie: ^1.7.1
   connectivity_plus: null
   cupertino_icons: ^1.0.2
   dartz: ^0.10.1
   dio: ^5.3.2
+  emoji_picker_flutter: ^1.6.1
   equatable: ^2.0.5
+  file_picker: ^5.5.0
   flutter:
     sdk: flutter
-  flutter_cache_manager: null
+  flutter_cache_manager: ^3.3.1
+  flutter_chat_types: ^3.6.2
+  flutter_chat_ui: ^1.6.9
   flutter_easyloading: ^3.0.5
   flutter_otp_text_field: ^1.1.1
   flutter_svg: ^2.0.7
@@ -25,18 +33,32 @@ dependencies:
   get: ^4.6.5
   get_it: ^7.6.0
   google_fonts: ^6.0.0
+  http: ^1.1.0
+  image_gallery_saver: ^2.0.3
   image_picker: ^1.0.4
+
   internet_connection_checker: ^1.0.0+1
   intl: ^0.18.1
   introduction_screen: ^3.1.11
+
+  moor_flutter: ^4.1.0
+  open_file: ^3.3.2
+  path_provider: ^2.1.1
+  pusher_channels_flutter: ^2.2.0
+  record_mp3: ^3.0.0
+  scrollable_positioned_list: ^0.3.8
   permission_handler: ^11.0.0
   shared_preferences: ^2.2.0
+  video_player: ^2.7.2
+  video_thumbnail: ^0.5.3
   shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+  build_runner: ^2.4.6
+  moor_generator: ^4.6.0+1
 
 flutter:
   uses-material-design: true
@@ -46,8 +68,9 @@ flutter:
     - assets/profiles/
     - assets/lottie/
     - assets/icons/
-    - assets/icons/icons/
+    - assets/sounds/
     - assets/json/user/
+    - assets/messages.json
 
   fonts:
     - family: Rubik

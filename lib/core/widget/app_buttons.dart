@@ -2,8 +2,8 @@ import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MyGesterDedector extends StatelessWidget {
-  const MyGesterDedector({
+class AppGesterDedector extends StatelessWidget {
+  const AppGesterDedector({
     super.key,
     required this.onTap,
     required this.text,

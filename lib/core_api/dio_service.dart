@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'dart:convert';
+
 import 'package:ashghal_app_frontend/core_api/errors/error_strings.dart';
 import 'package:ashghal_app_frontend/core_api/errors/exceptions.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
@@ -25,7 +27,7 @@ class DioService {
         .add(LogInterceptor(responseBody: true, requestBody: true));
   }
 
-  Future<ApiResponseModel> get(String path, Object? data) async {
+  Future<ApiResponseModel> get(String path, [Object? data]) async {
     print("?????????????????Before send request??????????????????????");
     CancelToken cancelToken = CancelToken();
     Response response =
@@ -52,6 +54,18 @@ class DioService {
     }
   }
 
+  Future<bool> head(String path) async {
+    try {
+      final response = await _dio.head(path);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<ApiResponseModel> post(String path, Object? data) async {
     print("???????????????????????????????????????");
     CancelToken cancelToken = CancelToken();
@@ -71,6 +85,73 @@ class DioService {
           status: false,
           message: response.statusMessage ?? ErrorString.SERVER_ERROR);
     }
+  }
+
+  Future<Response> download({
+    required String url,
+    required String savePath,
+    void Function(int, int)? onReceiveProgress,
+    CancelToken? cancelToken,
+  }) async {
+    // print("???????????????????????????????????????");
+    return await _dio.download(
+      url,
+      savePath,
+      onReceiveProgress: onReceiveProgress,
+      cancelToken: cancelToken,
+    );
+    // print("???????///////////?????????????????????????");
+    // print("?????????????????${response.statusCode}??${response.statusMessage}");
+    // if (response.statusCode == 200) {
+    //   // print("???????????????????????????????????????");
+    //   ApiResponseModel responseModel = ApiResponseModel.fromJson(response.data);
+    //   return true;
+    // } else {
+    // response.
+    // return false;
+    // }
+  }
+
+  Future<ApiResponseModel> uploadMultimedia(String path, Object? data,
+      {void Function(int, int)? onSendProgress,
+      CancelToken? cancelToken}) async {
+    // print("???????????????????????????????????????");
+    Response response = await _dio.post(path,
+        data: data, onSendProgress: onSendProgress, cancelToken: cancelToken);
+    // print("???????///////////?????????????????????????");
+    print("?????????????????${response.statusCode}??${response.statusMessage}");
+    if (response.statusCode == 200) {
+      // print("???????????????????????????????????????");
+      ApiResponseModel responseModel = ApiResponseModel.fromJson(response.data);
+      return responseModel;
+    } else {
+      return ApiResponseModel(
+          status: false,
+          message: response.statusMessage ?? ErrorString.SERVER_ERROR);
+    }
+  }
+
+  Future<dynamic> autherizeUserOnChannel(
+      {required String socketId, required String channelName}) async {
+    Response response = await _dio.post(
+      ApiConstants.channelsAutherizingUrl,
+      data: {'socket_id': socketId, 'channel_name': channelName},
+      // options: Options(
+      //   headers: {
+      //     'Authorization': 'Bearer H1yyza0I8r87vRAJXWn3H84EN3SjiEqn3QePFV2q',
+      //   },
+      // ),
+    );
+    print("?????????????????${response.statusCode}??${response.statusMessage}");
+    print("?????????????????${response.data}??${response.statusMessage}");
+    // var json = jsonDecode(response.data);
+    return response.data;
+    // if (response.statusCode == 200) {
+    //   var json = jsonDecode(response.data);
+    //   return json;
+    // } else {
+    //   throw Exception("Failed to authenticate the user in such a channel");
+    // }
   }
 
   Future<ApiResponseModel> delete(String path) async {
@@ -97,11 +178,11 @@ class DioService {
     ));
   }
 
-  // Future<Response> getUsers() async {
+  // Future<Response> getUsers()  async {
   //   return await _dio.get("/user/get");
   // }
 
-  // Future<Response> getSpecificUser() async {
+  // Future<Response> getSpecificUser()  async {
   //   return await _dio.get("/user/get/5");
   // }
 }

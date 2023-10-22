@@ -59,7 +59,7 @@ class SuccessScreen extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            MyGesterDedector(
+            AppGesterDedector(
               text: AppLocalization.signIn,
               onTap: () => Get.offAllNamed(AppRoutes.logIn),
             )

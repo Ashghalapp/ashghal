@@ -45,6 +45,47 @@ class SharedPref {
     _appServices.prefs.setString('authKey', userToken!);
   }
 
+  static setUserId(int id) {
+    _appServices.prefs.setInt('userId', id);
+  }
+
+  static int? get currentUserId => _appServices.prefs.get('userId') as int?;
+  // static int? get currentUserId => 11;
+
+  static setUserName(String name) {
+    _appServices.prefs.setString('userName', name);
+  }
+
+  static String? get currentUserName =>
+      _appServices.prefs.get('userName') as String?;
+
+  static setUserEmail(String? email) {
+    if (email != null) {
+      _appServices.prefs.setString('userEmail', email);
+    }
+  }
+
+  static String? get currentUserEmail =>
+      _appServices.prefs.get('userEmail') as String?;
+
+  static setUserPhone(String? phone) {
+    if (phone != null) {
+      _appServices.prefs.setString('userPhone', phone);
+    }
+  }
+
+  static String? get currentUserPhone =>
+      _appServices.prefs.get('userPhone') as String?;
+
+  static setUserImageUrl(String? url) {
+    if (url != null) {
+      _appServices.prefs.setString('userImageUrl', url);
+    }
+  }
+
+  static String? get currentUserImageUrl =>
+      _appServices.prefs.get('userImageUrl') as String?;
+
   static String? getUserToken() {
     return _appServices.prefs.get('authKey') as String?;
   }

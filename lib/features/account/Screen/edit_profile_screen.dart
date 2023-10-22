@@ -15,7 +15,6 @@ import 'package:intl/intl.dart';
 TextEditingController username = TextEditingController();
 
 class EditAccountScreen extends StatelessWidget {
-
   // final User user;
   EditAccountScreen({super.key});
   final editProfileController = Get.find<EditProfileController>();
@@ -49,15 +48,19 @@ class EditAccountScreen extends StatelessWidget {
               data: AppLocalization.tapToAdd,
               onTap: () async {},
             ),
-          if (editProfileController.userData.value.address != null) ..._buildAddresFields(),
+          if (editProfileController.userData.value.address != null)
+            ..._buildAddresFields(),
           Obx(
-            () => editProfileController.areThereChanges(editProfileController.userData.value)
+            () => editProfileController
+                    .areThereChanges(editProfileController.userData.value)
                 ? Padding(
                     padding: const EdgeInsets.all(10),
-                    child:
-                        MyGesterDedector(onTap: () async{
-                          await editProfileController.submitUploadChangesButton(editProfileController.userData.value);
-                        }, text: "Upload changes"),
+                    child: AppGesterDedector(
+                        onTap: () async {
+                          await editProfileController.submitUploadChangesButton(
+                              editProfileController.userData.value);
+                        },
+                        text: "Upload changes"),
                   )
                 : const SizedBox(),
           ),
@@ -155,7 +158,8 @@ class EditAccountScreen extends StatelessWidget {
                 if (editProfileController.imagePath.value.isEmpty &&
                     editProfileController.userData.value.imageUrl == null) {
                   return CircleFileImageWidget(
-                      imagePath: editProfileController.userData.value.gender == Gender.male
+                      imagePath: editProfileController.userData.value.gender ==
+                              Gender.male
                           ? editProfileController.assetMaleImage
                           : editProfileController.assetFemaleImage,
                       radius: 150);
@@ -242,8 +246,8 @@ class EditAccountScreen extends StatelessWidget {
             () => SettingItemWidget(
               icon: Icons.man_3_outlined,
               label: AppLocalization.gender,
-              data: editProfileController
-                  .selectedGender.value, // editProfileController.userData.value.gender.name,
+              data: editProfileController.selectedGender
+                  .value, // editProfileController.userData.value.gender.name,
               onTap: () async {
                 await AppUtil.buildButtomsheetToEditRadio(
                   title: AppLocalization.gender,

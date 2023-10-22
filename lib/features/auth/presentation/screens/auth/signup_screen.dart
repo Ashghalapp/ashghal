@@ -3,7 +3,7 @@ import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:ashghal_app_frontend/features/auth/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../config/app_colors.dart';
+
 import '../../../../../config/app_routes.dart';
 import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
@@ -47,7 +47,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     hintText: AppLocalization.fullName,
                     // iconName: Icons.person_outline_outlined,
                     iconName: AppIcons.user,
-                    lable: AppLocalization.fullName,
+                    label: AppLocalization.fullName,
                     obscureText: false,
                     controller: controller.nameController,
                     validator: (val) {
@@ -77,7 +77,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     hintText: AppLocalization.enterYourEmail,
                     // iconName: Icons.email_outlined,
                     iconName: AppIcons.email,
-                    lable: AppLocalization.enterYourEmail,
+                    label: AppLocalization.enterYourEmail,
                     obscureText: false,
                     controller: controller.emailController,
                     validator: (val) {
@@ -101,7 +101,7 @@ class SignUpScreen extends GetView<SignUpController> {
                         hintText: AppLocalization.password,
                         // iconName: Icons.lock_open_outlined,
                         iconName: AppIcons.lock,
-                        lable: AppLocalization.password,
+                        label: AppLocalization.password,
                         controller: controller.passwordController,
                         validator: (val) {
                           return validInput(val!, 6, 50, 'password');
@@ -111,7 +111,7 @@ class SignUpScreen extends GetView<SignUpController> {
                   ),
                   const SizedBox(height: 20),
 
-                  MyGesterDedector(
+                  AppGesterDedector(
                     text: AppLocalization.signIn,
                     color: Theme.of(context).primaryColor,
                     onTap: () async => await controller
@@ -151,9 +151,7 @@ class SignUpScreen extends GetView<SignUpController> {
                         onPressed: () => Get.offAllNamed(AppRoutes.logIn,),
                         child: Text(
                           AppLocalization.login,
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                          ),
+                          style:Get.textTheme.labelMedium
                         ),
                       ),
                     ],
@@ -226,7 +224,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                       // iconName: Icons.work_outline_rounded,
 
                       iconName: AppIcons.work,
-                      lable: AppLocalization.jobname,
+                      label: AppLocalization.jobname,
                       obscureText: false,
                       controller: controller.jobNameController,
                       validator: (val) {
@@ -238,7 +236,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                       hintText: AppLocalization.jobdesc,
                       // iconName: Icons.work_outline_rounded,
                       // iconName: AppIcons.work,
-                      lable: AppLocalization.jobdesc,
+                      label: AppLocalization.jobdesc,
                       obscureText: false,
                       controller: controller.jobDescController,
                       validator: (val) {
@@ -249,7 +247,7 @@ class SingUpScreenJob extends GetView<SignUpController> {
                   ],
                 ),
               ),
-              MyGesterDedector(
+              AppGesterDedector(
                 text: AppLocalization.next,
                 color: Theme.of(context).primaryColor,
                 onTap: () async => await controller.submitJobInfo(),

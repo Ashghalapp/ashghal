@@ -59,10 +59,11 @@ class AppTheme {
 
     // button theme
     buttonTheme: ButtonThemeData(
-        shape: const StadiumBorder(),
-        disabledColor: AppColors.grey1,
-        buttonColor: AppColors.appColorPrimary,
-        splashColor: AppColors.appColorPrimaryDark),
+      shape: const StadiumBorder(),
+      disabledColor: AppColors.grey1,
+      buttonColor: AppColors.appColorPrimary,
+      splashColor: AppColors.appColorPrimaryDark,
+    ),
 
     //radio theme
     radioTheme: RadioThemeData(
@@ -76,7 +77,6 @@ class AppTheme {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSize.s12)))),
 
-    
     // text theme
     textTheme: TextTheme(
       displayLarge:

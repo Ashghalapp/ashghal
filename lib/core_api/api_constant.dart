@@ -1,8 +1,13 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+
 class ApiConstants {
   static const String baseUrl = "http://10.0.2.2:8000/api/";
-  // static const String baseUrl = "http://192.168.43.20:8000/api/";
+  // static const String baseUrl = "http://192.168.128.175:8000/api/";
+  static const String channelsAutherizingUrl = "${baseUrl}broadcasting/auth";
+  //   static const String channelsAutherizingUrl =
+  // "http://192.168.0.192:8000/api/broadcasting/auth";
   // static const String baseUrl = "http://localhost:8000/api/";
   // static const String baseUrl = "https://jsonplaceholder.typicode.com/";
 
@@ -61,13 +66,15 @@ class ApiConstants {
   static String GET_POST_COMMENTS = "${COMMENT_ENDPOINT}get-post-comments";
   static String GET_COMMENT_REPLIES = "${COMMENT_ENDPOINT}get-comment-replies";
   static String GET_USER_COMMENTS = "${COMMENT_ENDPOINT}get-user-comments";
-  static String GET_USER_COMMENTS_ON_POST = "${COMMENT_ENDPOINT}get-user-comments-on-post";
-  static String GET_USER_REPLIES_ON_COMMENT = "${COMMENT_ENDPOINT}get-user-replies-on-comment";
+  static String GET_USER_COMMENTS_ON_POST =
+      "${COMMENT_ENDPOINT}get-user-comments-on-post";
+  static String GET_USER_REPLIES_ON_COMMENT =
+      "${COMMENT_ENDPOINT}get-user-replies-on-comment";
   static String ADD_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}add";
   static String UPDATE_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}update";
   static String DELETE_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}delete/";
-  static String DELETE_COMMENT_OR_REPLY_IMAGE = "${COMMENT_ENDPOINT}delete-image/";
-
+  static String DELETE_COMMENT_OR_REPLY_IMAGE =
+      "${COMMENT_ENDPOINT}delete-image/";
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///============================== User Urls =============================================
@@ -75,5 +82,18 @@ class ApiConstants {
   static String USER_ENDPOINT = "user/";
   static String GET_CURRENT_USER = "${USER_ENDPOINT}current-user";
   static String GET_SPECIFIC_USER = "${USER_ENDPOINT}get/";
-  static String uPDATE_USER = "${USER_ENDPOINT}update";
+  static String UPDATE_USER = "${USER_ENDPOINT}update";
+}
+
+class ChannelsEventsNames {
+  static const String userStateUpdatedChannel = 'presence-user.state.updated';
+  static const String userStateUpdatedEvent = 'user.state.updated.event';
+  static const String chatChannelName = 'private-chat.';
+  static const String messageSentEventName = 'message.sent';
+  static const String messageReceivedEventName = 'message.received';
+  static const String messageReadEventName = 'message.read';
+  static const String typingEventName = 'client-user.typing.state';
+  static const String userChannelName = 'private-user.channel.';
+  static const String newMessageUnknownConversationEvent =
+      'message.sent.unknown.conversation';
 }

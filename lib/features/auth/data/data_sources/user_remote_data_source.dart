@@ -12,10 +12,8 @@ abstract class UserRemoteDataSource {
   Future<User> getCurrentUserData();
 
   Future<User> getSpecificUserData(int userId);
-  
+
   Future<User> updateUser(UpdateUserRequest request);
-
-
 
   // Future<User> registerUserWithEmail(RegisterUserRequest request);
 }
@@ -36,16 +34,17 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     return UserModel.fromJson((await _sendRequest(
       method: 'get',
       endpoint: "${ApiConstants.GET_SPECIFIC_USER}$userId",
-    )).data);
+    ))
+        .data);
   }
 
   @override
   Future<User> updateUser(UpdateUserRequest request) async {
     return UserModel.fromJson((await _sendRequest(
-      method: 'post',
-      endpoint: ApiConstants.uPDATE_USER,
-      data: await request.toJson()
-    )).data);
+            method: 'post',
+            endpoint: ApiConstants.UPDATE_USER,
+            data: await request.toJson()))
+        .data);
   }
 
   Future<ApiResponseModel> _sendRequest(
@@ -72,6 +71,4 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     throw AppException(
         ServerFailure(message: response.message, errors: response.errors));
   }
-  
-  
 }

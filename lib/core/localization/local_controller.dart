@@ -6,7 +6,7 @@ import '../helper/shared_preference.dart';
 
 class AppLocallcontroller extends GetxController {
   // Locale? language =Locale('ar');
-  Locale? language ;
+  Locale? language;
 
   // ThemeData appTheme = enTheme;
 

@@ -77,7 +77,7 @@ class ChooseUserTypeScreen extends GetView<ChooseUserTypeController> {
               //التحقق اذا اختار المستخدم احد الخيارات
               () => (controller.isProviderSelected.value ||
                       controller.isClientSelected.value)
-                  ? MyGesterDedector(
+                  ? AppGesterDedector(
                       text: AppLocalization.next,
                       color: Theme.of(context).primaryColor,
                       onTap: () {

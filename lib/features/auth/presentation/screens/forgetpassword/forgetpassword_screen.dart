@@ -49,7 +49,7 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
                         hintText: AppLocalization.enterYourEmail,
                         // iconName: Icons.email_outlined,
                         iconName:AppIcons.email,
-                        lable: AppLocalization.email,
+                        label: AppLocalization.email,
                         obscureText: false,
                         controller: controller.emailController,
                         validator: (val) {
@@ -59,7 +59,7 @@ class ForgetPassword extends GetView<ForgetPasswordController> {
                       const SizedBox(
                         height: 20,
                       ),
-                      MyGesterDedector(
+                      AppGesterDedector(
                         text: AppLocalization.next,
                         color:Theme.of(context).primaryColor,
                         onTap: () => controller.checkEmail(),

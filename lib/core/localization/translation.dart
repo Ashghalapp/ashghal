@@ -313,6 +313,11 @@ class MyTranslation extends Translations {
           AppLocalization.provider: "",
           AppLocalization.provider: "",
           AppLocalization.provider: "",
+
+          //================================ Start chat messages ================================//
+          AppLocalization.conversationDeletedSuccess: "تم حذف المحادثة بنجاح",
+          AppLocalization.conversationDeletedFail: "فشل حذف المحادثة"
+          //================================ End chat messages ================================//
         },
 
         ///========================English=====================///

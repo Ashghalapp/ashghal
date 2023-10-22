@@ -1,6 +1,11 @@
 import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
+import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_main_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/home_screen.dart';
 import 'package:ashghal_app_frontend/features/account/Screen/account_screen.dart';
 import 'package:ashghal_app_frontend/features/post/data/data_sources/post_remote_data_source.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/post_repository_impl.dart';
@@ -22,6 +27,7 @@ import 'features/post/presentation/screen/add_post_screen.dart';
 class MainScreenController extends GetxController {
   int currentIndex = 4;
   final search = TextEditingController();
+  final UsersStateController stateController = Get.put(UsersStateController());
 
   AppServices appServices = Get.find();
   var location = ''.obs;
@@ -94,12 +100,12 @@ class MainScreenController extends GetxController {
           //   ),
           ),
       BottomNavigationBarItem(
-          icon: myIcons(svgAssetUrl: AppIcons.heartBorder),
+          icon: myIcons(svgAssetUrl: AppIcons.chatBorder),
           activeIcon: myIcons(
-            svgAssetUrl: AppIcons.heart,
+            svgAssetUrl: AppIcons.chat,
             color: AppColors.appColorPrimary,
           ),
-          label: 'Activity'
+          label: 'Chat'
           // activeIcon: Icon(
           //     Iconsax.heart5,
           //     // Icons.heart_broken_outlined
@@ -128,12 +134,10 @@ class MainScreenController extends GetxController {
           ),
     ];
   }
-
-
   //===========================================//
 
   List<Widget> listPage = [
-     PostsScreen(),
+    PostsScreen(),
     //  HomeScreen(),
     // Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
@@ -182,9 +186,16 @@ class MainScreenController extends GetxController {
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [Center(child: Text("Add Post"))],
     // ),
-    const Column(
+    Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [Center(child: Text("Activity Screen"))],
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              print(SharedPref.getUserToken());
+              Get.to(() => ChatScreen());
+            },
+            child: Text("Open Chat"))
+      ],
     ),
     AccountScreen(),
     // const Column(

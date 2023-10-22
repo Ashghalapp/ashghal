@@ -6,7 +6,7 @@ class AppTextFormField extends StatelessWidget {
   final TextDirection? textDirection;
   final List<TextInputFormatter>? inputformater;
   final TextInputType? textInputtype;
-  final String? lable;
+  final String? label;
   final String? prefixtext;
   final String hintText;
   final String? iconName;
@@ -26,7 +26,7 @@ class AppTextFormField extends StatelessWidget {
     Key? key,
     required this.hintText,
     this.iconName,
-    this.lable,
+    this.label,
     required this.obscureText,
     required this.controller,
     this.validator,
@@ -39,7 +39,9 @@ class AppTextFormField extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
     this.margin = const EdgeInsets.all(0),
     this.autoFocuse = false,
-    this.radius = 12, this.minLines, this.maxLines,
+    this.radius = 12,
+    this.minLines,
+    this.maxLines,
   }) : super(key: key);
 
   @override
@@ -55,7 +57,7 @@ class AppTextFormField extends StatelessWidget {
         cursorColor: Theme.of(context).primaryColor,
         autofocus: autoFocuse,
         minLines: minLines,
-        maxLines: obscureText? 1: maxLines,
+        maxLines: obscureText ? 1 : maxLines,
         // style: Theme.of(context).inputDecorationTheme.labelStyle,
         style: const TextStyle(
           decoration: TextDecoration.none,
@@ -84,7 +86,7 @@ class AppTextFormField extends StatelessWidget {
             ),
             // borderSide: BorderSide.none
           ),
-          hintText: lable,
+          hintText: label,
           hintStyle: Theme.of(context).textTheme.labelSmall,
           prefixIcon: iconName != null
               ? IconButton(
@@ -127,7 +129,7 @@ class AppTextFormField extends StatelessWidget {
             "",
             style: Theme.of(context).textTheme.labelSmall,
           ),
-    
+
           // borderSide: const BorderSide(color: AppColors.gray),
         ),
       ),
