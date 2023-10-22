@@ -53,12 +53,6 @@ abstract class RemoteDataSource {
   Future<Success> validateResetPasswordByPhoneCode(
       ValidateResetPasswordCodeRequest request);
 
-  Future<Success> validateResetPasswordByEmailCode(
-      ValidateResetPasswordCodeRequest request);
-
-  Future<Success> validateResetPasswordByPhoneCode(
-      ValidateResetPasswordCodeRequest request);
-
   Future<Success> resetPassword(ResetPasswordRequest request);
 
   // Future<Success> resendForgetPasswordCode(ForgetPasswordRequest request);
