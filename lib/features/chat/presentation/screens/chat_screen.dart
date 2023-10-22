@@ -25,11 +25,12 @@ class ChatScreen extends StatelessWidget {
     return Theme(
       data: Get.isPlatformDarkMode ? ChatTheme.dark : ChatTheme.light,
       child: Scaffold(
-        appBar: _buildAppBar(context),
+        appBar: _buildAppBar(),
         body: Column(
           children: [
             Obx(
-              () => _screenController.isSearching.value
+              () => _screenController.isSearching.value ||
+                      _screenController.forwardSelectionEnabled.value
                   ? const SizedBox.shrink()
                   : buildFilterButtons(),
             ),
@@ -46,41 +47,92 @@ class ChatScreen extends StatelessWidget {
                         ? const SizedBox.shrink()
                         : _buildSearchResultList();
                   }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _chatController.filteredConversations.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ConversationWidget(
-                        conversation:
-                            _chatController.filteredConversations[index],
-                      );
-                    },
-                  );
+                  return _builConversationsListView();
                 },
               ),
             ),
+            if (_screenController.forwardSelectionEnabled.value &&
+                _screenController.selectedConversationsIds.isNotEmpty)
+              Card(
+                color: Get.isPlatformDarkMode
+                    ? ChatColors.appBarDark
+                    : ChatColors.appBarLight,
+                margin: const EdgeInsets.all(0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount:
+                            _screenController.selectedConversationsIds.length,
+                        itemBuilder: (_, index) {
+                          return Chip(
+                            label: Text(
+                                "conversation${_screenController.selectedConversationsIds[index]}"),
+                          );
+                        },
+                      ),
+                    ),
+                    IconButton(onPressed: () {}, icon: Icon(Icons.send))
+                  ],
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  AppBar _buildAppBar(context) {
+  ListView _builConversationsListView() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: _chatController.filteredConversations.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Row(
+          children: [
+            // Container(
+            //   margin: EdgeInsets.only(left: 12),
+            //   // padding:,
+            //   height: 22,
+            //   width: 22,
+            //   decoration: BoxDecoration(
+            //       border: Border.all(
+            //     color: Get.isPlatformDarkMode ? Colors.white70 : Colors.black87,
+            //   ),),
+            // ),
+            Expanded(
+              child: ConversationWidget(
+                conversation: _chatController.filteredConversations[index],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  AppBar _buildAppBar() {
     return AppBar(
       elevation: 1,
       leadingWidth: 45,
+      // centerTitle: ,
       leading: Obx(
         () {
-          return _screenController.isSearching.value
+          return _screenController.forwardSelectionEnabled.value
               ? InkWell(
-                  onTap: _screenController.toggleSearchMode,
+                  onTap: _screenController.cnacelForwardMode,
                   child: const Icon(Icons.arrow_back),
                 )
-              : PressableIconBackground(
-                  icon: Icons.search,
-                  onTap: _screenController.toggleSearchMode,
-                  borderRadius: 0,
-                );
+              : _screenController.isSearching.value
+                  ? InkWell(
+                      onTap: _screenController.toggleSearchMode,
+                      child: const Icon(Icons.arrow_back),
+                    )
+                  : PressableIconBackground(
+                      icon: Icons.search,
+                      onTap: _screenController.toggleSearchMode,
+                      borderRadius: 0,
+                    );
         },
       ),
       title: Obx(
@@ -91,64 +143,134 @@ class ChatScreen extends StatelessWidget {
                   child: SearchTextField(
                     focusNode: _screenController.searchFeildFocusNode,
                     controller: _screenController.searchFeildController,
-                    // onSearchPressed: () async =>
-                    //     await _screenController.onSearchButtonPressed(),
                     onTextChanged: (value) async =>
                         await _screenController.onSearchTextFieldChanges(value),
                   ),
                 )
-              : const Text("Ashghal Chat");
+              : _screenController.forwardSelectionEnabled.value
+                  ? _screenController.selectedConversationsIds.isNotEmpty
+                      ? Text(
+                          "${_screenController.selectedConversationsIds.length} selected")
+                      : const Text("Forward to...")
+                  : const Text("Ashghal Chat");
         },
       ),
       actions: [
         Obx(
           () {
-            return !_screenController.isSearching.value
-                ? PressableIconBackground(
-                    padding: 1,
-                    borderRadius: 0,
-                    onTap: () {},
-                    child: PopupMenuButton<ChatPopupMenuItemsValues>(
-                      // color: Colors.white,
-                      onSelected: _screenController.popupMenuButtonOnSelected,
-                      itemBuilder: (BuildContext ctx) {
-                        return [
-                          PopupMenuItem(
-                            value: ChatPopupMenuItemsValues.settings,
-                            child:
-                                Text(ChatPopupMenuItemsValues.settings.value),
-                          ),
-                          PopupMenuItem(
-                            value: ChatPopupMenuItemsValues.blockedUsers,
-                            child: Text(
-                              ChatPopupMenuItemsValues.blockedUsers.value,
-                            ),
-                          ),
-                          // const PopupMenuItem(
-                          //   value: ChatPopupMenuItemsValues.createConversation,
-                          //   child: Text("Create Conversation"),
-                          // ),
-                        ];
-                      },
-                    ),
-                  )
-                : _screenController.isSearchTextEmpty.value
-                    ? const SizedBox.shrink()
-                    : Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: InkWell(
-                          child: const Icon(Icons.cancel),
-                          onTap: () {
-                            _screenController.searchFeildController.text = "";
-                            _screenController.isSearchTextEmpty.value = true;
-                          },
+            if (!_screenController.isSearching.value &&
+                !_screenController.forwardSelectionEnabled.value) {
+              return PressableIconBackground(
+                padding: 1,
+                borderRadius: 0,
+                onTap: () {},
+                child: PopupMenuButton<ChatPopupMenuItemsValues>(
+                  // color: Colors.white,
+                  onSelected: _screenController.popupMenuButtonOnSelected,
+                  itemBuilder: (BuildContext ctx) {
+                    return [
+                      PopupMenuItem(
+                        value: ChatPopupMenuItemsValues.settings,
+                        child: Text(ChatPopupMenuItemsValues.settings.value),
+                      ),
+                      PopupMenuItem(
+                        value: ChatPopupMenuItemsValues.blockedUsers,
+                        child: Text(
+                          ChatPopupMenuItemsValues.blockedUsers.value,
                         ),
-                      );
+                      ),
+                      // const PopupMenuItem(
+                      //   value: ChatPopupMenuItemsValues.createConversation,
+                      //   child: Text("Create Conversation"),
+                      // ),
+                    ];
+                  },
+                ),
+              );
+            } else if (_screenController.forwardSelectionEnabled.value &&
+                !_screenController.isSearching.value) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: InkWell(
+                  onTap: _screenController.toggleSearchMode,
+                  child: const Icon(Icons.search),
+                ),
+              );
+            } else if (_screenController.isSearching.value &&
+                _screenController.isSearchTextEmpty.value &&
+                !_screenController.forwardSelectionEnabled.value) {
+              return const SizedBox.shrink();
+            } else {
+              return Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: InkWell(
+                  child: const Icon(Icons.cancel),
+                  onTap: () {
+                    if (_screenController.isSearchTextEmpty.value &&
+                        _screenController.forwardSelectionEnabled.value) {
+                      _screenController.toggleSearchMode();
+                    } else {
+                      _screenController.clearSearchField();
+                    }
+                  },
+                ),
+              );
+            }
+
+            // _screenController.forwardSelectionEnabled.value && !_screenController.isSearching.value? Padding(
+            //             padding: const EdgeInsets.only(right: 10.0),
+            //             child: InkWell(
+            //               child: const Icon(Icons.search),
+            //               onTap:_screenController.toggleSearchMode,
+            //             ),
+            //           )
+            // return !_screenController.isSearching.value
+            //     ? PressableIconBackground(
+            //         padding: 1,
+            //         borderRadius: 0,
+            //         onTap: () {},
+            //         child: PopupMenuButton<ChatPopupMenuItemsValues>(
+            //           // color: Colors.white,
+            //           onSelected: _screenController.popupMenuButtonOnSelected,
+            //           itemBuilder: (BuildContext ctx) {
+            //             return [
+            //               PopupMenuItem(
+            //                 value: ChatPopupMenuItemsValues.settings,
+            //                 child:
+            //                     Text(ChatPopupMenuItemsValues.settings.value),
+            //               ),
+            //               PopupMenuItem(
+            //                 value: ChatPopupMenuItemsValues.blockedUsers,
+            //                 child: Text(
+            //                   ChatPopupMenuItemsValues.blockedUsers.value,
+            //                 ),
+            //               ),
+            //               // const PopupMenuItem(
+            //               //   value: ChatPopupMenuItemsValues.createConversation,
+            //               //   child: Text("Create Conversation"),
+            //               // ),
+            //             ];
+            //           },
+            //         ),
+            //       )
+            //     : _screenController.isSearchTextEmpty.value
+            //         ? const SizedBox.shrink()
+            //         : Padding(
+            //             padding: const EdgeInsets.only(right: 10.0),
+            //             child: InkWell(
+            //               child: const Icon(Icons.cancel),
+            //               onTap:_screenController.clearSearchField,
+            //             ),
+            //           );
           },
         ),
       ],
     );
   }
+
+  // buildForwardAppBar(){
+
+  // }
 
   /// A list of filters
   SizedBox buildFilterButtons() {

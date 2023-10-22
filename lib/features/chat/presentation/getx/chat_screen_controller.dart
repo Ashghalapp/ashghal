@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
@@ -35,6 +36,54 @@ class ChatScreenController extends GetxController {
   FocusNode searchFeildFocusNode = FocusNode();
   RxBool isSearchTextEmpty = true.obs;
 
+  RxBool selectionEnabled = false.obs;
+  RxBool forwardSelectionEnabled = false.obs;
+  RxList<int> selectedConversationsIds = <int>[].obs;
+  // MessageAndMultimediaModel? _forwardedMessage;
+  Future<void> Function(List<int> selectedConversationsIds)?
+      _onForwardedMessageSend;
+
+  resetToNormalMode() {
+    isSearching.value = false;
+    searchFeildController.text = "";
+    isSearchTextEmpty.value = true;
+    selectionEnabled.value = false;
+    forwardSelectionEnabled.value = false;
+    selectedConversationsIds.clear();
+    _onForwardedMessageSend = null;
+  }
+
+  void forwardMessage(
+      Future<void> Function(List<int> selectedConversationsIds)
+          onForwardedMessageSend) {
+    forwardSelectionEnabled.value = true;
+    print(
+        "Here we are*********************************************************");
+    _onForwardedMessageSend = onForwardedMessageSend;
+  }
+
+  void cnacelForwardMode() {
+    resetToNormalMode();
+    Get.back();
+    // _forwardedMessage = null;
+  }
+
+  Future<void> forwardMessageToSelectedConversations() async {
+    resetToNormalMode();
+    _onForwardedMessageSend ?? (selectedConversationsIds);
+  }
+
+  void selectConversation(int conversationId) {
+    if (!(selectionEnabled.value || forwardSelectionEnabled.value)) {
+      selectionEnabled.value = true;
+    }
+    if (selectedConversationsIds.contains(conversationId)) {
+      selectedConversationsIds.remove(conversationId);
+    } else {
+      selectedConversationsIds.add(conversationId);
+    }
+  }
+
   Future<void> startConversationWith(int userId) async {
     chatController.startConversationWith(userId);
   }
@@ -67,6 +116,11 @@ class ChatScreenController extends GetxController {
     } else {
       searchFeildFocusNode.requestFocus();
     }
+  }
+
+  clearSearchField() {
+    searchFeildController.text = "";
+    isSearchTextEmpty.value = true;
   }
 
   // Future<void> onSearchButtonPressed() async {

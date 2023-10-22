@@ -195,6 +195,23 @@ class ConversationRepositoryImp extends ConversationRepository {
           onTypingEvent) async {
     try {
       if (await networkInfo.isConnected) {
+        await _pusherChatHelper.subscribeToUserChannels(
+          onNewMessageUnknownConversation: (remoteConversation) async {
+            int? conversationLocalId =
+                await _insertLocalConversationFromRemoteIfNotExists(
+              remoteConversation,
+            );
+            if (conversationLocalId != null) {
+              for (var remoteMessage in remoteConversation.newMessages
+                  .cast<RemoteMessageModel>()) {
+                await _messageRepository.insertNewMessageFromRemote(
+                  remoteMessage,
+                  conversationLocalId,
+                );
+              }
+            }
+          },
+        );
         List<LocalConversation> conversations =
             await _conversationLocalSource.getRemoteConversations();
 
@@ -206,21 +223,6 @@ class ConversationRepositoryImp extends ConversationRepository {
                 message,
                 conversation.localId,
               );
-            },
-            onNewMessageUnknownConversation: (remoteConversation) async {
-              int? conversationLocalId =
-                  await _insertLocalConversationFromRemoteIfNotExists(
-                remoteConversation,
-              );
-              if (conversationLocalId != null) {
-                for (var remoteMessage in remoteConversation.newMessages
-                    .cast<RemoteMessageModel>()) {
-                  await _messageRepository.insertNewMessageFromRemote(
-                    remoteMessage,
-                    conversationLocalId,
-                  );
-                }
-              }
             },
             onMessageReceived: (receivedReadMessage) async {
               // print("onMessageReceived///////////////////////");

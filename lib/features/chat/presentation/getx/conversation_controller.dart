@@ -132,27 +132,29 @@ class ConversationController extends GetxController {
     messages.refresh();
   }
 
-  Future<void> dispatchTypingEvent(TypingEventType eventType) async {
+  Future<void> dispatchTypingEvent(
+      TypingEventType eventType, int conversationRemoteId) async {
     DispatchTypingEventUseCase useCase = di.getIt();
     await useCase.call(
       DispatchTypingEventRequest(
-        conversationId: conversationId,
+        conversationId: conversationRemoteId,
         eventType: eventType,
       ),
     );
   }
 
-  Future<void> sendTextMessage(String body) async {
+  Future<void> sendTextMessage(String body, [int? otherConversationId]) async {
     SendMessageRequest request = SendMessageRequest.withBody(
-      conversationId: conversationId,
+      conversationId: otherConversationId ?? conversationId,
       body: body,
     );
     _sendMessage(request);
   }
 
-  Future<void> sendMultimediaMessage(String path) async {
+  Future<void> sendMultimediaMessage(String path,
+      [int? otherConversationId]) async {
     SendMessageRequest request = SendMessageRequest.withMultimedia(
-      conversationId: conversationId,
+      conversationId: otherConversationId ?? conversationId,
       filePath: path,
       onSendProgress: (count, total) {},
       cancelToken: null,
@@ -160,9 +162,10 @@ class ConversationController extends GetxController {
     _sendMessage(request);
   }
 
-  Future<void> sendTextAndMultimediaMessage(String body, String path) async {
+  Future<void> sendTextAndMultimediaMessage(String body, String path,
+      [int? otherConversationId]) async {
     SendMessageRequest request = SendMessageRequest.withBodyAndMultimedia(
-      conversationId: conversationId,
+      conversationId: otherConversationId ?? conversationId,
       filePath: path,
       body: body,
       onSendProgress: (count, total) {},

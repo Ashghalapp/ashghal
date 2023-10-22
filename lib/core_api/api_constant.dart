@@ -48,7 +48,7 @@ class ChannelsEventsNames {
   static const String messageReceivedEventName = 'message.received';
   static const String messageReadEventName = 'message.read';
   static const String typingEventName = 'client-user.typing.state';
-  static const String userChannelName = 'user.channel.';
+  static const String userChannelName = 'private-user.channel.';
   static const String newMessageUnknownConversationEvent =
       'message.sent.unknown.conversation';
 }

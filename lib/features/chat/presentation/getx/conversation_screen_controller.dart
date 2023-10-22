@@ -4,8 +4,11 @@ import 'dart:io';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/message_and_multimedia.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/message_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -78,6 +81,10 @@ class ConversationScreenController extends GetxController {
 
   /// indicates if the user is searching
   RxBool isSearching = false.obs;
+
+  RxBool ableToForwardSelectedMessage = false.obs;
+
+  MessageAndMultimediaModel? forwardedMessage;
 
   RxBool showScrollDownIcon = false.obs;
 
@@ -157,6 +164,8 @@ class ConversationScreenController extends GetxController {
     isSearching.value = false;
     searchSelectedMessage.value = -1;
     mathedCurrentIndex.value = -1;
+    ableToForwardSelectedMessage.value = false;
+    forwardedMessage = null;
   }
 
   void goToConversationMediaScreen() {}
@@ -177,7 +186,8 @@ class ConversationScreenController extends GetxController {
   void toggleSelectionMode() {
     selectionEnabled.value = !selectionEnabled.value;
     if (!selectionEnabled.value) {
-      selectedMessagesIds.clear();
+      // selectedMessagesIds.clear();
+      resetToNormalMode();
     }
   }
 
@@ -188,6 +198,60 @@ class ConversationScreenController extends GetxController {
       } else {
         selectedMessagesIds.add(messageId);
       }
+      // if there is only one message check if its ok to enable forwarding the message
+      if (selectedMessagesIds.length == 1) {
+        forwardedMessage = conversationController.messages.firstWhereOrNull(
+            (element) => element.message.localId == selectedMessagesIds[0]);
+        if (forwardedMessage != null &&
+            forwardedMessage!.message.body != null &&
+            ((forwardedMessage!.multimedia != null &&
+                    forwardedMessage!.multimedia!.path != null) ||
+                forwardedMessage!.multimedia == null)) {
+          ableToForwardSelectedMessage.value = true;
+        } else {
+          ableToForwardSelectedMessage.value = false;
+        }
+      } else {
+        ableToForwardSelectedMessage.value = false;
+      }
+    }
+  }
+
+  Future<void> forwardSelectedMessage() async {
+    if (ableToForwardSelectedMessage.value && forwardedMessage != null) {
+      ChatScreenController controller = Get.find();
+      controller.forwardMessage((selectedconversationsIds) async {
+        print(selectedconversationsIds);
+        Get.back();
+        if (selectedconversationsIds.length > 1) {
+          Get.back();
+        }
+
+        // if (forwardedMessage!.message.body != null &&
+        //     forwardedMessage!.multimedia != null) {
+        //   for (int id in selectedconversationsIds) {
+        //     conversationController.sendTextAndMultimediaMessage(
+        //         forwardedMessage!.message.body!,
+        //         forwardedMessage!.multimedia!.path!,
+        //         id);
+        //   }
+        // } else if (forwardedMessage!.message.body != null &&
+        //     forwardedMessage!.multimedia == null) {
+        //   for (int id in selectedconversationsIds) {
+        //     conversationController.sendTextMessage(
+        //         forwardedMessage!.message.body!, id);
+        //   }
+        // } else if (forwardedMessage!.message.body == null &&
+        //     forwardedMessage!.multimedia != null) {
+        //   for (int id in selectedconversationsIds) {
+        //     conversationController.sendMultimediaMessage(
+        //         forwardedMessage!.multimedia!.path!, id);
+        //   }
+        // } else {
+        //   return;
+        // }
+      });
+      Get.to(() => ChatScreen());
     }
   }
 

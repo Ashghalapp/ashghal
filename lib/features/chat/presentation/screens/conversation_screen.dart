@@ -116,7 +116,7 @@ class ConversationScreen extends StatelessWidget {
                     : ChatColors.appBarLight,
                 margin: const EdgeInsets.all(0),
                 child: ActionBar(),
-              )
+              ),
 
               // _buildFooter(context)
             ],

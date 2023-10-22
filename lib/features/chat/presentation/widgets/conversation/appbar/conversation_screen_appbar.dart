@@ -1,6 +1,9 @@
 import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/search_textformfield.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/user_status_text_widget.dart';
@@ -15,6 +18,7 @@ class ConversationScreenAppBar extends StatelessWidget
   final LocalConversation conversation;
   ConversationScreenAppBar({super.key, required this.conversation});
   final ConversationScreenController _screenController = Get.find();
+  final ConversationController _Controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -72,15 +76,28 @@ class ConversationScreenAppBar extends StatelessWidget
             onPressed: _screenController.viewMessageInfo,
           ),
         ),
-        IconButton(
-          icon: Obx(() => Icon(
-                Icons.select_all,
-                color: _screenController.selectedMessagesIds.length ==
-                        _screenController.conversationController.messages.length
-                    ? Get.theme.primaryColor
-                    : null,
-              )),
-          onPressed: _screenController.selectAllMessages,
+        Visibility(
+          visible: _screenController.selectedMessagesIds.length > 1,
+          child: IconButton(
+            icon: Obx(() => Icon(
+                  Icons.select_all,
+                  color: _screenController.selectedMessagesIds.length ==
+                          _screenController
+                              .conversationController.messages.length
+                      ? Get.theme.primaryColor
+                      : null,
+                )),
+            onPressed: _screenController.selectAllMessages,
+          ),
+        ),
+        Visibility(
+          visible: _screenController.ableToForwardSelectedMessage.value,
+          child: IconButton(
+            icon: const Icon(
+              Icons.arrow_forward,
+            ),
+            onPressed: _screenController.forwardSelectedMessage,
+          ),
         ),
       ],
     );

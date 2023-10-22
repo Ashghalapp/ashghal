@@ -36,8 +36,8 @@ class PusherChatHelper {
   Future<void> subscribeToChatChannels({
     required int conversationRemoteId,
     required Function(RemoteMessageModel message) onNewMessage,
-    required void Function(RemoteConversationModel remoteConversation)
-        onNewMessageUnknownConversation,
+    // required void Function(RemoteConversationModel remoteConversation)
+    //     onNewMessageUnknownConversation,
     required Function(ReceivedReadMessageModel receivedReadMessage)
         onMessageReceived,
     required Function(ReceivedReadMessageModel receivedReadMessage)
@@ -46,8 +46,6 @@ class PusherChatHelper {
   }) async {
     String chatChannelName =
         '${ChannelsEventsNames.chatChannelName}$conversationRemoteId';
-    String userChannelName =
-        '${ChannelsEventsNames.userChannelName}${SharedPref.currentUserId}';
 
     //message sent event
     Channelhandler handler = Channelhandler(
@@ -64,23 +62,6 @@ class PusherChatHelper {
               RemoteMessageModel.fromJson(data['message']);
           onNewMessage(message);
         }
-      },
-    );
-    AppServices.pusher.addNewChannelHandler(handler);
-
-    //message sent on unknown conversation
-    handler = Channelhandler(
-      channel: AppChannel(
-        channelName: userChannelName,
-        eventName: ChannelsEventsNames.newMessageUnknownConversationEvent,
-      ),
-      onEvent: (PusherEvent event) async {
-        print("Pusher event received: $event");
-        dynamic data = json.decode(event.data);
-        RemoteConversationModel conversation = RemoteConversationModel.fromJson(
-          data['conversation'],
-        );
-        onNewMessageUnknownConversation(conversation);
       },
     );
     AppServices.pusher.addNewChannelHandler(handler);
@@ -162,6 +143,33 @@ class PusherChatHelper {
     if (!subscribedChannels.contains(chatChannelName)) {
       subscribedChannels.add(chatChannelName);
     }
+  }
+
+  Future<void> subscribeToUserChannels({
+    required void Function(RemoteConversationModel remoteConversation)
+        onNewMessageUnknownConversation,
+  }) async {
+    String userChannelName =
+        '${ChannelsEventsNames.userChannelName}${SharedPref.currentUserId}';
+
+    //message sent on unknown conversation
+    Channelhandler handler = Channelhandler(
+      channel: AppChannel(
+        channelName: userChannelName,
+        eventName: ChannelsEventsNames.newMessageUnknownConversationEvent,
+      ),
+      onEvent: (PusherEvent event) async {
+        print("Pusher event received: $event");
+        dynamic data = json.decode(event.data);
+        RemoteConversationModel conversation = RemoteConversationModel.fromJson(
+          data['conversation'],
+        );
+        onNewMessageUnknownConversation(conversation);
+      },
+    );
+    AppServices.pusher.addNewChannelHandler(handler);
+    await AppServices.pusher.subscribeToChannel(userChannelName);
+    print("Subscribe to user channel ok");
     if (!subscribedChannels.contains(userChannelName)) {
       subscribedChannels.add(userChannelName);
     }
@@ -169,6 +177,7 @@ class PusherChatHelper {
 
   Future<void> dispatchTypingEvent(
       int conversationId, TypingEventType eventType) async {
+    print("dispatchTypingEvent$conversationId");
     String channelName =
         "${ChannelsEventsNames.chatChannelName}$conversationId";
     if (subscribedChannels.contains(channelName)) {

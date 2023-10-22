@@ -104,8 +104,10 @@ class InsertingMessageController extends GetxController {
   }
 
   Future<void> _dispatchTypingEvent(TypingEventType eventType) async {
-    await _screenController.conversationController
-        .dispatchTypingEvent(eventType);
+    if (_screenController.conversation.remoteId != null) {
+      await _screenController.conversationController.dispatchTypingEvent(
+          eventType, _screenController.conversation.remoteId!);
+    }
   }
 
   void imojiButtonPressed() {

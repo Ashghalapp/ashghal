@@ -76,6 +76,7 @@ class MessageRepositoryImp extends MessageRepository {
   @override
   Future<void> dispatchTypingEvent(DispatchTypingEventRequest request) async {
     try {
+      // int remoteId
       await _pusherChatHelper.dispatchTypingEvent(
         request.conversationId,
         request.eventType,

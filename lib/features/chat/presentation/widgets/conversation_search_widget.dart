@@ -24,10 +24,13 @@ class ConversationSearchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => _controller.goToConversationScreen(
-        matchedConversation.conversation,
-        matchedConversation.message,
-      ),
+      onTap: () => _controller.forwardSelectionEnabled.value
+          ? _controller
+              .selectConversation(matchedConversation.conversation.localId)
+          : _controller.goToConversationScreen(
+              matchedConversation.conversation,
+              matchedConversation.message,
+            ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         child: Column(
