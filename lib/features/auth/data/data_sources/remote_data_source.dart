@@ -40,11 +40,18 @@ abstract class RemoteDataSource {
   Future<Success> validateEmailVerificationCode(VerifyEmailRequest request);
 
   /// ارسال طلب بتغيير كلمة السر وبناء عليه سيتم ارسال الكود الى الايميل او الهاتف
+  /// ارسال طلب بتغيير كلمة السر وبناء عليه سيتم ارسال الكود الى الايميل او الهاتف
   Future<Success> forgetPassword(ForgetPasswordRequest request);
 
   // Future<Success> verifyEmail(VerifyEmailRequest request);
 
   // Future<Success> resendEmailVerificationCode();
+
+  Future<Success> validateResetPasswordByEmailCode(
+      ValidateResetPasswordCodeRequest request);
+
+  Future<Success> validateResetPasswordByPhoneCode(
+      ValidateResetPasswordCodeRequest request);
 
   Future<Success> validateResetPasswordByEmailCode(
       ValidateResetPasswordCodeRequest request);
@@ -184,7 +191,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<Success> logout() async {
-    ApiResponseModel response = await dio.get(ApiConstants.LOGOUT);
+    ApiResponseModel response = await dio.get(ApiConstants.LOGOUT, null);
     if (response.status) {
       print("::: S End logout func in remote datasource");
       return ServerSuccess(response.message);

@@ -6,7 +6,8 @@ import 'api_constant.dart';
 class PublicInterceptor extends Interceptor {
   // @override
   // void onError(DioException err, ErrorInterceptorHandler handler) {
-  //     handler.next(err);
+  //   print("<>::::::::::::Error in dio :${err.message}");
+  //     // handler.next(err);
   // }
 
   @override
@@ -24,6 +25,7 @@ class PublicInterceptor extends Interceptor {
 
   // @override
   // void onResponse(Response response, ResponseInterceptorHandler handler) {
+  //   print("<>::::::::::::Error in dio :${response}");
   //   return super.onResponse(response, handler);
   // }
 }
