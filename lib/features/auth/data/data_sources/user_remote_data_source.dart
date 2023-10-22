@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/api_response_model.dart';
 import 'package:ashghal_app_frontend/core_api/dio_service.dart';
@@ -22,10 +23,12 @@ abstract class UserRemoteDataSource {
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<User> getCurrentUserData() async {
-    return UserModel.fromJson((await _sendRequest(
+    final currentUser =  UserModel.fromJson((await _sendRequest(
       method: 'get',
       endpoint: ApiConstants.GET_CURRENT_USER,
     )).data);
+    SharedPref.setCurrentUserData(currentUser);
+    return currentUser;
   }
 
   @override

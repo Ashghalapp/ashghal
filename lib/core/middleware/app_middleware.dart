@@ -19,7 +19,7 @@ class AppMiddleware extends GetMiddleware {
     // }
 
     // if (SharedPref.getintroductionScreenSeen()) {
-      printError(info: "hhhhhhhhhhhhhhhhhh${SharedPref.isUserLoggedIn()}");
+      // printError(info: "hhhhhhhhhhhhhhhhhh${SharedPref.isUserLoggedIn()}");
       if (SharedPref.isUserLoggedIn()) {
         return const RouteSettings(name: AppRoutes.mainScreen);
       } else{

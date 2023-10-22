@@ -22,8 +22,8 @@ class AppFunctions {
       followersRequestsWait: [],
       followRequestsSent: []);
 
-  static User get getCurrentUserDataOffline {
-    return SharedPref.getCurrentUserData();
+  // static User get getCurrentUserDataOffline {
+  //   return SharedPref.getCurrentUserData();
   //   Map<String, dynamic>? data = SharedPref.getCurrentUserData();
   //   if (data == null) {
   //     Get.offAllNamed(AppRoutes.logIn);
@@ -44,5 +44,5 @@ class AppFunctions {
   //     followersRequestsWait: [],
   //     followRequestsSent: [],
   //   );
-  }
+  // }
 }

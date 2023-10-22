@@ -55,16 +55,15 @@ class PostWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildTextWidget(
-                    text: post.title,
-                    style: Get.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    )
-                    // fontSize: 17,
-                    // fontWeight: FontWeight.bold,
-                    ),
+                  text: post.title,
+                  style: Get.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 buildTextWidget(text: post.content),
               ],
             ),
@@ -74,10 +73,13 @@ class PostWidget extends StatelessWidget {
             child:
                 ImagesPostDesignAsFacebook(multimedia: post.multimedia ?? []),
           ),
-          Divider(
-            color: Get.theme.dividerColor,
-            thickness: 0.2,
-            height: 6,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Divider(
+              color: Get.theme.dividerColor,
+              thickness: 0.2,
+              height: 6,
+            ),
           ),
           buildPostBottomButtons(),
         ],

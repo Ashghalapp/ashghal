@@ -16,7 +16,7 @@ import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
 
 // TextEditingController? Email;
 class EditProfileController extends GetxController {
-  late Rx<User> userData;// = Rx(getCurrentUserDataOffline);
+  late Rx<User> userData; // = Rx(getCurrentUserDataOffline);
   final String assetMaleImage = "assets/images/unKnown.jpg";
   final String assetFemaleImage = "assets/images/unKnown.jpg";
   RxString imagePath = "".obs;
@@ -28,7 +28,7 @@ class EditProfileController extends GetxController {
   RxString addressDesc = "".obs;
 
   User get getCurrentUserDataOffline {
-    return AppFunctions.getCurrentUserDataOffline;
+    return SharedPref.getCurrentUserData();
   }
 
   @override
@@ -55,15 +55,16 @@ class EditProfileController extends GetxController {
       name.value != user.name ||
       selectedGender.value != user.gender.name ||
       birthDate.value != user.birthDate ||
-      city.value != user.address?.city ||
-      street.value != user.address?.street ||
-      addressDesc.value != user.address?.desc;
+      city.value != (user.address?.city ?? "") ||
+      street.value != (user.address?.street ?? "") ||
+      addressDesc.value != (user.address?.desc ?? "");
 
   UpdateUserRequest getUpdatedDataRequest() {
     UpdateUserRequest request = UpdateUserRequest();
     if (imagePath.isNotEmpty) request.imagePath = imagePath.value;
     if (name.value != userData.value.name) request.name = name.value;
-    if (birthDate.value != userData.value.birthDate) request.birthDate = birthDate.value;
+    if (birthDate.value != userData.value.birthDate)
+      request.birthDate = birthDate.value;
     if (selectedGender.value != userData.value.gender.name) {
       request.gender = Gender.values.byName(selectedGender.value);
     }
@@ -74,7 +75,9 @@ class EditProfileController extends GetxController {
         addressDesc.value != userData.value.address?.desc) {
       Address address = Address.updateRequest(
         city: city.value != userData.value.address?.city ? city.value : null,
-        street: street.value != userData.value.address?.street ? street.value : null,
+        street: street.value != userData.value.address?.street
+            ? street.value
+            : null,
         desc: addressDesc.value != userData.value.address?.desc
             ? addressDesc.value
             : null,

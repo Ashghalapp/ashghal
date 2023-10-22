@@ -51,7 +51,7 @@ class CurrentUserAccountController extends GetxController {
   }
 
   User get getCurrentUserDataOffline {
-    return AppFunctions.getCurrentUserDataOffline;
+    return SharedPref.getCurrentUserData();
   }
 
   Future<void> getCurrentUserData() async {
