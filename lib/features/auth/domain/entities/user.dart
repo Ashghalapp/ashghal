@@ -8,12 +8,12 @@ class User {
   String name;
   String? email;
   String? phone;
-  String? imagePath;
+  String? imageUrl;
   DateTime birthDate;
   Gender gender;
   bool isBlocked;
   DateTime createdAt;
-  DateTime updatededAt;
+  DateTime updatedAt;
   Address? address;
   Provider? provider;
   List<int> followersUsers;
@@ -26,14 +26,14 @@ class User {
     required this.name,
     this.email,
     this.phone,
-    this.imagePath,
+    this.imageUrl,
     required this.birthDate,
     required this.gender,
     required this.isBlocked,
     this.address,
     this.provider,
     required this.createdAt,
-    required this.updatededAt,    
+    required this.updatedAt,    
     required this.followersUsers,
     required this.followingUsers,
     required this.followersRequestsWait,

@@ -55,7 +55,7 @@ class ResetPasswordController extends GetxController {
       (success) {
         AppUtil.showMessage(AppLocalization.success, Colors.greenAccent);
         // go to successResetPassword screen
-        Get.offAll(()=> const SuccesResetPassword(message: "Successfully reset password"));
+        Get.offAll(()=> const SuccessScreen(message: "Successfully reset password"));
       },
     );
     EasyLoading.dismiss();

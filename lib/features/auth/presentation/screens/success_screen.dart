@@ -7,9 +7,9 @@ import '../../../../config/app_routes.dart';
 import '../../../../core/localization/app_localization.dart';
 import '../../../../core/widget/app_buttons.dart';
 
-class SuccesResetPassword extends StatelessWidget {
+class SuccessScreen extends StatelessWidget {
   final String message;
-  const SuccesResetPassword({super.key, required this.message});
+  const SuccessScreen({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,6 @@
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/success/success.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/Requsets/add_or_change_email_request%20.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/Requsets/add_or_change_email_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/add_or_change_phone_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/check_email_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/register_user_provider_request.dart';

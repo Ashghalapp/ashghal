@@ -1,18 +1,22 @@
+import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class AppGesterDedector extends StatelessWidget {
-  const AppGesterDedector(
-      {super.key, required this.onTap, required this.text, this.color});
+class MyGesterDedector extends StatelessWidget {
+  const MyGesterDedector({
+    super.key,
+    required this.onTap,
+    required this.text,
+    this.color,
+  });
   final void Function() onTap;
   final String text;
   final Color? color;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-    
       onTap: onTap,
       child: Container(
-        
         height: 53,
         width: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 0),
@@ -50,6 +54,111 @@ class AppGesterDedector extends StatelessWidget {
   }
 }
 
+/// لعرض نص بجانبه ايقونه كزر قابل للنقر widget يتم استخدام هذا الـ
+class CustomTextAndIconButton extends StatelessWidget {
+  final Widget text;
+  final void Function() onPressed;
+  final Widget icon;
+  final double height;
+  final double? width;
+
+  const CustomTextAndIconButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    required this.icon,
+    this.height = 30,
+    this.width,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      width: width,
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: icon,
+        label: text,
+        style: ButtonStyle(
+          overlayColor: MaterialStatePropertyAll(Get.theme.hoverColor),
+          backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
+          elevation: const MaterialStatePropertyAll(0),
+          iconColor: MaterialStatePropertyAll(Get.textTheme.bodyMedium?.color),
+          padding: const MaterialStatePropertyAll(
+              EdgeInsets.symmetric(horizontal: 0)),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomTextAndIconAndCircleCounterButton extends StatelessWidget {
+  final Widget text;
+  final void Function() onPressed;
+  final Icon icon;
+  final double height;
+  final double? width;
+  final String count;
+  final Color? countTextColor;
+  final Color? countBackColor;
+  final bool isCenter;
+  final bool isStart;
+  final bool isEnd;
+  const CustomTextAndIconAndCircleCounterButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    required this.icon,
+    this.height = 30,
+    this.width,
+    required this.count,
+    this.countTextColor = Colors.white,
+    this.countBackColor = Colors.grey,
+    this.isCenter = false,
+    this.isStart = false,
+    this.isEnd = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var alignment = isStart
+        ? MainAxisAlignment.start
+        : isEnd
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.center;
+    return CustomTextAndIconButton(
+      onPressed: onPressed,
+      icon: icon, //const Icon(null, size: 0),
+      height: height,
+      width: width,
+      text: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: alignment,
+        children: <Widget>[
+          text,
+          // CircleAvatar(
+          // radius: 8,
+          // backgroundColor: countBackColor,
+          // child:
+          Padding(
+            padding: EdgeInsets.only(
+              left: Get.locale?.languageCode == 'en' ? 8 : 0,
+              right: Get.locale?.languageCode == 'ar' ? 4 : 0,
+            ),
+            child: Text(
+              count,
+              style: Get.textTheme.bodySmall
+                  ?.copyWith(color: Get.theme.primaryColor),
+            ),
+          ),
+          // ),
+        ],
+      ),
+    );
+  }
+}
+
 class MyElevatedButton extends StatelessWidget {
   const MyElevatedButton(
       {this.text,
@@ -69,7 +178,6 @@ class MyElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // ThemeData currentTheme = Theme.of(context);
     return ElevatedButton(
-      
       style: ElevatedButton.styleFrom(
         padding: padding,
         backgroundColor: color ?? Theme.of(context).primaryColor,
@@ -78,8 +186,7 @@ class MyElevatedButton extends StatelessWidget {
         ),
       ),
       onPressed: onPressed as void Function()?,
-      child: Text(text!,style: Theme.of(context).textTheme.titleLarge,),
-      
+      child: Text(text!),
     );
   }
 }

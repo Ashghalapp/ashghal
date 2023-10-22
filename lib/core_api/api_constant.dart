@@ -38,6 +38,51 @@ class ApiConstants {
 
   static String ADD_OR_CHANGE_PHONE = "${AUTH_ENDPOINT}add-or-change-phone";
   static String ADD_OR_CHANGE_EMAIL = "${AUTH_ENDPOINT}add-or-change-email";
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///=========================================   Post Urls ===============================================
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  static String POST_ENDPOINT = "post/";
+  static String GET_ALL_POSTS = "${POST_ENDPOINT}get";
+  static String GET_ALL_ALIVE_POSTS = "${POST_ENDPOINT}get-alive-posts";
+  static String GET_ALL_COMPLETE_POSTS = "${POST_ENDPOINT}get-complete-posts";
+  static String GET_CATEGORY_POSTS = "${POST_ENDPOINT}get-category-posts";
+  static String GET_USER_POSTS = "${POST_ENDPOINT}get-user-posts";
+  static String GET_CURRENT_USER_POSTS =
+      "${POST_ENDPOINT}get-current-user-posts";
+  static String GET_SPECIFIC_POST = "${POST_ENDPOINT}get/";
+  static String ADD_POST = "${POST_ENDPOINT}add";
+  static String UPDATE_POST = "${POST_ENDPOINT}update";
+  static String SEARCH_FOR_POSTS = "${POST_ENDPOINT}search/";
+  static String DELETE_POST = "${POST_ENDPOINT}delete/";
+  static String DELETE_SOME_POST_MULTIMEDIA =
+      "${POST_ENDPOINT}delete-some-multimedia";
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///============================== Comment and reply Urls =============================================
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  static String COMMENT_ENDPOINT = "comment/";
+  static String GET_COMMENTS_AND_REPLIES = "${COMMENT_ENDPOINT}get";
+  static String GET_POST_COMMENTS = "${COMMENT_ENDPOINT}get-post-comments";
+  static String GET_COMMENT_REPLIES = "${COMMENT_ENDPOINT}get-comment-replies";
+  static String GET_USER_COMMENTS = "${COMMENT_ENDPOINT}get-user-comments";
+  static String GET_USER_COMMENTS_ON_POST =
+      "${COMMENT_ENDPOINT}get-user-comments-on-post";
+  static String GET_USER_REPLIES_ON_COMMENT =
+      "${COMMENT_ENDPOINT}get-user-replies-on-comment";
+  static String ADD_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}add";
+  static String UPDATE_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}update";
+  static String DELETE_COMMENT_OR_REPLY = "${COMMENT_ENDPOINT}delete/";
+  static String DELETE_COMMENT_OR_REPLY_IMAGE =
+      "${COMMENT_ENDPOINT}delete-image/";
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///============================== User Urls =============================================
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  static String USER_ENDPOINT = "user/";
+  static String GET_CURRENT_USER = "${USER_ENDPOINT}current-user";
+  static String GET_SPECIFIC_USER = "${USER_ENDPOINT}get/";
+  static String UPDATE_USER = "${USER_ENDPOINT}update";
 }
 
 class ChannelsEventsNames {

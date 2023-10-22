@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import '../widget/app_buttons.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -11,16 +13,16 @@ class AppUtil {
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
-  static Widget addProgressIndicator(BuildContext context, double? size) {
+  static Widget addProgressIndicator(double? size) {
     return Center(
         child: SizedBox(
-      width: size ?? 50,
-      height: size ?? 50,
+      width: size ?? 40,
+      height: size ?? 40,
       child: CircularProgressIndicator(
-          strokeWidth: 2.0,
-          backgroundColor: Colors.black12,
-          valueColor:
-              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)),
+        strokeWidth: 2.0,
+        backgroundColor: Colors.black12,
+        valueColor: AlwaysStoppedAnimation<Color>(Get.theme.primaryColor),
+      ),
     ));
   }
 
@@ -65,10 +67,20 @@ class AppUtil {
 
   static void hanldeAndShowFailure(Failure failure, {String prefixText = ""}) {
     if (failure is NotSpecificFailure) {
+      // if (!failure.message.contains("DioException")) {
       buildErrorDialog("$prefixText ${failure.message}");
+      // }
     } else {
-      showMessage(
-          "$prefixText ${failure.message}", Get.theme.colorScheme.error);
+      String message = failure.message;
+      // الحصول على رسائل الاخطاء وتحويلها الى نص وعرضها للمستخدم
+      if (failure.errors != null) {
+        message = (failure.errors as Map).entries.map((entry) {
+          final key = entry.key;
+          final value = entry.value;
+          return "$key: $value";
+        }).join('\n');
+      }
+      showMessage("$prefixText $message", Get.theme.colorScheme.error);
     }
   }
 
@@ -86,39 +98,224 @@ class AppUtil {
     ));
   }
 
-  static Future<bool> exitApp(BuildContext context) {
-    Get.defaultDialog(
-        backgroundColor: Theme.of(context).dialogBackgroundColor,
-        title: AppLocalization.warning,
-        titleStyle: TextStyle(
-            color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold),
-        middleText: AppLocalization.doyouwanttoexitApp,
-        actions: [
+  static buildDialog(
+    String title,
+    String message,
+    void Function() onSubmitPresed, {
+    bool isShowCancelButton = true,
+    String? cancelButtonText,
+    String? submitButtonText,
+  }) {
+    return Get.defaultDialog(
+      backgroundColor: Get.theme.dialogBackgroundColor,
+      title: title,
+      titleStyle:
+          TextStyle(color: Get.theme.primaryColor, fontWeight: FontWeight.bold),
+      middleText: message,
+      actions: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Get.theme.primaryColor,
+          ),
+          onPressed: onSubmitPresed,
+          child: Text(
+            submitButtonText ?? AppLocalization.submit,
+            style: Get.theme.primaryTextTheme.labelSmall,
+          ),
+        ),
+        if (isShowCancelButton)
           ElevatedButton(
-            style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all(Theme.of(context).primaryColor)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Get.theme.primaryColor,
+            ),
             onPressed: () {
-              exit(0);
+              Get.back();
             },
             child: Text(
-              AppLocalization.submit,
-              style: Theme.of(context).primaryTextTheme.labelSmall,
+              cancelButtonText ?? AppLocalization.cancle,
+              style: Get.theme.primaryTextTheme.labelSmall,
+            ),
+          )
+      ],
+    );
+  }
+
+  static Future<bool> exitApp(BuildContext context) {
+    buildDialog(
+      AppLocalization.warning,
+      AppLocalization.doyouwanttoexitApp,
+      () {
+        exit(0);
+      },
+    );
+    return Future.value(true);
+  }
+
+  static Shimmer getShimmerForFullPage() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: Get.width - 10,
+        height: Get.height,
+        color: Colors.grey[300],
+      ),
+    );
+  }
+
+  static Future buildBottomsheet({double height = 200, required Widget child}) {
+    return Get.bottomSheet(
+      Container(
+        width: double.infinity,
+        height: height,
+        decoration: BoxDecoration(
+          color: Get.theme.cardColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        padding: const EdgeInsets.all(8.0),
+        child: Stack(
+          children: [
+            Positioned(
+              right: Get.locale?.languageCode == 'en' ? 10 : null,
+              left: Get.locale?.languageCode == 'ar' ? 10 : null,
+              child: IconButton(
+                icon: const Icon(Icons.close_rounded),
+                onPressed: () => Get.back(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 25),
+              child: child,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Future buildButtomSheetToEditField({
+    required String title,
+    required String initialValue,
+    required void Function(String newValue) onSave,
+    double height = 200,
+    bool autoFocuse = true,
+  }) {
+    var textController = TextEditingController();
+    RxBool enableSaveButton = true.obs;
+    textController.text = initialValue;
+    textController.addListener(() {
+      enableSaveButton.value = textController.text.isNotEmpty;
+    });
+
+    return buildBottomsheet(
+      height: height,
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            alignment: AlignmentDirectional.centerStart,
+            margin: EdgeInsets.only(
+              right: Get.locale?.languageCode == 'ar' ? 10 : 0,
+              left: Get.locale?.languageCode == 'en' ? 10 : 0,
+            ),
+            child: Text(
+              title,
+              style: Get.textTheme.titleMedium,
             ),
           ),
-          ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                      Theme.of(context).primaryColor)),
-              onPressed: () {
-                Get.back();
-              },
+          AppTextFormField(
+            controller: textController,
+            hintText: '',
+            obscureText: false,
+            onSuffixIconPressed: () {},
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+            autoFocuse: autoFocuse,
+          ),
+          const SizedBox(height: 5),
+          Container(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Obx(
+              () => TextButton(
+                onPressed: () {
+                  Get.focusScope?.unfocus();
+                  onSave(textController.text);
+                  Get.back();
+                },
+                child: Text(
+                  AppLocalization.save.tr,
+                  style: Get.textTheme.titleMedium?.copyWith(
+                      color: enableSaveButton.value ? null : Colors.grey),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Future buildButtomsheetToEditRadio({
+    required String title,
+    required List<String> values,
+    required String initialValue,
+    required void Function(String newValue) onSave,
+    double height = 250,
+  }) {
+    RxString selectedValue = initialValue.obs;
+    return buildBottomsheet(
+      height: height,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: AlignmentDirectional.centerStart,
+              margin: EdgeInsets.only(
+                right: Get.locale?.languageCode == 'ar' ? 10 : 0,
+                left: Get.locale?.languageCode == 'en' ? 10 : 0,
+              ),
               child: Text(
-                AppLocalization.cancle,
-                style: Theme.of(context).primaryTextTheme.labelSmall,
-              ))
-        ]);
-    return Future.value(true);
+                title,
+                style: Get.textTheme.titleMedium,
+              ),
+            ),
+            for (int i = 0; i < values.length; i++)
+              Obx(
+                () => RadioListTile(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                  title: Text(values[i]),
+                  value: values[i].tr,
+                  groupValue: selectedValue.value,
+                  onChanged: (Object? value) {
+                    selectedValue.value = value.toString();
+                  },
+                ),
+              ),
+            const SizedBox(height: 5),
+            Container(
+              alignment: AlignmentDirectional.centerEnd,
+              child: TextButton(
+                onPressed: () {
+                  Get.focusScope?.unfocus();
+                  onSave(selectedValue.value);
+                  Get.back();
+                },
+                child: Text(
+                  "Save ",
+                  style: Get.textTheme.titleMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   static String timeAgoSince(DateTime dateTime) {

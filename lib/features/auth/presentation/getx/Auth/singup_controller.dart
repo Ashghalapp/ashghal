@@ -7,6 +7,7 @@ import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/success/success.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/check_email_request.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/Requsets/register_user_provider_request.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/entities/provider.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/check_email_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_user_with_email_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/presentation/screens/success_screen.dart';
@@ -128,7 +129,7 @@ class SignUpController extends GetxController {
       email: emailController.text,
       birthDate: DateTime.now(),
       provider: isProviderSignUp
-          ? ProviderDataRequest(
+          ? Provider.addRequest(
               jobName: jobNameController.text,
               jobDesc: jobDescController.text,
               categoryId: int.parse(jobCategoryController.text),
@@ -163,7 +164,7 @@ class SignUpController extends GetxController {
     }, (user) {
       AppUtil.showMessage('Successfully Registered', Colors.green);
       Get.offAll(
-          () => const SuccesResetPassword(message: 'Successfully Registered'));
+          () => const SuccessScreen(message: 'Successfully Registered'));
       // Get.offNamed(AppRoutes.succesSignUp);
     });
   }

@@ -1,5 +1,4 @@
-
-
+import 'package:ashghal_app_frontend/core/middleware/app_middleware.dart';
 import 'package:ashghal_app_frontend/main_screen.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +21,7 @@ List<GetPage<dynamic>>? routes = [
 //  GetPage(
 //     name: '/SignInGoogle',
 //     page: () =>   SignInGoogle(),
-    
+
 //   ),
 
   // GetPage(
@@ -85,6 +84,7 @@ List<GetPage<dynamic>>? routes = [
   GetPage(
     name: AppRoutes.logIn,
     page: () => const LoginScreen(),
+    middlewares: [AppMiddleware()],
   ),
   GetPage(
     name: AppRoutes.signUp,
@@ -108,7 +108,7 @@ List<GetPage<dynamic>>? routes = [
   // ),
   GetPage(
     name: AppRoutes.resetPassword,
-    page: () =>  const ResetPasswordScreen(),
+    page: () => const ResetPasswordScreen(),
   ),
   // GetPage(
   //   name: AppRoutes.succesSignUp,

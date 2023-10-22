@@ -1,5 +1,14 @@
+import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
+import 'package:ashghal_app_frontend/features/account/widgets/header_widgets/profile_account_header_widget.dart';
+import 'package:ashghal_app_frontend/features/auth/domain/entities/user.dart';
+import 'package:ashghal_app_frontend/features/auth/presentation/screens/test_screen.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_card_widget.dart';
+import 'package:ashghal_app_frontend/test.dart';
+import 'package:ashghal_app_frontend/tester.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -43,6 +52,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final CommentInputController con = Get.put(CommentInputController(), permanent: true);
     AppLocallcontroller controller = Get.find();
     return GetMaterialApp(
       darkTheme: AppTheme.darkTheme,
@@ -62,15 +72,19 @@ class MyApp extends StatelessWidget {
       //   useMaterial3: true,
       // ),
 
-      // initialBinding: InitialBinding(),
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
-      // initialRoute: HomeScreen(),
+      // // initialRoute: HomeScreen(),
+      // home: ProfileAccountHeaderWidget(user: User(id: 1, name: "name", birthDate: DateTime.now(), gender: Gender.male, isBlocked: true, createdAt: DateTime.now(), updatededAt: DateTime.now(), followersUsers: [], followingUsers: [], followersRequestsWait: [], followRequestsSent: []),),
+      // home: CommentCardWidget(comment: CommentController().commentsListToTry[0]),
       // initialRoute: AppRoutes.singUpJobScreen,
       // initialRoute: AppRoutes.chooseUserTypeScreen,
       // initialRoute: AppRoutes.mainScreen-
       initialRoute: AppRoutes.logIn,
       // initialRoute: AppRoutes.mainScreen,
+      // initialRoute: AppRoutes.logIn,
+      initialRoute: AppRoutes.logIn,
+      // home: Tester(),
       // home: TestDownloading(),
       // home: Center(
       //   child: ElevatedButton(
@@ -83,6 +97,7 @@ class MyApp extends StatelessWidget {
       // initialRoute: '/tester',
       // initialRoute: AppRoutes.testScreen,
       getPages: routes,
+      themeMode: ThemeMode.light,
     );
   }
 }

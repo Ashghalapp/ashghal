@@ -14,14 +14,20 @@ class AppTheme {
 
   // Define the light theme for the app.
   static final ThemeData lightTheme = ThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: AppColors.appLayoutBackground,
+      elevation: 5,
+      foregroundColor: AppColors.appColorPrimary,
+    ),
     // brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.appLayoutBackground,
     primaryColor: AppColors.appColorPrimary,
     primaryColorDark: AppColors.appColorPrimaryDark,
     useMaterial3: true,
-    hoverColor: Colors.white54,
+    hoverColor: Colors.grey[350],
     // splashColor:AppColors.appColorPrimary,
-    dividerColor: AppColors.dividerColorLight,
+    // dividerColor: AppColors.dividerColorLight,
+    dividerColor: AppColors.appDividerColorDark,
     // fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
     fontFamily: GoogleFonts.urbanist().fontFamily,
     // app bar theme
@@ -30,8 +36,8 @@ class AppTheme {
       // color: AppColors.appColorPrimary,
       // elevation: AppSize.s4,
       // shadowColor: AppColors.appColorPrimaryDark,
-      titleTextStyle:
-          getRegularStyle(fontSize: FontSize.s16, color: AppColors.white),
+      titleTextStyle: getBoldStyle(
+          fontSize: FontSize.s18, color: AppColors.appColorPrimary),
       surfaceTintColor: AppColors.appLayoutBackground,
       color: AppColors.appLayoutBackground,
       // iconTheme: const IconThemeData(color: textPrimaryColor),
@@ -75,8 +81,6 @@ class AppTheme {
     textTheme: TextTheme(
       displayLarge:
           getSemiBoldStyle(color: AppColors.bodyDark, fontSize: FontSize.s16),
-      displayMedium:
-          getSemiBoldStyle(color: AppColors.grey1, fontSize: FontSize.s20),
       headlineLarge:
           getBoldStyle(color: AppColors.blackHeadline, fontSize: FontSize.s26),
       headlineMedium: getSemiBoldStyle(
@@ -87,8 +91,6 @@ class AppTheme {
           getRegularStyle(color: AppColors.textgray, fontSize: FontSize.s12),
       labelMedium: getRegularStyle(
           color: AppColors.appColorPrimary, fontSize: FontSize.s14),
-      labelLarge:
-          getRegularStyle(color: AppColors.white, fontSize: FontSize.s18),
       bodyLarge:
           getRegularStyle(color: AppColors.grey1, fontSize: FontSize.s16),
       bodySmall: getRegularStyle(color: AppColors.bodyDark1),
@@ -148,14 +150,15 @@ class AppTheme {
 
   /////////// DARK THEME ////////////////
   static final ThemeData darkTheme = ThemeData(
-    brightness: Brightness.dark,
+//  brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.appBackgroundColorDark,
     primaryColor: AppColors.appColorPrimary,
     primaryColorDark: AppColors.appColorPrimaryDark,
     useMaterial3: true,
     hoverColor: Colors.black54,
     // splashColor: AppColors.appColorPrimary,
-    dividerColor: AppColors.appDividerColorDark,
+    // dividerColor: AppColors.appDividerColorDark,
+    dividerColor: AppColors.dividerColorLight,
     // fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
     fontFamily: GoogleFonts.urbanist().fontFamily,
     // app bar theme

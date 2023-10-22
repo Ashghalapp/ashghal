@@ -77,7 +77,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                                     ? AppIcons.hide
                                     : AppIcons.show,
                                 obscureText: controller.isVisible,
-                                onPressed: () => controller.changVisible(),
+                                onSuffixIconPressed: () => controller.changVisible(),
                                 hintText: '34'.tr,
                                 // iconName: Icons.lock_clock_outlined,
                                 iconName: AppIcons.lock,
@@ -97,7 +97,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                                     ? AppIcons.hide
                                     : AppIcons.show,
                                 obscureText: controller.isConfirmVisible,
-                                onPressed: () =>
+                                onSuffixIconPressed: () =>
                                     controller.changConfirmVisible(),
                                 hintText: '41'.tr,
                                 iconName: AppIcons.lock,
