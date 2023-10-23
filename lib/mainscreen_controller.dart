@@ -25,7 +25,7 @@ import 'config/app_icons.dart';
 import 'features/post/presentation/screen/add_post_screen.dart';
 
 class MainScreenController extends GetxController {
-  int currentIndex = 4;
+  int currentIndex = 3;
   final search = TextEditingController();
   final UsersStateController stateController = Get.put(UsersStateController());
 

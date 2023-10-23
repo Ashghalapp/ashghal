@@ -51,7 +51,8 @@ class AppUtil {
   }
 
   static String editUrl(String url) {
-    return url.replaceAll(RegExp(r'localhost'), '10.0.2.2:8000');
+    // return url.replaceAll(RegExp(r'localhost'), '10.0.2.2:8000');
+    return url.replaceAll(RegExp(r'localhost'), '10.0.2.2');
   }
 
   static void showErrorToast(String title, String message) {
@@ -410,17 +411,16 @@ class AppUtil {
     // }
 
     // final bytes = file.lengthSync();
-    if (bytes < 100) {
-      return '$bytes B';
-    }
-    // else if (bytes < 1024) {
+    // if (bytes < 100) {
     //   return '$bytes B';
     // }
-    // else if (bytes < 1024 * 1024) {
-    //   final fileSizeKB = (bytes / 1024).toStringAsFixed(2);
-    //   return '$fileSizeKB KB';
-    // }
-    else if (bytes < 1024 * 1024 * 1024) {
+    // else
+    if (bytes < 1024) {
+      return '$bytes B';
+    } else if (bytes < 1024 * 1024) {
+      final fileSizeKB = (bytes / 1024).toStringAsFixed(2);
+      return '$fileSizeKB KB';
+    } else if (bytes < 1024 * 1024 * 1024) {
       final fileSizeMB = (bytes / (1024 * 1024)).toStringAsFixed(2);
       return '$fileSizeMB MB';
     } else {

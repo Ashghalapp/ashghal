@@ -221,7 +221,7 @@ class ConversationScreenController extends GetxController {
     if (ableToForwardSelectedMessage.value && forwardedMessage != null) {
       ChatScreenController controller = Get.find();
       controller.forwardMessage((selectedconversationsIds) async {
-        print(selectedconversationsIds);
+        print("Number of selected conversations $selectedconversationsIds");
         Get.back();
         if (selectedconversationsIds.length > 1) {
           Get.back();

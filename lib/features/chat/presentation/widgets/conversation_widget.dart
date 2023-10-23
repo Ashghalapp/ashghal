@@ -35,8 +35,24 @@ class ConversationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return _buildDismissibleWidget(
       child: InkWell(
-        onTap: () =>
-            _screenController.goToConversationScreen(conversation.conversation),
+        onLongPress: () {
+          if (!_screenController.isSearching.value) {
+            if (!_screenController.selectionEnabled.value) {
+              _screenController.toggleSelectionMode();
+            }
+            _screenController
+                .selectConversation(conversation.conversation.localId);
+          }
+        },
+        onTap: () {
+          if (_screenController.selectionEnabled.value ||
+              _screenController.forwardSelectionEnabled.value) {
+            _screenController
+                .selectConversation(conversation.conversation.localId);
+          } else {
+            _screenController.goToConversationScreen(conversation.conversation);
+          }
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           child: Row(
@@ -199,12 +215,12 @@ class ConversationWidget extends StatelessWidget {
       key: Key(conversation.conversation.localId
           .toString()), //?? DateTime.now().microsecondsSinceEpoch.toString()),
       direction: DismissDirection.horizontal,
-      confirmDismiss: (direction) {
+      confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
           // Widget dismissed from right to left
           //to prevent the widget from beeing deleted from the tree until it is updated
           //I will fire the updating action here and return false so the dissmisssble widget will not delete the wiget
-          return AppUtil.showConfirmationDialog(
+          return await AppUtil.showConfirmationDialog(
             AppLocalization.cofirmArchiveConversationMessage,
           );
           //   .then((value) {
@@ -216,19 +232,21 @@ class ConversationWidget extends StatelessWidget {
           // return Future.value(false);
         } else if (direction == DismissDirection.startToEnd) {
           // Widget dismissed from left to right
-          return AppUtil.showConfirmationDialog(
+          return await AppUtil.showConfirmationDialog(
             AppLocalization.cofirmDeleteConversationMessage,
           );
         }
         return Future.value(false);
       },
-      onDismissed: (direction) {
+      onDismissed: (direction) async {
         if (direction == DismissDirection.endToStart) {
           // Widget dismissed from right to left
           // TODO: Archive chat
+          await _screenController
+              .archiveConversation(conversation.conversation.localId);
         } else if (direction == DismissDirection.startToEnd) {
           // Widget dismissed from left to right
-          _screenController
+          await _screenController
               .deleteConversation(conversation.conversation.localId);
         }
       },

@@ -39,6 +39,7 @@ class PusherService {
 
   Future<void> initialize() async {
     pusher = PusherChannelsFlutter.getInstance();
+
     try {
       await pusher!.init(
           apiKey: PusherConfig.apiKey,
@@ -120,6 +121,12 @@ class PusherService {
   Future<void> connect() async {
     if (pusher != null) {
       await pusher!.connect();
+      print(
+          "Subscribed channels/////////////////////////////////////////////////////////");
+
+      print(pusher!.channels.toString());
+      print(
+          "Subscribed channels/////////////////////////////////////////////////////////");
     }
   }
 

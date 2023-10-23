@@ -340,6 +340,12 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
         .getSingleOrNull();
   }
 
+  Future<LocalConversation?> getConversationByLocalId(int localId) async {
+    return await (select(db.conversations)
+          ..where((c) => c.localId.equals(localId)))
+        .getSingleOrNull();
+  }
+
   /// Retrieves the remote ID of a conversation by its local ID.
   ///
   /// Returns a [Future] that resolves to the remote ID of the conversation with the specified
@@ -407,22 +413,32 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
         .get();
   }
 
-  Future<bool> favoriteUnfavoriteConversation(int conversationLocalId) async {
-    LocalConversation? conversation = await (select(db.conversations)
+  Future<int> toggleFavoriteConversation(
+      int conversationLocalId, bool addToFavorite) async {
+    // LocalConversation? conversation = await (select(db.conversations)
+    //       ..where((c) => c.localId.equals(conversationLocalId)))
+    //     .getSingleOrNull();
+    return await (update(db.conversations)
           ..where((c) => c.localId.equals(conversationLocalId)))
-        .getSingleOrNull();
-    if (conversation != null) {
-      await (update(db.conversations)
-            ..where((c) => c.localId.equals(conversationLocalId)))
-          .write(
-        ConversationsCompanion(
-          isFavorite: Value(!conversation.isFavorite),
-        ),
-      );
-      return true;
-    } else {
-      return false;
-    }
+        .write(
+      ConversationsCompanion(
+        isFavorite: Value(addToFavorite),
+      ),
+    );
+  }
+
+  Future<int> toggleArchiveConversation(
+      int conversationLocalId, bool addToArchive) async {
+    // LocalConversation? conversation = await (select(db.conversations)
+    //       ..where((c) => c.localId.equals(conversationLocalId)))
+    //     .getSingleOrNull();
+    return await (update(db.conversations)
+          ..where((c) => c.localId.equals(conversationLocalId)))
+        .write(
+      ConversationsCompanion(
+        isArchived: Value(addToArchive),
+      ),
+    );
   }
 
   /// Blocks or unblocks a conversation based on its local ID.
@@ -441,10 +457,10 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
   /// ```
   ///
   Future<int> blockUnblockConversation(
-      int conversationLocalId, bool block) async {
+      int conversationRemoteId, bool block) async {
     return await (update(db.conversations)
           ..where((conversation) =>
-              conversation.localId.equals(conversationLocalId)))
+              conversation.localId.equals(conversationRemoteId)))
         .write(
       ConversationsCompanion(
         isBlocked: Value(block),

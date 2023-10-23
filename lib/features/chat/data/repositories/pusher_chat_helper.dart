@@ -232,7 +232,19 @@ class PusherChatHelper {
   Future<void> unsubscribeFromChannels() async {
     for (var channelName in subscribedChannels) {
       await AppServices.pusher.unsubscribeFromChannel(channelName);
+      print("unsubscribed from channel $channelName");
     }
     subscribedChannels.clear();
+  }
+
+  Future<void> unsubscribeFromConversationChannel(
+      int conversationRemoteId) async {
+    String chatChannelName =
+        '${ChannelsEventsNames.chatChannelName}$conversationRemoteId';
+    if (subscribedChannels.contains(chatChannelName)) {
+      await AppServices.pusher.unsubscribeFromChannel(chatChannelName);
+      subscribedChannels.remove(chatChannelName);
+      print("Unsubscribe from chat $conversationRemoteId channel finished");
+    }
   }
 }

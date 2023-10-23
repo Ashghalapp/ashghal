@@ -85,33 +85,36 @@ class ConversationRepositoryImp extends ConversationRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> deleteConversation(
-      int conversationLocalId) async {
+  Future<Either<Failure, bool>> deleteConversations(
+      List<int> conversationsLocalIds) async {
     try {
-      bool deleted = false;
-      if (await networkInfo.isConnected) {
+      for (var conversationLocalId in conversationsLocalIds) {
         int? conversationRemoteId = await _conversationLocalSource
             .getRemoteIdByLocalId(conversationLocalId);
-        if (conversationRemoteId != null) {
-          deleted = await _deleteConversationRemotelyAndlocally(
-              conversationRemoteId, conversationLocalId);
-        }
+        await _deleteConversationRemotelyAndlocally(
+          conversationLocalId: conversationLocalId,
+          conversationRemoteId: conversationRemoteId,
+        );
       }
-      if (!deleted) {
-        deleted = (await _conversationLocalSource
-                .deleteConversationLocally(conversationLocalId)) >
-            0;
-      }
-      return Right(deleted);
+      // bool deleted = false;
+
+      // if (await networkInfo.isConnected) {}
+      // if (!deleted) {
+      //   deleted = (await _conversationLocalSource
+      //           .deleteConversationLocally(conversationsLocalId)) >
+      //       0;
+      // }
+      return const Right(true);
     } catch (e) {
       return Left(NotSpecificFailure(message: e.toString()));
     }
   }
 
   Future<bool> _deleteConversationRemotelyAndlocally(
-      int conversationRemoteId, int conversationLocalId) async {
-    try {
-      bool deleted = false;
+      {required int conversationLocalId, int? conversationRemoteId}) async {
+    // try {
+    bool deleted = false;
+    if (conversationRemoteId != null && await networkInfo.isConnected) {
       DeleteConversationRequest request =
           DeleteConversationRequest(conversationRemoteId: conversationRemoteId);
       bool ok =
@@ -121,12 +124,24 @@ class ConversationRepositoryImp extends ConversationRepository {
         deleted = await _conversationLocalSource
             .deleteConversationByLocalId(conversationLocalId);
       }
-      return deleted;
-    } catch (e) {
-      print(
-          "**********Error in ConversationRepositoryImp in _deleteConversationRemotely: ${e.toString()}");
-      return false;
     }
+    if (!deleted) {
+      deleted = (await _conversationLocalSource
+              .deleteConversationLocally(conversationLocalId)) >
+          0;
+    }
+    if (deleted && conversationRemoteId != null) {
+      print("Unsubscribe from chat $conversationRemoteId channel started");
+      await _pusherChatHelper
+          .unsubscribeFromConversationChannel(conversationRemoteId);
+    }
+
+    return deleted;
+    // } catch (e) {
+    //   print(
+    //       "**********Error in ConversationRepositoryImp in _deleteConversationRemotely: ${e.toString()}");
+    //   return false;
+    // }
   }
 
   // Future<void> _deleteConversation
@@ -173,18 +188,50 @@ class ConversationRepositoryImp extends ConversationRepository {
           response = await _conversationRemoteSource
               .unblockConversation(request.toJson());
         }
-        await _conversationLocalSource.blockUnblockConversation(
-          request.conversationId,
-          request.block,
-        );
+
         if (!response.status) {
           return Left(NotSpecificFailure(message: response.message));
+        } else {
+          await _conversationLocalSource.blockUnblockConversation(
+            request.conversationRemoteId,
+            request.block,
+          );
         }
         return const Right(true);
       } else {
         return Left(NotSpecificFailure(message: ErrorString.OFFLINE_ERROR));
       }
     } catch (e) {
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> toggleFavoriteConversation(
+      int conversationLocalId, bool addToFavorite) async {
+    try {
+      bool ok = (await _conversationLocalSource.toggleFavoriteConversation(
+              conversationLocalId, addToFavorite)) >
+          0;
+      return right(ok);
+    } catch (e) {
+      print(
+          "**********Error in ConversationRepositoryImp in toggleFavoriteConversation: ${e.toString()}");
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> toggleArchiveConversation(
+      int conversationLocalId, bool addToArchive) async {
+    try {
+      bool ok = (await _conversationLocalSource.toggleArchiveConversation(
+              conversationLocalId, addToArchive)) >
+          0;
+      return right(ok);
+    } catch (e) {
+      print(
+          "**********Error in ConversationRepositoryImp in toggleFavoriteConversation: ${e.toString()}");
       return Left(NotSpecificFailure(message: e.toString()));
     }
   }
@@ -209,35 +256,44 @@ class ConversationRepositoryImp extends ConversationRepository {
                   conversationLocalId,
                 );
               }
+              LocalConversation? conversation = await _conversationLocalSource
+                  .getConversationByLocalId(conversationLocalId);
+              if (conversation != null) {
+                await _subscribTtoConversationChannel(
+                    conversation, onTypingEvent);
+              }
             }
           },
         );
+
         List<LocalConversation> conversations =
             await _conversationLocalSource.getRemoteConversations();
 
         for (var conversation in conversations) {
-          await _pusherChatHelper.subscribeToChatChannels(
-            conversationRemoteId: conversation.remoteId!,
-            onNewMessage: (message) async {
-              await _messageRepository.insertNewMessageFromRemote(
-                message,
-                conversation.localId,
-              );
-            },
-            onMessageReceived: (receivedReadMessage) async {
-              // print("onMessageReceived///////////////////////");
-              print(receivedReadMessage.toString());
-              await _messageRepository
-                  .markMessagesAsReceived([receivedReadMessage]);
-            },
-            onMessageRead: (receivedReadMessage) async {
-              print("onMessageRead///////////////////////");
-              // print(receivedReadMessage.toString());
-              await _messageRepository
-                  .markMessagesAsRead([receivedReadMessage]);
-            },
-            onTypingEvent: onTypingEvent,
-          );
+          await _subscribTtoConversationChannel(conversation, onTypingEvent);
+
+          // await _pusherChatHelper.subscribeToChatChannels(
+          //   conversationRemoteId: conversation.remoteId!,
+          //   onNewMessage: (message) async {
+          //     await _messageRepository.insertNewMessageFromRemote(
+          //       message,
+          //       conversation.localId,
+          //     );
+          //   },
+          //   onMessageReceived: (receivedReadMessage) async {
+          //     // print("onMessageReceived///////////////////////");
+          //     print(receivedReadMessage.toString());
+          //     await _messageRepository
+          //         .markMessagesAsReceived([receivedReadMessage]);
+          //   },
+          //   onMessageRead: (receivedReadMessage) async {
+          //     print("onMessageRead///////////////////////");
+          //     // print(receivedReadMessage.toString());
+          //     await _messageRepository
+          //         .markMessagesAsRead([receivedReadMessage]);
+          //   },
+          //   onTypingEvent: onTypingEvent,
+          // );
           print("*********Subscrib to chat channls ok*********");
         }
 
@@ -263,6 +319,32 @@ class ConversationRepositoryImp extends ConversationRepository {
       print(
           "**********Error in ConversationRepositoryImp in subscribeToChatChannels: ${e.toString()}");
     }
+  }
+
+  Future<void> _subscribTtoConversationChannel(
+      LocalConversation conversation,
+      void Function(TypingEventType eventType, int userId)
+          onTypingEvent) async {
+    await _pusherChatHelper.subscribeToChatChannels(
+      conversationRemoteId: conversation.remoteId!,
+      onNewMessage: (message) async {
+        await _messageRepository.insertNewMessageFromRemote(
+          message,
+          conversation.localId,
+        );
+      },
+      onMessageReceived: (receivedReadMessage) async {
+        // print("onMessageReceived///////////////////////");
+        print(receivedReadMessage.toString());
+        await _messageRepository.markMessagesAsReceived([receivedReadMessage]);
+      },
+      onMessageRead: (receivedReadMessage) async {
+        print("onMessageRead///////////////////////");
+        // print(receivedReadMessage.toString());
+        await _messageRepository.markMessagesAsRead([receivedReadMessage]);
+      },
+      onTypingEvent: onTypingEvent,
+    );
   }
 
   @override
@@ -298,8 +380,8 @@ class ConversationRepositoryImp extends ConversationRepository {
         for (var conversation in deletedConversations) {
           if (conversation.remoteId != null) {
             await _deleteConversationRemotelyAndlocally(
-              conversation.remoteId!,
-              conversation.localId,
+              conversationLocalId: conversation.localId,
+              conversationRemoteId: conversation.remoteId,
             );
           }
         }

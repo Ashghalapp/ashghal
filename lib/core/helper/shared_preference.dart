@@ -49,7 +49,8 @@ class SharedPref {
     _appServices.prefs.setInt('userId', id);
   }
 
-  static int? get currentUserId => _appServices.prefs.get('userId') as int?;
+  static int? get currentUserId => getCurrentUserData().id;
+  // static int? get currentUserId => _appServices.prefs.get('userId') as int?;
   // static int? get currentUserId => 11;
 
   static setUserName(String name) {
@@ -83,8 +84,9 @@ class SharedPref {
     }
   }
 
-  static String? get currentUserImageUrl =>
-      _appServices.prefs.get('userImageUrl') as String?;
+  static String? get currentUserImageUrl => getCurrentUserData().imageUrl;
+  // static String? get currentUserImageUrl =>
+  //     _appServices.prefs.get('userImageUrl') as String?;
 
   static String? getUserToken() {
     return _appServices.prefs.get('authKey') as String?;
@@ -119,8 +121,9 @@ class SharedPref {
 
   static Map<String, dynamic> getCurrentUserBasicData() {
     String? data = SharedPref.getString("current_user_basic_data");
-    if (data != null) return jsonDecode(data);
-   else {
+    if (data != null)
+      return jsonDecode(data);
+    else {
       AppUtil.showMessage(
           AppLocalization.thereIsSomethingError, Get.theme.colorScheme.error);
       Get.offAllNamed(AppRoutes.logIn);
@@ -138,10 +141,10 @@ class SharedPref {
   static User getCurrentUserData() {
     String? data = SharedPref.getString("current_user_data");
     if (data != null) {
-      // print("<<<<<<<<<<<<<<<<<<<$data)}>>>>>>>>>>>>>>>>>>>"); 
-      print("<<<<<<<<<<<<<<<<<<<${jsonDecode(data)}>>>>>>>>>>>>>>>>>>>"); 
+      // print("<<<<<<<<<<<<<<<<<<<$data)}>>>>>>>>>>>>>>>>>>>");
+      // print("<<<<<<<<<<<<<<<<<<<${jsonDecode(data)}>>>>>>>>>>>>>>>>>>>");
       var user = UserModel.fromJson(jsonDecode(data));
-      print("<<<<<<<<<<<<<<<<<<<$user>>>>>>>>>>>>>>>>>>>");
+      // print("<<<<<<<<<<<<<<<<<<<$user>>>>>>>>>>>>>>>>>>>");
       return user;
     } else {
       AppUtil.showMessage(

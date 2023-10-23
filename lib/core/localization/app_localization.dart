@@ -405,5 +405,52 @@ class AppLocalization {
   static String goToFirstMessage = "Go To First Message".tr;
   static String clearChat = "Clear Chat".tr;
 
+  static String failToUnfavoriteConversation =
+      "Failed to remove this conversation from favorites";
+
+  static String failToFavoriteConversation =
+      "Failed to add this conversation to favorites";
+
+  static String successToUnfavoriteConversation =
+      "Conversation removed from favorites successfully";
+
+  static String successToFavoriteConversation =
+      "Conversation added to favorites successfully";
+
+  static String failToUnarchiveConversation =
+      "Failed to remove this conversation from archives";
+
+  static String failToArchiveConversation =
+      "Failed to archive this conversation";
+
+  static String successToUnarchiveConversation =
+      "Conversation removed from archives successfully";
+
+  static String successToArchiveConversation =
+      "Conversation archived successfully";
+
+  static String failToBlockConversation = "Failed to block this conversation";
+
+  static String failToUnblockConversation =
+      "Failed to unblock this conversation";
+
+  static String conversationBlockedsuccess =
+      "Conversation blocked successfully";
+
+  static String conversationUnblockedsuccess =
+      "Conversation unblocked successfully";
+
+  static String autoReply = "Auto reply"; // الرد التقائي
+
+  static String starredMessages = "Starred messages"; // الرسائل المميزة بنجمة
+
+  static String viewProfile = "View profile";
+
+  static String markMessagesAsRead = "Mark messages as read";
+
+  static String selectAll = "Select all";
+
+  static String archived = "Archived";
+
 //================================ End chat messages ================================//
 }

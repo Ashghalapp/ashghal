@@ -6,22 +6,40 @@ import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conve
 
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/blocked_users_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_settings_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/conversation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum ChatPopupMenuItemsValues {
-  settings,
+  autoReply, //الرد التلقائي
+  starredMessages, //الرسائل المميزة بنجمة
   blockedUsers,
+  settings,
+  viewProfile, //فتح الملف الشخصي
+  markMessagesAsRead, //تمييز كمقروءة
+  selectAll,
 }
 
 extension ChatPopupMenuItemsValuesExtension on ChatPopupMenuItemsValues {
   String get value {
     switch (this) {
-      case ChatPopupMenuItemsValues.settings:
-        return AppLocalization.settings;
+      case ChatPopupMenuItemsValues.autoReply:
+        return AppLocalization.autoReply;
+      case ChatPopupMenuItemsValues.starredMessages:
+        return AppLocalization.starredMessages;
       case ChatPopupMenuItemsValues.blockedUsers:
         return AppLocalization.blockedUsers;
+      case ChatPopupMenuItemsValues.settings:
+        return AppLocalization.settings;
+
+      case ChatPopupMenuItemsValues.viewProfile:
+        return AppLocalization.viewProfile;
+      case ChatPopupMenuItemsValues.markMessagesAsRead:
+        return AppLocalization.markMessagesAsRead;
+      case ChatPopupMenuItemsValues.selectAll:
+        return AppLocalization.selectAll;
     }
   }
 }
@@ -39,6 +57,16 @@ class ChatScreenController extends GetxController {
   RxBool selectionEnabled = false.obs;
   RxBool forwardSelectionEnabled = false.obs;
   RxList<int> selectedConversationsIds = <int>[].obs;
+  LocalConversation? get firstSelectedConversation {
+    if (selectedConversationsIds.isEmpty) {
+      return null;
+    }
+    return chatController.conversations
+        .firstWhereOrNull((element) =>
+            element.conversation.localId == selectedConversationsIds[0])
+        ?.conversation;
+  }
+
   // MessageAndMultimediaModel? _forwardedMessage;
   Future<void> Function(List<int> selectedConversationsIds)?
       _onForwardedMessageSend;
@@ -53,10 +81,28 @@ class ChatScreenController extends GetxController {
     _onForwardedMessageSend = null;
   }
 
+  popupMenuButtonOnSelected(ChatPopupMenuItemsValues value) {
+    if (value == ChatPopupMenuItemsValues.autoReply) {
+    } else if (value == ChatPopupMenuItemsValues.starredMessages) {
+    } else if (value == ChatPopupMenuItemsValues.blockedUsers) {
+      goToBlockedUsersScreen();
+    } else if (value == ChatPopupMenuItemsValues.settings) {
+      // AppLocallcontroller controller = Get.find();
+      // controller.changLang("en");
+      goToSettingsScreen();
+    } else if (value == ChatPopupMenuItemsValues.viewProfile) {
+    } else if (value == ChatPopupMenuItemsValues.markMessagesAsRead) {
+    } else if (value == ChatPopupMenuItemsValues.selectAll) {}
+    // else if (value == ChatPopupMenuItemsValues.createConversation) {
+    //   startConversationWith(13);
+    // }
+  }
+
   void forwardMessage(
       Future<void> Function(List<int> selectedConversationsIds)
           onForwardedMessageSend) {
     forwardSelectionEnabled.value = true;
+    // selectionEnabled.value = true;
     print(
         "Here we are*********************************************************");
     _onForwardedMessageSend = onForwardedMessageSend;
@@ -69,18 +115,43 @@ class ChatScreenController extends GetxController {
   }
 
   Future<void> forwardMessageToSelectedConversations() async {
-    resetToNormalMode();
     _onForwardedMessageSend ?? (selectedConversationsIds);
+    resetToNormalMode();
+  }
+
+  void toggleSelectionMode() {
+    selectionEnabled.value = !selectionEnabled.value;
+    if (!selectionEnabled.value) {
+      selectedConversationsIds.clear();
+    }
   }
 
   void selectConversation(int conversationId) {
-    if (!(selectionEnabled.value || forwardSelectionEnabled.value)) {
-      selectionEnabled.value = true;
+    print("conversation ${conversationId} selected ");
+    if (selectionEnabled.value || forwardSelectionEnabled.value) {
+      if (selectedConversationsIds.contains(conversationId)) {
+        selectedConversationsIds.remove(conversationId);
+      } else {
+        selectedConversationsIds.add(conversationId);
+      }
+      if (selectedConversationsIds.isEmpty && !forwardSelectionEnabled.value) {
+        // selectedConversationsIds.clear();
+        // selectionEnabled.value = false;
+        toggleSelectionMode();
+      }
     }
-    if (selectedConversationsIds.contains(conversationId)) {
-      selectedConversationsIds.remove(conversationId);
-    } else {
-      selectedConversationsIds.add(conversationId);
+    print(selectedConversationsIds);
+
+    // if (!(selectionEnabled.value || forwardSelectionEnabled.value)) {
+    //   selectionEnabled.value = true;
+    // }
+  }
+
+  Future<void> deleteSelectedConversations() async {
+    if (selectedConversationsIds.isNotEmpty) {
+      await chatController.deleteConversations(
+        selectedConversationsIds.map((element) => element).toList(),
+      );
     }
   }
 
@@ -89,20 +160,11 @@ class ChatScreenController extends GetxController {
   }
 
   Future<void> deleteConversation(int conversationId) async {
-    chatController.deleteConversation(conversationId);
+    await chatController.deleteConversations([conversationId]);
   }
 
-  popupMenuButtonOnSelected(ChatPopupMenuItemsValues value) {
-    if (value == ChatPopupMenuItemsValues.settings) {
-      AppLocallcontroller controller = Get.find();
-      controller.changLang("en");
-      // goToSettingsScreen();
-    } else if (value == ChatPopupMenuItemsValues.blockedUsers) {
-      goToBlockedUsersScreen();
-    }
-    // else if (value == ChatPopupMenuItemsValues.createConversation) {
-    //   startConversationWith(13);
-    // }
+  Future<void> archiveConversation(int conversationId) async {
+    await chatController.toggleArchiveConversation(selectedConversationsIds[0]);
   }
 
   toggleSearchMode() {
@@ -145,8 +207,14 @@ class ChatScreenController extends GetxController {
     // }
   }
 
-  void goToSettingsScreen() {}
-  void goToBlockedUsersScreen() {}
+  void goToSettingsScreen() {
+    Get.to(() => const ChatSettingsScreen());
+  }
+
+  void goToBlockedUsersScreen() {
+    Get.to(() => const BlockedUsersScreen());
+  }
+
   void goToConversationScreen(LocalConversation conversation,
       [LocalMessage? matchedMessage]) {
     Get.delete<ConversationScreenController>();
@@ -166,5 +234,25 @@ class ChatScreenController extends GetxController {
     //     conversation: matchedConversation.conversation));
     // Get.to(() =>
     //     ConversationScreen(conversation: matchedConversation.conversation));
+  }
+
+  Future<void> toggleFavoriteSelectedConversation() async {
+    if (selectedConversationsIds.isNotEmpty) {
+      selectionEnabled.value = false;
+      await chatController
+          .toggleFavoriteConversation(selectedConversationsIds[0]);
+      selectedConversationsIds.clear();
+    }
+  }
+
+  Future<void> toggleArchiveSelectedConversation() async {
+    if (selectedConversationsIds.isNotEmpty) {
+      // toggleSelectionMode();
+      selectionEnabled.value = false;
+
+      await chatController
+          .toggleArchiveConversation(selectedConversationsIds[0]);
+      selectedConversationsIds.clear();
+    }
   }
 }

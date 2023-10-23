@@ -15,12 +15,12 @@ class MainScreen extends GetView<MainScreenController> {
   Widget build(BuildContext context) {
     Get.put(MainScreenController());
     // print();
-    print("--------------------------------------------------------------");
-    print("Theme is dark ${Get.isDarkMode}");
-    print("Theme is dark ${Theme.of(context).brightness == Brightness.dark}");
-    print("--------------------------------------------------------------");
+    // print("--------------------------------------------------------------");
+    // print("Theme is dark ${Get.isDarkMode}");
+    // print("Theme is dark ${Theme.of(context).brightness == Brightness.dark}");
+    // print("--------------------------------------------------------------");
 
-    printError(info: "<<<<<<<<<<<${Get.isDarkMode} ${Get.isPlatformDarkMode}");
+    // printError(info: "<<<<<<<<<<<${Get.isDarkMode} ${Get.isPlatformDarkMode}");
     return GetBuilder<MainScreenController>(
       init: MainScreenController(),
       initState: (_) {},

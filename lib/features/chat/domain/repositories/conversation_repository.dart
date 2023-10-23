@@ -154,7 +154,8 @@ abstract class ConversationRepository {
   /// }
   /// ```
   /// - [request]: A [DeleteConversationRequest] object specifying the conversation to delete.
-  Future<Either<Failure, bool>> deleteConversation(int conversationLocalId);
+  Future<Either<Failure, bool>> deleteConversations(
+      List<int> conversationsLocalIds);
 
   /// Blocks or unblocks a conversation based on the provided [BlockUnblockConversationRequest].
   ///
@@ -186,4 +187,9 @@ abstract class ConversationRepository {
   /// Throws a [NotSpecificFailure] if an exception occurs during the blocking/unblocking process.
   Future<Either<Failure, bool>> blockUnblockConversation(
       BlockUnblockConversationRequest request);
+  Future<Either<Failure, bool>> toggleFavoriteConversation(
+      int conversationLocalId, bool addToFavorite);
+
+  Future<Either<Failure, bool>> toggleArchiveConversation(
+      int conversationLocalId, bool addToArchive);
 }

@@ -15,6 +15,8 @@ import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecase
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecases/update_user_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_email_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_reset_password_code_uc.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_archive_conversation.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_favorite_conversation.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/comment_repository_impl.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/post_repository_impl.dart';
 import 'package:ashghal_app_frontend/features/post/domain/repositories/comment_repository.dart';
@@ -181,6 +183,11 @@ void setupDependencies() {
 
   getIt.registerLazySingleton(
       () => SearchInConversationsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => ToggleFavoriteConversationUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => ToggleArchiveConversationUseCase(repository: getIt()));
+
   // repository injection
   getIt.registerLazySingleton<ConversationRepository>(
       () => ConversationRepositoryImp());

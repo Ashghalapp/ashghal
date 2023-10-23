@@ -1,6 +1,5 @@
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/camera_getx_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/multimedia_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/unused/camera_appbar.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

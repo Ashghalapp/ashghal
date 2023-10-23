@@ -3,6 +3,7 @@ import 'package:ashghal_app_frontend/core/services/app_services.dart';
 import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
     as di;
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core_api/errors/error_strings.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
@@ -10,9 +11,11 @@ import 'package:ashghal_app_frontend/features/chat/data/models/conversation_last
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/requests/block_unblock_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/send_message_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/block_unblock_conversation.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_conversation.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_conversations.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/search_in_conversations.dart';
@@ -20,6 +23,8 @@ import 'package:ashghal_app_frontend/features/chat/domain/use_cases/send_message
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/start_conversation_with.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/subscribe_to_chat_channels.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/synchronize_conversations.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_archive_conversation.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_favorite_conversation.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/unsubscribe_from_chat_channels.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_all_conversations.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conversations_last_message_and_count.dart';
@@ -28,12 +33,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-enum ChatFilters {
-  all,
-  recentMessages,
-  active,
-  favorite,
-}
+enum ChatFilters { all, recentMessages, active, favorite, archived }
 
 extension ChatFiltersExtension on ChatFilters {
   String get value {
@@ -46,6 +46,8 @@ extension ChatFiltersExtension on ChatFilters {
         return AppLocalization.active;
       case ChatFilters.favorite:
         return AppLocalization.favorite;
+      case ChatFilters.archived:
+        return AppLocalization.archived;
     }
   }
 }
@@ -123,7 +125,7 @@ class ChatController extends GetxController {
     _syncronizeConversations();
   }
 
-  void _startOnlineUsersListener() {
+  void _startOnlineUsersStreamListenerToRefershfilteredData() {
     stateController.onlineUsersStream.listen(
       (event) {
         if (appliedFilter.value == ChatFilters.active) {
@@ -136,21 +138,43 @@ class ChatController extends GetxController {
   RxList<ConversationWithCountAndLastMessage> get filteredConversations {
     switch (appliedFilter.value) {
       case ChatFilters.all:
-        return conversations;
+        return conversations
+            .where((c) => !c.conversation.isArchived)
+            .toList()
+            .obs;
       case ChatFilters.recentMessages:
         return conversations
-            .where((c) => c.lastMessage != null && c.newMessagesCount > 0)
+            .where((c) =>
+                c.lastMessage != null &&
+                c.newMessagesCount > 0 &&
+                !c.conversation.isArchived)
             .toList()
             .obs;
       case ChatFilters.active:
-        _startOnlineUsersListener();
+        _startOnlineUsersStreamListenerToRefershfilteredData();
         return conversations
-            .where((c) =>
-                stateController.onlineUsersIds.contains(c.conversation.userId))
+            .where(
+              (c) =>
+                  stateController.onlineUsersIds
+                      .contains(c.conversation.userId) &&
+                  !c.conversation.isArchived,
+            )
             .toList()
             .obs;
       case ChatFilters.favorite:
-        return conversations;
+        return conversations
+            .where(
+              (c) => c.conversation.isFavorite && !c.conversation.isArchived,
+            )
+            .toList()
+            .obs;
+      case ChatFilters.archived:
+        return conversations
+            .where(
+              (c) => c.conversation.isArchived,
+            )
+            .toList()
+            .obs;
       default:
         return conversations;
     }
@@ -195,8 +219,11 @@ class ChatController extends GetxController {
     SynchronizeConversations synchronizeConversations = di.getIt();
     await synchronizeConversations.call().then(
       (value) async {
-        await _subscribeToChatEventsChannels();
-        isSubscribed = true;
+        print("Subscribtion state $isSubscribed");
+        if (!isSubscribed) {
+          await _subscribeToChatEventsChannels();
+          isSubscribed = true;
+        }
       },
     );
     ;
@@ -288,44 +315,44 @@ class ChatController extends GetxController {
     } else {}
   }
 
-  Future<void> sendRedirectedMessage(
-      MessageAndMultimediaModel message, int conversatioLocalId) async {
-    // print("Request Sent");
-    SendMessageRequest request;
-    if (message.message.body != null && message.multimedia != null) {
-      request = SendMessageRequest.withBodyAndMultimedia(
-        conversationId: conversatioLocalId,
-        body: message.message.body!,
-        filePath: message.multimedia!.path!,
-        onSendProgress: null,
-        cancelToken: null,
-      );
-    } else if (message.message.body != null && message.multimedia == null) {
-      request = SendMessageRequest.withBody(
-        conversationId: conversatioLocalId,
-        body: message.message.body!,
-      );
-    } else if (message.message.body == null && message.multimedia != null) {
-      request = SendMessageRequest.withMultimedia(
-        conversationId: conversatioLocalId,
-        filePath: message.multimedia!.path!,
-        onSendProgress: null,
-        cancelToken: null,
-      );
-    } else {
-      return;
-    }
-    SendMessageUseCase sendMessageUseCase = di.getIt();
-    (await sendMessageUseCase.call(request)).fold(
-      (failure) {
-        // print("Request Fail${failure.message}");
-      },
-      (localMessage) {
-        // print("request success$localMessage");
-      },
-    );
-    // print("Request Finished");
-  }
+  // Future<void> sendRedirectedMessage(
+  //     MessageAndMultimediaModel message, int conversatioLocalId) async {
+  //   // print("Request Sent");
+  //   SendMessageRequest request;
+  //   if (message.message.body != null && message.multimedia != null) {
+  //     request = SendMessageRequest.withBodyAndMultimedia(
+  //       conversationId: conversatioLocalId,
+  //       body: message.message.body!,
+  //       filePath: message.multimedia!.path!,
+  //       onSendProgress: null,
+  //       cancelToken: null,
+  //     );
+  //   } else if (message.message.body != null && message.multimedia == null) {
+  //     request = SendMessageRequest.withBody(
+  //       conversationId: conversatioLocalId,
+  //       body: message.message.body!,
+  //     );
+  //   } else if (message.message.body == null && message.multimedia != null) {
+  //     request = SendMessageRequest.withMultimedia(
+  //       conversationId: conversatioLocalId,
+  //       filePath: message.multimedia!.path!,
+  //       onSendProgress: null,
+  //       cancelToken: null,
+  //     );
+  //   } else {
+  //     return;
+  //   }
+  //   SendMessageUseCase sendMessageUseCase = di.getIt();
+  //   (await sendMessageUseCase.call(request)).fold(
+  //     (failure) {
+  //       // print("Request Fail${failure.message}");
+  //     },
+  //     (localMessage) {
+  //       // print("request success$localMessage");
+  //     },
+  //   );
+  //   // print("Request Finished");
+  // }
 
   Future<void> startConversationWith(int userId) async {
     StartConversationRequest request = StartConversationRequest(userId: userId);
@@ -336,12 +363,12 @@ class ChatController extends GetxController {
     );
   }
 
-  Future<void> deleteConversation(int conversationId) async {
+  Future<void> deleteConversations(List<int> conversationslocalIds) async {
     // DeleteConversationRequest request = DeleteConversationRequest(
     //   conversationLocalId: conversationId,
     // );
     DeleteConversationUseCase deleteConversationUseCase = di.getIt();
-    (await deleteConversationUseCase(conversationId)).fold(
+    (await deleteConversationUseCase(conversationslocalIds)).fold(
       (failure) {
         AppUtil.showMessage(
             AppLocalization.conversationDeletedFail.tr, Colors.red);
@@ -349,7 +376,8 @@ class ChatController extends GetxController {
       (success) {
         if (success) {
           conversations.removeWhere(
-            (element) => element.conversation.localId == conversationId,
+            (element) =>
+                conversationslocalIds.contains(element.conversation.localId),
           );
           filteredConversations.refresh();
           AppUtil.showMessage(
@@ -445,6 +473,7 @@ class ChatController extends GetxController {
   Future<void> unsubscribeFromChatChannels() async {
     UnsubscribeFromRemoteChannelsUseCase useCase = di.getIt();
     await useCase.call();
+    print("Unsubscribed from chat channels");
   }
 
   @override
@@ -453,5 +482,141 @@ class ChatController extends GetxController {
     // AppServices.pusher.unsubscribeFromChannel("presence-chat");
     AppServices.pusher.disconnect();
     super.onClose();
+  }
+
+  Future<void> toggleFavoriteConversation(int conversationLocalId) async {
+    bool? favorite = conversations
+        .firstWhereOrNull(
+            (element) => element.conversation.localId == conversationLocalId)
+        ?.conversation
+        .isFavorite;
+    if (favorite == null) {
+      return;
+    }
+    ToggleFavoriteConversationUseCase useCase = di.getIt();
+    (await useCase.call(conversationLocalId, !favorite)).fold(
+      (failure) {
+        if (favorite) {
+          AppUtil.showMessage(
+              AppLocalization.failToUnfavoriteConversation.tr, Colors.red);
+        } else {
+          AppUtil.showMessage(
+              AppLocalization.failToFavoriteConversation.tr, Colors.red);
+        }
+      },
+      (success) {
+        if (success) {
+          if (favorite) {
+            AppUtil.showMessage(
+                AppLocalization.successToUnfavoriteConversation.tr,
+                Colors.blue);
+          } else {
+            AppUtil.showMessage(
+                AppLocalization.successToFavoriteConversation.tr, Colors.blue);
+          }
+        } else {
+          if (favorite) {
+            AppUtil.showMessage(
+                AppLocalization.failToUnfavoriteConversation.tr, Colors.red);
+          } else {
+            AppUtil.showMessage(
+                AppLocalization.failToFavoriteConversation.tr, Colors.red);
+          }
+        }
+      },
+    );
+  }
+
+  Future<void> toggleArchiveConversation(int conversationLocalId) async {
+    bool? archived = conversations
+        .firstWhereOrNull(
+            (element) => element.conversation.localId == conversationLocalId)
+        ?.conversation
+        .isArchived;
+    if (archived == null) {
+      return;
+    }
+    ToggleArchiveConversationUseCase useCase = di.getIt();
+    (await useCase.call(conversationLocalId, !archived)).fold(
+      (failure) {
+        if (archived) {
+          AppUtil.showMessage(
+              AppLocalization.failToUnarchiveConversation.tr, Colors.red);
+        } else {
+          AppUtil.showMessage(
+              AppLocalization.failToArchiveConversation.tr, Colors.red);
+        }
+      },
+      (success) {
+        if (success) {
+          filteredConversations.refresh();
+          if (archived) {
+            AppUtil.showMessage(
+                AppLocalization.successToUnarchiveConversation.tr, Colors.blue);
+          } else {
+            AppUtil.showMessage(
+                AppLocalization.successToArchiveConversation.tr, Colors.blue);
+          }
+        } else {
+          if (archived) {
+            AppUtil.showMessage(
+                AppLocalization.failToUnarchiveConversation.tr, Colors.red);
+          } else {
+            AppUtil.showMessage(
+                AppLocalization.failToArchiveConversation.tr, Colors.red);
+          }
+        }
+      },
+    );
+  }
+
+  Future<void> blockConversation(int conversationLocalId) async {
+    int index = conversations.indexWhere(
+      (element) => element.conversation.localId == conversationLocalId,
+    );
+    if (conversations[index].conversation.remoteId != null) {
+      await toggleBlockConversation(
+        conversations[index].conversation.remoteId!,
+        true,
+      );
+    } else {
+      AppUtil.showMessage(
+          AppLocalization.failToBlockConversation.tr, Colors.red);
+    }
+  }
+
+  Future<void> toggleBlockConversation(
+      int conversationRemoteId, bool blockConversation) async {
+    if (await AppServices.networkInfo.isConnected) {
+      BlockUnblockConversationRequest request = BlockUnblockConversationRequest(
+        conversationRemoteId: conversationRemoteId,
+        block: blockConversation,
+      );
+      BlockUnblockConversationUseCase useCase = di.getIt();
+      (await useCase(request)).fold(
+        (failure) {
+          if (blockConversation) {
+            AppUtil.showMessage(
+                AppLocalization.failToBlockConversation.tr, Colors.red);
+          } else {
+            AppUtil.showMessage(
+                AppLocalization.failToUnblockConversation.tr, Colors.red);
+          }
+        },
+        (success) {
+          if (success) {
+            if (blockConversation) {
+              AppUtil.showMessage(
+                  AppLocalization.conversationBlockedsuccess.tr, Colors.red);
+            } else {
+              AppUtil.showMessage(
+                  AppLocalization.conversationUnblockedsuccess.tr, Colors.red);
+            }
+          }
+        },
+      );
+    } else {
+      AppUtil.showMessage(ErrorString.OFFLINE_ERROR.tr, Colors.red);
+    }
   }
 }

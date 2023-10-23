@@ -22,6 +22,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conver
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conversation_messages_multimedia.dart';
 import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
     as di;
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
 import 'package:get/get.dart';
 
@@ -271,37 +272,39 @@ class ConversationController extends GetxController {
   }
 
   Future<void> blockConversation() async {
-    _blockUnblockConversation(
-      BlockUnblockConversationRequest(
-        conversationId: conversationId,
-        block: true,
-      ),
-    );
+    ChatController chatController = Get.find();
+    await chatController.blockConversation(conversationId);
+    // _toggleBlockConversation(
+    //   BlockUnblockConversationRequest(
+    //     conversationRemoteId: conversationId,
+    //     block: true,
+    //   ),
+    // );
   }
 
-  Future<void> unblockConversation() async {
-    _blockUnblockConversation(
-      BlockUnblockConversationRequest(
-        conversationId: conversationId,
-        block: false,
-      ),
-    );
-  }
+  // Future<void> unblockConversation() async {
+  //   _toggleBlockConversation(
+  //     BlockUnblockConversationRequest(
+  //       conversationId: conversationId,
+  //       block: false,
+  //     ),
+  //   );
+  // }
 
-  Future<void> _blockUnblockConversation(
-      BlockUnblockConversationRequest request) async {
-    BlockUnblockConversationUseCase useCase = di.getIt();
-    (await useCase(request)).fold(
-      (failure) => {
-        //
-      },
-      (success) {
-        if (success) {
-          //
-        }
-      },
-    );
-  }
+  // Future<void> _toggleBlockConversation(
+  //     BlockUnblockConversationRequest request) async {
+  //   BlockUnblockConversationUseCase useCase = di.getIt();
+  //   (await useCase(request)).fold(
+  //     (failure) => {
+  //       //
+  //     },
+  //     (success) {
+  //       if (success) {
+  //         //
+  //       }
+  //     },
+  //   );
+  // }
 
   @override
   void onClose() {
