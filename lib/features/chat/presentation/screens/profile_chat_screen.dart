@@ -1,15 +1,18 @@
+import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key, required this.user}) : super(key: key);
+class ProfileChatScreen extends StatelessWidget {
+  const ProfileChatScreen({Key? key, required this.conversation})
+      : super(key: key);
 
-  final UserModel user;
+  final LocalConversation conversation;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.username),
+        title: Text(conversation.userName),
         actions: [
           IconButton(
             onPressed: () {},
@@ -28,23 +31,23 @@ class ProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              user.username,
+              conversation.userName,
               style: const TextStyle(fontSize: 24),
             ),
             const SizedBox(height: 10),
             Text(
-              user.phoneNumber,
+              conversation.userPhone ?? "",
               style: const TextStyle(
                 fontSize: 20,
                 color: Colors.grey,
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              "Last seen ${lastSeenMessage(user.lastSeen)} ago",
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 20),
+            // Text(
+            //   "Last seen ${lastSeenMessage(user.lastSeen)} ago",
+            //   style: const TextStyle(color: Colors.grey),
+            // ),
+            // const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -103,7 +106,7 @@ class ProfilePage extends StatelessWidget {
                 Icons.group,
                 color: Colors.green,
               ),
-              title: Text('Create group with ${user.username}'),
+              title: Text('Create group with ${conversation.userName}'),
             ),
             const SizedBox(height: 20),
             ListTile(
@@ -112,7 +115,7 @@ class ProfilePage extends StatelessWidget {
                 color: Colors.red,
               ),
               title: Text(
-                'Block ${user.username}',
+                'Block ${conversation.userName}',
                 style: const TextStyle(
                   color: Colors.red,
                 ),
@@ -124,7 +127,7 @@ class ProfilePage extends StatelessWidget {
                 color: Colors.red,
               ),
               title: Text(
-                'Report ${user.username}',
+                'Report ${conversation.userName}',
                 style: const TextStyle(
                   color: Colors.red,
                 ),
@@ -157,20 +160,6 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-}
-
-class UserModel {
-  final String username;
-  final String phoneNumber;
-  final String lastSeen;
-  final String profileImageUrl;
-
-  UserModel({
-    required this.username,
-    required this.phoneNumber,
-    required this.lastSeen,
-    required this.profileImageUrl,
-  });
 }
 
 String lastSeenMessage(String lastSeen) {

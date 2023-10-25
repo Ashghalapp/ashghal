@@ -49,6 +49,7 @@ class Messages extends Table {
 
   DateTimeColumn get readAt => dateTime().nullable()();
   BoolColumn get readLocally => boolean().withDefault(const Constant(false))();
+  BoolColumn get isStarred => boolean().withDefault(const Constant(false))();
   // BoolColumn get confirmGotRead =>
   //     boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();

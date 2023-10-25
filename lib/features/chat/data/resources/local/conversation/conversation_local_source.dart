@@ -1,6 +1,5 @@
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/tables/chat_tables.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 // import 'package:moor/moor.dart';
 
@@ -25,7 +24,7 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
 
   ConversationLocalSource(this.db) : super(db);
 
-  Future<List<LocalMessage>> searchConversationsAndMessages(
+  Future<List<LocalConversation>> search(
     String searchText,
   ) async {
     final query = searchText.toLowerCase();
@@ -59,38 +58,42 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
     //    WHERE LOWER(c.user_name) LIKE '%$query%' OR LOWER(m.body) LIKE '%$query%' ''',
     // );
     final customQuery = customSelect(
-      '''SELECT * from messages where LOWER(body) LIKE '%$query%' AND conversation_id not in(select local_id from conversations where is_blocked is true or is_deleted_locally is true)''',
+      '''SELECT * from coversations where LOWER(user_name) LIKE '%$query%' AND is_blocked is not true and is_deleted_locally is not true ''',
     );
 
     final results = await customQuery.map((row) {
-      // final conversation = LocalConversation(
-      //   localId: row.read<int>('c_local_id'),
-      //   remoteId: row.read<int?>('c_remote_id'),
-      //   userId: row.read<int>('c_user_id'),
-      //   userName: row.read<String>('c_user_name'),
-      //   userEmail: row.read<String?>('c_user_email'),
-      //   userPhone: row.read<String?>('c_user_phone'),
-      //   userImageUrl: row.read<String?>('c_user_image_url'),
-      //   isBlocked: row.read<bool>('c_is_blocked'),
-      //   createdAt: row.read<DateTime>('c_created_at'),
-      //   updatedAt: row.read<DateTime>('c_updated_at'),
-      // );
-
-      final message = LocalMessage(
+      final conversation = LocalConversation(
         localId: row.read<int>('local_id'),
         remoteId: row.read<int?>('remote_id'),
-        body: row.read<String?>('body'),
-        senderId: row.read<int>('sender_id'),
-        conversationId: row.read<int>('conversation_id'),
-        sentAt: row.read<DateTime?>('sent_at'),
-        recievedAt: row.read<DateTime?>('recieved_at'),
-        receivedLocally: row.read<bool>('received_locally'),
-        readAt: row.read<DateTime?>('read_at'),
-        readLocally: row.read<bool>('read_locally'),
+        userId: row.read<int>('user_id'),
+        userName: row.read<String>('user_name'),
+        userEmail: row.read<String?>('user_email'),
+        userPhone: row.read<String?>('user_phone'),
+        userImageUrl: row.read<String?>('user_image_url'),
+        isBlocked: row.read<bool>('is_blocked'),
+        isFavorite: row.read<bool>('is_favorite'),
+        isArchived: row.read<bool>('is_archived'),
+        isDeletedLocally: row.read<bool>('is_deleted_locally'),
         createdAt: row.read<DateTime>('created_at'),
         updatedAt: row.read<DateTime>('updated_at'),
       );
-      return message;
+
+      // final message = LocalConversation(
+      //   localId: row.read<int>('local_id'),
+      //   remoteId: row.read<int?>('remote_id'),
+      //   body: row.read<String?>('body'),
+      //   senderId: row.read<int>('sender_id'),
+      //   conversationId: row.read<int>('conversation_id'),
+      //   sentAt: row.read<DateTime?>('sent_at'),
+      //   recievedAt: row.read<DateTime?>('recieved_at'),
+      //   receivedLocally: row.read<bool>('received_locally'),
+      //   readAt: row.read<DateTime?>('read_at'),
+      //   readLocally: row.read<bool>('read_locally'),
+      //   createdAt: row.read<DateTime>('created_at'),
+      //   updatedAt: row.read<DateTime>('updated_at'),
+      // );
+      // return message;
+      return conversation;
       // return MatchedConversationsAndMessage(
       //   conversation: conversation,
       //   message: message,
@@ -230,15 +233,23 @@ class ConversationLocalSource extends DatabaseAccessor<ChatDatabase>
   /// }
   /// ```
   /// - [conversation]: An [Insertable] representation of the [LocalConversation] to insert.
-  Future<bool> startConversation(
+  Future<LocalConversation?> startConversation(
       Insertable<LocalConversation> conversation) async {
     try {
-      await into(db.conversations).insert(
-          conversation); //maybe there is a conversation wih the same userId
-      return true;
+      int id = await into(db.conversations).insert(
+        conversation,
+      ); //maybe there is a conversation wih the same userId
+      return await getConversationByLocalId(id);
+      // return id;
     } catch (_) {
-      return false;
+      return null;
     }
+  }
+
+  Future<LocalConversation?> getConversationWithUser(int userId) async {
+    return await (select(db.conversations)
+          ..where((c) => c.userId.equals(userId)))
+        .getSingleOrNull();
   }
 
   /// Refreshes the `updatedAt` timestamp for a conversation in the local database.

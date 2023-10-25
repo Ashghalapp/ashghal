@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,8 +21,9 @@ class HighlightableTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textParts = text.toLowerCase().split(searchText.toLowerCase());
-
+    final pattern = RegExp(searchText, caseSensitive: false);
+    final textParts = text.split(pattern);
+    AppPrint.printInfo('$textParts');
     return RichText(
       text: TextSpan(
         style: TextStyle(

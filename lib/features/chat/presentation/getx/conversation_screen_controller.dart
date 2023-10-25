@@ -88,7 +88,7 @@ class ConversationScreenController extends GetxController {
 
   RxBool showScrollDownIcon = false.obs;
 
-  /// A list to track over selected messages,
+  /// A list to track over selected messages ids,
   RxList<int> selectedMessagesIds = <int>[].obs;
 
   @override
@@ -109,7 +109,7 @@ class ConversationScreenController extends GetxController {
           .map((e) => e.index)
           .toList();
       // print(indexes);
-      if (indexes.isNotEmpty && indexes[indexes.length - 1] > 4) {
+      if (indexes.isNotEmpty && indexes[0] > 2) {
         showScrollDownIcon.value = true;
         // print("Ok");
       } else {
@@ -146,6 +146,7 @@ class ConversationScreenController extends GetxController {
 
   popupMenuButtonOnSelected(ConversationPopupMenuItemsValues value) {
     if (value == ConversationPopupMenuItemsValues.search) {
+      toggleSearchingMode();
     } else if (value == ConversationPopupMenuItemsValues.media) {
       goToConversationMediaScreen();
     } else if (value == ConversationPopupMenuItemsValues.goToFirstMessage) {
@@ -160,6 +161,7 @@ class ConversationScreenController extends GetxController {
   void resetToNormalMode() {
     selectedMessagesIds.clear();
     selectionEnabled.value = false;
+
     matchedMsgIndixes.clear();
     isSearching.value = false;
     searchSelectedMessage.value = -1;
@@ -183,6 +185,17 @@ class ConversationScreenController extends GetxController {
   }
 
   //============================ Start selection functions ============================//
+
+  LocalMessage? get firstSelectedMessage {
+    if (selectedMessagesIds.isEmpty) {
+      return null;
+    }
+    return conversationController.messages
+        .firstWhereOrNull(
+            (element) => element.message.localId == selectedMessagesIds[0])
+        ?.message;
+  }
+
   void toggleSelectionMode() {
     selectionEnabled.value = !selectionEnabled.value;
     if (!selectionEnabled.value) {
@@ -217,41 +230,50 @@ class ConversationScreenController extends GetxController {
     }
   }
 
+  Future<void> toggleStarSelectedMessage() async {
+    if (selectedMessagesIds.isNotEmpty) {
+      // selectionEnabled.value = false;
+      selectionEnabled.value = false;
+      await conversationController.toggleStarMessage(selectedMessagesIds[0]);
+      selectedMessagesIds.clear();
+    }
+  }
+
   Future<void> forwardSelectedMessage() async {
     if (ableToForwardSelectedMessage.value && forwardedMessage != null) {
+      Get.to(() => ChatScreen());
       ChatScreenController controller = Get.find();
       controller.forwardMessage((selectedconversationsIds) async {
         print("Number of selected conversations $selectedconversationsIds");
-        Get.back();
-        if (selectedconversationsIds.length > 1) {
-          Get.back();
-        }
 
-        // if (forwardedMessage!.message.body != null &&
-        //     forwardedMessage!.multimedia != null) {
-        //   for (int id in selectedconversationsIds) {
-        //     conversationController.sendTextAndMultimediaMessage(
-        //         forwardedMessage!.message.body!,
-        //         forwardedMessage!.multimedia!.path!,
-        //         id);
-        //   }
-        // } else if (forwardedMessage!.message.body != null &&
-        //     forwardedMessage!.multimedia == null) {
-        //   for (int id in selectedconversationsIds) {
-        //     conversationController.sendTextMessage(
-        //         forwardedMessage!.message.body!, id);
-        //   }
-        // } else if (forwardedMessage!.message.body == null &&
-        //     forwardedMessage!.multimedia != null) {
-        //   for (int id in selectedconversationsIds) {
-        //     conversationController.sendMultimediaMessage(
-        //         forwardedMessage!.multimedia!.path!, id);
-        //   }
-        // } else {
-        //   return;
+        // if (selectedconversationsIds.length > 1) {
+        //   Get.back();
         // }
+
+        if (forwardedMessage!.message.body != null &&
+            forwardedMessage!.multimedia != null) {
+          for (int id in selectedconversationsIds) {
+            conversationController.sendTextAndMultimediaMessage(
+                forwardedMessage!.message.body!,
+                forwardedMessage!.multimedia!.path!,
+                id);
+          }
+        } else if (forwardedMessage!.message.body != null &&
+            forwardedMessage!.multimedia == null) {
+          for (int id in selectedconversationsIds) {
+            conversationController.sendTextMessage(
+                forwardedMessage!.message.body!, id);
+          }
+        } else if (forwardedMessage!.message.body == null &&
+            forwardedMessage!.multimedia != null) {
+          for (int id in selectedconversationsIds) {
+            conversationController.sendMultimediaMessage(
+                forwardedMessage!.multimedia!.path!, id);
+          }
+        } else {
+          return;
+        }
       });
-      Get.to(() => ChatScreen());
     }
   }
 

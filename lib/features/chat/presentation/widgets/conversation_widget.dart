@@ -34,95 +34,96 @@ class ConversationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _buildDismissibleWidget(
-      child: InkWell(
-        onLongPress: () {
-          if (!_screenController.isSearching.value) {
-            if (!_screenController.selectionEnabled.value) {
-              _screenController.toggleSelectionMode();
-            }
-            _screenController
-                .selectConversation(conversation.conversation.localId);
-          }
-        },
-        onTap: () {
-          if (_screenController.selectionEnabled.value ||
-              _screenController.forwardSelectionEnabled.value) {
-            _screenController
-                .selectConversation(conversation.conversation.localId);
-          } else {
-            _screenController.goToConversationScreen(conversation.conversation);
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          child: Row(
-            children: [
-              UserImageAvatarWithStatusWidget(
-                userId: conversation.conversation.userId,
-                userName: conversation.conversation.userName,
-                raduis: 26,
-                boderThickness: 1,
-                borderColor: Get.theme.primaryColor,
-                // borderColor: Theme.of(context).primaryColor,
-                imageUrl: conversation.conversation.userImageUrl,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Obx(
-                        () {
-                          return _screenController.isSearching.value
-                              ? HighlightableTextWidget(
-                                  text: conversation.conversation.userName,
-                                  searchText: _screenController
-                                      .searchFeildController.text,
+      // child: InkWell(
+      // onLongPress: () {
+      //   if (!_screenController.isSearching.value) {
+      //     if (!_screenController.selectionEnabled.value) {
+      //       _screenController.toggleSelectionMode();
+      //     }
+      //     _screenController
+      //         .selectConversation(conversation.conversation.localId);
+      //   }
+      // },
+      // onTap: () {
+      //   if (_screenController.selectionEnabled.value ||
+      //       _screenController.forwardSelectionEnabled.value) {
+      //     _screenController
+      //         .selectConversation(conversation.conversation.localId);
+      //   } else {
+      //     _screenController.goToConversationScreen(conversation.conversation);
+      //   }
+      // },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        child: Row(
+          children: [
+            UserImageAvatarWithStatusWidget(
+              userId: conversation.conversation.userId,
+              userName: conversation.conversation.userName,
+              raduis: 26,
+              boderThickness: 1,
+              borderColor: Get.theme.primaryColor,
+              // borderColor: Theme.of(context).primaryColor,
+              imageUrl: conversation.conversation.userImageUrl,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Obx(
+                      () {
+                        return _screenController.isSearching.value &&
+                                !_screenController.isSearchTextEmpty.value
+                            ? HighlightableTextWidget(
+                                text: conversation.conversation.userName,
+                                searchText: _screenController
+                                    .searchFeildController.text,
+                                fontSize: 20,
+                                // textColor: Colors.black,
+                              )
+                            : Text(
+                                conversation.conversation.userName,
+                                style: const TextStyle(
                                   fontSize: 20,
-                                  // textColor: Colors.black,
-                                )
-                              : Text(
-                                  conversation.conversation.userName,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                );
-                        },
-                      ),
-                      const SizedBox(height: 7),
-                      Obx(
-                        () {
-                          return _chatController.typingUsers
-                                  .contains(conversation.conversation.userId)
-                              ? Text(
-                                  "${AppLocalization.typingNow}...",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 16,
-                                  ),
-                                )
-                              : conversation.lastMessage != null
-                                  ? Opacity(
-                                      opacity: 0.9,
-                                      child: buildLastMessageRow(),
-                                    )
-                                  : const SizedBox.shrink();
-                        },
-                      ),
-                    ],
-                  ),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              );
+                      },
+                    ),
+                    const SizedBox(height: 7),
+                    Obx(
+                      () {
+                        return _chatController.typingUsers
+                                .contains(conversation.conversation.userId)
+                            ? Text(
+                                "${AppLocalization.typingNow}...",
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 16,
+                                ),
+                              )
+                            : conversation.lastMessage != null
+                                ? Opacity(
+                                    opacity: 0.9,
+                                    child: buildLastMessageRow(),
+                                  )
+                                : const SizedBox.shrink();
+                      },
+                    ),
+                  ],
                 ),
               ),
-              _buildTimeAgoAndNumberOfNewMessages()
-            ],
-          ),
+            ),
+            _buildTimeAgoAndNumberOfNewMessages()
+          ],
         ),
       ),
+      // ),
     );
   }
 
@@ -156,7 +157,9 @@ class ConversationWidget extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
-                          color: conversation.newMessagesCount > 0
+                          color: conversation.newMessagesCount > 0 &&
+                                  !_screenController
+                                      .forwardSelectionEnabled.value
                               ? Get.theme.primaryColor
                               : null,
                         ),
@@ -188,7 +191,8 @@ class ConversationWidget extends StatelessWidget {
           },
         ),
         const SizedBox(height: 10),
-        if (conversation.newMessagesCount > 0)
+        if (conversation.newMessagesCount > 0 &&
+            !_screenController.forwardSelectionEnabled.value)
           Container(
             decoration: BoxDecoration(
               color: Get.theme.primaryColor,

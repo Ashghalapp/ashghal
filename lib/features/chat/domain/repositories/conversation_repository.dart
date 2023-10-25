@@ -48,7 +48,7 @@ abstract class ConversationRepository {
     ) onTypingEvent,
   );
 
-  Future<Either<Failure, List<LocalMessage>>> searchInConversations(
+  Future<Either<Failure, List<LocalConversation>>> searchInConversations(
       String searchText);
 
   /// Starts a conversation with the specified user, both locally and remotely, based on the provided [StartConversationRequest].
@@ -74,7 +74,7 @@ abstract class ConversationRepository {
   /// ```
   /// - [request]: A [StartConversationRequest] object specifying the user to start a conversation with.
   /// - Returns a boolean value indicating whether the conversation was created successfully.
-  Future<Either<Failure, bool>> startConversationWith(
+  Future<Either<Failure, LocalConversation>> startConversationWith(
       StartConversationRequest request);
 
   /// Streams updates to a list of local conversations from the local data source.

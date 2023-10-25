@@ -47,7 +47,7 @@ class UsersStateController extends GetxController {
     Channelhandler handler = Channelhandler(
       channel: AppChannel(
         channelName: ChannelsEventsNames.userStateUpdatedChannel,
-        eventName: 'message.read',
+        eventName: ChannelsEventsNames.userStateUpdatedEvent,
       ),
       onEvent: (PusherEvent event) async {
         print("Pusher event received: $event");

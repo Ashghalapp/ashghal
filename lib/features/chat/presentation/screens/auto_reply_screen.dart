@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ChatSettingsScreen extends StatelessWidget {
-  const ChatSettingsScreen({super.key});
+class AutoReplyScreen extends StatelessWidget {
+  const AutoReplyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Settings"),
+        title: Text("Auto Replies"),
       ),
       body: Center(
-        child: Text("Chat Settings Screen"),
+        child: Text("Auto Reply Screen"),
       ),
     );
   }

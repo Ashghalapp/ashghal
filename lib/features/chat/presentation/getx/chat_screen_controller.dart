@@ -1,25 +1,32 @@
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/conversation_messages_read.dart';
 
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/blocked_users_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/auto_reply_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/blocked_chats_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_settings_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/conversation_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/full_image_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/profile_chat_screen.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/starred_messages_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum ChatPopupMenuItemsValues {
   autoReply, //الرد التلقائي
   starredMessages, //الرسائل المميزة بنجمة
-  blockedUsers,
+  blockedChats,
   settings,
+  search,
   viewProfile, //فتح الملف الشخصي
   markMessagesAsRead, //تمييز كمقروءة
   selectAll,
+  unselectAll,
 }
 
 extension ChatPopupMenuItemsValuesExtension on ChatPopupMenuItemsValues {
@@ -29,191 +36,162 @@ extension ChatPopupMenuItemsValuesExtension on ChatPopupMenuItemsValues {
         return AppLocalization.autoReply;
       case ChatPopupMenuItemsValues.starredMessages:
         return AppLocalization.starredMessages;
-      case ChatPopupMenuItemsValues.blockedUsers:
-        return AppLocalization.blockedUsers;
+      case ChatPopupMenuItemsValues.blockedChats:
+        return AppLocalization.blockedChats;
       case ChatPopupMenuItemsValues.settings:
         return AppLocalization.settings;
-
+      case ChatPopupMenuItemsValues.search:
+        return AppLocalization.search;
       case ChatPopupMenuItemsValues.viewProfile:
         return AppLocalization.viewProfile;
       case ChatPopupMenuItemsValues.markMessagesAsRead:
         return AppLocalization.markMessagesAsRead;
       case ChatPopupMenuItemsValues.selectAll:
         return AppLocalization.selectAll;
+      case ChatPopupMenuItemsValues.unselectAll:
+        return AppLocalization.unselectAll;
     }
   }
 }
 
 class ChatScreenController extends GetxController {
-  // RxList<ConversationWithCountAndLastMessage> get conversations =>
-  //     _chatController.conversations;
-  // RxBool isLoaing = false.obs;
-  RxBool isSearching = false.obs;
   final ChatController chatController = Get.put(ChatController());
-  TextEditingController searchFeildController = TextEditingController();
   FocusNode searchFeildFocusNode = FocusNode();
-  RxBool isSearchTextEmpty = true.obs;
+  RxBool isLoading = false.obs;
+  final ParticipantModel? user;
 
-  RxBool selectionEnabled = false.obs;
-  RxBool forwardSelectionEnabled = false.obs;
-  RxList<int> selectedConversationsIds = <int>[].obs;
-  LocalConversation? get firstSelectedConversation {
-    if (selectedConversationsIds.isEmpty) {
-      return null;
+  ChatScreenController({this.user});
+  @override
+  void onInit() {
+    super.onInit();
+    if (user != null) {
+      openConversationWithUser();
     }
-    return chatController.conversations
-        .firstWhereOrNull((element) =>
-            element.conversation.localId == selectedConversationsIds[0])
-        ?.conversation;
   }
 
-  // MessageAndMultimediaModel? _forwardedMessage;
-  Future<void> Function(List<int> selectedConversationsIds)?
-      _onForwardedMessageSend;
-
-  resetToNormalMode() {
-    isSearching.value = false;
-    searchFeildController.text = "";
-    isSearchTextEmpty.value = true;
-    selectionEnabled.value = false;
-    forwardSelectionEnabled.value = false;
-    selectedConversationsIds.clear();
-    _onForwardedMessageSend = null;
+  Future<void> openConversationWithUser() async {
+    isLoading.value = true;
+    LocalConversation? conversation =
+        await chatController.startConversationWith(user!);
+    isLoading.value = false;
+    if (conversation != null) {
+      goToConversationScreen(conversation);
+    }
+    // isLoading.value = false;
   }
 
   popupMenuButtonOnSelected(ChatPopupMenuItemsValues value) {
     if (value == ChatPopupMenuItemsValues.autoReply) {
+      goToAutoReplyScreen();
     } else if (value == ChatPopupMenuItemsValues.starredMessages) {
-    } else if (value == ChatPopupMenuItemsValues.blockedUsers) {
-      goToBlockedUsersScreen();
+      goToStarredMessagesScreen();
+    } else if (value == ChatPopupMenuItemsValues.blockedChats) {
+      goToBlockedChatsScreen();
     } else if (value == ChatPopupMenuItemsValues.settings) {
       // AppLocallcontroller controller = Get.find();
       // controller.changLang("en");
       goToSettingsScreen();
+    } else if (value == ChatPopupMenuItemsValues.search) {
+      toggleSearchMode();
     } else if (value == ChatPopupMenuItemsValues.viewProfile) {
+      openSelectedCoversationProfile();
     } else if (value == ChatPopupMenuItemsValues.markMessagesAsRead) {
-    } else if (value == ChatPopupMenuItemsValues.selectAll) {}
-    // else if (value == ChatPopupMenuItemsValues.createConversation) {
-    //   startConversationWith(13);
-    // }
-  }
-
-  void forwardMessage(
-      Future<void> Function(List<int> selectedConversationsIds)
-          onForwardedMessageSend) {
-    forwardSelectionEnabled.value = true;
-    // selectionEnabled.value = true;
-    print(
-        "Here we are*********************************************************");
-    _onForwardedMessageSend = onForwardedMessageSend;
-  }
-
-  void cnacelForwardMode() {
-    resetToNormalMode();
-    Get.back();
-    // _forwardedMessage = null;
-  }
-
-  Future<void> forwardMessageToSelectedConversations() async {
-    _onForwardedMessageSend ?? (selectedConversationsIds);
-    resetToNormalMode();
-  }
-
-  void toggleSelectionMode() {
-    selectionEnabled.value = !selectionEnabled.value;
-    if (!selectionEnabled.value) {
-      selectedConversationsIds.clear();
+      markSelectedConversationMessagesAsRead();
+    } else if (value == ChatPopupMenuItemsValues.selectAll) {
+      selectAllConvesations();
+    } else if (value == ChatPopupMenuItemsValues.unselectAll) {
+      toggleSelectionMode();
     }
   }
 
-  void selectConversation(int conversationId) {
-    print("conversation ${conversationId} selected ");
-    if (selectionEnabled.value || forwardSelectionEnabled.value) {
-      if (selectedConversationsIds.contains(conversationId)) {
-        selectedConversationsIds.remove(conversationId);
-      } else {
-        selectedConversationsIds.add(conversationId);
-      }
-      if (selectedConversationsIds.isEmpty && !forwardSelectionEnabled.value) {
-        // selectedConversationsIds.clear();
-        // selectionEnabled.value = false;
-        toggleSelectionMode();
-      }
+  Future<bool> onBackButtonPressed() async {
+    if (isSearching.value || selectionEnabled.value) {
+      resetToNormalMode();
+      return Future.value(false);
+    } else if (forwardSelectionEnabled.value) {
+      cnacelForwardMode();
+      return Future.value(false);
     }
-    print(selectedConversationsIds);
-
-    // if (!(selectionEnabled.value || forwardSelectionEnabled.value)) {
-    //   selectionEnabled.value = true;
-    // }
+    return Future.value(true);
   }
 
-  Future<void> deleteSelectedConversations() async {
-    if (selectedConversationsIds.isNotEmpty) {
-      await chatController.deleteConversations(
-        selectedConversationsIds.map((element) => element).toList(),
-      );
-    }
+  String getConversationUserName(int conversationLocalId) {
+    return chatController.conversations
+        .firstWhere((c) => c.conversation.localId == conversationLocalId)
+        .conversation
+        .userName;
   }
 
-  Future<void> startConversationWith(int userId) async {
-    chatController.startConversationWith(userId);
-  }
+  // Future<void> startConversationWith(int userId) async {
+  //   chatController.startConversationWith(userId);
+  // }
 
   Future<void> deleteConversation(int conversationId) async {
     await chatController.deleteConversations([conversationId]);
   }
 
   Future<void> archiveConversation(int conversationId) async {
-    await chatController.toggleArchiveConversation(selectedConversationsIds[0]);
-  }
-
-  toggleSearchMode() {
-    isSearching.value = !isSearching.value;
-    if (!isSearching.value) {
-      // chatController.searchMatchedMessages.clear();
-      searchFeildController.clear();
-      chatController.stopSearchMode();
-      isSearchTextEmpty.value = true;
-      // chatController.searchText = "";
-    } else {
-      searchFeildFocusNode.requestFocus();
-    }
-  }
-
-  clearSearchField() {
-    searchFeildController.text = "";
-    isSearchTextEmpty.value = true;
-  }
-
-  // Future<void> onSearchButtonPressed() async {
-  //   print("onSearchButtonPressed");
-  //   if (searchFeildController.text.trim() != "") {
-  //     searchStarted = true;
-  //     await chatController.search(searchFeildController.text);
-  //   }
-  // }
-
-  // bool searchStarted = false;
-
-  Future<void> onSearchTextFieldChanges(String text) async {
-    print("onSearchTextFieldChanges");
-    // if (text.trim().length > 2 || searchStarted) {
-    if (text.trim().isEmpty) {
-      isSearchTextEmpty.value = true;
-    } else {
-      isSearchTextEmpty.value = false;
-    }
-    await chatController.search(text);
-    // }
+    await chatController.toggleArchiveConversation(conversationId);
   }
 
   void goToSettingsScreen() {
     Get.to(() => const ChatSettingsScreen());
   }
 
-  void goToBlockedUsersScreen() {
-    Get.to(() => const BlockedUsersScreen());
+  void goToBlockedChatsScreen() {
+    Get.to(() => const BlockedChatsScreen());
   }
+
+  void goToAutoReplyScreen() {
+    Get.to(() => const AutoReplyScreen());
+  }
+
+  void goToStarredMessagesScreen() {
+    Get.to(() => const StarredMessagesScreen());
+  }
+
+  void goToChatProfileScreen(LocalConversation conversation) {
+    Get.to(
+      () => ProfileChatScreen(
+        conversation: conversation,
+      ),
+    );
+  }
+
+  void openUserProfileImageInFullScreen(
+      String? imagePath, String userName, int userId) {
+    Get.to(
+      () => FullImageScreen(
+        imagePath: imagePath,
+        title: userName,
+        userId: userId,
+      ),
+    );
+  }
+
+  LocalConversation? getConversationWithUserId(int userId) {
+    return chatController.conversations
+        .firstWhereOrNull((element) => element.conversation.userId == userId)
+        ?.conversation;
+  }
+
+  // void goToChatProfileScreenWithUserId(int userId) {
+  //   LocalConversation? conversation = chatController.conversations
+  //       .firstWhereOrNull((element) => element.conversation.userId == userId)
+  //       ?.conversation;
+  //   if (conversation != null) {
+  //     goToChatProfileScreen(conversation);
+  //   }
+  // }
+
+  // void goToConversationScreenWithUserId(int userId) {
+  //   LocalConversation? conversation = chatController.conversations
+  //       .firstWhereOrNull((element) => element.conversation.userId == userId)
+  //       ?.conversation;
+  //   if (conversation != null) {
+  //     goToChatProfileScreen(conversation);
+  //   }
+  // }
 
   void goToConversationScreen(LocalConversation conversation,
       [LocalMessage? matchedMessage]) {
@@ -236,6 +214,109 @@ class ChatScreenController extends GetxController {
     //     ConversationScreen(conversation: matchedConversation.conversation));
   }
 
+  resetToNormalMode() {
+    isSearching.value = false;
+    searchFeildController.text = "";
+    isSearchTextEmpty.value = true;
+    selectionEnabled.value = false;
+    forwardSelectionEnabled.value = false;
+    selectedConversationsIds.clear();
+    _onForwardedMessageSend = null;
+  }
+
+  //============================ Start search section ============================//
+
+  TextEditingController searchFeildController = TextEditingController();
+  RxBool isSearchTextEmpty = true.obs;
+  RxBool isSearching = false.obs;
+
+  Future<void> onSearchTextFieldChanges(String text) async {
+    print("onSearchTextFieldChanges");
+    // if (text.trim().length > 2 || searchStarted) {
+    if (text.trim().isEmpty) {
+      isSearchTextEmpty.value = true;
+    } else {
+      isSearchTextEmpty.value = false;
+    }
+    chatController.searchInConversations(text);
+    if (!forwardSelectionEnabled.value) {
+      await chatController.searchInMessages(text);
+    }
+  }
+
+  toggleSearchMode() {
+    isSearching.value = !isSearching.value;
+    if (!isSearching.value) {
+      searchFeildController.clear();
+      isSearchTextEmpty.value = true;
+    } else {
+      searchFeildFocusNode.requestFocus();
+    }
+  }
+
+  clearSearchField() {
+    searchFeildController.text = "";
+    isSearchTextEmpty.value = true;
+  }
+
+  //============================ End search section =================================//
+  //=================================================================================//
+  //============================ Start selection section ============================//
+
+  RxBool selectionEnabled = false.obs;
+
+  RxList<int> selectedConversationsIds = <int>[].obs;
+
+  LocalConversation? get firstSelectedConversation {
+    if (selectedConversationsIds.isEmpty) {
+      return null;
+    }
+    return chatController.conversations
+        .firstWhereOrNull((element) =>
+            element.conversation.localId == selectedConversationsIds[0])
+        ?.conversation;
+  }
+
+  void toggleSelectionMode() {
+    selectionEnabled.value = !selectionEnabled.value;
+    if (!selectionEnabled.value) {
+      selectedConversationsIds.clear();
+    }
+  }
+
+  void selectConversation(int conversationId) {
+    AppPrint.printInfo("conversation $conversationId selected ");
+    if (selectionEnabled.value || forwardSelectionEnabled.value) {
+      if (selectedConversationsIds.contains(conversationId)) {
+        selectedConversationsIds.remove(conversationId);
+      } else {
+        selectedConversationsIds.add(conversationId);
+      }
+      if (selectedConversationsIds.isEmpty && !forwardSelectionEnabled.value) {
+        toggleSelectionMode();
+      }
+    }
+  }
+
+  void selectAllConvesations() {
+    if (selectionEnabled.value) {
+      selectedConversationsIds.clear();
+      selectedConversationsIds.addAll(
+        chatController.conversations
+            .map((element) => element.conversation.localId)
+            .toList(),
+      );
+    }
+  }
+
+  Future<void> deleteSelectedConversations() async {
+    if (selectedConversationsIds.isNotEmpty) {
+      await chatController.deleteConversations(
+        selectedConversationsIds.map((element) => element).toList(),
+      );
+    }
+  }
+
   Future<void> toggleFavoriteSelectedConversation() async {
     if (selectedConversationsIds.isNotEmpty) {
       selectionEnabled.value = false;
@@ -255,4 +336,61 @@ class ChatScreenController extends GetxController {
       selectedConversationsIds.clear();
     }
   }
+
+  Future<void> openSelectedCoversationProfile() async {
+    if (selectedConversationsIds.isNotEmpty) {
+      // ParticipantModel participant = ParticipantModel(
+      //   id: firstSelectedConversation!.userId,
+      //   name: firstSelectedConversation!.userName,
+      //   email: firstSelectedConversation!.userEmail,
+      //   phone: firstSelectedConversation!.userPhone,
+      //   imageUrl: firstSelectedConversation!.userImageUrl,
+      // );
+      goToChatProfileScreen(firstSelectedConversation!);
+      selectionEnabled.value = false;
+      selectedConversationsIds.clear();
+    }
+  }
+
+  Future<void> markSelectedConversationMessagesAsRead() async {
+    if (selectedConversationsIds.isNotEmpty) {
+      await chatController.markConversationMessagesAsRead(
+        selectedConversationsIds[0],
+      );
+    }
+  }
+
+  //============================ End selection section ============================//
+  //===============================================================================//
+  //============================ Start forward section ============================//
+
+  RxBool forwardSelectionEnabled = false.obs;
+
+  Future<void> Function(List<int> selectedConversationsIds)?
+      _onForwardedMessageSend;
+
+  void forwardMessage(
+      Future<void> Function(List<int> selectedConversationsIds)
+          onForwardedMessageSend) {
+    forwardSelectionEnabled.value = true;
+    // selectionEnabled.value = true;
+    AppPrint.printInfo("Forwarding started");
+    _onForwardedMessageSend = onForwardedMessageSend;
+  }
+
+  Future<void> forwardMessageToSelectedConversations() async {
+    _onForwardedMessageSend!(selectedConversationsIds);
+    Get.back();
+    if (selectedConversationsIds.length > 1) {
+      Get.back();
+    }
+    resetToNormalMode();
+  }
+
+  void cnacelForwardMode() {
+    AppPrint.printInfo("Forward Mode Canceled");
+    resetToNormalMode();
+    Get.back();
+  }
+  //============================ End forward section ============================//
 }

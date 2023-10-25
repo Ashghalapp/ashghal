@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/tables/chat_tables.dart';
@@ -193,6 +191,103 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
       MessagesCompanion(
         readAt: Value(DateTime.now()),
         readLocally: const Value(true),
+      ),
+    );
+  }
+
+  Future<List<LocalMessage>> search(
+    String searchText,
+  ) async {
+    final query = searchText.toLowerCase();
+
+    // Create a custom SQL query to search conversations and messages
+    // final customQuery = customSelect(
+    //   '''SELECT
+    //   c.local_id       as c_local_id ,
+    //   c.remote_id      as c_remote_id  ,
+    //   c.user_id        as c_user_id  ,
+    //   c.user_name      as c_user_name  ,
+    //   c.user_email     as c_user_email ,
+    //   c.user_phone     as c_user_phone   ,
+    //   c.user_image_url as c_user_image_url  ,
+    //   c.is_blocked     as c_is_blocked   ,
+    //   c.created_at     as c_created_at   ,
+    //   c.updated_at     as c_updated_at   ,
+    //   m.local_id         as m_local_id  ,
+    //   m.remote_id        as m_remote_id  ,
+    //   m.body             as m_body    ,
+    //   m.sender_id        as m_sender_id   ,
+    //   m.conversation_id  as m_conversation_id ,
+    //   m.sent_at          as m_sent_at     ,
+    //   m.recieved_at      as m_recieved_at  ,
+    //   m.received_locally as m_received_locally ,
+    //   m.read_at          as m_read_at  ,
+    //   m.read_locally     as m_read_locally,
+    //   m.created_at       as m_created_at,
+    //   m.updated_at       as m_updated_at
+    //   FROM conversations as c LEFT JOIN messages as m ON c.local_id = m.conversation_id
+    //    WHERE LOWER(c.user_name) LIKE '%$query%' OR LOWER(m.body) LIKE '%$query%' ''',
+    // );
+    final customQuery = customSelect(
+      '''SELECT * from messages where LOWER(body) LIKE '%$query%' AND conversation_id not in(select local_id from conversations where is_blocked is true or is_deleted_locally is true)''',
+    );
+
+    final results = await customQuery.map((row) {
+      // final conversation = LocalConversation(
+      //   localId: row.read<int>('c_local_id'),
+      //   remoteId: row.read<int?>('c_remote_id'),
+      //   userId: row.read<int>('c_user_id'),
+      //   userName: row.read<String>('c_user_name'),
+      //   userEmail: row.read<String?>('c_user_email'),
+      //   userPhone: row.read<String?>('c_user_phone'),
+      //   userImageUrl: row.read<String?>('c_user_image_url'),
+      //   isBlocked: row.read<bool>('c_is_blocked'),
+      //   createdAt: row.read<DateTime>('c_created_at'),
+      //   updatedAt: row.read<DateTime>('c_updated_at'),
+      // );
+
+      final message = LocalMessage(
+        localId: row.read<int>('local_id'),
+        remoteId: row.read<int?>('remote_id'),
+        body: row.read<String?>('body'),
+        senderId: row.read<int>('sender_id'),
+        conversationId: row.read<int>('conversation_id'),
+        sentAt: row.read<DateTime?>('sent_at'),
+        recievedAt: row.read<DateTime?>('recieved_at'),
+        receivedLocally: row.read<bool>('received_locally'),
+        readAt: row.read<DateTime?>('read_at'),
+        readLocally: row.read<bool>('read_locally'),
+        isStarred: row.read<bool>('is_starred'),
+        createdAt: row.read<DateTime>('created_at'),
+        updatedAt: row.read<DateTime>('updated_at'),
+      );
+      return message;
+      // return MatchedConversationsAndMessage(
+      //   conversation: conversation,
+      //   message: message,
+      // );
+    }).get();
+
+    // final groupedResults = groupConversationsAndMessages(results);
+
+    return results;
+  }
+
+  Future<List<LocalConversation>> getDeletedLocallyConversations() async {
+    return await (select(db.conversations)
+          ..where((c) => c.isDeletedLocally.equals(true)))
+        .get();
+  }
+
+  Future<int> toggleStarMessage(int messageLocalId, bool starMessage) async {
+    // LocalConversation? conversation = await (select(db.conversations)
+    //       ..where((c) => c.localId.equals(conversationLocalId)))
+    //     .getSingleOrNull();
+    return await (update(db.messages)
+          ..where((c) => c.localId.equals(messageLocalId)))
+        .write(
+      MessagesCompanion(
+        isStarred: Value(starMessage),
       ),
     );
   }
@@ -508,6 +603,7 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
             // confirmGotReceive: row.read<bool>('confirm_got_receive'),
             readAt: row.read<DateTime?>('read_at'),
             readLocally: row.read<bool>('read_locally'),
+            isStarred: row.read<bool>('is_starred'),
             // confirmGotRead: row.read<bool>('confirm_got_read'),
             createdAt: row.read<DateTime>('created_at'),
             updatedAt: row.read<DateTime>('updated_at'),

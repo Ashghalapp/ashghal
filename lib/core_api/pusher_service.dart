@@ -47,6 +47,7 @@ class PusherService {
           useTLS: true,
           // onConnectionStateChange: (),
           // onError: onError,
+
           onSubscriptionSucceeded:
               onSubscriptionSucceeded, //use this if you want to be informed of when a channel has successfully been subscribed to, which is useful if you want to perform actions that are only relevant after a subscription has succeeded. For example querying the members for presence channel.
           onEvent:
@@ -136,22 +137,22 @@ class PusherService {
     }
   }
 
-  Future<void> subscribeToPublicChannel(
-      String channelName, Channelhandler handler) async {
-    if (pusher != null) {
-      Channelhandler? h = channelsHandlers.firstWhereOrNull((element) =>
-          element.channel.channelName == handler.channel.channelName &&
-          element.channel.eventName == handler.channel.eventName);
-      if (h == null) {
-        channelsHandlers.add(handler);
-      }
-      final channel = await pusher!.subscribe(
-        channelName: channelName,
-        // onEvent: (event) {
-        // },
-      );
-    }
-  }
+  // Future<void> subscribeToPublicChannel(
+  //     String channelName, Channelhandler handler) async {
+  //   if (pusher != null) {
+  //     Channelhandler? h = channelsHandlers.firstWhereOrNull((element) =>
+  //         element.channel.channelName == handler.channel.channelName &&
+  //         element.channel.eventName == handler.channel.eventName);
+  //     if (h == null) {
+  //       channelsHandlers.add(handler);
+  //     }
+  //     final channel = await pusher!.subscribe(
+  //       channelName: channelName,
+  //       // onEvent: (event) {
+  //       // },
+  //     );
+  //   }
+  // }
 
   void addNewChannelHandler(Channelhandler handler) {
     int index = channelsHandlers.indexWhere((element) =>
@@ -166,20 +167,24 @@ class PusherService {
   Future<void> subscribeToChannel(String channelName) async {
     if (pusher != null) {
       // final myPrivateChannel =
-      await pusher!.subscribe(
-        channelName: channelName,
+      if (!pusher!.channels.keys.contains(channelName)) {
+        await pusher!.subscribe(
+          channelName: channelName,
 
-        // onMemberAdded: (dynamic event) {
-        //   print("Private OnMemeber Added $event");
-        //   dynamic data = json.decode(event.toString());
-        //   print("Private OnMemeber Added $data");
-        // },
-        // onMemberRemoved: (dynamic event) {
-        //   print("Private OnMemeber Removed $event");
-        //   dynamic data = json.decode(event.toString());
-        //   print("Private OnMemeber Removed $data");
-        // },
-      );
+          // onMemberAdded: (dynamic event) {
+          //   print("Private OnMemeber Added $event");
+          //   dynamic data = json.decode(event.toString());
+          //   print("Private OnMemeber Added $data");
+          // },
+          // onMemberRemoved: (dynamic event) {
+          //   print("Private OnMemeber Removed $event");
+          //   dynamic data = json.decode(event.toString());
+          //   print("Private OnMemeber Removed $data");
+          // },
+        );
+      } else {
+        print("Already Subscribed to channel $channelName");
+      }
     }
   }
 
@@ -203,6 +208,11 @@ class PusherService {
   Future<void> unsubscribeFromChannel(String channelName) async {
     if (pusher != null) {
       await pusher!.unsubscribe(channelName: channelName);
+      int index = channelsHandlers
+          .indexWhere((element) => element.channel.channelName == channelName);
+      if (index != -1) {
+        channelsHandlers.removeAt(index);
+      }
     }
   }
 
@@ -220,9 +230,9 @@ class PusherService {
     } else {
       print(
           "///////////////////My Idea Doesn't work/////////////////////////////");
-      print("channelName:${event.channelName}");
-      print("channelName:${event.eventName}");
-      print("event:${event.data}");
+      print("channelName: ${event.channelName}");
+      print("eventName: ${event.eventName}");
+      print("event data: ${event.data}");
     }
   }
 

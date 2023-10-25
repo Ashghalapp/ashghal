@@ -124,17 +124,21 @@ class InsertingMessageController extends GetxController {
   Future<bool> backButtonPressed() {
     if (emojiPickerShowing.value) {
       emojiPickerShowing.value = false;
-    } else if (messageFieldFocusNode.hasFocus) {
-      messageFieldFocusNode.unfocus();
-    } else if (_screenController.selectionEnabled.value) {
+      return Future.value(false);
+    }
+    // else if (messageFieldFocusNode.hasFocus) {
+    //   messageFieldFocusNode.unfocus();
+    //   return Future.value(false);
+    // }
+    else if (_screenController.selectionEnabled.value ||
+        _screenController.isSearching.value) {
       _screenController.resetToNormalMode();
-    } else if (_screenController.isSearching.value) {
-      _screenController.resetToNormalMode();
+      return Future.value(false);
     } else {
       _screenController.conversationController.markConversationMessagesAsRead();
       return Future.value(true);
     }
-    return Future.value(false);
+    // return Future.value(false);
   }
 
   Future<void> sendMessage() async {

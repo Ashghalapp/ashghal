@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core_api/errors/error_strings.dart';
 import 'package:ashghal_app_frontend/core_api/errors/exceptions.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
@@ -74,6 +75,35 @@ class MessageRepositoryImp extends MessageRepository {
   }
 
   @override
+  Future<Either<Failure, List<LocalMessage>>> searchInMessages(
+      String searchText) async {
+    try {
+      List<LocalMessage> matchedes =
+          await _messageLocalSource.search(searchText);
+      return right(matchedes);
+    } catch (e) {
+      AppPrint.printError(
+          "Error in MessageRepositoryImp in searchInMessages: ${e.toString()}");
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> toggleStarMessage(
+      int messageLocalId, bool starMessage) async {
+    try {
+      bool ok = (await _messageLocalSource.toggleStarMessage(
+              messageLocalId, starMessage)) >
+          0;
+      return right(ok);
+    } catch (e) {
+      print(
+          "**********Error in MessageRepositoryImp in toggleStarMessage: ${e.toString()}");
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
+
+  @override
   Future<void> dispatchTypingEvent(DispatchTypingEventRequest request) async {
     try {
       // int remoteId
@@ -82,7 +112,7 @@ class MessageRepositoryImp extends MessageRepository {
         request.eventType,
       );
     } catch (e) {
-      print(
+      AppPrint.printError(
           "**********Error in MessageRepositoryImp in dispatchTypingEvent: ${e.toString()}");
     }
   }

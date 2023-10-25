@@ -70,6 +70,12 @@ abstract class MessageRepository {
 
   Future<Either<Failure, bool>> clearChat(ClearChatRequest request);
 
+  Future<Either<Failure, List<LocalMessage>>> searchInMessages(
+      String searchText);
+
+  Future<Either<Failure, bool>> toggleStarMessage(
+      int messageLocalId, bool starMessage);
+
   Future<void> conversationMessagesRead(int conversationId);
 
   /// Confirms the receipt of messages that were received locally to the remote server.

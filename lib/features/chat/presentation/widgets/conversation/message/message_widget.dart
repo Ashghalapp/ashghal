@@ -157,6 +157,8 @@ class MessageWidget extends StatelessWidget {
                 borderColor: ChatStyle.ownMessageColor!,
                 userName: _screenController.conversation.userName,
                 imageUrl: _screenController.conversation.userImageUrl,
+                userId: _screenController.conversation.userId,
+                showImageOnPress: false,
               ),
             ConstrainedBox(
               constraints: BoxConstraints(

@@ -630,6 +630,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
   final bool receivedLocally;
   final DateTime? readAt;
   final bool readLocally;
+  final bool isStarred;
   final DateTime createdAt;
   final DateTime updatedAt;
   LocalMessage(
@@ -643,6 +644,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       required this.receivedLocally,
       this.readAt,
       required this.readLocally,
+      required this.isStarred,
       required this.createdAt,
       required this.updatedAt});
   factory LocalMessage.fromData(Map<String, dynamic> data, GeneratedDatabase db,
@@ -669,6 +671,8 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
           .mapFromDatabaseResponse(data['${effectivePrefix}read_at']),
       readLocally: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}read_locally'])!,
+      isStarred: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_starred'])!,
       createdAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
@@ -698,6 +702,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       map['read_at'] = Variable<DateTime?>(readAt);
     }
     map['read_locally'] = Variable<bool>(readLocally);
+    map['is_starred'] = Variable<bool>(isStarred);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -721,6 +726,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       readAt:
           readAt == null && nullToAbsent ? const Value.absent() : Value(readAt),
       readLocally: Value(readLocally),
+      isStarred: Value(isStarred),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -740,6 +746,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       receivedLocally: serializer.fromJson<bool>(json['receivedLocally']),
       readAt: serializer.fromJson<DateTime?>(json['readAt']),
       readLocally: serializer.fromJson<bool>(json['readLocally']),
+      isStarred: serializer.fromJson<bool>(json['isStarred']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -758,6 +765,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       'receivedLocally': serializer.toJson<bool>(receivedLocally),
       'readAt': serializer.toJson<DateTime?>(readAt),
       'readLocally': serializer.toJson<bool>(readLocally),
+      'isStarred': serializer.toJson<bool>(isStarred),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -774,6 +782,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
           bool? receivedLocally,
           DateTime? readAt,
           bool? readLocally,
+          bool? isStarred,
           DateTime? createdAt,
           DateTime? updatedAt}) =>
       LocalMessage(
@@ -787,6 +796,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
         receivedLocally: receivedLocally ?? this.receivedLocally,
         readAt: readAt ?? this.readAt,
         readLocally: readLocally ?? this.readLocally,
+        isStarred: isStarred ?? this.isStarred,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -803,6 +813,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
           ..write('receivedLocally: $receivedLocally, ')
           ..write('readAt: $readAt, ')
           ..write('readLocally: $readLocally, ')
+          ..write('isStarred: $isStarred, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -821,6 +832,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       receivedLocally,
       readAt,
       readLocally,
+      isStarred,
       createdAt,
       updatedAt);
   @override
@@ -837,6 +849,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
           other.receivedLocally == this.receivedLocally &&
           other.readAt == this.readAt &&
           other.readLocally == this.readLocally &&
+          other.isStarred == this.isStarred &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -852,6 +865,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
   final Value<bool> receivedLocally;
   final Value<DateTime?> readAt;
   final Value<bool> readLocally;
+  final Value<bool> isStarred;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const MessagesCompanion({
@@ -865,6 +879,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
     this.receivedLocally = const Value.absent(),
     this.readAt = const Value.absent(),
     this.readLocally = const Value.absent(),
+    this.isStarred = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -879,6 +894,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
     this.receivedLocally = const Value.absent(),
     this.readAt = const Value.absent(),
     this.readLocally = const Value.absent(),
+    this.isStarred = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   })  : senderId = Value(senderId),
@@ -894,6 +910,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
     Expression<bool>? receivedLocally,
     Expression<DateTime?>? readAt,
     Expression<bool>? readLocally,
+    Expression<bool>? isStarred,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -908,6 +925,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
       if (receivedLocally != null) 'received_locally': receivedLocally,
       if (readAt != null) 'read_at': readAt,
       if (readLocally != null) 'read_locally': readLocally,
+      if (isStarred != null) 'is_starred': isStarred,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -924,6 +942,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
       Value<bool>? receivedLocally,
       Value<DateTime?>? readAt,
       Value<bool>? readLocally,
+      Value<bool>? isStarred,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
     return MessagesCompanion(
@@ -937,6 +956,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
       receivedLocally: receivedLocally ?? this.receivedLocally,
       readAt: readAt ?? this.readAt,
       readLocally: readLocally ?? this.readLocally,
+      isStarred: isStarred ?? this.isStarred,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -975,6 +995,9 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
     if (readLocally.present) {
       map['read_locally'] = Variable<bool>(readLocally.value);
     }
+    if (isStarred.present) {
+      map['is_starred'] = Variable<bool>(isStarred.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -997,6 +1020,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
           ..write('receivedLocally: $receivedLocally, ')
           ..write('readAt: $readAt, ')
           ..write('readLocally: $readLocally, ')
+          ..write('isStarred: $isStarred, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1076,6 +1100,14 @@ class $MessagesTable extends Messages
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (read_locally IN (0, 1))',
       defaultValue: const Constant(false));
+  final VerificationMeta _isStarredMeta = const VerificationMeta('isStarred');
+  @override
+  late final GeneratedColumn<bool?> isStarred = GeneratedColumn<bool?>(
+      'is_starred', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_starred IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
@@ -1102,6 +1134,7 @@ class $MessagesTable extends Messages
         receivedLocally,
         readAt,
         readLocally,
+        isStarred,
         createdAt,
         updatedAt
       ];
@@ -1165,6 +1198,10 @@ class $MessagesTable extends Messages
           _readLocallyMeta,
           readLocally.isAcceptableOrUnknown(
               data['read_locally']!, _readLocallyMeta));
+    }
+    if (data.containsKey('is_starred')) {
+      context.handle(_isStarredMeta,
+          isStarred.isAcceptableOrUnknown(data['is_starred']!, _isStarredMeta));
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,

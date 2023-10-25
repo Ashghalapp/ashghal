@@ -379,6 +379,7 @@ class AppLocalization {
   static String noActiveUsers = "No active users in your chats".tr;
   static String noFavoriteChats = "No favorite chats".tr;
   static String noConversationsYet = "No Conversations Yet".tr;
+  static String noArchivedChats = "No Archived Chats".tr;
 
   static String conversations = "Conversations".tr;
   static String noConversationsMatchedSearch =
@@ -390,7 +391,7 @@ class AppLocalization {
   static String recentMessages = "Recent Messages".tr;
   static String active = "Active".tr;
   static String favorite = "Favorite".tr;
-  static String blockedUsers = "Blocked Users".tr;
+  static String blockedChats = "Blocked Chats".tr;
   static String online = "Online".tr;
   static String offline = "Offline".tr;
   static String typingNow = "Typing Now".tr;
@@ -451,6 +452,18 @@ class AppLocalization {
   static String selectAll = "Select all";
 
   static String archived = "Archived";
+
+  static String startChatingFailer = "Fail to start a chat with this user";
+
+  static String failToUnstarMessage = "Fail to unstar this message";
+
+  static String failToStarMessage = "Fail to star this message";
+
+  static String successToUnstarMessage = "Message unstarred successfully";
+
+  static String successToStarMessage = "Message starred successfully";
+
+  static String unselectAll = "Unselect All";
 
 //================================ End chat messages ================================//
 }

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
 import 'package:ashghal_app_frontend/core_api/api_response_model.dart';
 import 'package:ashghal_app_frontend/core_api/errors/error_strings.dart';
@@ -30,6 +32,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/requests/start_convers
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
 
 import 'package:dartz/dartz.dart';
+import 'package:get/get.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class ConversationRepositoryImp extends ConversationRepository {
@@ -157,20 +160,42 @@ class ConversationRepositoryImp extends ConversationRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> startConversationWith(
+  Future<Either<Failure, LocalConversation>> startConversationWith(
       StartConversationRequest request) async {
     try {
-      bool conversationCreated =
+      LocalConversation? conversation = await _conversationLocalSource
+          .getConversationWithUser(request.userId);
+      if (conversation != null) {
+        AppPrint.printInfo("Conversation already exists in the local db");
+        return right(conversation);
+      }
+      conversation =
           await _conversationLocalSource.startConversation(request.toLocal());
-      print("isconversation created: ${conversationCreated.toString()}");
+      // LocalConversation conversation =
+      //     await _conversationLocalSource.startConversation(request.toLocal());
 
       // If the device is connected to the network, start the conversation remotely
-      if (await networkInfo.isConnected && conversationCreated) {
+      if (await networkInfo.isConnected && conversation != null) {
+        AppPrint.printData(
+            "conversation creadted locally: ${conversation.toString()}");
         await _startAConversationRemotelyAndUpdateTheLocal(request);
+        conversation = await _conversationLocalSource
+            .getConversationWithUser(request.userId);
+        AppPrint.printData(
+            "conversation creadted remotely: ${conversation.toString()}");
       }
 
-      return Right(conversationCreated);
+      if (conversation == null) {
+        AppPrint.printError(
+            "error in ConversationRepositoryImp in startConversationWith: Fail to create conversation locally");
+        return Left(
+            NotSpecificFailure(message: AppLocalization.startChatingFailer.tr));
+      }
+
+      return Right(conversation);
     } catch (e) {
+      AppPrint.printError(
+          "error in ConversationRepositoryImp in startConversationWith:${e.toString()}");
       return Left(NotSpecificFailure(message: e.toString()));
     }
   }
@@ -348,13 +373,15 @@ class ConversationRepositoryImp extends ConversationRepository {
   }
 
   @override
-  Future<Either<Failure, List<LocalMessage>>> searchInConversations(
+  Future<Either<Failure, List<LocalConversation>>> searchInConversations(
       String searchText) async {
     try {
-      List<LocalMessage> matchedes = await _conversationLocalSource
-          .searchConversationsAndMessages(searchText);
+      List<LocalConversation> matchedes =
+          await _conversationLocalSource.search(searchText);
       return right(matchedes);
     } catch (e) {
+      AppPrint.printError(
+          "Error in ConversationRepositoryImp in searchInConversations: ${e.toString()}");
       return Left(NotSpecificFailure(message: e.toString()));
     }
   }
@@ -448,10 +475,10 @@ class ConversationRepositoryImp extends ConversationRepository {
         //   print("userid: $userid");
         // });
       } on AppException catch (e) {
-        print(
+        AppPrint.printError(
             "MyException in ConversationRepositoryImp in initializeConversations: ${e.failure.toString()}");
       } catch (e) {
-        print(
+        AppPrint.printError(
             "Error in ConversationRepositoryImp in initializeConversations: ${e.toString()}");
       }
     }

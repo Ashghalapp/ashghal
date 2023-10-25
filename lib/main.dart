@@ -56,13 +56,10 @@ class MyApp extends StatelessWidget {
     AppLocallcontroller controller = Get.find();
     return GetMaterialApp(
       darkTheme: AppTheme.darkTheme,
-      // darkTheme: AppServices.apptheme,
       builder: EasyLoading.init(),
       onInit: () {},
       title: 'Ashghal App',
       theme: AppTheme.lightTheme,
-      // theme: AppServices.apptheme,
-      // themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       locale: controller.language,
       translations: MyTranslation(),
@@ -74,7 +71,7 @@ class MyApp extends StatelessWidget {
 
       // initialRoute: AppRoutes.singUpScreenJob,
       // initialRoute: AppRoutes.languageScreen,
-      // // initialRoute: HomeScreen(),
+      // initialRoute: HomeScreen(),
       // home: ProfileAccountHeaderWidget(user: User(id: 1, name: "name", birthDate: DateTime.now(), gender: Gender.male, isBlocked: true, createdAt: DateTime.now(), updatededAt: DateTime.now(), followersUsers: [], followingUsers: [], followersRequestsWait: [], followRequestsSent: []),),
       // home: CommentCardWidget(comment: CommentController().commentsListToTry[0]),
       // initialRoute: AppRoutes.singUpJobScreen,

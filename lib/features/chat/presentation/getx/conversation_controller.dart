@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
@@ -17,6 +18,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/use_cases/dispatch_typ
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/download_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_conversation_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/send_message.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_star_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/upload_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conversation_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conversation_messages_multimedia.dart';
@@ -24,6 +26,7 @@ import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
     as di;
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ConversationController extends GetxController {
@@ -310,5 +313,48 @@ class ConversationController extends GetxController {
   void onClose() {
     // textEditingController.dispose();
     super.onClose();
+  }
+
+  // toggleStarMessage(int selectedMessagesId) {}
+
+  Future<void> toggleStarMessage(int messageLocalId) async {
+    bool? isStarred = messages
+        .firstWhereOrNull(
+            (element) => element.message.localId == messageLocalId)
+        ?.message
+        .isStarred;
+    if (isStarred == null) {
+      return;
+    }
+    ToggleStarMessageUseCase useCase = di.getIt();
+    (await useCase.call(messageLocalId, !isStarred)).fold(
+      (failure) {
+        if (isStarred) {
+          AppUtil.showMessage(
+              AppLocalization.failToUnstarMessage.tr, Colors.red);
+        } else {
+          AppUtil.showMessage(AppLocalization.failToStarMessage.tr, Colors.red);
+        }
+      },
+      (success) {
+        if (success) {
+          if (isStarred) {
+            AppUtil.showMessage(
+                AppLocalization.successToUnstarMessage.tr, Colors.blue);
+          } else {
+            AppUtil.showMessage(
+                AppLocalization.successToStarMessage.tr, Colors.blue);
+          }
+        } else {
+          if (isStarred) {
+            AppUtil.showMessage(
+                AppLocalization.failToUnarchiveConversation.tr, Colors.red);
+          } else {
+            AppUtil.showMessage(
+                AppLocalization.failToArchiveConversation.tr, Colors.red);
+          }
+        }
+      },
+    );
   }
 }

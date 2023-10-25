@@ -16,6 +16,7 @@ abstract class ChatColors {
   static const cardDark = Color(0xFF303334);
   static const appBarLight = Colors.white70;
   static const appBarDark = Color(0xFF303334);
+  static const scaffoldDarkBackground = Color(0xFF1B1E1F);
 }
 
 abstract class _LightColors {

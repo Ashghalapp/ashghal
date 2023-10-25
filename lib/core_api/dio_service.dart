@@ -14,6 +14,7 @@ import 'public_interceptor.dart';
 class DioService {
   final int connectTimeout = 60;
   late Dio _dio;
+  late Dio _headDio;
   DioService() {
     _dio = Dio(BaseOptions(
       baseUrl: ApiConstants.baseUrl,
@@ -25,6 +26,17 @@ class DioService {
     _dio.interceptors.add(PublicInterceptor());
     _dio.interceptors
         .add(LogInterceptor(responseBody: true, requestBody: true));
+
+    _headDio = Dio(BaseOptions(
+      baseUrl: ApiConstants.baseUrl,
+      connectTimeout: Duration(seconds: connectTimeout + 5),
+      receiveTimeout: const Duration(seconds: 60),
+      sendTimeout: const Duration(seconds: 60),
+      receiveDataWhenStatusError: true,
+    ));
+    _headDio.interceptors.add(PublicInterceptor());
+    // _dio.interceptors
+    //     .add(LogInterceptor(responseBody: true, requestBody: true));
   }
 
   Future<ApiResponseModel> get(String path, [Object? data]) async {
@@ -56,6 +68,7 @@ class DioService {
 
   Future<bool> head(String path) async {
     try {
+      // final response = await _headDio.head(path);
       final response = await _dio.head(path);
       if (response.statusCode == 200) {
         return true;
