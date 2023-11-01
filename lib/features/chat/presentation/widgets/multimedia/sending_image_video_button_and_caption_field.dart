@@ -27,8 +27,8 @@ class SendingImageVideoButtonAndCaptionField extends StatelessWidget {
                     borderRadius: BorderRadius.circular(26),
                   ),
                   child: AppTextFormField(
+                    labelText: 'Add caption...',
                     hintText: 'Add caption...',
-                    label: 'Add caption...',
                     //           onPressed: () =>
                     //  SelectImageFromGalleryButton(receiverId: '123').pickImagesFromGallery(context),
                     obscureText: false,

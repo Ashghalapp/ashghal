@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
+import 'package:ashghal_app_frontend/app_library/public_request/pagination_request.dart';
 import 'package:dio/dio.dart' as dio_p;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

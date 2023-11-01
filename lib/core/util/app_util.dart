@@ -1,8 +1,12 @@
 import 'dart:io';
+import 'package:ashghal_app_frontend/config/app_routes.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/services/dependency_injection.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
+import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/check_password_uc.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -13,7 +17,7 @@ class AppUtil {
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
-  static Widget addProgressIndicator(double? size) {
+  static Widget addProgressIndicator([double? size, Color? color]) {
     return Center(
         child: SizedBox(
       width: size ?? 40,
@@ -21,7 +25,8 @@ class AppUtil {
       child: CircularProgressIndicator(
         strokeWidth: 2.0,
         backgroundColor: Colors.black12,
-        valueColor: AlwaysStoppedAnimation<Color>(Get.theme.primaryColor),
+        valueColor:
+            AlwaysStoppedAnimation<Color>(color ?? Get.theme.primaryColor),
       ),
     ));
   }
@@ -54,15 +59,20 @@ class AppUtil {
     return url.replaceAll(RegExp(r'localhost'), '10.0.2.2:8000');
   }
 
-  static void showErrorToast(String title, String message) {
-    Get.snackbar(title, message,
-        duration: const Duration(seconds: 4),
-        padding: EdgeInsets.only(
-          right: 10,
-          left: 10,
-          top: title == "" ? 0 : 6,
-          bottom: title == "" ? 20 : 6,
-        ));
+  static void showErrorToast(String message) {
+    Get.snackbar(
+      "",
+      message,
+      duration: const Duration(seconds: 4),
+      padding: const EdgeInsets.only(
+        right: 10,
+        left: 10,
+        // top: title == "" ? 0 : 6,
+        // bottom: title == "" ? 20 : 6,
+        top: 0,
+        bottom: 20,
+      ),
+    );
   }
 
   static void hanldeAndShowFailure(Failure failure, {String prefixText = ""}) {
@@ -98,6 +108,44 @@ class AppUtil {
     ));
   }
 
+  static showSignInDialog() {
+    return buildDialogForWidget(
+      child: Container(
+        width: Get.width,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15, top: 5),
+              child: Text(
+                AppLocalization.signUpForAccount,
+                style: Get.textTheme.bodyLarge,
+              ),
+            ),
+            SizedBox(
+              width: Get.width,
+              height: 35,
+              child: TextButton(
+                onPressed: () => Get.toNamed(AppRoutes.logIn),
+                child: Text(AppLocalization.signUp),
+              ),
+            ),
+            const Divider(),
+            SizedBox(
+              width: Get.width,
+              height: 35,
+              child: TextButton(
+                onPressed: () => Get.back(),
+                child: Text(AppLocalization.cancel,
+                    style: Get.textTheme.bodyMedium),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   static buildDialog(
     String title,
     String message,
@@ -109,6 +157,7 @@ class AppUtil {
     return Get.defaultDialog(
       backgroundColor: Get.theme.dialogBackgroundColor,
       title: title,
+      titlePadding: title.isEmpty ? EdgeInsets.zero : null,
       titleStyle:
           TextStyle(color: Get.theme.primaryColor, fontWeight: FontWeight.bold),
       middleText: message,
@@ -132,7 +181,7 @@ class AppUtil {
               Get.back();
             },
             child: Text(
-              cancelButtonText ?? AppLocalization.cancle,
+              cancelButtonText ?? AppLocalization.cancel,
               style: Get.theme.primaryTextTheme.labelSmall,
             ),
           )
@@ -163,158 +212,12 @@ class AppUtil {
     );
   }
 
-  static Future buildBottomsheet({double height = 200, required Widget child}) {
-    return Get.bottomSheet(
-      Container(
-        width: double.infinity,
-        height: height,
-        decoration: BoxDecoration(
-          color: Get.theme.cardColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          children: [
-            Positioned(
-              right: Get.locale?.languageCode == 'en' ? 10 : null,
-              left: Get.locale?.languageCode == 'ar' ? 10 : null,
-              child: IconButton(
-                icon: const Icon(Icons.close_rounded),
-                onPressed: () => Get.back(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 25),
-              child: child,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static Future buildButtomSheetToEditField({
-    required String title,
-    required String initialValue,
-    required void Function(String newValue) onSave,
-    double height = 200,
-    bool autoFocuse = true,
-  }) {
-    var textController = TextEditingController();
-    RxBool enableSaveButton = true.obs;
-    textController.text = initialValue;
-    textController.addListener(() {
-      enableSaveButton.value = textController.text.isNotEmpty;
-    });
-
-    return buildBottomsheet(
-      height: height,
-      child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            alignment: AlignmentDirectional.centerStart,
-            margin: EdgeInsets.only(
-              right: Get.locale?.languageCode == 'ar' ? 10 : 0,
-              left: Get.locale?.languageCode == 'en' ? 10 : 0,
-            ),
-            child: Text(
-              title,
-              style: Get.textTheme.titleMedium,
-            ),
-          ),
-          AppTextFormField(
-            controller: textController,
-            hintText: '',
-            obscureText: false,
-            onSuffixIconPressed: () {},
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-            autoFocuse: autoFocuse,
-          ),
-          const SizedBox(height: 5),
-          Container(
-            alignment: AlignmentDirectional.centerEnd,
-            child: Obx(
-              () => TextButton(
-                onPressed: () {
-                  Get.focusScope?.unfocus();
-                  onSave(textController.text);
-                  Get.back();
-                },
-                child: Text(
-                  AppLocalization.save.tr,
-                  style: Get.textTheme.titleMedium?.copyWith(
-                      color: enableSaveButton.value ? null : Colors.grey),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static Future buildButtomsheetToEditRadio({
-    required String title,
-    required List<String> values,
-    required String initialValue,
-    required void Function(String newValue) onSave,
-    double height = 250,
-  }) {
-    RxString selectedValue = initialValue.obs;
-    return buildBottomsheet(
-      height: height,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              alignment: AlignmentDirectional.centerStart,
-              margin: EdgeInsets.only(
-                right: Get.locale?.languageCode == 'ar' ? 10 : 0,
-                left: Get.locale?.languageCode == 'en' ? 10 : 0,
-              ),
-              child: Text(
-                title,
-                style: Get.textTheme.titleMedium,
-              ),
-            ),
-            for (int i = 0; i < values.length; i++)
-              Obx(
-                () => RadioListTile(
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                  title: Text(values[i]),
-                  value: values[i].tr,
-                  groupValue: selectedValue.value,
-                  onChanged: (Object? value) {
-                    selectedValue.value = value.toString();
-                  },
-                ),
-              ),
-            const SizedBox(height: 5),
-            Container(
-              alignment: AlignmentDirectional.centerEnd,
-              child: TextButton(
-                onPressed: () {
-                  Get.focusScope?.unfocus();
-                  onSave(selectedValue.value);
-                  Get.back();
-                },
-                child: Text(
-                  "Save ",
-                  style: Get.textTheme.titleMedium,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+  static Future buildDialogForWidget({required Widget child}) {
+    return Get.defaultDialog(
+      title: "",
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      content: child,
     );
   }
 
@@ -323,23 +226,36 @@ class AppUtil {
     final difference = now.difference(dateTime);
 
     if (difference.inSeconds < 60) {
-      return 'Now';
+      return 'now';
     }
     // else if (difference.inSeconds < 60) {
     //   return '${difference.inSeconds} seconds ago';
     // }
     else if (difference.inMinutes < 60) {
       final minutes = difference.inMinutes;
-      return '${minutes} ${minutes == 1 ? 'minute' : 'minutes'} ago';
+      return '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
     } else if (difference.inHours < 24) {
       final hours = difference.inHours;
-      return '${hours} ${hours == 1 ? 'hour' : 'hours'} ago';
+      return '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
     } else if (difference.inDays == 1) {
       final s = dateTime.subtract(const Duration(days: 1));
       return 'Yesterday at ${formatDateTime(s)}';
     } else if (difference.inDays < 7) {
       final days = difference.inDays;
-      return '${days} ${days == 1 ? 'day' : 'days'} ago';
+      return '$days ${days == 1 ? 'day' : 'days'} ago';
+    } else if (difference.inDays < 30) {
+      final int days = difference.inDays;
+      int weak = 1;
+      if (days < 14) {
+        weak = 1;
+      } else if (days < 21) {
+        weak = 2;
+      } else if (days < 28) {
+        weak = 3;
+      } else {
+        weak = 4;
+      }
+      return '$weak ${weak == 1 ? 'weak' : 'weaks'} ago';
     } else {
       // If it's more than a week ago, return the actual date
       return '${dateTime.year}-${dateTime.month}-${dateTime.day}';

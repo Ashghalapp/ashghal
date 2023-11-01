@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
@@ -8,7 +7,6 @@ import 'package:ashghal_app_frontend/features/post/presentation/getx/post_contro
 import 'package:ashghal_app_frontend/features/post/presentation/widget/ScrollerAppBar.dart';
 
 import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_input_widget.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/post_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,16 +38,16 @@ class PostCommentsScreen extends StatelessWidget {
       onRefresh: () => commentController.getPostComments(post.id),
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: const Color(0xFFEDF0F6),
+          // backgroundColor: const Color(0xFFEDF0F6),
           // appBar: AppBar(),
           body: Column(
             children: [
               ScrollerAppBar(
-                controller: commentController.commentScrollController,
+                pageScrollController: commentController.commentScrollController,
                 title: "Post Comments",
                 onScrollDirectionChange: (scrollDirection, isAppBarShow) {
                   _showJumpTopButton.value = isAppBarShow;
-                  if (_showJumpTopButton.value){
+                  if (_showJumpTopButton.value) {
                     Timer(
                       const Duration(seconds: 3),
                       () {
@@ -68,7 +66,11 @@ class PostCommentsScreen extends StatelessWidget {
                     Obx(() {
                       post.commentsCount = post.commentsCount +
                           commentController.sentCommentCounts.value;
-                      return PostWidget(post: post, postMenuButton: PostController().getPostMenuButtonValuesWidget(post.id),);
+                      return PostCardWidget(
+                        post: post,
+                        postMenuButton: PostController()
+                            .getPostMenuButtonValuesWidget(post.id),
+                      );
                     }),
 
                     // show the post's comments
@@ -109,8 +111,6 @@ class PostCommentsScreen extends StatelessWidget {
         ),
       ),
     );
-
-    
   }
 
   Widget _buildPostCommentsWidget() {
@@ -167,6 +167,4 @@ class PostCommentsScreen extends StatelessWidget {
       isReply: false,
     );
   }
-
-    
 }

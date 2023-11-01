@@ -1,3 +1,5 @@
+import 'package:ashghal_app_frontend/app_library/public_entities/app_category.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
@@ -17,26 +19,69 @@ class AddPostController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final contentController = TextEditingController();
+
+  late TextEditingController expireDateController;
+  Rx<DateTime> expireDate = Rx(DateTime.now().add(const Duration(days: 30)));
+
   int? selectedCategory;
 
   // الفئات التي سينتمي لها البوست
-  List<Map<String, Object>> categoryItems = [
-    {'id': 1, 'value': 'برمجة'},
-    {'id': 2, 'value': 'طب'},
-    {'id': 3, 'value': 'هندسة'},
-    {'id': 4, 'value': 'حرفة يدوية'},
-    {'id': 5, 'value': 'تصميم'},
-  ];
+  // List<Map<String, Object>> categories = [
+  //   {'id': 1, 'name': 'برمجة'},
+  //   {'id': 2, 'name': 'طب'},
+  //   {'id': 3, 'name': 'هندسة'},
+  //   {'id': 4, 'name': 'حرفة يدوية'},
+  //   {'id': 5, 'name': 'تصميم'},
+  // ];
 
   // XFile حفظ جميع الصور التي سيتم رفعها بالبوست ويتم حفظها بشكل
   // RxList<XFile> imagesXFiles = <XFile>[].obs;
   // حفظ مسار جميع الصور التي سيتم رفعها بالبوست
   RxList<String> imagesPaths = <String>[].obs;
 
+  /// list to save the multimedia when edit found post
   List<Multimedia> multiMediaToEdit = [];
+
+  /// list to save the ids of multimedia to delete them
   List<int> imagesIdToDelete = [];
 
+  RxBool allowComment = true.obs;
+
+  RxList<AppCategory> categories =
+      SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
+
   bool get isValidateForm => formKey.currentState?.validate() ?? false;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    expireDateController = TextEditingController();
+    expireDateController.text = expireDate.value.toString().split(' ')[0];
+    
+    // await loadCategories();
+  }
+
+  // Future<void> loadCategories() async {
+  //   (await ApiUtil.getCategoriesFromApi()).fold((failure) {
+  //     AppUtil.hanldeAndShowFailure(failure);
+  //   }, (resultCategories) {
+  //     SharedPref.setCategories(resultCategories);
+  //     categories.value = resultCategories;
+  //   });
+  // }
+
+  void loadPostDataToUpdate(Post post) {
+    titleController.text = post.title;
+    contentController.text = post.content;
+    selectedCategory = int.parse(post.categoryData['id'].toString());
+    multiMediaToEdit = post.multimedia ?? [];
+    imagesPaths.value = post.multimedia?.map((e) => e.url).toList() ?? [];
+    expireDate.value = post.expireDate;
+    expireDateController.text = expireDate.value.toString().split(' ')[0];
+    allowComment.value = post.allowComment;
+
+    imagesIdToDelete.clear();
+  }
 
   Future<void> submitAddButton() async {
     if (!isValidateForm || selectedCategory == null) return;
@@ -49,6 +94,8 @@ class AddPostController extends GetxController {
         content: contentController.text,
         categoryId: selectedCategory,
         multimediaPaths: imagesPaths,
+        expireDate: expireDate.value,
+        allowComment: allowComment.value,
       ),
     );
 
@@ -71,8 +118,8 @@ class AddPostController extends GetxController {
       return;
     }
 
-    UpdatePostUseCase addPostUS = di.getIt();
-    var result = addPostUS.call(
+    UpdatePostUseCase updatePostUS = di.getIt();
+    var result = updatePostUS.call(
       UpdatePostRequest(
         postId: postId,
         title: titleController.text,
@@ -81,6 +128,8 @@ class AddPostController extends GetxController {
         multimediaPaths: imagesPaths
             .where((imagePath) => !imagePath.startsWith('http'))
             .toList(),
+        expireDate: expireDate.value,
+        allowComment: allowComment.value,
       ),
     );
 
@@ -88,7 +137,7 @@ class AddPostController extends GetxController {
       AppUtil.hanldeAndShowFailure(failure);
     }, (post) {
       AppUtil.showMessage(AppLocalization.successAddPost, Colors.green);
-      // Get.back();
+      Get.back();
     });
     EasyLoading.dismiss();
   }
@@ -112,16 +161,6 @@ class AddPostController extends GetxController {
       );
     }
     return isImagesDeleted;
-  }
-
-  void loadPostDataToUpdate(Post post) {
-    titleController.text = post.title;
-    contentController.text = post.content;
-    selectedCategory = post.categoryId;
-    multiMediaToEdit = post.multimedia ?? [];
-    imagesPaths.value = post.multimedia?.map((e) => e.url).toList() ?? [];
-
-    imagesIdToDelete.clear();
   }
 
   // عبئة قائمة مسارات الصور
@@ -163,7 +202,9 @@ class AddPostController extends GetxController {
         Get.back();
         int multimediaIndex = multiMediaToEdit
             .indexWhere((element) => element.url == imagesPaths[index]);
-        if (multimediaIndex != -1) imagesIdToDelete.add(multiMediaToEdit[multimediaIndex].id);
+        if (multimediaIndex != -1) {
+          imagesIdToDelete.add(multiMediaToEdit[multimediaIndex].id);
+        }
         // imagesIdToDelete.add(multiMediaToEdit
         //     .firstWhere((element) => element.url == imagesPaths[index])
         //     .id);

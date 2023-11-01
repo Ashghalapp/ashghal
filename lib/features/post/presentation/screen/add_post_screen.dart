@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
+import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/cashed_image_widget.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
@@ -33,19 +34,18 @@ class AddPostScreen extends StatelessWidget {
             : AppLocalization.createNewPost),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: ListView(
           shrinkWrap: true,
           children: <Widget>[
-            // Title Input Field
             Form(
               key: addPostController.formKey,
               child: Column(
                 children: [
                   // Title Input Field
                   AppTextFormField(
+                    // labelText: "Enter title",
                     hintText: "Enter title",
-                    label: "Enter title",
                     obscureText: false,
                     controller: addPostController.titleController,
                     padding:
@@ -61,8 +61,8 @@ class AddPostScreen extends StatelessWidget {
 
                   // Content Input Field
                   AppTextFormField(
+                    // labelText: "Enter content",
                     hintText: "Enter content",
-                    label: "Enter content",
                     obscureText: false,
                     controller: addPostController.contentController,
                     padding:
@@ -83,22 +83,64 @@ class AddPostScreen extends StatelessWidget {
 
             const SizedBox(height: 5),
 
-            // Category Selection Dropdown
-            _buildCategoryDropdownButton(),
+            // Category Dropdown
+            Obx(
+              () => AppDropDownButton(
+                items: addPostController.categories
+                    .map((category) => category.toJson())
+                    .toList(),
+                onChange: (newValue) {
+                  addPostController.selectedCategory =
+                      int.parse(newValue?.toString() ?? "1");
+                },
+                hintText: AppLocalization.selectCategory,
+                labelText: AppLocalization.category,
+                initialValue: addPostController.selectedCategory,
+              ),
+            ),
 
+            // images widgets
             Obx(() => _buildImagesWidget()),
 
-            // Create Post Button
-            // PostButton(
-            //   text: AppLocalization.addMedia,
-            //   onPressed: () {
-            //     controller.pickImages();
-            //   },
-            //   icon: Icons.camera_alt,
-            // ),
-            // addPostController.formKey.currentState?.validate()?? false
-            // ?
+            // Expire date Field
+            AppTextFormField(
+              labelText: "Expire date",
+              hintText: "Select expire date",
+              obscureText: false,
+              controller: addPostController.expireDateController,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              margin: const EdgeInsets.only(bottom: 5),
+              readOnly: true,
+              onTap: () async {
+                await _selectDate(addPostController.expireDate);
+                addPostController.expireDateController.text =
+                    addPostController.expireDate.value.toString().split(' ')[0];
+                print("<<<<<<<${addPostController.expireDate.value}>>>>>>>");
+              },
+              validator: (newValue) {
+                if (newValue?.isEmpty ?? true) {
+                  return AppLocalization.requiredField;
+                }
+                return null;
+              },
+            ),
 
+            // allow comment widget
+            Obx(
+              () => CheckboxListTile(
+                title: Text('Allow Comment'),
+                value: addPostController.allowComment.value,
+                contentPadding: EdgeInsets.only(
+                  left: Get.locale?.languageCode == 'en' ? 5 : 0,
+                  right: Get.locale?.languageCode == 'ar' ? 5 : 0,
+                ),
+                onChanged: (newValue) {
+                  addPostController.allowComment.value = newValue ?? true;
+                },
+              ),
+            ),
+
+            // send/update post button
             const SizedBox(height: 10),
             AppGesterDedector(
               text:
@@ -135,42 +177,6 @@ class AddPostScreen extends StatelessWidget {
     );
   }
 
-  /// دالة لبناء القائمة الخاصة بتحديد الفئة
-  Widget _buildCategoryDropdownButton() {
-    var borderRadius = const OutlineInputBorder(
-      borderRadius: BorderRadius.all(
-        Radius.circular(12),
-      ),
-    );
-    return DropdownButtonFormField(
-      isExpanded: true,
-      value: addPostController.selectedCategory,
-      onChanged: (newValue) {
-        addPostController.selectedCategory =
-            int.parse(newValue?.toString() ?? "1");
-      },
-      style: Get.textTheme.bodyMedium,
-      items: addPostController.categoryItems
-          .map(
-            (category) => DropdownMenuItem(
-                value: category['id'],
-                child: Center(child: Text(category['value'].toString()))),
-          )
-          .toList(),
-      decoration: InputDecoration(
-        hintText: 'Select category',
-        hintStyle: Get.textTheme.labelSmall,
-        border: borderRadius,
-        enabledBorder: borderRadius.copyWith(
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: borderRadius.copyWith(
-          borderSide: BorderSide(color: Get.theme.primaryColor),
-        ),
-      ),
-    );
-  }
-
   final heightOfImages = 225.0;
 
   Widget _buildImagesWidget() {
@@ -180,46 +186,44 @@ class AddPostScreen extends StatelessWidget {
           scrollDirection: Axis.horizontal, // Horizontal scrolling
           itemCount: addPostController.imagesPaths.length + 1,
           itemBuilder: (context, index) {
-            if (index == addPostController.imagesPaths.length) {
-              return _buildAddMultiMediaButtonAsImage();
+            // if (index == addPostController.imagesPaths.length) {
+            if (index == 0) {
+              print("{{{{{{{$index}}}}}}}");
+              return _buildAddMultiMediaButtonAsImage(
+                  addPostController.imagesPaths.isNotEmpty ? 115 : null);
             }
 
-            final imageUrl = addPostController.imagesPaths[index];
+            final imageUrl = addPostController.imagesPaths[index - 1];
             print("<<<<<<<<<<$imageUrl>>>>>>>>>>");
 
             return Padding(
-              padding: EdgeInsets.only(
-                top: 15.0,
-                bottom: 10,
-                left: Get.locale?.languageCode == 'ar' ? 10 : 0,
-                right: Get.locale?.languageCode == 'en' ? 10 : 0,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               child: Stack(
                 children: [
                   GestureDetector(
                     onTap: () => addPostController.chooseImage(index),
-                    child: imageUrl.startsWith('http')
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            // height: 200,
-                            child: CashedNetworkImageWidget(
-                              imageUrl: addPostController.imagesPaths[index],
+                    child:
+                        // imageUrl.startsWith('http')            ?
+                        ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      // height: 200,
+                      child: imageUrl.startsWith('http')
+                          ? CashedNetworkImageWidget(
+                              height: 200,
+                              imageUrl: imageUrl,
                               errorAssetImagePath: "assets/images/unKnown.jpg",
-                            ),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.file(
-                              File(addPostController.imagesPaths[index]),
+                            )
+                          : Image.file(
+                              File(imageUrl),
                               // width: Get.width - 100,
-                              // height: 200,
+                              height: 200,
                             ),
-                          ),
+                    ),
                   ),
                   Container(
                     alignment: AlignmentDirectional.topEnd,
                     child: InkWell(
-                      onTap: () => addPostController.removeImage(index),
+                      onTap: () => addPostController.removeImage(index - 1),
                       child: const Icon(
                         Icons.delete,
                         color: Colors.red,
@@ -234,7 +238,7 @@ class AddPostScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAddMultiMediaButtonAsImage() {
+  Widget _buildAddMultiMediaButtonAsImage([double? width]) {
     return InkWell(
       onTap: () => addPostController.pickImages(),
       child: Container(
@@ -245,14 +249,31 @@ class AddPostScreen extends StatelessWidget {
           color: Get.theme.inputDecorationTheme.fillColor,
           borderRadius: BorderRadius.circular(12),
         ),
-        width: Get.width - 32,
+        width: width ?? Get.width - 20,
         child: CustomTextAndIconButton(
-          text:
-              Text(AppLocalization.photoVideo, style: Get.textTheme.bodyMedium),
+          text: Text(
+            AppLocalization.photoVideo,
+            style: Get.textTheme.bodyMedium,
+            overflow: TextOverflow.ellipsis,
+          ),
           onPressed: () => addPostController.pickImages(),
           icon: const Icon(Icons.add_photo_alternate),
         ),
       ),
     );
+  }
+
+  Future<void> _selectDate(Rx<DateTime> date) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: Get.context!,
+      initialDate: date.value,
+      firstDate: DateTime(1950),
+      lastDate: DateTime(2100),
+      locale: const Locale('en'), // تعيين اللغة لعرض التاريخ بالعربية
+    );
+
+    if (pickedDate != null && pickedDate != date.value) {
+      date.value = pickedDate;
+    }
   }
 }

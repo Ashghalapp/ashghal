@@ -1,4 +1,4 @@
-import '../pagination_request.dart';
+import '../../../../../app_library/public_request/pagination_request.dart';
 
 class GetUserPostsRequest extends PaginationRequest {
   final int userId;

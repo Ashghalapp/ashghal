@@ -1,9 +1,15 @@
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
-import 'package:ashghal_app_frontend/features/account/widgets/header_widgets/profile_account_header_widget.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/entities/user.dart';
-import 'package:ashghal_app_frontend/features/auth/presentation/screens/test_screen.dart';
+import 'package:ashghal_app_frontend/config/theme_controller.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core_api/api_util.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/settings_screen.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/change_password_screen.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/account/header_widgets/profile_account_header_widget.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/test_screen.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_card_widget.dart';
@@ -13,6 +19,7 @@ import 'package:ashghal_app_frontend/tester.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/app_routes.dart';
 import 'config/app_theme.dart';
@@ -24,8 +31,20 @@ import 'core/services/app_services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialServices();
+  loadCategories();
+  
+  // (await SharedPreferences.getInstance()).clear();
   runApp(const MyApp());
   configLoading();
+}
+
+Future<void> loadCategories() async {
+  (await ApiUtil.getCategoriesFromApi()).fold((failure) {
+    AppUtil.hanldeAndShowFailure(failure);
+  }, (resultCategories) {
+    SharedPref.setCategories(resultCategories);
+    // categories.value = resultCategories;
+  });
 }
 
 void configLoading() {
@@ -54,7 +73,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // final CommentInputController con = Get.put(CommentInputController(), permanent: true);
     AppLocallcontroller controller = Get.find();
+    ThemeController themeController = Get.find();
     return GetMaterialApp(
+
       darkTheme: AppTheme.darkTheme,
       // darkTheme: AppServices.apptheme,
       builder: EasyLoading.init(),
@@ -80,6 +101,8 @@ class MyApp extends StatelessWidget {
       // initialRoute: AppRoutes.singUpJobScreen,
       // initialRoute: AppRoutes.chooseUserTypeScreen,
       // initialRoute: AppRoutes.mainScreen-
+
+      // home: SettingScreen(user: SharedPref.getCurrentUserData()),
       initialRoute: AppRoutes.logIn,
       // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
@@ -96,7 +119,7 @@ class MyApp extends StatelessWidget {
       // initialRoute: '/tester',
       // initialRoute: AppRoutes.testScreen,
       getPages: routes,
-      themeMode: ThemeMode.light,
+      themeMode: themeController.themeMode.value,
     );
   }
 }

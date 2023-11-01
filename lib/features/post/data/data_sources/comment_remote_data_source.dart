@@ -16,7 +16,7 @@ import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_reque
 import 'package:ashghal_app_frontend/features/post/domain/entities/comment.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/reply.dart';
 
-import '../../domain/Requsets/pagination_request.dart';
+import '../../../../app_library/public_request/pagination_request.dart';
 
 // لكل implement الكلاس الاساسي والي يحتوي العمليات الاساسية حتى يتم منه عمل
 // تقنية مستخدمة حتى تمثل مصدر البيانات، وهكذا تسهل عملية التعديل وايضا التغيير

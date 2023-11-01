@@ -8,7 +8,7 @@ class AppRoutes {
   static const String signUp = '/signup';
   static const String singUpScreenEmail = '/signupscreenemail';
   static const String singUpScreenLocation = '/signupscreenlocation';
-  static const String singUpJobScreen = '/signupscreenjob';
+  // static const String singUpJobScreen = '/signupscreenjob';
   static const String succesSignUp = '/successignup';
   static const String verficationSignUp = '/verficationsignup';
 

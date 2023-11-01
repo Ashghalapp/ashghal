@@ -14,11 +14,16 @@ class AppTheme {
 
   // Define the light theme for the app.
   static final ThemeData lightTheme = ThemeData(
+    unselectedWidgetColor: Colors.white,
+
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.appLayoutBackground,
       elevation: 5,
       foregroundColor: AppColors.appColorPrimary,
+      shape: CircleBorder(),
     ),
+
+    dropdownMenuTheme: DropdownMenuThemeData(textStyle: TextTheme().bodyMedium),
     // brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.appLayoutBackground,
     primaryColor: AppColors.appColorPrimary,
@@ -27,7 +32,7 @@ class AppTheme {
     hoverColor: Colors.grey[350],
     // splashColor:AppColors.appColorPrimary,
     // dividerColor: AppColors.dividerColorLight,
-    dividerColor: AppColors.appDividerColorDark,
+    dividerColor: AppColors.appDividerColorLight,
     // fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
     fontFamily: GoogleFonts.urbanist().fontFamily,
     // app bar theme
@@ -70,12 +75,13 @@ class AppTheme {
       fillColor: MaterialStateProperty.all(AppColors.appColorPrimary),
     ), // elevated button them
     elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-            textStyle:
-                getRegularStyle(color: AppColors.white, fontSize: FontSize.s17),
-            backgroundColor: AppColors.appColorPrimary,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSize.s12)))),
+      style: ElevatedButton.styleFrom(
+          textStyle:
+              getRegularStyle(color: AppColors.white, fontSize: FontSize.s17),
+          backgroundColor: AppColors.appColorPrimary,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSize.s12))),
+    ),
 
     // text theme
     textTheme: TextTheme(
@@ -93,7 +99,7 @@ class AppTheme {
           color: AppColors.appColorPrimary, fontSize: FontSize.s14),
       bodyLarge:
           getRegularStyle(color: AppColors.grey1, fontSize: FontSize.s16),
-      bodySmall: getRegularStyle(color: AppColors.bodyDark1),
+      bodySmall: getRegularStyle(color: AppColors.bodyWhite),
       bodyMedium:
           getRegularStyle(color: AppColors.darkGrey, fontSize: FontSize.s14),
       titleSmall: getBoldStyle(
@@ -150,6 +156,12 @@ class AppTheme {
 
   /////////// DARK THEME ////////////////
   static final ThemeData darkTheme = ThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: Colors.grey,
+      shape: CircleBorder(),
+      elevation: 5,
+    ),
+
 //  brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.appBackgroundColorDark,
     primaryColor: AppColors.appColorPrimary,
@@ -158,7 +170,7 @@ class AppTheme {
     hoverColor: Colors.black54,
     // splashColor: AppColors.appColorPrimary,
     // dividerColor: AppColors.appDividerColorDark,
-    dividerColor: AppColors.dividerColorLight,
+    dividerColor: AppColors.appDividerColorDark,
     // fontFamily: GoogleFonts.plusJakartaSans().fontFamily,
     fontFamily: GoogleFonts.urbanist().fontFamily,
     // app bar theme
@@ -184,7 +196,7 @@ class AppTheme {
 
     // card theme
     cardTheme: const CardTheme(color: AppColors.cardBackgroundBlackDark),
-    cardColor: AppColors.appSectionBackground,
+    cardColor: AppColors.cardBackgroundBlackDark,
 
     // button theme
     buttonTheme: ButtonThemeData(

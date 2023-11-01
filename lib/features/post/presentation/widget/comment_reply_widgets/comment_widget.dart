@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/util/bottom_sheet_util.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/comment.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class CommentWidget extends CommentReplyWidgetAbstract {
           userImageUrl: comment.basicUserData['image_url'].toString(),
           content: comment.content,
           imageUrl: comment.imageUrl,
+          time: comment.createdAt,
         );
   final CommentController commentController = Get.find<CommentController>();
   late ReplyController replyController;
@@ -117,7 +119,7 @@ class CommentWidget extends CommentReplyWidgetAbstract {
 
   @override
   void onEdit() {
-     AppUtil.buildButtomSheetToEditField(
+     BottomSheetUtil.buildButtomSheetToEditField(
       title: AppLocalization.editYourComment,
       initialValue: comment.content,
       onSave: (newContent) async {

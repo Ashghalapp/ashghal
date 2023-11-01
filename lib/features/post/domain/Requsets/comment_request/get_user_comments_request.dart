@@ -1,5 +1,5 @@
 
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
+import 'package:ashghal_app_frontend/app_library/public_request/pagination_request.dart';
 
 class GetUserCommentsRequest extends PaginationRequest{
   final int userId;

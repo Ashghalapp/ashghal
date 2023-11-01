@@ -1,20 +1,34 @@
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
-import 'package:ashghal_app_frontend/features/auth/data/repositories/user_provider_repository_impl.dart';
-import 'package:ashghal_app_frontend/features/auth/data/repositories/user_repository_impl.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/repositories/user_provider_repository.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/repositories/user_repository.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/check_email_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/forget_password_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/login_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/logout_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_user_with_email_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/register_user_with_phone_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/reset_password_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecases/get_current_user_data_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecases/get_specific_user_data_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecases/update_user_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_email_uc.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_reset_password_code_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/data/repositories/user_provider_repository_impl.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/data/repositories/user_repository_impl.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/repositories/user_provider_repository.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/repositories/user_repository.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/add_or_change_email_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/check_email_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/forget_password_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/login_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/logout_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/register_user_with_email_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/register_user_with_phone_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/reset_password_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/send_email_verification_code_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/change_password_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/check_password_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/convert_client_to_provider_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/convert_provider_to_client_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/delete_account_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/delete_user_image_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/follow_user_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/get_current_user_data_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/get_specific_user_data_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/get_user_followers_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/get_user_following_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/search_for_users_us.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/unfollow_me_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/unfollow_user_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/update_user_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/validate_email_code_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/verify_reset_password_code_uc.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/comment_repository_impl.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/post_repository_impl.dart';
 import 'package:ashghal_app_frontend/features/post/domain/repositories/comment_repository.dart';
@@ -38,6 +52,7 @@ import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_cas
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_all_posts_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_category_posts_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_current_user_posts_uc.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_recent_posts_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_specific_post_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_user_posts_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/search_for_posts_us.dart';
@@ -85,42 +100,59 @@ void setupDependencies() {
   //// usecases injection
   getIt.registerLazySingleton(() => RegisterUserWithEmailUseCase(getIt()));
   getIt.registerLazySingleton(() => RegisterUserWithPhoneUseCase(getIt()));
-  getIt.registerLazySingleton(() => VerifyEmailUseCase(getIt()));
+  getIt.registerLazySingleton(() => SendEmailVerificationCodeUseCase(getIt()));
+  getIt.registerLazySingleton(() => ValidateEmailCodeUseCase(getIt()));
   getIt.registerLazySingleton(() => LoginUseCase(getIt()));
   getIt.registerLazySingleton(() => LogoutUseCase(getIt()));
   getIt.registerLazySingleton(() => CheckEmailUseCase(getIt()));
   getIt.registerLazySingleton(() => ForgetPasswordUseCase(getIt()));
   getIt.registerLazySingleton(() => ValidateResetPasswordByEmailCode(getIt()));
   getIt.registerLazySingleton(() => ResetPasswordUseCase(getIt()));
+  getIt.registerLazySingleton(() => AddOrChangeEmailUseCase(getIt()));
 
   getIt.registerLazySingleton(() => GetCurrentUserDataUseCase(getIt()));
   getIt.registerLazySingleton(() => GetSpecificUserDataUseCase(getIt()));
   getIt.registerLazySingleton(() => UpdateUserUseCase(getIt()));
+  getIt.registerLazySingleton(() => ConvertClientToProviderUseCase(getIt()));
+  getIt.registerLazySingleton(() => ConvertProviderToClientUseCase(getIt()));
+  getIt.registerLazySingleton(() => CheckPasswordUseCase(getIt()));
+  getIt.registerLazySingleton(() => ChangePasswordUseCase(getIt()));
 
-  //=============================End Auth Dependencey Injection==================================//
-  ///=============================================================================================//
-  ///=============================================================================================//
-  //=============================Start Post Dependencey Injection==================================//
+  getIt.registerLazySingleton(() => GetUserFollowersUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetUserFollowingsUseCase(getIt()));
+  getIt.registerLazySingleton(() => FollowUserUseCase(getIt()));
+  getIt.registerLazySingleton(() => UnfollowUserUseCase(getIt()));
+  getIt.registerLazySingleton(() => UnfollowMeUseCase(getIt()));
+  getIt.registerLazySingleton(() => SearchForUsersUseCase(getIt()));
+  getIt.registerLazySingleton(() => DeleteUserImageUseCase(getIt()));
+  getIt.registerLazySingleton(() => DeleteAccountUseCase(getIt()));
+//=============================End Auth and User Dependencey Injection==================================//
+///=============================================================================================//
+///
+///
+///=============================================================================================//
+//=============================Start Post Dependencey Injection==================================//
   //// repository injection
   getIt.registerLazySingleton<PostRepository>(() => PostRepositoryImpl());
 
   //// usecases injection
-  getIt.registerLazySingleton(() => AddPostUseCase(getIt()));
-  getIt.registerLazySingleton(() => UpdatePostUseCase(getIt()));
-  getIt.registerLazySingleton(() => GetAllAlivePostsUseCase(getIt()));
-  getIt.registerLazySingleton(() => GetAllCompletePostsUseCase(getIt()));
   getIt.registerLazySingleton(() => GetAllPostsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetAllAlivePostsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetRecentPostsUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetAllCompletePostsUseCase(getIt()));
   getIt.registerLazySingleton(() => GetSpecificPostUseCase(getIt()));
-  getIt.registerLazySingleton(() => GetUserPostsUseCase(getIt()));
+  getIt.registerLazySingleton(() => AddPostUseCase(getIt()));
   getIt.registerLazySingleton(() => GetCurrentUserPostsUseCase(getIt()));
   getIt.registerLazySingleton(() => GetCategoryPostsUseCase(getIt()));
+  getIt.registerLazySingleton(() => UpdatePostUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetUserPostsUseCase(getIt()));
   getIt.registerLazySingleton(() => SearchForPostsUseCase(getIt()));
   getIt.registerLazySingleton(() => DeletePostUseCase(getIt()));
   getIt.registerLazySingleton(() => DeleteSomePostMultimediaUseCase(getIt()));
-  //=============================End Post Dependencey Injection====================================//
+//=============================End Post Dependencey Injection====================================//
 
-  ///=============================================================================================//
-  //=============================Start Comment Dependencey Injection==================================//
+///=============================================================================================//
+//=============================Start Comment Dependencey Injection==================================//
   //// repository injection
   getIt.registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl());
 

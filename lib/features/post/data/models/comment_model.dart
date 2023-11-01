@@ -20,8 +20,8 @@ class CommentModel extends Comment {
       parentPostId: int.parse(json['parent_post_id'].toString()),
       basicUserData: json['user'],
       repliesCount: int.parse(json['replies_count'].toString()),
-      createdAt: DateTime.now(), //parse(json['updated_at'].toString()),
-      updatedAt: DateTime.now(), // parse(json['created_at'].toString()),
+      createdAt: DateTime.parse(json['updated_at'].toString()),
+      updatedAt: DateTime.parse(json['created_at'].toString()),
     );
   }
 

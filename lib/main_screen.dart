@@ -1,11 +1,5 @@
-import 'package:ashghal_app_frontend/features/account/Screen/account_screen.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/screen/add_post_screen.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'core/util/app_util.dart';
-import 'core/widget/app_scaffold_widget.dart';
 import 'mainscreen_controller.dart';
 
 class MainScreen extends GetView<MainScreenController> {
@@ -20,7 +14,6 @@ class MainScreen extends GetView<MainScreenController> {
     print("Theme is dark ${Theme.of(context).brightness == Brightness.dark}");
     print("--------------------------------------------------------------");
 
-    printError(info: "<<<<<<<<<<<${Get.isDarkMode} ${Get.isPlatformDarkMode}");
     return GetBuilder<MainScreenController>(
       init: MainScreenController(),
       initState: (_) {},

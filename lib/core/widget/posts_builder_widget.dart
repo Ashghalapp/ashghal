@@ -1,46 +1,65 @@
-// import 'package:ashghal_app_frontend/features/post/presentation/getx/post_controller.dart';
-// import 'package:ashghal_app_frontend/features/post/presentation/widget/post_widget.dart';
-// import 'package:ashghal_app_frontend/features/post/presentation/widget/post_shimmer.dart';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
+import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/post_shimmer.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/post_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-// class PostsBuilder extends StatelessWidget {
-//   final PostController postController;
-//   final ScrollController? scrollController;
-//   final Widget onFaildGetData;
-//   const PostsBuilder({
-//     super.key,
-//     required this.postController,
-//     this.scrollController,
-//     required this.onFaildGetData,
-//   });
+class PostsBuilderWidget extends StatelessWidget {
+  final RxList<Post> posts;
+  // final int lastIndexToGetNextPage;
+  final void Function(int index) onIndexChange;
+  final PopupMenuButtonWidget Function(int postId) getPopupMenuFunction;
+  final RxBool isRequestFinishWithoutData;
+  final ScrollController? scrollController;
+  final Widget faildDownloadWidget;
+  const PostsBuilderWidget({
+    super.key,
+    required this.posts,
+    this.scrollController,
+    // required this.lastIndexToGetNextPage,
+    required this.onIndexChange,
+    required this.getPopupMenuFunction,
+    required this.isRequestFinishWithoutData,
+    required this.faildDownloadWidget,
+  });
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Obx(
-//       () => postController.postList.isNotEmpty
-//           ? ListView.builder(
-//               controller: scrollController,
-//               shrinkWrap: true,
-//               itemBuilder: (context, index) {
-//                 print("------------Posts number $index");
-//                 if (index == postController.postList.length - 3 &&
-//                     index != postController.lastIndexToGetNewPage) {
-//                   postController.loadNextPageOfPosts();
-//                   postController.lastIndexToGetNewPage = index;
-//                 }
-//                 if (index < postController.postList.length) {
-//                   return PostWidget(
-//                     post: postController.postList[index],
-//                   );
-//                 }
-//                 return null;
-//               },
-//               itemCount: postController.postList.length,
-//             )
-//           : postController.isRequestFinishWithoutData
-//               ? onFaildGetData
-//               : PostShimmer(width: Get.width, shimmerNumber: 2),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => posts.isNotEmpty
+          ? ListView.builder(
+              controller: scrollController,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                print("------------Posts number $index of ${posts.length}");
+                onIndexChange(index);
+                // if (index == posts.length - 3 &&
+                //     index != lastIndexToGetNextPage) {
+                //   onIndexChange(index);
+                //   // postController.lastIndexToGetNewPage = index;
+                //   // postController.lastIndexToGetNextPage = index;
+                // }
+                // print("------------last index ${lastIndexToGetNextPage}");
+                // print(
+                // "------------last loaded index ${postController.lastIndexToGetNewPage}");
+                if (index < posts.length) {
+                  return PostCardWidget(
+                      // key: GlobalObjectKey(postController.postList[index].id),
+                      post: posts[index],
+                      postMenuButton: getPopupMenuFunction(posts[index].id)
+                      // (
+                      // posts[index].id,
+                      // ),
+                      );
+                }
+                return null;
+              },
+              itemCount: posts.length,
+            )
+          : isRequestFinishWithoutData.value
+              ? faildDownloadWidget
+              : PostShimmer(width: Get.width, shimmerNumber: 2),
+    );
+  }
+}

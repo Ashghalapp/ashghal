@@ -1,5 +1,9 @@
 import 'package:ashghal_app_frontend/config/app_theme.dart';
+import 'package:ashghal_app_frontend/config/theme_controller.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core_api/api_util.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 
 import 'package:ashghal_app_frontend/core_api/pusher_service.dart';
@@ -22,12 +26,13 @@ class AppServices extends GetxService {
   // late SharedPreferences sharedPref;
   Future<AppServices> init() async {
     prefs = await SharedPreferences.getInstance();
-
+    // prefs.clear();
     // prefs.setString('authKey', "1|lAaMrRzYbX5iVFgocDYMLQK2aKFBwdq3mZUYvD8U6510413a");
     // prefs.setString("current_user_data", jsonEncode({'id': '1', 'name': 'hezbr al-humaidi'}));
 
     // Get.lazyPut(() => OnBoardingControllerImp());
     Get.lazyPut(() => AppLocallcontroller());
+    Get.lazyPut(() => ThemeController(), fenix: true);
     cameras = await availableCameras();
 
     pusher = PusherService();
@@ -59,3 +64,5 @@ class AppServices extends GetxService {
 initialServices() async {
   await Get.putAsync(() => AppServices().init());
 }
+
+

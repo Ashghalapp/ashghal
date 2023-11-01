@@ -2,6 +2,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 class AppLocalization {
+  static String signUpForAccount = "Sign up for an account";
+
   static String back = 'back'.tr;
   static String activity = 'activity'.tr;
   static String about = 'about'.tr;
@@ -20,7 +22,7 @@ class AppLocalization {
   static String rejected = 'rejected'.tr;
   static String transactionHistory = 'transaction history'.tr;
   static String loading = 'loading...'.tr;
-  static String message = 'message'.tr;
+  static String message = 'Message';
   static String newMessage = 'newMessage'.tr;
   static String reply = 'reply'.tr;
   static String forward = 'forward'.tr;
@@ -76,7 +78,7 @@ class AppLocalization {
   static String hi = 'Hi'.tr;
   static String login = 'Login'.tr;
 
-  static String profile = 'profile'.tr;
+  static String profile = 'Profile';
   static String editProfile = 'editProfile'.tr;
   static String profileUpdated = 'profileUpdated'.tr;
 
@@ -101,7 +103,7 @@ class AppLocalization {
 
   static String loginAnotherAccount = 'loginAnotherAccount'.tr;
   static String yourEmail = 'yourEmail'.tr;
-  static String forgotPwd = 'forgotPwd'.tr;
+  static String forgetPassword = 'Forgot Password?'.tr;
   static String passwordIsEmpty = 'passwordIsEmpty'.tr;
   static String emailPwdIsIncorrect = 'emailPwdIsIncorrect'.tr;
   static String passwordChanged = 'passwordChanged'.tr;
@@ -173,9 +175,6 @@ class AppLocalization {
   static String pleaseEnterUserName = 'pleaseEnterUserName'.tr;
   static String pleaseEnterValidUserName = 'pleaseEnterValidUserName'.tr;
 
-  static String enterNewPassword = 'enterNewPassword'.tr;
-  static String enterConfirmPassword = 'enterConfirmPassword'.tr;
-  static String enterOldPassword = 'enterOldPassword'.tr;
   static String pleaseEnterCategoryName = 'pleaseEnterCategoryName'.tr;
   static String pleaseEnterSliderName = 'pleaseEnterCategoryName'.tr;
 
@@ -196,19 +195,16 @@ class AppLocalization {
   static String and = ' and '.tr;
 
 /////////////////////////
-  static String password = 'Password';
-  static String newPassword = 'newPassword'.tr;
-  static String confirmPassword = 'confirmPassword'.tr;
 
 //================== NEW STRINGS ===============================//
 ///////////////////////////////////////////////////////////////////
 
-  static String category = 'Category'.tr;
+  static String category = 'Category';
 
   static String search = 'Search'.tr;
 
   static String logout = 'Log Out'.tr;
-  static String changePwd = 'Change Password'.tr;
+
   static String logoutConfirmation = "Are you sure, you want to logout?".tr;
 
   static String enterAddress = 'Enter address details'.tr;
@@ -219,14 +215,22 @@ class AppLocalization {
   static String createNewPwdCondition =
       'Your new password must be different from last password'.tr;
 
-  static String oldPwdStr = 'Old password'.tr;
-  static String newPwdStr = 'New password'.tr;
-  static String confirmPwdStr = 'Confirm password'.tr;
+  static String changePassword = 'Change password';
+  static String password = 'Password';
+  static String oldPassword = 'Old password';
+  static String newPassword = 'New password'.tr;
+  static String confirmPassword = 'Confirm password'.tr;
+  static String enterNewPassword = 'Enter new password';
+  static String enterConfirmPassword = 'Enter confirm password';
+  static String enterOldPassword = 'Enter old password';
   static String pwdDoesNotMatched = 'Password does not match'.tr;
   static String pwdChanged = 'Password changed'.tr;
   static String pwdRule = 'Password rules'.tr;
   static String passwordRule =
       'Your password must be 8 or more characters long'.tr;
+  static String resetYourPassword = "Reset Your Password";
+  static String pleaseEnterYourNewPasswordDownHere =
+      "Please enter your new password down here!";
 
   static String resetPwd = 'resetPwd'.tr;
 
@@ -272,7 +276,7 @@ class AppLocalization {
 
   static String followBack = 'Follow back'.tr;
 
-  static String unFollow = 'UnFollow'.tr;
+  static String unFollow = 'UnFollow';
 
   static String newFollower = 'New Follower'.tr;
 
@@ -300,7 +304,7 @@ class AppLocalization {
 
   //======================Sign up strings============================//
   static String emailAlreadyExist = "Email Already Exist".tr;
-  static String successRegister = "Successfull Register".tr;
+  static String successRegister = "Successfully registered";
 
 ///////////////// NEW STRINGS //////////////////
   static String successloggedIn = "Successfull Logged In".tr;
@@ -311,17 +315,21 @@ class AppLocalization {
   static String done = 'Done'.tr;
   static String warning = 'Warning'.tr;
   static String orContinueWith = 'or contiue with'.tr;
-  static String cancle = 'Cancel'.tr;
+  static String cancel = 'Cancel'.tr;
   static String jobname = 'Job Name'.tr;
   static String jobdesc = 'Job Description'.tr;
   static String doyouwanttoexitApp = 'Do you want exit the app?'.tr;
   static String choosejobcategory = 'Choose Your Job Category'.tr;
-  static String selectCategory = 'Select Category'.tr;
+  static String selectCategory = 'Select category';
   // static String NotFoundDataInOfflineMode = 'Not found data in offline mode'.tr;
 
-  ///////////////////////Post Messages/////////////////////////////////////
+  /////////////////////// Post Messages /////////////////////////////////////
   static String successAddPost = "The post has been added successfully";
+  static String successEditPost = "The post has been edited successfully";
   static String thereIsSomethingError = "There is something error.. Try later";
+  static String recentPosts = "Recent Posts";
+  static String incompletePosts = "Incomplete Posts";
+  static String completedPosts = "Completed Posts";
 
   ///////////////////////Comment and replies Messages/////////////////////////////////////
   static String areYouSureToDeleteYourComment =
@@ -349,6 +357,25 @@ class AppLocalization {
   static String photoVideo = "Photo/Video";
 
   static String providerData = "Provider data";
+
+  static String comment = "Comment";
+  static String completed = 'Completed';
+  static String incomplete = "Incomplete";
+  static String theme = 'Theme';
+
+//====================== Start settings messages =======================
+  static String deleteAccount = "Delete your Account";
+  static String areYouSureToDeleteYourAccount =
+      "Are you sure to delete your account?";
+  static String noteForDeleteAccount =
+      "Note: Your account cannot be retrieved after delete it!.\nAre you sure to continue deleting the account?";
+  static String noteForDeleteAccountThatWillDeleteAllPosts =
+      "Note: Deleting the account will delete all your posts in the application!.\nAre you sure to continue deleting the account?";
+  static String sure= "Sure";
+  static String confirm= "Confirm";
+//====================== End settings messages =======================
+
+//====================== Start account settings messages =======================
   static String gender = 'Gender';
   static String name = "Name";
   static String birthDate = "Birth date";
@@ -357,19 +384,43 @@ class AppLocalization {
   static String address = "Address";
   static String street = "Street";
   static String description = "Description";
-
-  static String comment = "Comment";
-  static String completed = 'Completed';
-  static String incomplete = "Incomplete";
-  static String theme = 'Theme';
-
   static String save = "Save";
   static String male = "male";
   static String female = "female";
   static String addressDescription = "Address description";
-  static String tapToAdd = "Address description";
+  static String tapToAdd = "Tap to add";
   static String successModifyYourData =
       "Your data has been successfully modified";
+  static String unfollowFriend =
+      "You and this person are currently friends. Unfollow this person?";
+  static String chat = "Chat";
+  static String notFound = "Not found";
+  static String successUpgradeToProviderAccount =
+      "Your account has been successfully upgraded to a provider account";
+  static String youCanOnlyEditIncompletePost =
+      "You can only edit incomplete posts";
+
+  // change password messages
+  static String successChangePassword = "Password changed successfully";
+  static String changeYourPassword = "Change Your Password";
+  static String check = "Check";
+  static String enterYourPassword = "Enter your password";
+  static String incorrectPassword = "Incorrect password";
+  static String pleaseEnterYourPassword = "Please enter your password";
+  static String pleaseEnterOldPasswordThenNewPasswordThenConfirmIt =
+      "Please enter the old password, then the new password, then confirm it.";
+
+  // change email messages
+  static String changeYourEmail = "Change your email";
+  static String changeEmail = "Change email";
+  static String pleaseEnterNewEmail = "Please enter the new email.";
+//================================ End account settings messages ============================
+
+//================================ Start Search messages ============================
+  static String posts = "Posts";
+  static String users = "Users";
+  static String writeToSearch = "Write to search";
+//================================ End Search messages ==============================
 
 //================================ Start chat messages ================================//
   static String conversationDeletedSuccess =

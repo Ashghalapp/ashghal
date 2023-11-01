@@ -1,5 +1,5 @@
 
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
+import 'package:ashghal_app_frontend/app_library/public_request/pagination_request.dart';
 
 class GetCategoryPostsRequest extends PaginationRequest{
   final int categoryId;

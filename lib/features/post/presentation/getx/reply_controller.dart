@@ -95,7 +95,7 @@ class ReplyController extends GetxController {
       parentCommentId: parentId,
       content: content,
       imageUrl: imagePath,
-      basicUserData: currentUserData,
+      basicUserData: currentUserData?? {},
       replyToCommentId: replyToCommentId,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),

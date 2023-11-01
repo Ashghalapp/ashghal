@@ -20,10 +20,11 @@ import '../../../../../core/widget/cashed_image_widget.dart';
 // ignore: must_be_immutable
 abstract class CommentReplyWidgetAbstract extends StatelessWidget {
   final int userId;
-  final String? userImageUrl;
   final String userName;
+  final String? userImageUrl;
   final String content;
   final String? imageUrl;
+  final DateTime time;
   final CommentStatus status;
   DateTime currentTimeWidget = DateTime.now();
 
@@ -31,10 +32,11 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
     super.key,
     required this.userId,
     required this.userName,
+    this.userImageUrl,
     required this.content,
     required this.imageUrl,
+    required this.time,
     // required this.replyController,
-    this.userImageUrl,
     this.status = CommentStatus.recieved,
     DateTime? setCurrentTime,
   }) {
@@ -66,7 +68,7 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
     // ":::comment user id: $userId :::and current user data are: $currentUserData");
 
     // getMentionUserData();
-    print("<<<<<<<<<<<<<<<<<<<<<<$userImageUrl>>>>>>>>>>>>>>>>>>>>>>");
+    // print("<<<<<<<<<<<<<<<<<<<<<<$userImageUrl>>>>>>>>>>>>>>>>>>>>>>");
     return Column(
       children: [
         Row(
@@ -100,15 +102,6 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
                         _buildTitleWidget(),
 
                         if (imageUrl != null) _buildImageWidget(),
-                        // const SizedBox(height: 2),
-                        // if (getMentionUserData() != null)
-                        // _buildMentionWidget() ?? const SizedBox(),
-
-                        // Text(
-                        //   content,
-                        //   style: Get.textTheme.bodyMedium,
-                        //   overflow: TextOverflow.clip,
-                        // ),
                         _buildContentWidget(),
 
                         // زر الرد وعرض الردود وشريط التحميل
@@ -151,7 +144,7 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
 
   Widget _buildTitleWidget() {
     // Map<String, dynamic> currentUserData = SharedPref.getCurrentUserData() ?? {};
-    Map<String, dynamic> currentUserData = SharedPref.getCurrentUserBasicData();
+    Map<String, dynamic>? currentUserData = SharedPref.getCurrentUserBasicData();
     return SizedBox(
       height: 25,
       child: Row(
@@ -165,10 +158,10 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
             ),
             overflow: TextOverflow.fade,
           ),
-          if (userId == int.parse(currentUserData['id'].toString()))
+          if (userId == currentUserData?['id'])
             PopupMenuButtonWidget(
               onSelected: _onPopupItemSelected,
-              values: OperationsOnCommentPopupMenuValues.values
+              items: OperationsOnCommentPopupMenuValues.values
                   .asNameMap()
                   .keys
                   .toList(),
@@ -199,6 +192,11 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
           text: content,
           style: Get.textTheme.bodyMedium,
           // overflow: TextOverflow.clip,
+        ),
+        TextSpan(
+          text: "\n${AppUtil.timeAgoSince(time)}",
+          style: Get.textTheme.bodySmall
+              ?.copyWith(color: Get.textTheme.titleSmall?.color),
         )
       ]),
     );

@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'dart:convert';
-
 import 'package:ashghal_app_frontend/core_api/errors/error_strings.dart';
 import 'package:ashghal_app_frontend/core_api/errors/exceptions.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
@@ -12,7 +10,7 @@ import 'api_response_model.dart';
 import 'public_interceptor.dart';
 
 class DioService {
-  final int connectTimeout = 60;
+  final int connectTimeout = 30;
   late Dio _dio;
   DioService() {
     _dio = Dio(BaseOptions(

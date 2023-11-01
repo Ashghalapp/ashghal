@@ -1,23 +1,16 @@
-import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_main_screen.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/account/current_user_account_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/home_screen.dart';
-import 'package:ashghal_app_frontend/features/account/Screen/account_screen.dart';
-import 'package:ashghal_app_frontend/features/post/data/data_sources/post_remote_data_source.dart';
-import 'package:ashghal_app_frontend/features/post/data/repositories/post_repository_impl.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/delete_some_post_multimedia_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/repositories/post_repository.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
+import 'package:ashghal_app_frontend/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 import 'package:get/get.dart';
 
@@ -25,7 +18,7 @@ import 'config/app_icons.dart';
 import 'features/post/presentation/screen/add_post_screen.dart';
 
 class MainScreenController extends GetxController {
-  int currentIndex = 4;
+  int currentIndex = 0;
   final search = TextEditingController();
   final UsersStateController stateController = Get.put(UsersStateController());
 
@@ -137,50 +130,19 @@ class MainScreenController extends GetxController {
   //===========================================//
 
   List<Widget> listPage = [
+    // index 0 => posts
     PostsScreen(),
     //  HomeScreen(),
-    // Column(
+
+    // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
-    //   children: [
-    //     const Center(child: Text("Home screen")),
-    //     ElevatedButton(onPressed: () async{
-    //       try{
-    //       PostCommentRepository ds= PostCommentRepositoryImpl();
-    //       (await ds.addPost(AddPostRequest(title: "title", content: "Upload more one multimedia", categoryId: 1)));
-    //       } catch (e){
-    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-    //       }
-    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-    //     ElevatedButton(onPressed: () async{
-    //       try{
-    //       PostCommentRepository ds= PostCommentRepositoryImpl();
-    //       (await ds.updatePost(UpdatePostRequest(id: 8, allowComment: true, address: Address.updateRequest(city: 'taiz', street: "ss", lat: 10.2))));
-    //       } catch (e){
-    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-    //       }
-    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-    //     ElevatedButton(onPressed: () async{
-    //       try{
-    //       PostCommentRepository ds= PostCommentRepositoryImpl();
-    //       (await ds.deletePost(90));
-    //       } catch (e){
-    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-    //       }
-    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-    //     ElevatedButton(onPressed: () async{
-    //       try{
-    //       PostCommentRepository ds= PostCommentRepositoryImpl();
-    //       (await ds.deleteSomePostMultimedia(DeleteSomePostMultimediaRequest(postId: 93, multimediaIds: [0])));
-    //       } catch (e){
-    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-    //       }
-    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-    //   ],
+    //   children: [Center(child: Text("Search screen"))],
     // ),
-    const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [Center(child: Text("Search screen"))],
-    ),
+
+    // index 1 => Search for posts or users
+    AppSearchScreen(),
+
+    // index 2 => Add Post
     AddPostScreen(),
     // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
@@ -197,7 +159,16 @@ class MainScreenController extends GetxController {
             child: Text("Open Chat"))
       ],
     ),
-    AccountScreen(),
+    // AccountScreen(),
+    if (SharedPref.getCurrentUserData() != null) CurrentUserAccountScreen(),
+    // if (SharedPref.getCurrentUserData() == null)
+    //   FutureBuilder(
+    //     future: AppUtil.buildErrorDialog("hh"),
+    //     builder: (context, snapshot) {
+    //       return const Center(child: Text("data"));
+    //     },
+    //   )
+    // AppUtil.buildErrorDialog("hh"),
     // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [Center(child: Text("Profile Screen"))],
@@ -211,7 +182,13 @@ class MainScreenController extends GetxController {
     Icons.settings
   ];
 
-  changePage(int index) {
+  changePage(int index) async {
+    if ((index == 2 || index == 3 || index == 4) &&
+        SharedPref.getCurrentUserData() == null) {
+      await AppUtil.showSignInDialog();
+      return;
+    }
+
     currentIndex = index;
     update();
   }

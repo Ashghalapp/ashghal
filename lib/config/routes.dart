@@ -1,13 +1,14 @@
 import 'package:ashghal_app_frontend/core/middleware/app_middleware.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/signup_provider_data_screen.dart';
 import 'package:ashghal_app_frontend/main_screen.dart';
 import 'package:get/get.dart';
 
-import '../features/auth/presentation/screens/auth/chooseusertype.dart';
-import '../features/auth/presentation/screens/auth/login_screen.dart';
-import '../features/auth/presentation/screens/auth/signup_screen.dart';
-import '../features/auth/presentation/screens/forgetpassword/forgetpassword_screen.dart';
-import '../features/auth/presentation/screens/forgetpassword/resetpassword_screen.dart';
-import '../features/auth/presentation/screens/test_screen.dart';
+import '../features/auth_and_user/presentation/screens/auth/chooseusertype.dart';
+import '../features/auth_and_user/presentation/screens/auth/login_screen.dart';
+import '../features/auth_and_user/presentation/screens/auth/signup_screen.dart';
+import '../features/auth_and_user/presentation/screens/forgetpassword/forgetpassword_screen.dart';
+import '../features/auth_and_user/presentation/screens/forgetpassword/resetpassword_screen.dart';
+import '../features/auth_and_user/presentation/screens/test_screen.dart';
 import 'app_routes.dart';
 
 List<GetPage<dynamic>>? routes = [
@@ -32,10 +33,10 @@ List<GetPage<dynamic>>? routes = [
   //   name: AppRoutes.homeScreen,
   //   page: () =>  HomeScreen(),
   // ),
-  GetPage(
-    name: AppRoutes.testScreen,
-    page: () => const TestScreen(),
-  ),
+  // GetPage(
+  //   name: AppRoutes.testScreen,
+  //   page: () => const TestScreen(),
+  // ),
   GetPage(
     name: AppRoutes.mainScreen,
     page: () => const MainScreen(),
@@ -60,10 +61,10 @@ List<GetPage<dynamic>>? routes = [
     name: AppRoutes.chooseUserTypeScreen,
     page: () => const ChooseUserTypeScreen(),
   ),
-  GetPage(
-    name: AppRoutes.singUpJobScreen,
-    page: () => const SingUpScreenJob(),
-  ),
+  // GetPage(
+  //   name: AppRoutes.singUpJobScreen,
+  //   // page: () => const SignUpProviderDataScreen(),
+  // ),
   // GetPage(
   //   name: AppRoutes.singUpScreenLocation,
   //   page: () =>  const SignUpScreenLocation(),

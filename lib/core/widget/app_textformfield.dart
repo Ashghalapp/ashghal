@@ -6,9 +6,9 @@ class AppTextFormField extends StatelessWidget {
   final TextDirection? textDirection;
   final List<TextInputFormatter>? inputformater;
   final TextInputType? textInputtype;
-  final String? label;
+  final String? hintText;
   final String? prefixtext;
-  final String hintText;
+  final String? labelText;
   final String? iconName;
   final String? sufficxIconDataName;
   final bool obscureText;
@@ -21,12 +21,15 @@ class AppTextFormField extends StatelessWidget {
   final double radius;
   final int? minLines;
   final int? maxLines;
+  final String? errorText;
+  final bool readOnly;
+  final void Function()? onTap;
 
   const AppTextFormField({
     Key? key,
-    required this.hintText,
+    this.labelText,
     this.iconName,
-    this.label,
+    this.hintText,
     required this.obscureText,
     required this.controller,
     this.validator,
@@ -42,6 +45,9 @@ class AppTextFormField extends StatelessWidget {
     this.radius = 12,
     this.minLines,
     this.maxLines,
+    this.errorText,
+    this.readOnly = false,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -51,6 +57,8 @@ class AppTextFormField extends StatelessWidget {
       child: TextFormField(
         keyboardType: textInputtype,
         inputFormatters: inputformater,
+        readOnly: readOnly,
+        onTap: onTap,
         validator: validator,
         controller: controller,
         obscureText: obscureText,
@@ -64,6 +72,7 @@ class AppTextFormField extends StatelessWidget {
           decorationThickness: 0,
         ),
         decoration: InputDecoration(
+          errorText: errorText,
           filled: true,
           fillColor: Theme.of(context).inputDecorationTheme.fillColor,
           prefixText: prefixtext,
@@ -86,8 +95,14 @@ class AppTextFormField extends StatelessWidget {
             ),
             // borderSide: BorderSide.none
           ),
-          hintText: label,
+          hintText: hintText,
           hintStyle: Theme.of(context).textTheme.labelSmall,
+          labelText: labelText,
+          labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context).textTheme.labelSmall?.color,
+              ),
+          alignLabelWithHint: false,
+
           prefixIcon: iconName != null
               ? IconButton(
                   onPressed: null,
@@ -125,10 +140,10 @@ class AppTextFormField extends StatelessWidget {
           contentPadding: padding,
           // const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           floatingLabelBehavior: FloatingLabelBehavior.always,
-          label: Text(
-            "",
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
+          // label: Text(
+          //   "",
+          //   style: Theme.of(context).textTheme.labelSmall,
+          // ),
 
           // borderSide: const BorderSide(color: AppColors.gray),
         ),

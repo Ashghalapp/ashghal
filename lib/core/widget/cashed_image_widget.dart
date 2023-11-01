@@ -49,7 +49,7 @@ class CashedNetworkImageWidget extends StatelessWidget {
                 imageErrorBuilder: (context, error, stackTrace) {
                   return Image.asset(errorAssetImagePath, fit: BoxFit.fitWidth);
                 },
-                fit: BoxFit.cover,
+                fit: fit,
                 height: height,
               ),
               

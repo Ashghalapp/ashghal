@@ -1,10 +1,8 @@
-import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../getx/comment_input_controller.dart';
 
 // صنوق ادخال نص التعليق والذي يظهر بجانبه زر الارسال وصورة المستخدم الذي سيقوم بالتعليق
 // ويتم ارسال الدالة التي ستقوم بالعمل اثناء الضغط على زر ارسال
@@ -113,10 +111,15 @@ class CommentInputWidget extends StatelessWidget {
                   child: IconButton(
                     onPressed: () {
                       if (enabledSendButton.value) {
-                        onSend(
-                          // postId,
-                          textController.text,
-                        );
+                        if (SharedPref.getCurrentUserBasicData() != null) {
+                          onSend(
+                            // postId,
+                            textController.text,
+                          );
+                        } else {
+                          Get.focusScope?.unfocus();
+                          AppUtil.showSignInDialog();
+                        }
                       }
                     },
                     icon: Obx(
