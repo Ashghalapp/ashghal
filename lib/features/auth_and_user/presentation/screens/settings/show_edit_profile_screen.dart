@@ -1,7 +1,5 @@
-// import 'dart:io';
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/bottom_sheet_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/circle_cached_networkimage.dart';
@@ -12,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-// TextEditingController username = TextEditingController();
-
 class ShowEditProfileScreen extends StatelessWidget {
   // final User user;
   ShowEditProfileScreen({super.key});
@@ -22,7 +18,21 @@ class ShowEditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalization.profile.tr)),
+      appBar: AppBar(
+        title: Text(AppLocalization.profile.tr),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  child: Text(AppLocalization.deleteProfileImage),
+                  onTap: () => editProfileController.deleteProfileImage(),
+                )
+              ];
+            },
+          )
+        ],
+      ),
       body: GetX<ShowEditProfileController>(builder: (context) {
         return ListView(
           shrinkWrap: true,

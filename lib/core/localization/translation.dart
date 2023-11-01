@@ -343,6 +343,7 @@ class MyTranslation extends Translations {
           AppLocalization.category: "الفئة",
           AppLocalization.youCanOnlyEditIncompletePost:
               "يمكنك تعديل المنشورات الغير مكتملة فقط.",
+          AppLocalization.deleteProfileImage: "حذف صورة الملف الشخصي",
 
           // change password messages
           AppLocalization.forgetPassword: "هل نسيت كلمة السر؟",

@@ -399,6 +399,7 @@ class AppLocalization {
       "Your account has been successfully upgraded to a provider account";
   static String youCanOnlyEditIncompletePost =
       "You can only edit incomplete posts";
+  static String deleteProfileImage = "Delete profile image";
 
   // change password messages
   static String successChangePassword = "Password changed successfully";

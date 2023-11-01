@@ -6,6 +6,7 @@ import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/update_user_request.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/provider.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/delete_user_image_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/update_user_uc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -123,6 +124,21 @@ class ShowEditProfileController extends GetxController {
   Future<void> pickImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) imagePath.value = image.path;
+  }
+
+  Future<void> deleteProfileImage() async{
+    EasyLoading.show(status: AppLocalization.loading);
+    DeleteUserImageUseCase deleteImageUC = di.getIt();
+
+    (await deleteImageUC.call()).fold((failure){
+      AppUtil.hanldeAndShowFailure(failure);
+    }, (success){
+      AppUtil.showMessage(success.message, Colors.green);
+      userData.value.imageUrl = null;
+      imagePath.value = "";
+      imagePath.refresh();
+    });
+    EasyLoading.dismiss();
   }
 
   // TextEditingController Accont1 = TextEditingController();
