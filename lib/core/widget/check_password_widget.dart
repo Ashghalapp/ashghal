@@ -21,7 +21,7 @@ class CheckPasswordWidget extends StatelessWidget {
     // controller.errorPassword.value = null;
     // controller.passwordController.text = "";
 
-    return Container(
+    return SizedBox(
       // color: Get.theme.scaffoldBackgroundColor,
       // height: 100,
       width: Get.width,
@@ -55,6 +55,7 @@ class CheckPasswordWidget extends StatelessWidget {
               ),
             ),
           ),
+          
           // forget password
           Container(
             alignment: AlignmentDirectional.centerEnd,

@@ -150,7 +150,7 @@ class SignUpController extends GetxController {
   }
 
   Future<void> submitJobInfo() async {
-    if (!(jobFormKey.currentState?.validate() ?? false)) return;
+    // if (!(jobFormKey.currentState?.validate() ?? false)) return;
     EasyLoading.show(status: AppLocalization.loading);
     Get.focusScope!.unfocus(); // اخفاء الكيبورد
     // Get.toNamed(AppRoutes.verficationSignUp);

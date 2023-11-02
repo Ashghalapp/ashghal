@@ -5,7 +5,6 @@ import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
-import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/Auth/singup_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

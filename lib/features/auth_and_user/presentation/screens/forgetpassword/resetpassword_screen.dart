@@ -2,8 +2,6 @@ import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../../config/app_colors.dart';
-
 import '../../../../../core/localization/app_localization.dart';
 import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
@@ -11,9 +9,7 @@ import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/forgetpwd/resetpassword_controller.dart';
 
 class ResetPasswordScreen extends GetView<ResetPasswordController> {
-  const ResetPasswordScreen({
-    super.key,
-  });
+  const ResetPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -94,8 +90,7 @@ class ResetPasswordScreen extends GetView<ResetPasswordController> {
                               iconName: AppIcons.lock,
                               // iconName: Icons.key_outlined,
                               hintText: AppLocalization.confirmPassword,
-                              controller:
-                                  controller.confirmPasswordController,
+                              controller: controller.confirmPasswordController,
                               validator: (val) {
                                 return validInput(
                                     val!, 6, 50, 'confirmpassword',
