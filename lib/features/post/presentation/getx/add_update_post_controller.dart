@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/services/dependency_injection.dart' as di;
 
-class AddPostController extends GetxController {
+class AddUpdatePostController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final contentController = TextEditingController();
@@ -137,7 +137,7 @@ class AddPostController extends GetxController {
       AppUtil.hanldeAndShowFailure(failure);
     }, (post) {
       AppUtil.showMessage(AppLocalization.successAddPost, Colors.green);
-      Get.back();
+      Get.back<Post>(result: post);
     });
     EasyLoading.dismiss();
   }

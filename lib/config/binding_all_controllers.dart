@@ -8,7 +8,7 @@ import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/Au
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/forgetpwd/resetpassword_controller.dart';
 
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/validate_controller.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/getx/add_post_controller.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/getx/add_update_post_controller.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/post_controller.dart';
 import 'package:ashghal_app_frontend/search_controller.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,7 @@ class BindingAllControllers extends Bindings{
 
     /////////////////////////////////////
     Get.lazyPut(() => PostController(), fenix: true);
-    Get.lazyPut(() => AddPostController(), fenix: true);
+    Get.lazyPut(() => AddUpdatePostController(), fenix: true);
     Get.lazyPut(() => CurrentUserAccountController(), fenix: true);
     Get.lazyPut(() => ShowEditProfileController(), fenix: true);
     Get.lazyPut(() => ShowEditProviderController(), fenix: true);

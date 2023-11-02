@@ -5,6 +5,7 @@ import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/circle_cached_networkimage.dart';
 import 'package:ashghal_app_frontend/core/widget/circle_file_image_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/settings/show_edit_profile_controller.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/address_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/setting_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -120,7 +121,7 @@ class ShowEditProfileScreen extends StatelessWidget {
           icon: Icons.location_on,
           label: AppLocalization.address,
           data: AppLocalization.tapToAdd,
-          onTap: () async {},
+          onTap: () => Get.to(AddressScreen()),
         )
       ];
     }

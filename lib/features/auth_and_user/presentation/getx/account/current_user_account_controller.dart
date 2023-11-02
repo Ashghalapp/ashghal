@@ -17,7 +17,7 @@ import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_cas
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_current_user_posts_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_user_posts_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/update_post_us.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/screen/add_post_screen.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/screen/add_update_post_screen.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -184,7 +184,7 @@ class CurrentUserAccountController extends GetxController {
 
     EasyLoading.dismiss();
   }
-  
+
   Future<void> disallowCommentForPost(int postId) async {
     EasyLoading.show(status: AppLocalization.loading);
 
@@ -203,7 +203,7 @@ class CurrentUserAccountController extends GetxController {
       AppUtil.hanldeAndShowFailure(failure);
     }, (post) {
       AppUtil.showMessage(AppLocalization.successEditPost, Colors.green);
-      int postIndex= postList.indexWhere((element) => element.id== post.id);
+      int postIndex = postList.indexWhere((element) => element.id == post.id);
       if (postIndex != -1) {
         postList[postIndex] = post;
       }
@@ -235,16 +235,21 @@ class CurrentUserAccountController extends GetxController {
 
   void postPopupMenuButtonOnSelected(String value, int postId) async {
     if (value == "Edit") {
+      final indexPost = postList.indexWhere((element) => element.id == postId);
       final post = postList.firstWhere((element) => element.id == postId);
-      if (post.isComplete){
+      if (postList[indexPost].isComplete) {
         AppUtil.showErrorToast(AppLocalization.youCanOnlyEditIncompletePost);
       } else {
         Get.to(
-        () => AddPostScreen(
-          isUpdatePost: true,
-          post: postList.firstWhere((element) => element.id == postId),
-        ),
-      );
+          () => AddUpdatePostScreen(
+            isUpdatePost: true,
+            post: postList[indexPost],
+          ),
+        )?.then((value) {
+          if (value != null) {
+            return postList[indexPost] = value;
+          }
+        });
       }
     } else if (value == "Mark this post as complete") {
       markPostAsComplete(postId);

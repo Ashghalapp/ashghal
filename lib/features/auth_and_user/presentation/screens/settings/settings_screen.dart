@@ -32,7 +32,7 @@ class SettingScreen extends GetView<ShowEditProfileController> {
           // delete account
           SettingItemWidget(
             icon: Icons.delete,
-            iconColor: Colors.red,
+            // iconColor: Colors.red,
             label: AppLocalization.deleteAccount,
             labelStyle: Get.textTheme.bodyMedium?.copyWith(color: Colors.red),
             onTap: () => settingsController.submitDeleteAccount(),

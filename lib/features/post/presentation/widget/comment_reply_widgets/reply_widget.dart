@@ -94,9 +94,11 @@ class ReplyWidget extends CommentReplyWidgetAbstract {
       title: AppLocalization.editYourReply,
       initialValue: reply.content,
       onSave: (newContent) async {
-        if (await replyController.updateReply(reply.id, newContent)) {
-          Get.back();
-        }
+        // if (
+          await replyController.updateReply(reply.id, newContent);
+          // {
+          // Get.back();
+        // }
       },
     );
   }

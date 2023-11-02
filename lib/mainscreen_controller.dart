@@ -15,7 +15,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import 'config/app_icons.dart';
-import 'features/post/presentation/screen/add_post_screen.dart';
+import 'features/post/presentation/screen/add_update_post_screen.dart';
 
 class MainScreenController extends GetxController {
   int currentIndex = 0;
@@ -143,7 +143,7 @@ class MainScreenController extends GetxController {
     AppSearchScreen(),
 
     // index 2 => Add Post
-    AddPostScreen(),
+    AddUpdatePostScreen(),
     // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [Center(child: Text("Add Post"))],

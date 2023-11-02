@@ -4,6 +4,8 @@ import 'package:ashghal_app_frontend/core/app_functions.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/account/specific_user_account_controller.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/account/specific_user_account_screen.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_input_controller.dart';
 import 'package:ashghal_app_frontend/core/widget/circle_cached_networkimage.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_input_widget.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import '../../../../../app_library/app_data_types.dart';
 import '../display_image_on_tap.dart';
 import '../display_sending_image_widget.dart';
@@ -93,7 +96,7 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Get.theme.cardColor,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Column(
@@ -144,7 +147,8 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
 
   Widget _buildTitleWidget() {
     // Map<String, dynamic> currentUserData = SharedPref.getCurrentUserData() ?? {};
-    Map<String, dynamic>? currentUserData = SharedPref.getCurrentUserBasicData();
+    Map<String, dynamic>? currentUserData =
+        SharedPref.getCurrentUserBasicData();
     return SizedBox(
       height: 25,
       child: Row(
@@ -153,8 +157,8 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
         children: [
           Text(
             userName,
-            style: Get.textTheme.titleMedium?.copyWith(
-              color: Colors.black,
+            style: Get.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
             ),
             overflow: TextOverflow.fade,
           ),
@@ -176,29 +180,36 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
     printError(info: ">>>>> mentionUserData: $userData");
     return RichText(
       overflow: TextOverflow.clip,
-      text: TextSpan(children: [
-        if (userData != null)
+      text: TextSpan(
+        children: [
+          // comment mention
+          if (userData != null)
+            TextSpan(
+              text: "${userData['name'] ?? "unknown".tr}  ",
+              style: Get.textTheme.bodyMedium
+                  ?.copyWith(color: Get.theme.primaryColor),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () =>
+                    Get.to(SpecificUserAccountScreen(userId: userData['id'])),
+            ),
+
+          // comment content
           TextSpan(
-            text: "${userData['name'] ?? "unknown".tr}  ",
-            style: Get.textTheme.bodyMedium
-                ?.copyWith(color: Get.theme.primaryColor),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                // go to profile screen by use user id in basicUserData['id]
-                Get.defaultDialog(title: "show mention user page");
-              },
+            text: content,
+            style: Get.textTheme.bodyMedium,
+            // overflow: TextOverflow.clip,
           ),
-        TextSpan(
-          text: content,
-          style: Get.textTheme.bodyMedium,
-          // overflow: TextOverflow.clip,
-        ),
-        TextSpan(
-          text: "\n${AppUtil.timeAgoSince(time)}",
-          style: Get.textTheme.bodySmall
-              ?.copyWith(color: Get.textTheme.titleSmall?.color),
-        )
-      ]),
+
+          // comment time
+          TextSpan(
+            text: "\n${DateFormat('yyyy/MM/dd h:mm a').format(time)}",
+            style: Get.textTheme.bodySmall
+                ?.copyWith(color: Get.textTheme.titleSmall?.color),
+          )
+        ],
+        // ),
+      ),
+      // ],
     );
   }
 

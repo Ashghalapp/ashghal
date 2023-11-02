@@ -134,14 +134,17 @@ class CommentWidget extends CommentReplyWidgetAbstract {
     return Column(
       children: [
         for (int i = 0; i < replyController.repliesList.length; i++) ...{
-          const Divider(),
+          Divider(color: Get.theme.dividerColor, thickness: 2),
           ReplyWidget(
             reply: replyController.repliesList[i],
             replyController: replyController,
           ),
         },
         for (int i = 0; i < replyController.sendingReplies.length; i++)
-          ...{const Divider(), replyController.sendingReplies[i]}.toList(),
+          ...{
+            Divider(color: Get.theme.dividerColor, thickness: 2),
+            replyController.sendingReplies[i]
+          }.toList(),
 
         // عرض الزر الخاص بعرض المزيد من الردود
         if (comment.repliesCount > PER_PAGE_REPLIES &&
@@ -159,7 +162,7 @@ class CommentWidget extends CommentReplyWidgetAbstract {
     return PostCommentsFunctionWidgets.buildShowMoreTextButton(
       moreCounts: moreCommentCounts,
       onTap: () => replyController.loadNextPageOfCommentReplies(comment.id),
-      isReply: false,
+      isReply: true,
     );
   }
 }

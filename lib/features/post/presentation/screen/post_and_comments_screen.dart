@@ -36,6 +36,7 @@ class PostCommentsScreen extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () => commentController.getPostComments(post.id),
+
       child: SafeArea(
         child: Scaffold(
           // backgroundColor: const Color(0xFFEDF0F6),
@@ -59,6 +60,7 @@ class PostCommentsScreen extends StatelessWidget {
               ),
               Expanded(
                 child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   shrinkWrap: true,
                   controller: commentController.commentScrollController,
                   children: [
@@ -125,8 +127,8 @@ class PostCommentsScreen extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(top: 9),
                     padding: const EdgeInsets.only(top: 9),
-                    decoration: const BoxDecoration(
-                        border: Border(top: BorderSide(color: Colors.white))),
+                    decoration: BoxDecoration(
+                        border: Border(top: BorderSide(color: Get.theme.dividerColor))),
                     child: commentController.sendingComments[i],
                   ),
 
@@ -134,8 +136,8 @@ class PostCommentsScreen extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(top: 9),
                     padding: const EdgeInsets.only(top: 9),
-                    decoration: const BoxDecoration(
-                        border: Border(top: BorderSide(color: Colors.white))),
+                    decoration: BoxDecoration(
+                        border: Border(top: BorderSide(color: Get.theme.dividerColor))),
                     child: CommentWidget(
                       comment: commentController.commentsList[i],
                     ),

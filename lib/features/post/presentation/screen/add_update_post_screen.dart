@@ -6,21 +6,19 @@ import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dar
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/cashed_image_widget.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/getx/add_post_controller.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/getx/post_image_picker_controller.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/post_button.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/getx/add_update_post_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-class AddPostScreen extends StatelessWidget {
+class AddUpdatePostScreen extends StatelessWidget {
   final bool isUpdatePost;
   final Post? post;
-  AddPostScreen({super.key, this.isUpdatePost = false, this.post});
+  AddUpdatePostScreen({super.key, this.isUpdatePost = false, this.post});
   // final PostImageController postImageController =
   //     Get.put(PostImageController());
 
-  late final addPostController = Get.find<AddPostController>();
+  late final addPostController = Get.find<AddUpdatePostController>();
   @override
   Widget build(BuildContext context) {
     if (isUpdatePost && post != null) {

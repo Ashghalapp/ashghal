@@ -50,7 +50,7 @@ class AccountNestedScrollViewWidget extends StatelessWidget {
                     unselectedLabelColor: AppColors.iconColor,
                     tabs: const [
                       Tab(icon: Icon(Icons.grid_on)),
-                      Tab(icon: Icon(Icons.person_outline))
+                      Tab(icon: Icon(Icons.favorite_border))
                     ],
                   ),
                 ),

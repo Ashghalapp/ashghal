@@ -371,8 +371,8 @@ class AppLocalization {
       "Note: Your account cannot be retrieved after delete it!.\nAre you sure to continue deleting the account?";
   static String noteForDeleteAccountThatWillDeleteAllPosts =
       "Note: Deleting the account will delete all your posts in the application!.\nAre you sure to continue deleting the account?";
-  static String sure= "Sure";
-  static String confirm= "Confirm";
+  static String sure = "Sure";
+  static String confirm = "Confirm";
 //====================== End settings messages =======================
 
 //====================== Start account settings messages =======================
@@ -421,6 +421,14 @@ class AppLocalization {
   static String posts = "Posts";
   static String users = "Users";
   static String writeToSearch = "Write to search";
+//================================ End Search messages ==============================
+
+//================================ Start Search messages ============================
+  static String addAddress = "Add address";
+  static String enterAddressDescription = "Enter a description of the address";
+  static String enterStreetName = "Enter the street name";
+  static String enterCityName = "Enter the city name";
+  static var optional = "(optional)";
 //================================ End Search messages ==============================
 
 //================================ Start chat messages ================================//

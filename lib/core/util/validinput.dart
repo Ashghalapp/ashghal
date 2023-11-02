@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:get/get.dart';
 
 ///دالة لفحص المدخلات
@@ -10,9 +11,10 @@ validInput(String? val, int? min, int? max, String? type,
       type == 'jobname' ||
       type == 'selectedCategory' ||
       type == 'username' ||
-      type == 'confirmpassword') {
+      type == 'confirmpassword' ||
+      type == 'requiredField') {
     if (GetUtils.isNullOrBlank(val)!) {
-      return '44'.tr;
+      return AppLocalization.requiredField;
     }
   }
   if (type == 'email') {

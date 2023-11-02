@@ -54,7 +54,7 @@ class MyTranslation extends Translations {
           AppLocalization.resetYourPassword: "أعد تعيين كلمة مرورك",
           AppLocalization.pleaseEnterYourNewPasswordDownHere:
               " الرجاء ادخال كلمة المرور الجديدة في الاسفل",
-          "44": "حقل مطلوب",
+          AppLocalization.requiredField: "حقل مطلوب",
           "45": "بريد إلكتروني غير صالح",
           "46": "اسم مستخدم غير صالح",
           "47": "اسم المستخدم قصير",
@@ -379,6 +379,17 @@ class MyTranslation extends Translations {
           AppLocalization.users: "مستخدمين",
           AppLocalization.writeToSearch: "اكتب للبحث",
 //================================ End Search messages ==============================
+
+
+//================================ Start Search messages ============================
+  AppLocalization. addAddress : "Add address",
+  AppLocalization. enterAddressDescription : "Enter a description of the address",
+  AppLocalization. enterStreetName : "Enter the street name",
+  AppLocalization. enterCityName : "Enter the city name",
+  AppLocalization.optional : "(optional)",
+//================================ End Search messages ==============================
+
+
 
 //================================ Start chat messages ================================//
           AppLocalization.conversationDeletedSuccess: "تم حذف المحادثة بنجاح",

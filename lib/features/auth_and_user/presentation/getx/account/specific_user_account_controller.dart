@@ -15,7 +15,7 @@ import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/delete_post_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_current_user_posts_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_user_posts_uc.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/screen/add_post_screen.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/screen/add_update_post_screen.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -203,7 +203,7 @@ class SpecificUserAccountController extends GetxController {
     if (value == OperationsOnCurrentUserPostPopupMenuValues.delete.name) {
       deletePost(postId);
     } else if (value == OperationsOnCurrentUserPostPopupMenuValues.edit.name) {
-      Get.to(() => AddPostScreen(
+      Get.to(() => AddUpdatePostScreen(
             isUpdatePost: true,
             post: postList.firstWhere((element) => element.id == postId),
           ));
