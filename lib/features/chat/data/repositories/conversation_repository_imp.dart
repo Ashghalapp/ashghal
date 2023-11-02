@@ -11,6 +11,7 @@ import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 import 'package:ashghal_app_frontend/core_api/pusher_service.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/receive_read_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_conversation_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_message_model.dart';
@@ -41,17 +42,17 @@ class ConversationRepositoryImp extends ConversationRepository {
   final MessageRemoteSource _messageRemoteSource = MessageRemoteSourceImp();
   late final ConversationLocalSource _conversationLocalSource;
   late final MessageLocalSource _messageLocalSource;
-  late final MultimediaLocalSource _multimediaLocalSource;
   // late final MultimediaLocalSource _multimediaLocalSource;
-  final ChatDatabase db = ChatDatabase();
+  // late final MultimediaLocalSource _multimediaLocalSource;
+  // final ChatDatabase db = ChatDatabase();
   final NetworkInfo networkInfo = NetworkInfoImpl();
   final MessageRepositoryImp _messageRepository = MessageRepositoryImp();
   final PusherChatHelper _pusherChatHelper = PusherChatHelper();
   // List<LocalConversation> _remoteConversations = [];
   ConversationRepositoryImp() {
-    _conversationLocalSource = ConversationLocalSource(db);
-    _messageLocalSource = MessageLocalSource(db);
-    _multimediaLocalSource = MultimediaLocalSource(db);
+    _conversationLocalSource = ConversationLocalSource();
+    _messageLocalSource = MessageLocalSource();
+    // _multimediaLocalSource = MultimediaLocalSource(db);
   }
 
   @override
@@ -62,8 +63,36 @@ class ConversationRepositoryImp extends ConversationRepository {
 
       return Right(conversations);
     } catch (e) {
-      print(
+      AppPrint.printError(
           ">>>>>>>>>>Exception:in ConversationRepositoryImp - function getAllConversations $e");
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ConversationWithCountAndLastMessage>>>
+      getAllConversationsWithLastMessageAndCount() async {
+    try {
+      List<ConversationWithCountAndLastMessage> conversations =
+          await _conversationLocalSource
+              .getConversationsWithLastMessageAndCount();
+
+      return Right(conversations);
+    } catch (e) {
+      AppPrint.printError(
+          ">>>>>>>>>>Exception:in ConversationRepositoryImp - function getAllConversationsWithLastMessageAndCount $e");
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<LocalConversation>>>
+      getAllBlockedConversations() async {
+    try {
+      return Right(await _conversationLocalSource.getBlockedConversations());
+    } catch (e) {
+      AppPrint.printError(
+          ">>>>>>>>>>Exception:in ConversationRepositoryImp - function getAllBlockedConversations $e");
       return Left(NotSpecificFailure(message: e.toString()));
     }
   }
@@ -167,6 +196,7 @@ class ConversationRepositoryImp extends ConversationRepository {
           .getConversationWithUser(request.userId);
       if (conversation != null) {
         AppPrint.printInfo("Conversation already exists in the local db");
+
         return right(conversation);
       }
       conversation =
@@ -181,6 +211,7 @@ class ConversationRepositoryImp extends ConversationRepository {
         await _startAConversationRemotelyAndUpdateTheLocal(request);
         conversation = await _conversationLocalSource
             .getConversationWithUser(request.userId);
+
         AppPrint.printData(
             "conversation creadted remotely: ${conversation.toString()}");
       }
@@ -190,9 +221,16 @@ class ConversationRepositoryImp extends ConversationRepository {
             "error in ConversationRepositoryImp in startConversationWith: Fail to create conversation locally");
         return Left(
             NotSpecificFailure(message: AppLocalization.startChatingFailer.tr));
+      } else if (conversation.isBlocked) {
+        return Left(ServerFailure(
+            message: ErrorString.CAN_NOT_START_Chat_WITH_BLOCKED_USER));
       }
 
       return Right(conversation);
+    } on AppException catch (e) {
+      print(
+          "**********MyException in ConversationRepositoryImp in startConversationWith: ${e.failure.toString()}");
+      return Left(NotSpecificFailure(message: e.toString()));
     } catch (e) {
       AppPrint.printError(
           "error in ConversationRepositoryImp in startConversationWith:${e.toString()}");
@@ -205,6 +243,7 @@ class ConversationRepositoryImp extends ConversationRepository {
       BlockUnblockConversationRequest request) async {
     try {
       if (await networkInfo.isConnected) {
+        AppPrint.printInfo("blockUnblockConversation Started");
         ApiResponseModel response;
         if (request.block) {
           response = await _conversationRemoteSource
@@ -274,18 +313,36 @@ class ConversationRepositoryImp extends ConversationRepository {
               remoteConversation,
             );
             if (conversationLocalId != null) {
+              List<ReceivedReadMessageModel> confirmData = [];
+              //Confirm receiving messages
+
               for (var remoteMessage in remoteConversation.newMessages
                   .cast<RemoteMessageModel>()) {
                 await _messageRepository.insertNewMessageFromRemote(
                   remoteMessage,
                   conversationLocalId,
                 );
+                confirmData.add(
+                  ReceivedReadMessageModel(
+                      id: remoteMessage.id, at: DateTime.now()),
+                );
               }
+              if (confirmData.isNotEmpty) {
+                await _messageRepository
+                    .confirmReceivedMessagesRemotelyAndUpdateLocallay(
+                        confirmData);
+              }
+
+              // await _confirmReceivedMessagesRemotely([
+              //   ReceivedReadMessageModel(id: message.id, at: DateTime.now()),
+              // ]);
               LocalConversation? conversation = await _conversationLocalSource
                   .getConversationByLocalId(conversationLocalId);
               if (conversation != null) {
                 await _subscribTtoConversationChannel(
-                    conversation, onTypingEvent);
+                  conversation,
+                  onTypingEvent,
+                );
               }
             }
           },
@@ -336,6 +393,7 @@ class ConversationRepositoryImp extends ConversationRepository {
         //     print("************Search Ends************");
         //   },
         // );
+        // await _pusherChatHelper.connect();
       }
     } on AppException catch (e) {
       print(
@@ -356,6 +414,16 @@ class ConversationRepositoryImp extends ConversationRepository {
         await _messageRepository.insertNewMessageFromRemote(
           message,
           conversation.localId,
+        );
+
+        await _messageRepository
+            .confirmReceivedMessagesRemotelyAndUpdateLocallay(
+          [
+            ReceivedReadMessageModel(
+              id: message.id,
+              at: DateTime.now(),
+            )
+          ],
         );
       },
       onMessageReceived: (receivedReadMessage) async {
@@ -396,14 +464,17 @@ class ConversationRepositoryImp extends ConversationRepository {
     // print("Syncronizing start before connection checked");
     if (await networkInfo.isConnected) {
       try {
+        AppPrint.printInfo("Syncronizing started");
         // print("Syncronizing start with connection");
         // print("before Call Start Local Conversation Remotely");
 
         // start coversations created locally remotely
+        AppPrint.printInfo("Start local conversations remotely");
         await _startLocalConversationsRemotely();
-
+        AppPrint.printInfo("Get locally deleted conversations");
         List<LocalConversation> deletedConversations =
             await _conversationLocalSource.getDeletedLocallyConversations();
+
         for (var conversation in deletedConversations) {
           if (conversation.remoteId != null) {
             await _deleteConversationRemotelyAndlocally(
@@ -415,38 +486,62 @@ class ConversationRepositoryImp extends ConversationRepository {
         // print("after Call Start Local Conversation Remotely");
 
         //Conferm any messages that is marked as received locally or read locally
+        AppPrint.printInfo(
+            "Conferm any messages that is marked as received locally or read locally");
         await _messageRepository.confirmReceivedLocallyMessagesRemotely();
         await _messageRepository.confermReadLocallyMessagesRemotely();
 
         // send unsent messages
+        AppPrint.printInfo("send unsent messages");
         await _sendUnSentMessages();
-        print("here0");
+
         //  get conversations updates from remote surce
+        AppPrint.printInfo("get conversations updates from remote surce");
         List<RemoteConversationModel> remoteConversations =
             await _conversationRemoteSource.getUserConversationsUpdates();
-        print("here0");
+        AppPrint.printInfo(
+            "Got ${remoteConversations.length} conversations updates from remote");
 
         // update local conversations according to updates comes from remote
         for (RemoteConversationModel remoteConversation
             in remoteConversations) {
           int? conversationLocalId =
               await _insertLocalConversationFromRemoteIfNotExists(
-                  remoteConversation);
+            remoteConversation,
+          );
+          // return;
           // print("After conversation Updates");
           if (conversationLocalId == null) {
             continue;
           }
-          print("here1");
 
           //Save new messages into local db
-          for (RemoteMessageModel message
-              in remoteConversation.newMessages.cast<RemoteMessageModel>()) {
-            await _messageRepository.insertNewMessageFromRemote(
-              message,
-              conversationLocalId,
-            );
+          if (remoteConversation.newMessages.isNotEmpty) {
+            AppPrint.printInfo(
+                "Save new messages into local db ${remoteConversation.newMessages.length}");
+            List<ReceivedReadMessageModel> confirmData = [];
+            for (RemoteMessageModel message
+                in remoteConversation.newMessages.cast<RemoteMessageModel>()) {
+              await _messageRepository.insertNewMessageFromRemote(
+                message,
+                conversationLocalId,
+              );
+              //Confirm receiving messages
+              confirmData.add(
+                ReceivedReadMessageModel(id: message.id, at: DateTime.now()),
+              );
+            }
+            // await _confirmReceivedMessagesRemotely([
+            //   ReceivedReadMessageModel(id: message.id, at: DateTime.now()),
+            // ]);
+            if (confirmData.isNotEmpty) {
+              AppPrint.printInfo(
+                  "Confirm receiving messages ${remoteConversation.newMessages.length}");
+              await _messageRepository
+                  .confirmReceivedMessagesRemotelyAndUpdateLocallay(
+                      confirmData);
+            }
           }
-          print("here2");
 
           //refresh the conversation as the last updated conversation
           _conversationLocalSource
@@ -476,10 +571,10 @@ class ConversationRepositoryImp extends ConversationRepository {
         // });
       } on AppException catch (e) {
         AppPrint.printError(
-            "MyException in ConversationRepositoryImp in initializeConversations: ${e.failure.toString()}");
+            "MyException in ConversationRepositoryImp in synchronizeConversations: ${e.failure.toString()}");
       } catch (e) {
         AppPrint.printError(
-            "Error in ConversationRepositoryImp in initializeConversations: ${e.toString()}");
+            "Error in ConversationRepositoryImp in synchronizeConversations: ${e.toString()}");
       }
     }
   }
@@ -546,7 +641,7 @@ class ConversationRepositoryImp extends ConversationRepository {
       //exclude multimedia messages from being sent
       //becuase they have to be sent exciplicitly by pressing upload
       if (localMessage.senderId == SharedPref.currentUserId &&
-          await _multimediaLocalSource
+          await _messageLocalSource
                   .getMessageMultimedia(localMessage.localId) !=
               null) {
         continue;
@@ -572,21 +667,43 @@ class ConversationRepositoryImp extends ConversationRepository {
       RemoteConversationModel remote) async {
     LocalConversation? local = await _conversationLocalSource
         .getConversationWith(remote.id, remote.secondUser.id);
+    // AppPrint.printError("_insertLocalConversationFromRemoteIfNotExists");
     if (local == null) {
       // print("Coversation Not Exists");
       try {
         int? c = await _conversationLocalSource
-            .insertConversation(remote.toLocalConversation());
+            .insertConversation(remote.toLocalConversationOnInsert());
         await cofirmGotConversationData(remote.id);
         return c;
       } catch (e) {
         return null;
       }
+    } else {
+      await _conversationLocalSource.updateConversationWithUserId(
+        remote.toLocalConversation(),
+        remote.secondUser.id,
+      );
     }
-
     return local.localId;
   }
 
+  // Future<int?> _inserOrUpdateLocalConversationFromRemote(
+  //     RemoteConversationModel remote) async {
+  //   LocalConversation? local = await _conversationLocalSource
+  //       .getConversationWith(remote.id, remote.secondUser.id);
+  //   if (local == null) {
+  //     // print("Coversation Not Exists");
+  //     try {
+  //       int? c = await _conversationLocalSource
+  //           .insertConversation(remote.toLocalConversationOnInsert());
+  //       await cofirmGotConversationData(remote.id);
+  //       return c;
+  //     } catch (e) {
+  //       return null;
+  //     }
+  //   }
+  //   return local.localId;
+  // }
   // Future<void> _listenToReceivedLocallyMessages() async {
   //   _messageLocalSource
   //       .watchReceivedLocallyMessages()

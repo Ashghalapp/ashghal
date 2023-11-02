@@ -4,6 +4,7 @@ import 'package:ashghal_app_frontend/core_api/errors/exceptions.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/receive_read_confirmation_models.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/receive_read_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_message_model.dart';
@@ -27,16 +28,16 @@ class MessageRepositoryImp extends MessageRepository {
   final MessageRemoteSource _messageRemoteSource = MessageRemoteSourceImp();
   late final ConversationLocalSource _conversationLocalSource;
   late final MessageLocalSource _messageLocalSource;
-  late final MultimediaLocalSource _multimediaLocalSource;
+  // late final MultimediaLocalSource _multimediaLocalSource;
   // final ConversationRepositoryImp _conversationRepository =
   //     ConversationRepositoryImp();
-  final ChatDatabase db = ChatDatabase();
+  // final ChatDatabase db = ChatDatabase();
   final NetworkInfo networkInfo = NetworkInfoImpl();
   final PusherChatHelper _pusherChatHelper = PusherChatHelper();
   MessageRepositoryImp() {
-    _conversationLocalSource = ConversationLocalSource(db);
-    _messageLocalSource = MessageLocalSource(db);
-    _multimediaLocalSource = MultimediaLocalSource(db);
+    _conversationLocalSource = ConversationLocalSource();
+    _messageLocalSource = MessageLocalSource();
+    // _multimediaLocalSource = MultimediaLocalSource(db);
   }
 
   @override
@@ -45,6 +46,31 @@ class MessageRepositoryImp extends MessageRepository {
     try {
       return Right(
           await _messageLocalSource.getConversationMessages(conversationId));
+    } on AppException catch (e) {
+      return Left(e.failure as ServerFailure);
+    } catch (e) {
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MessageAndMultimediaModel>>>
+      getStarredMessages() async {
+    try {
+      return Right(await _messageLocalSource.getStarredMessages());
+    } on AppException catch (e) {
+      return Left(e.failure as ServerFailure);
+    } catch (e) {
+      return Left(NotSpecificFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MessageAndMultimediaModel>>>
+      getConversationMessagesWithMultimedia(int conversationLocalId) async {
+    try {
+      return Right(await _messageLocalSource
+          .getConversationMessagesWithMultimedia(conversationLocalId));
     } on AppException catch (e) {
       return Left(e.failure as ServerFailure);
     } catch (e) {
@@ -63,11 +89,11 @@ class MessageRepositoryImp extends MessageRepository {
   }
 
   @override
-  Stream<List<LocalMultimedia>> watchConversationMessagesMultimedia(
+  Stream<List<MessageAndMultimediaModel>> watchConversationMessagesMultimedia(
       int conversationId) async* {
     try {
-      yield* _multimediaLocalSource
-          .watchConversationMessagesMultimedia(conversationId);
+      yield* _messageLocalSource
+          .watchConversationMessagesAndMultimedia(conversationId);
     } catch (e) {
       print("Error: " + e.toString());
       throw NotSpecificFailure(message: e.toString());
@@ -90,10 +116,13 @@ class MessageRepositoryImp extends MessageRepository {
 
   @override
   Future<Either<Failure, bool>> toggleStarMessage(
-      int messageLocalId, bool starMessage) async {
+      int messageLocalId, bool starMessage, int conversationLocalId) async {
     try {
       bool ok = (await _messageLocalSource.toggleStarMessage(
-              messageLocalId, starMessage)) >
+            messageLocalId,
+            starMessage,
+            conversationLocalId,
+          )) >
           0;
       return right(ok);
     } catch (e) {
@@ -128,7 +157,7 @@ class MessageRepositoryImp extends MessageRepository {
               .getRemoteIdByLocalId(localMessage.conversationId);
 
           if (conversationRemoteId != null) {
-            LocalMultimedia? localMultimedia = await _multimediaLocalSource
+            LocalMultimedia? localMultimedia = await _messageLocalSource
                 .getMessageMultimedia(localMessage.localId);
             if (localMultimedia == null) {
               return const Left(
@@ -139,29 +168,53 @@ class MessageRepositoryImp extends MessageRepository {
             SendMessageRequest sendRequest =
                 SendMessageRequest.withBodyAndMultimedia(
               conversationId: conversationRemoteId,
+              replyTo: localMessage.replyTo,
               body: localMessage.body ?? "",
-              filePath: localMultimedia!.path!,
+              filePath: localMultimedia.path!,
               onSendProgress: request.onSendProgress,
               cancelToken: request.cancelToken,
             );
             // print(request.toJson());
 
+            request.cancelToken!.whenCancel.then((value) async {
+              int count = await _messageLocalSource
+                  .cancelUploadDownloadMultimedia(localMultimedia.localId);
+              AppPrint.printError(
+                  "Uploading multimedia ${localMultimedia.localId} Canceled, number of updates $count");
+            });
             //Send the message to the remote db
             RemoteMessageModel remoteMessage =
                 await _messageRemoteSource.uploadMultimedia(sendRequest);
 
+            // AppPrint.printInfo(
+            //     "sending the message to the remote db completes${remoteMessage.toString()}");
             //update local message according to the changes you got
             await _messageLocalSource.updateMessageWithLocalId(
-                remoteMessage.toLocalMessageOnSend(), localMessage.localId);
+              conversationLocalId: localMessage.conversationId,
+              localMessage: remoteMessage.toLocalMessageOnSend(),
+              messageLocalId: localMessage.localId,
+              multimediaLocalId: remoteMessage.multimedia == null
+                  ? null
+                  : localMultimedia.localId,
+              multimediaConverterCallBack: (messageLocalId) {
+                return Future.value(
+                  (remoteMessage.multimedia! as RemoteMultimediaModel)
+                      .toLocalMultimediaOnSend(),
+                );
+              },
+            );
+
+            // await _messageLocalSource.updateMessageWithLocalId(
+            //     remoteMessage.toLocalMessageOnSend(), localMessage.localId,localMessage.conversationId);
 
             //if the message contians multimedia update the local multimedia record
-            if (remoteMessage.multimedia != null) {
-              await _multimediaLocalSource.updateMultimedia(
-                (remoteMessage.multimedia! as RemoteMultimediaModel)
-                    .toLocalMultimediaOnSend(),
-                localMultimedia.localId,
-              );
-            }
+            // if (remoteMessage.multimedia != null) {
+            //   await _multimediaLocalSource.updateMultimedia(
+            //     (remoteMessage.multimedia! as RemoteMultimediaModel)
+            //         .toLocalMultimediaOnSend(),
+            //     localMultimedia.localId,
+            //   );
+            // }
           }
         } else {
           return const Left(
@@ -184,10 +237,17 @@ class MessageRepositoryImp extends MessageRepository {
       DownloadRequest request) async {
     try {
       if (await networkInfo.isConnected) {
+        request.cancelToken!.whenCancel.then((value) async {
+          int count = await _messageLocalSource
+              .cancelUploadDownloadMultimedia(request.multimediaLocalId);
+          AppPrint.printError(
+              "Downloading multimedia ${request.multimediaLocalId} Canceled, number of updates $count");
+        });
         bool isDownloaded =
             await _messageRemoteSource.downloadMultimedia(request);
         if (isDownloaded) {
-          await _multimediaLocalSource.updateMultimedia(
+          await _messageLocalSource.updateMessageMultimedia(
+            request.messageLocalId,
             request.toLocalOnDownload(),
             request.multimediaLocalId,
           );
@@ -210,17 +270,22 @@ class MessageRepositoryImp extends MessageRepository {
   Future<Either<Failure, LocalMessage>> sendMessage(
       SendMessageRequest request) async {
     try {
-      LocalMessage message = await _messageLocalSource
-          .insertMessageAndGetInstance(request.toLocal());
-      if (request.filePath != null) {
-        await _multimediaLocalSource.insertMultimedia(
-          await request.toLocalMultimediaOnInsert(message.localId),
-        );
-      }
+      LocalMessage message = await _messageLocalSource.insertMessage(
+        message: request.toLocal(),
+        conversationLocalId: request.conversationId,
+        multimediaConverterCallBack: request.filePath == null
+            ? null
+            : (messageLocalId) async {
+                return await request.toLocalMultimediaOnInsert(messageLocalId);
+              },
+      );
+      AppPrint.printInfo("local message inserted");
+      AppPrint.printData(message.toString());
+      await _conversationLocalSource
+          .refreshConversationUpdatedAt(request.conversationId);
 
       if (request.filePath == null && await networkInfo.isConnected) {
-        await sendLocalMessageToRemote(message);
-        // await sendLocalMessageToRemote(message, message.conversationId);
+        await sendLocalMessageToRemote(message, request.replyTo);
       }
 
       return Right(message);
@@ -259,7 +324,8 @@ class MessageRepositoryImp extends MessageRepository {
   }
 
   @override
-  Future<void> sendLocalMessageToRemote(LocalMessage localMessage) async {
+  Future<void> sendLocalMessageToRemote(LocalMessage localMessage,
+      [int? replyTo]) async {
     try {
       // print("sendLocalMessageToRemote ----------");
       //get the conversation remote id the message belongs to
@@ -267,17 +333,14 @@ class MessageRepositoryImp extends MessageRepository {
           .getRemoteIdByLocalId(localMessage.conversationId);
 
       if (conversationRemoteId != null) {
-        LocalMultimedia? localMultimedia = await _multimediaLocalSource
+        LocalMultimedia? localMultimedia = await _messageLocalSource
             .getMessageMultimedia(localMessage.localId);
         // print(localMultimedia.toString());
         // print("--------here-------" + localMultimedia.toString());
 
         //Construct the request according to the message content
         SendMessageRequest request = _buildSendMessageRequestObject(
-          localMessage,
-          localMultimedia,
-          conversationRemoteId,
-        );
+            localMessage, localMultimedia, conversationRemoteId);
         // print(request.toJson());
 
         //Send the message to the remote db
@@ -286,16 +349,35 @@ class MessageRepositoryImp extends MessageRepository {
 
         //update local message according to the changes you got
         await _messageLocalSource.updateMessageWithLocalId(
-            remoteMessage.toLocalMessageOnSend(), localMessage.localId);
+          conversationLocalId: localMessage.conversationId,
+          localMessage: remoteMessage.toLocalMessageOnSend(),
+          messageLocalId: localMessage.localId,
+          multimediaLocalId:
+              remoteMessage.multimedia == null || localMultimedia == null
+                  ? null
+                  : localMultimedia.localId,
+          multimediaConverterCallBack: (messageLocalId) {
+            return Future.value(
+              (remoteMessage.multimedia! as RemoteMultimediaModel)
+                  .toLocalMultimediaOnSend(),
+            );
+          },
+        );
+
+        //update local message according to the changes you got
+        // await _messageLocalSource.updateMessageWithLocalId(
+        //     remoteMessage.toLocalMessageOnSend(),
+        //     localMessage.localId,
+        //     localMessage.conversationId);
 
         //if the message contians multimedia update the local multimedia record
-        if (remoteMessage.multimedia != null && localMultimedia != null) {
-          await _multimediaLocalSource.updateMultimedia(
-            (remoteMessage.multimedia! as RemoteMultimediaModel)
-                .toLocalMultimediaOnSend(),
-            localMultimedia.localId,
-          );
-        }
+        // if (remoteMessage.multimedia != null && localMultimedia != null) {
+        //   await _multimediaLocalSource.updateMultimedia(
+        //     (remoteMessage.multimedia! as RemoteMultimediaModel)
+        //         .toLocalMultimediaOnSend(),
+        //     localMultimedia.localId,
+        //   );
+        // }
       }
     } on AppException catch (e) {
       print(
@@ -327,25 +409,39 @@ class MessageRepositoryImp extends MessageRepository {
       //the receiving confimation didn't success, so the api sent it to you again as a new message
       int? messageLocalId =
           (await _messageLocalSource.getMessageByRemoteId(message.id))?.localId;
-      if (messageLocalId == null) {
-        messageLocalId = await _messageLocalSource.insertMessage(
-          message.toLocalMessageOnReceived(conversationLocalId),
-        );
-        if (message.multimedia != null) {
-          //check if the message has a multimedia to be added
-          await _multimediaLocalSource.insertMultimedia(
-            (message.multimedia! as RemoteMultimediaModel)
-                .toLocalMultimediaOnReceive(messageLocalId),
-          );
-        }
-      }
+      messageLocalId ??= (await _messageLocalSource.insertMessage(
+        message: message.toLocalMessageOnReceived(conversationLocalId),
+        conversationLocalId: conversationLocalId,
+        multimediaConverterCallBack: message.multimedia == null
+            ? null
+            : (int messageLocalId) async {
+                return Future.value(
+                  (message.multimedia! as RemoteMultimediaModel)
+                      .toLocalMultimediaOnReceive(messageLocalId),
+                );
+              },
+      ))
+          .localId;
+      // if (messageLocalId == null) {
+      //   messageLocalId = await _messageLocalSource.insertMessage(
+      //     message.toLocalMessageOnReceived(conversationLocalId),
+      //     conversationLocalId
+      //   );
+      //   if (message.multimedia != null) {
+      //     //check if the message has a multimedia to be added
+      //     await _multimediaLocalSource.insertMultimedia(
+      //       (message.multimedia! as RemoteMultimediaModel)
+      //           .toLocalMultimediaOnReceive(messageLocalId),
+      //     );
+      //   }
+      // }
       await _conversationLocalSource
           .refreshConversationUpdatedAt(conversationLocalId);
 
       //If the message already exists, or its added now, in both cases we need to confirm thier receipt
-      await _confirmReceivedMessagesRemotely([
-        ReceivedReadMessageModel(id: message.id, at: DateTime.now()),
-      ]);
+      // await confirmReceivedMessagesRemotelyAndUpdateLocallay([
+      //   ReceivedReadMessageModel(id: message.id, at: DateTime.now()),
+      // ]);
       // return messageLocalId;
     } on AppException catch (e) {
       print(
@@ -366,7 +462,7 @@ class MessageRepositoryImp extends MessageRepository {
       // Extract a liat of ReceivedReadMessageModel from the messages, to use in the request
       List<ReceivedReadMessageModel> recReadMeaages =
           _getIdsAndAtFromLocalMessages(messages, true);
-      await _confirmReceivedMessagesRemotely(recReadMeaages);
+      await confirmReceivedMessagesRemotelyAndUpdateLocallay(recReadMeaages);
     } on AppException catch (e) {
       print(
           "**********MyException in MessageRepositoryImp in confirmReceivedLocallyMessagesRemotely: ${e.failure.toString()}");
@@ -452,16 +548,14 @@ class MessageRepositoryImp extends MessageRepository {
   ///
   /// print("Sending Message Request: $request");
   /// ```
-  SendMessageRequest _buildSendMessageRequestObject(
-    LocalMessage localMessage,
-    LocalMultimedia? localMultimedia,
-    int conversationRemoteId,
-  ) {
+  SendMessageRequest _buildSendMessageRequestObject(LocalMessage localMessage,
+      LocalMultimedia? localMultimedia, int conversationRemoteId) {
     late SendMessageRequest request;
     if (localMultimedia != null) {
       if (localMessage.body != null && localMessage.body != "") {
         request = SendMessageRequest.withBodyAndMultimedia(
           conversationId: conversationRemoteId,
+          replyTo: localMessage.replyTo,
           body: localMessage.body!,
           filePath: localMultimedia.path!,
           onSendProgress: null,
@@ -470,6 +564,7 @@ class MessageRepositoryImp extends MessageRepository {
       } else {
         request = SendMessageRequest.withMultimedia(
           conversationId: conversationRemoteId,
+          replyTo: localMessage.replyTo,
           filePath: localMultimedia.path!,
           onSendProgress: null,
           cancelToken: null,
@@ -478,6 +573,7 @@ class MessageRepositoryImp extends MessageRepository {
     } else {
       request = SendMessageRequest.withBody(
         conversationId: conversationRemoteId,
+        replyTo: localMessage.replyTo,
         body: localMessage.body!,
       );
     }
@@ -500,7 +596,7 @@ class MessageRepositoryImp extends MessageRepository {
   /// ```
   ///
   /// - [recReadMessages]: A list of [ReceivedReadMessageModel] objects representing received messages.
-  Future<void> _confirmReceivedMessagesRemotely(
+  Future<void> confirmReceivedMessagesRemotelyAndUpdateLocallay(
       List<ReceivedReadMessageModel> recReadMeaages) async {
     if (recReadMeaages.isNotEmpty) {
       ReceivedReadConfimationResponseModel response =

@@ -1,5 +1,4 @@
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/search_textformfield.dart';
@@ -213,57 +212,60 @@ class ConversationScreenAppBar extends StatelessWidget
   AppBar buildNormalAppBar(LocalConversation conversation) {
     return AppBar(
       centerTitle: false,
-      // backgroundColor: ChatStyle.ownMessageColor,
-      // backgroundColor: Color.fromRGBO(25, 39, 52, 1),
       elevation: 2,
-      leadingWidth: 100,
+      leadingWidth: 101,
       leading: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(width: 9),
-          PressableIconBackground(
+          InkWell(
+            onTap: _screenController.closeThisConversationScreen,
             child: const Icon(
               Icons.arrow_back_ios_new,
             ),
-            onTap: () => Get.back(),
           ),
           const SizedBox(width: 8),
           UserImageAvatarWithStatusWidget(
             userId: conversation.userId,
             userName: conversation.userName,
-            raduis: 23,
-            boderThickness: 0,
+            raduis: 24,
+            statusRadius: 8,
+            // boderThickness: 1,
+            borderColor: Get.theme.primaryColor,
+            boderThickness: 1,
             imageUrl: conversation.userImageUrl,
             statusBorderColor: Colors.white54,
             showImageDirectly: true,
           ),
         ],
       ),
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            conversation.userName,
-            // style: const TextStyle(
-            //   fontWeight: FontWeight.w500,
-            //   fontSize: 20,
-            //   // color: Colors.white,
-            // ),
-          ),
-          const SizedBox(height: 5),
-          UserStatusTextWidget(
-            userId: conversation.userId,
-            offlineColor:
-                Get.isPlatformDarkMode ? Colors.white70 : Colors.black45,
-          )
-        ],
+      title: InkWell(
+        onTap: _screenController.goToChatProfileScreen,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              conversation.userName,
+              // style: const TextStyle(
+              //   fontWeight: FontWeight.w500,
+              //   fontSize: 20,
+              //   // color: Colors.white,
+              // ),
+            ),
+            const SizedBox(height: 5),
+            UserStatusTextWidget(
+              userId: conversation.userId,
+              offlineColor:
+                  Get.isPlatformDarkMode ? Colors.white70 : Colors.black45,
+            )
+          ],
+        ),
       ),
       actions: [
         IconButton(
           icon: const Icon(
             Icons.search,
-            // color: Colors.white,
           ),
           onPressed: _screenController.toggleSearchingMode,
         ),
@@ -280,24 +282,24 @@ class ConversationScreenAppBar extends StatelessWidget
         return [
           PopupMenuItem(
             value: ConversationPopupMenuItemsValues.search,
-            child: Text(ConversationPopupMenuItemsValues.search.value),
+            child: Text(ConversationPopupMenuItemsValues.search.value.tr),
           ),
           PopupMenuItem(
             value: ConversationPopupMenuItemsValues.media,
-            child: Text(ConversationPopupMenuItemsValues.media.value),
+            child: Text(ConversationPopupMenuItemsValues.media.value.tr),
           ),
           PopupMenuItem(
             value: ConversationPopupMenuItemsValues.goToFirstMessage,
-            child:
-                Text(ConversationPopupMenuItemsValues.goToFirstMessage.value),
+            child: Text(
+                ConversationPopupMenuItemsValues.goToFirstMessage.value.tr),
           ),
           PopupMenuItem(
             value: ConversationPopupMenuItemsValues.clearChat,
-            child: Text(ConversationPopupMenuItemsValues.clearChat.value),
+            child: Text(ConversationPopupMenuItemsValues.clearChat.value.tr),
           ),
           PopupMenuItem(
             value: ConversationPopupMenuItemsValues.block,
-            child: Text(ConversationPopupMenuItemsValues.block.value),
+            child: Text(ConversationPopupMenuItemsValues.block.value.tr),
           ),
         ];
       },

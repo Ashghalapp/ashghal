@@ -6,16 +6,13 @@
 // PUSHER_SCHEME=https
 // PUSHER_APP_CLUSTER=ap2
 // import 'package:pusher_channels/pusher_channels.dart';
-import 'dart:collection';
 
-import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/dio_service.dart';
-import 'package:dio/dio.dart';
 
 import 'dart:convert';
 
-import 'package:ashghal_app_frontend/features/chat/data/models/remote_message_model.dart';
 import 'package:get/get.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
@@ -42,30 +39,31 @@ class PusherService {
 
     try {
       await pusher!.init(
-          apiKey: PusherConfig.apiKey,
-          cluster: PusherConfig.apiCluster,
-          useTLS: true,
-          // onConnectionStateChange: (),
-          // onError: onError,
+        apiKey: PusherConfig.apiKey,
+        cluster: PusherConfig.apiCluster,
+        useTLS: true,
+        onConnectionStateChange: onConnectionStateChange,
+        // onError: onError,
 
-          onSubscriptionSucceeded:
-              onSubscriptionSucceeded, //use this if you want to be informed of when a channel has successfully been subscribed to, which is useful if you want to perform actions that are only relevant after a subscription has succeeded. For example querying the members for presence channel.
-          onEvent:
-              onEvent, //Called when a event is received by the client. The global event handler will trigger on events from any channel.
-          // authEndpoint: ,  //The authEndpoint provides a URL that the Pusher client will call to authorize users for a presence channel.
-          onSubscriptionError:
-              onSubscriptionError, //use this if you want to be informed of a failed subscription attempt, which you could use, for example, to then attempt another subscription or make a call to a service you use to track errors.
-          onDecryptionFailure:
-              onDecryptionFailure, //only used with private encrypted channels - use this if you want to be notified if any messages fail to decrypt.
-          onMemberAdded: onMemberAdded,
-          onMemberRemoved: onMemberRemoved,
-          authEndpoint: ApiConstants.channelsAutherizingUrl,
-          onAuthorizer: onAuthorizer,
-          authParams: {
-            //The authEndpoint provides a URL that the Pusher client will call to authorize users for a presence channel. On how to implement an authorization service please check here: https://pusher.com/docs/channels/server_api/authenticating-users/
-            // 'params': {'foo': 'bar'}, //Query parameters  (AJAX only).
-            // 'headers': {'baz': 'boo'} //Headers parameters (AJAX only).
-          });
+        onSubscriptionSucceeded:
+            onSubscriptionSucceeded, //use this if you want to be informed of when a channel has successfully been subscribed to, which is useful if you want to perform actions that are only relevant after a subscription has succeeded. For example querying the members for presence channel.
+        onEvent:
+            onEvent, //Called when a event is received by the client. The global event handler will trigger on events from any channel.
+        // authEndpoint: ,  //The authEndpoint provides a URL that the Pusher client will call to authorize users for a presence channel.
+        onSubscriptionError:
+            onSubscriptionError, //use this if you want to be informed of a failed subscription attempt, which you could use, for example, to then attempt another subscription or make a call to a service you use to track errors.
+        onDecryptionFailure:
+            onDecryptionFailure, //only used with private encrypted channels - use this if you want to be notified if any messages fail to decrypt.
+        onMemberAdded: onMemberAdded,
+        onMemberRemoved: onMemberRemoved,
+        authEndpoint: ApiConstants.channelsAutherizingUrl,
+        onAuthorizer: onAuthorizer,
+        authParams: {
+          //The authEndpoint provides a URL that the Pusher client will call to authorize users for a presence channel. On how to implement an authorization service please check here: https://pusher.com/docs/channels/server_api/authenticating-users/
+          // 'params': {'foo': 'bar'}, //Query parameters  (AJAX only).
+          // 'headers': {'baz': 'boo'} //Headers parameters (AJAX only).
+        },
+      );
     } catch (e) {
       print("ERROR: $e");
     }
@@ -122,12 +120,12 @@ class PusherService {
   Future<void> connect() async {
     if (pusher != null) {
       await pusher!.connect();
-      print(
-          "Subscribed channels/////////////////////////////////////////////////////////");
+      // print(
+      //     "Subscribed channels/////////////////////////////////////////////////////////");
 
-      print(pusher!.channels.toString());
-      print(
-          "Subscribed channels/////////////////////////////////////////////////////////");
+      // print(pusher!.channels.toString());
+      // print(
+      //     "Subscribed channels/////////////////////////////////////////////////////////");
     }
   }
 
@@ -136,7 +134,9 @@ class PusherService {
       await pusher!.disconnect();
     }
   }
-
+// void onConnectionStateChange(dynamic currentState, dynamic previousState) {
+//   print("Connection: $currentState");
+// }
   // Future<void> subscribeToPublicChannel(
   //     String channelName, Channelhandler handler) async {
   //   if (pusher != null) {
@@ -166,25 +166,25 @@ class PusherService {
 
   Future<void> subscribeToChannel(String channelName) async {
     if (pusher != null) {
-      // final myPrivateChannel =
-      if (!pusher!.channels.keys.contains(channelName)) {
+      try {
         await pusher!.subscribe(
           channelName: channelName,
-
-          // onMemberAdded: (dynamic event) {
-          //   print("Private OnMemeber Added $event");
-          //   dynamic data = json.decode(event.toString());
-          //   print("Private OnMemeber Added $data");
-          // },
-          // onMemberRemoved: (dynamic event) {
-          //   print("Private OnMemeber Removed $event");
-          //   dynamic data = json.decode(event.toString());
-          //   print("Private OnMemeber Removed $data");
-          // },
         );
-      } else {
-        print("Already Subscribed to channel $channelName");
+
+        AppPrint.printInfo(
+            "in PusherService on subscribeToChannel Connection state:${pusher!.connectionState} ---- Subscribed to channel:$channelName ---- Subscribed Channels:${pusher!.channels.keys}");
+        // AppPrint.printInfo(
+        //     "in PusherService on subscribeToChannel Subscribed to channel $channelName");
+        // AppPrint.printInfo(
+        //     "in PusherService on subscribeToChannel Subscribed Channels ${pusher!.channels.keys}");
+      } catch (e) {
+        AppPrint.printError(
+            "in PusherService on subscribeToChannel error Subscribed to channel $channelName : ${e.toString()}");
       }
+      // } else {
+      //   AppPrint.printError(
+      //       "in PusherService on subscribeToChannel Already Subscribed to channel $channelName");
+      // }
     }
   }
 
@@ -207,12 +207,19 @@ class PusherService {
 
   Future<void> unsubscribeFromChannel(String channelName) async {
     if (pusher != null) {
+      // PusherChannel? channel = await pusher!.getChannel(channelName);
+      // await channel!.unsubscribe();
+      // pusher!.channels.remove(channelName);
       await pusher!.unsubscribe(channelName: channelName);
       int index = channelsHandlers
           .indexWhere((element) => element.channel.channelName == channelName);
       if (index != -1) {
         channelsHandlers.removeAt(index);
       }
+      AppPrint.printSuccess(
+          "in PusherService on unsubscribeFromChannel UnSubscribed from channel $channelName");
+      AppPrint.printInfo(
+          "in PusherService on unsubscribeFromChannel Subscribed Channels ${pusher!.channels.keys}");
     }
   }
 
@@ -384,8 +391,14 @@ class PusherService {
   /// DISCONNECTING - the connection has been instructed to disconnect and it is just about to do so
   /// DISCONNECTED - the connection has disconnected and no attempt will be made to reconnect automatically
   /// RECONNECTING - an attempt is going to be made to try and re-establish the connection
-  void onConnectionStateChange(dynamic currentState, dynamic previousState) {
-    print("Connection: $currentState");
+  void onConnectionStateChange(
+      dynamic currentState, dynamic previousState) async {
+    AppPrint.printError("Connection: $currentState");
+    if (currentState.toString() == "CONNECTED") {
+      AppPrint.printData("Connection established again");
+
+      await pusher?.connect();
+    }
   }
 
   /// use this if you want to be informed of errors received from Pusher Channels e.g. Application is over connection quota. You can find some of the possible errors listed here.

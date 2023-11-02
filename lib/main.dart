@@ -1,14 +1,5 @@
-import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
-import 'package:ashghal_app_frontend/features/account/widgets/header_widgets/profile_account_header_widget.dart';
-import 'package:ashghal_app_frontend/features/auth/domain/entities/user.dart';
-import 'package:ashghal_app_frontend/features/auth/presentation/screens/test_screen.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_card_widget.dart';
-import 'package:ashghal_app_frontend/test.dart';
-import 'package:ashghal_app_frontend/tester.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

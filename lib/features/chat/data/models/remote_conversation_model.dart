@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
@@ -82,6 +83,7 @@ class RemoteConversationModel extends RemoteConversation {
 
   static List<RemoteConversationModel> fromJsonList(
       List<Map<String, dynamic>> jsonList) {
+    AppPrint.printInfo("fromJsonList");
     return jsonList
         .map<RemoteConversationModel>(
             (json) => RemoteConversationModel.fromJson(json))
@@ -92,6 +94,20 @@ class RemoteConversationModel extends RemoteConversation {
     return ConversationsCompanion(
       remoteId: Value(id),
       // isBlocked: Value(secondUse),
+      // userId: Value(secondUser.id),
+      userName: Value(secondUser.name),
+      userEmail: Value(secondUser.email),
+      userPhone: Value(secondUser.phone),
+      userImageUrl: Value(secondUser.imageUrl),
+      // createdAt: Value(createdAt),
+      // updatedAt: Value(DateTime.now()),
+    );
+  }
+
+  ConversationsCompanion toLocalConversationOnInsert() {
+    return ConversationsCompanion(
+      remoteId: Value(id),
+      // isBlocked: Value(secondUser.),
       userId: Value(secondUser.id),
       userName: Value(secondUser.name),
       userEmail: Value(secondUser.email),

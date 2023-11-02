@@ -10,12 +10,14 @@ class DownloadRequest {
   final String url;
   final String savePath;
   final int multimediaLocalId;
+  final int messageLocalId;
   final CancelToken? cancelToken;
   final Function(int count, int total)? onReceiveProgress;
   DownloadRequest({
     required this.url,
     required this.savePath,
     required this.multimediaLocalId,
+    required this.messageLocalId,
     this.onReceiveProgress,
     this.cancelToken,
   });

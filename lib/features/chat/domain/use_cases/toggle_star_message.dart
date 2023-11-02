@@ -9,10 +9,11 @@ class ToggleStarMessageUseCase {
   });
 
   Future<Either<Failure, bool>> call(
-      int messageLocalId, bool starMessage) async {
+      int messageLocalId, bool starMessage, int conversationLocalId) async {
     return await repository.toggleStarMessage(
       messageLocalId,
       starMessage,
+      conversationLocalId,
     );
   }
 }

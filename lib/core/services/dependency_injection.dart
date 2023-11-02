@@ -15,6 +15,11 @@ import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecase
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecases/update_user_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_email_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_reset_password_code_uc.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_messages.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_blocked_conversations.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_conversations_with_last_message_and_count.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_conversation_messages_with_multimedia.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_starred_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/search_in_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_archive_conversation.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_favorite_conversation.dart';
@@ -150,7 +155,7 @@ void setupDependencies() {
   getIt.registerLazySingleton(
       () => WatchConversationMessages(repository: getIt()));
   getIt.registerLazySingleton(
-      () => WatchConversationsLastMessageAndCount(repository: getIt()));
+      () => WatchConversationsLastMessageAndCountUseCase(repository: getIt()));
 
   getIt.registerLazySingleton(() => SendMessageUseCase(repository: getIt()));
   getIt.registerLazySingleton(
@@ -193,7 +198,15 @@ void setupDependencies() {
       () => SearchInMessagesUseCase(repository: getIt()));
   getIt.registerLazySingleton(
       () => ToggleStarMessageUseCase(repository: getIt()));
-
+  getIt.registerLazySingleton(() =>
+      GetAllConversationsWithLastMessageAndCountUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetConversationMessagesWithMultimediaUsecase(repository: getIt()));
+  getIt.registerLazySingleton(() => DeleteMessagesUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetStarredMessagesUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetAllBlockedConversationsCountUseCase(repository: getIt()));
   // repository injection
   getIt.registerLazySingleton<ConversationRepository>(
       () => ConversationRepositoryImp());

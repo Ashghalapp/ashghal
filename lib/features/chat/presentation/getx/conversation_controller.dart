@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
@@ -17,6 +20,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_messa
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/dispatch_typing_event.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/download_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_conversation_messages.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_conversation_messages_with_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/send_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_star_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/upload_multimedia.dart';
@@ -26,6 +30,7 @@ import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
     as di;
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/streames_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,10 +38,11 @@ class ConversationController extends GetxController {
   RxList<MessageAndMultimediaModel> messages =
       <MessageAndMultimediaModel>[].obs;
 
-  late final int conversationId;
-  ConversationController({required this.conversationId});
-
-  RxBool isloading = false.obs;
+  int get conversationId => currentConversation.localId;
+  final LocalConversation currentConversation;
+  ConversationController({required this.currentConversation});
+  final StreamsManager streamsManager = StreamsManager();
+  RxBool isLoading = false.obs;
   // final RemoteMessageService messageService = RemoteMessageService.create();
   // final RemoteMessageConfirmationService confirmationService =
   //     RemoteMessageConfirmationService.create();
@@ -45,14 +51,12 @@ class ConversationController extends GetxController {
   void onInit() {
     super.onInit();
     // di.setupChatDependencies();
-
+// WatchConversationMessagesMultimediaUseCase usecase =di.getIt();
+// messages.bindStream(usecase.call(conversationId))
     markConversationMessagesAsRead();
-    _getAllMessages().then((value) {
-      _listenToMultimedia();
-      _listenToAllMessages();
-    });
-    // _listenToAllMessages();
-    // _listenToMultimedia();
+    _getAllMessagesWithMultimedia().then((value) {});
+    _listenToAllMessages();
+    _listenToMultimedia();
   }
 
   Future<void> markConversationMessagesAsRead() async {
@@ -68,35 +72,79 @@ class ConversationController extends GetxController {
   }
 
   Future<void> _getAllMessages() async {
+    isLoading.value = true;
     // print("Conversation ID" + conversationId.toString());
     GetConversationMessagesUsecase usecase = di.getIt();
     (await usecase(conversationId)).fold((l) {}, (localMessages) {
       for (var localMessage in localMessages) {
         _insertOrReplaceMessage(localMessage);
       }
+      isLoading.value = false;
+    });
+  }
+
+  Future<void> _getAllMessagesWithMultimedia() async {
+    isLoading.value = true;
+    // print("Conversation ID" + conversationId.toString());
+    GetConversationMessagesWithMultimediaUsecase usecase = di.getIt();
+    (await usecase(conversationId)).fold((failure) {
+      AppUtil.buildErrorDialog(failure.message);
+    }, (messagesWithMultimedia) {
+      // AppPrint.printInfo("got messages :${messagesWithMultimedia.length}");
+      messages.insertAll(0, messagesWithMultimedia);
+      // for (var localMessage in localMessages) {
+      //   _insertOrReplaceMessage(localMessage);
+      // }
+      isLoading.value = false;
     });
   }
 
   void _listenToAllMessages() {
     WatchConversationMessages watchConversationMessages = di.getIt();
-    watchConversationMessages(conversationId).listen((localMessages) {
-      print(
+    streamsManager.listenAllMessagesStream(
+        watchConversationMessages.call(conversationId), (localMessages) {
+      AppPrint.printInfo(
           "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to messages got updates :${localMessages.length}");
+      // print(
+      // "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to messages got updates :${localMessages.length}");
       for (var localMessage in localMessages) {
+        // AppPrint.printData(localMessage.toString());
         _insertOrReplaceMessage(localMessage);
       }
     });
+
+    // watchConversationMessages.call(conversationId).listen((localMessages) {
+    //   AppPrint.printInfo(
+    //       "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to messages got updates :${localMessages.length}");
+    //   // print(
+    //   // "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to messages got updates :${localMessages.length}");
+    //   for (var localMessage in localMessages) {
+    //     _insertOrReplaceMessage(localMessage);
+    //   }
+    // });
   }
 
   void _listenToMultimedia() {
     WatchConversationMessagesMultimediaUseCase useCase = di.getIt();
-    useCase(conversationId).listen((localMultimedia) {
-      print(
-          "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to Multimedia got updates :${localMultimedia.length}");
-      for (var multimedia in localMultimedia) {
-        _insertOrReplaceMultimedia(multimedia);
+    streamsManager.listenMessagesAndMultimediaStream(
+        useCase.call(conversationId), (messagesAndMultimedia) {
+      AppPrint.printInfo(
+          "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to Multimedia got updates :${messagesAndMultimedia.length}");
+
+      for (var msgAndMul in messagesAndMultimedia) {
+        // AppPrint.printData(msgAndMul.toString());
+        _insertOrReplaceMultimediaAndMessage(msgAndMul);
       }
     });
+    // useCase.call(conversationId).listen((messagesAndMultimedia) {
+    //   AppPrint.printInfo(
+    //       "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to Multimedia got updates :${messagesAndMultimedia.length}");
+
+    //   for (var msgAndMul in messagesAndMultimedia) {
+    //     // AppPrint.printData(msgAndMul.toString());
+    //     _insertOrReplaceMultimediaAndMessage(msgAndMul);
+    //   }
+    // });
   }
 
   void _insertOrReplaceMessage(LocalMessage message) {
@@ -110,10 +158,13 @@ class ConversationController extends GetxController {
     }
   }
 
-  void _insertOrReplaceMultimedia(LocalMultimedia multimedia) {
+  void _insertOrReplaceMultimediaAndMessage(
+      MessageAndMultimediaModel msgAndMul) {
     int index = messages.indexWhere(
-        (element) => element.message.localId == multimedia.messageId);
+        (element) => element.message.localId == msgAndMul.message.localId);
     if (index == -1) {
+      // AppPrint.printInfo("Inserted");
+      messages.insert(0, msgAndMul);
       // messages.add(
       //   MessageAndMultimediaModel(
       //     //we added a random message object with the real localId, and it will be replaced with the real message object when it comes in the messages listner
@@ -131,54 +182,25 @@ class ConversationController extends GetxController {
       // );
     } else {
       // print("multimedia ${multimedia.toString()}");
-      messages[index] = messages[index].copyWith(multimedia: multimedia);
+      // messages.replaceRange(index, index + 1, [msgAndMul]);
+      messages[index] = msgAndMul;
     }
-    messages.refresh();
+    // messages.refresh();
   }
 
-  Future<void> dispatchTypingEvent(
-      TypingEventType eventType, int conversationRemoteId) async {
-    DispatchTypingEventUseCase useCase = di.getIt();
-    await useCase.call(
-      DispatchTypingEventRequest(
-        conversationId: conversationRemoteId,
-        eventType: eventType,
-      ),
-    );
+  Future<void> dispatchTypingEvent(TypingEventType eventType) async {
+    if (currentConversation.remoteId != null) {
+      DispatchTypingEventUseCase useCase = di.getIt();
+      await useCase.call(
+        DispatchTypingEventRequest(
+          conversationId: currentConversation.remoteId!,
+          eventType: eventType,
+        ),
+      );
+    }
   }
 
-  Future<void> sendTextMessage(String body, [int? otherConversationId]) async {
-    SendMessageRequest request = SendMessageRequest.withBody(
-      conversationId: otherConversationId ?? conversationId,
-      body: body,
-    );
-    _sendMessage(request);
-  }
-
-  Future<void> sendMultimediaMessage(String path,
-      [int? otherConversationId]) async {
-    SendMessageRequest request = SendMessageRequest.withMultimedia(
-      conversationId: otherConversationId ?? conversationId,
-      filePath: path,
-      onSendProgress: (count, total) {},
-      cancelToken: null,
-    );
-    _sendMessage(request);
-  }
-
-  Future<void> sendTextAndMultimediaMessage(String body, String path,
-      [int? otherConversationId]) async {
-    SendMessageRequest request = SendMessageRequest.withBodyAndMultimedia(
-      conversationId: otherConversationId ?? conversationId,
-      filePath: path,
-      body: body,
-      onSendProgress: (count, total) {},
-      cancelToken: null,
-    );
-    _sendMessage(request);
-  }
-
-  Future<void> _sendMessage(SendMessageRequest request) async {
+  Future<void> sendMessage(SendMessageRequest request) async {
     // print("Request Sent");
     SendMessageUseCase sendMessageUseCase = di.getIt();
     (await sendMessageUseCase.call(request)).fold(
@@ -285,6 +307,22 @@ class ConversationController extends GetxController {
     // );
   }
 
+  Future<void> unblockConversation() async {
+    if (currentConversation.remoteId != null) {
+      ChatController chatController = Get.find();
+      await chatController.unblockConversation(currentConversation.remoteId!);
+    } else {
+      AppUtil.buildErrorDialog(AppLocalization.failToUnblockConversation.tr);
+    }
+
+    // _toggleBlockConversation(
+    //   BlockUnblockConversationRequest(
+    //     conversationRemoteId: conversationId,
+    //     block: true,
+    //   ),
+    // );
+  }
+
   // Future<void> unblockConversation() async {
   //   _toggleBlockConversation(
   //     BlockUnblockConversationRequest(
@@ -312,22 +350,27 @@ class ConversationController extends GetxController {
   @override
   void onClose() {
     // textEditingController.dispose();
+    streamsManager.cancelAllMessagesListener();
+    streamsManager.cancelMessagesAndMultimediaListener();
     super.onClose();
   }
 
   // toggleStarMessage(int selectedMessagesId) {}
 
   Future<void> toggleStarMessage(int messageLocalId) async {
-    bool? isStarred = messages
+    LocalMessage? message = messages
         .firstWhereOrNull(
             (element) => element.message.localId == messageLocalId)
-        ?.message
-        .isStarred;
-    if (isStarred == null) {
+        ?.message;
+
+    if (message == null) {
+      // isStarred = message?.isStarred;
       return;
     }
+    bool isStarred = message.isStarred;
     ToggleStarMessageUseCase useCase = di.getIt();
-    (await useCase.call(messageLocalId, !isStarred)).fold(
+    (await useCase.call(messageLocalId, !isStarred, message.conversationId))
+        .fold(
       (failure) {
         if (isStarred) {
           AppUtil.showMessage(

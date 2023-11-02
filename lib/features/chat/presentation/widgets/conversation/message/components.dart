@@ -3,7 +3,6 @@ import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/video_message_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
 import 'package:flutter/material.dart';
 
@@ -68,8 +67,8 @@ class PressableIconBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).cardColor,
-      // color: Colors.white,
+      color:
+          Get.isPlatformDarkMode ? Colors.white12 : Theme.of(context).cardColor,
       borderRadius: BorderRadius.circular(borderRadius),
       child: InkWell(
         borderRadius: BorderRadius.circular(borderRadius),
@@ -80,7 +79,7 @@ class PressableIconBackground extends StatelessWidget {
           child: icon != null
               ? Icon(
                   icon,
-                  size: 22,
+                  size: 24,
                 )
               : child,
         ),
@@ -115,20 +114,17 @@ class MessageStatusIcon extends StatelessWidget {
             size: 16,
           )
         : messageStatus == MessageStatus.received
-            ? Icon(
+            ? const Icon(
                 FontAwesomeIcons.checkDouble,
-                // color: ,
                 size: 16,
               )
             : messageStatus == MessageStatus.sent
                 ? const Icon(
                     FontAwesomeIcons.check,
-                    // color: Colors.black87,
                     size: 16,
                   )
                 : const Icon(
                     Icons.access_time,
-                    // color: Colors.black87,
                     size: 18,
                   );
   }
@@ -203,10 +199,10 @@ class DownloadUploadIconWithSizeWidget extends StatelessWidget {
           MultimediaSizeTextWidget(
             size: size,
             isMine: isMine,
+            color: Colors.white,
           )
         ],
       ),
-      // borderRaduis: 50,
     );
   }
 }
@@ -217,21 +213,24 @@ class MultimediaSizeTextWidget extends StatelessWidget {
     required this.size,
     required this.isMine,
     this.fontSize = 14,
+    this.color,
   });
 
   final int size;
   final double fontSize;
   final bool isMine;
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return Text(
       AppUtil.getFormatedFileSize(size),
       style: TextStyle(
-        color: isMine
-            ? ChatStyle.ownMessageTextColor.withOpacity(0.7)
-            : Get.isPlatformDarkMode
-                ? ChatStyle.otherMessageTextDarkColor.withOpacity(0.7)
-                : ChatStyle.otherMessageTextLightColor.withOpacity(0.7),
+        color: color ??
+            (isMine
+                ? ChatStyle.ownMessageTextColor.withOpacity(0.7)
+                : Get.isPlatformDarkMode
+                    ? ChatStyle.otherMessageTextDarkColor.withOpacity(0.7)
+                    : ChatStyle.otherMessageTextLightColor.withOpacity(0.7)),
         fontSize: fontSize,
       ),
     );
@@ -269,16 +268,20 @@ class DownloadUploadIconWidget extends StatelessWidget {
   const DownloadUploadIconWidget({
     super.key,
     required this.isMine,
+    this.iconSize = 18,
+    this.color = Colors.white,
   });
 
   final bool isMine;
+  final double iconSize;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Icon(
       isMine ? Icons.upload : Icons.download,
-      color: Colors.white,
-      size: 18,
+      color: color,
+      size: iconSize,
     );
   }
 }
@@ -286,10 +289,15 @@ class DownloadUploadIconWidget extends StatelessWidget {
 class DownloadinUploadingCicrularWidget extends StatelessWidget {
   const DownloadinUploadingCicrularWidget({
     super.key,
-    required UploadDownloadController controller,
-  }) : _controller = controller;
-
-  final UploadDownloadController _controller;
+    this.cancelIconColor = Colors.white,
+    required this.onCancel,
+    this.scaleCircular = 0.6,
+    this.iconSize = 12,
+  });
+  final VoidCallback? onCancel;
+  final Color? cancelIconColor;
+  final double scaleCircular;
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -297,29 +305,39 @@ class DownloadinUploadingCicrularWidget extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Transform.scale(
-          scale: 0.7,
-          child: CircularProgressIndicator(
-            value: _controller.progress.value,
-            // strokeWidth: 3,
-            // backgroundColor: Colors.grey,
-            // valueColor: const AlwaysStoppedAnimation<Color>(
-            //   Colors.blue,
-            // ),
+          scale: scaleCircular,
+          child: const CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Colors.blue,
+            ),
           ),
         ),
-        const Icon(
-          FontAwesomeIcons.x,
-          color: Colors.white,
-          size: 16,
+        InkWell(
+          onTap: onCancel,
+          child: Icon(
+            FontAwesomeIcons.x,
+            color: cancelIconColor,
+            size: iconSize,
+          ),
         ),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 50),
-        //   child: Text(
-        //     (_controller.progress.value * 100).toStringAsFixed(2),
-        //     style: const TextStyle(fontSize: 12),
-        //   ),
-        // ),
       ],
+    );
+  }
+}
+
+class DownloadingUploadingProgressPercent extends StatelessWidget {
+  const DownloadingUploadingProgressPercent({
+    super.key,
+    required this.value,
+  });
+
+  final double value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      (value * 100).toStringAsFixed(2),
+      style: const TextStyle(fontSize: 12),
     );
   }
 }
@@ -373,31 +391,6 @@ class ImageVideoPlaceHolderWidget extends StatelessWidget {
         fit: BoxFit.contain,
       ),
     );
-
-    //  Container(
-    //   // height: double.infinity,
-    //   width: double.infinity,
-    //   decoration: BoxDecoration(
-    //     color: Colors.grey,
-    //     borderRadius: BorderRadius.circular(8),
-    //     image: DecorationImage(
-    //       onError: (_, s) {
-    //         // _controller.fileExists.value = false;
-    //       },
-    //       image: const AssetImage(AppImages.imagePlaceholder),
-    //       fit: BoxFit.cover,
-    //     ),
-    //   ),
-    // );
-    // Container(
-    //   // height: double.infinity,
-    //   width: double.infinity,
-    //   decoration: BoxDecoration(
-    //     color: Colors.grey,
-    //     borderRadius: BorderRadius.circular(8),
-    //   ),
-    //   child: message != null ? Center(child: Text(message)) : null,
-    // );
   }
 }
 
@@ -408,6 +401,7 @@ class PressableCircularContianerWidget extends StatelessWidget {
   final EdgeInsetsGeometry childPadding;
   final Widget child;
   final Color color;
+  final double? width;
   const PressableCircularContianerWidget({
     super.key,
     required this.onPress,
@@ -415,6 +409,7 @@ class PressableCircularContianerWidget extends StatelessWidget {
     this.borderRaduis = 50,
     this.childPadding = const EdgeInsets.all(10),
     this.color = ChatStyle.iconsBackColor,
+    this.width,
   });
 
   @override
@@ -422,6 +417,7 @@ class PressableCircularContianerWidget extends StatelessWidget {
     return InkWell(
       onTap: onPress,
       child: Container(
+        width: width,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(borderRaduis),

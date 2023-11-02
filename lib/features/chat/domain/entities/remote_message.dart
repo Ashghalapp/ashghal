@@ -6,6 +6,7 @@ class RemoteMessage extends Equatable {
   final String? body;
   final int senderId;
   final int conversationId;
+  final int? replyTo;
   final RemoteMultimedia? multimedia;
   final DateTime sentAt;
   final DateTime? receivedAt;
@@ -17,6 +18,7 @@ class RemoteMessage extends Equatable {
     this.body,
     required this.senderId,
     required this.conversationId,
+    this.replyTo,
     this.multimedia,
     required this.sentAt,
     this.receivedAt,
@@ -30,6 +32,7 @@ class RemoteMessage extends Equatable {
         body,
         senderId,
         conversationId,
+        replyTo,
         multimedia,
         sentAt,
         receivedAt,

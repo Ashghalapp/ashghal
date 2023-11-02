@@ -11,15 +11,7 @@ class ProfileChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(conversation.userName),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert),
-          ),
-        ],
-      ),
+      appBar: _buildAppBar(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,6 +26,13 @@ class ProfileChatScreen extends StatelessWidget {
               conversation.userName,
               style: const TextStyle(fontSize: 24),
             ),
+
+            const SizedBox(height: 10),
+            Text(
+              conversation.userEmail ?? "",
+              style: const TextStyle(fontSize: 24),
+            ),
+
             const SizedBox(height: 10),
             Text(
               conversation.userPhone ?? "",
@@ -41,6 +40,21 @@ class ProfileChatScreen extends StatelessWidget {
                 fontSize: 20,
                 color: Colors.grey,
               ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "user_id : ${conversation.userId}",
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "conversation_local_id : ${conversation.localId}",
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "conversation_remote_id : ${conversation.remoteId}",
+              style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 10),
             // Text(
@@ -137,6 +151,18 @@ class ProfileChatScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text(conversation.userName),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.more_vert),
+        ),
+      ],
     );
   }
 

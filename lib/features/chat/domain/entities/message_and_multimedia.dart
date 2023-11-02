@@ -6,7 +6,7 @@ class MessageAndMultimedia extends Equatable {
   final LocalMultimedia? multimedia;
   const MessageAndMultimedia({
     required this.message,
-    required this.multimedia,
+    this.multimedia,
   });
 
   @override

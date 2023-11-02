@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/directory_path.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/download_request.dart';
@@ -16,22 +17,20 @@ import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-enum AttachmentOption { camera, gallery, video, file, contact }
+enum AttachmentOption { camera, gallery, video, file }
 
 //An extension, To extract the enum values as strings without the enum type name.
 extension AttachmentOptionExtension on AttachmentOption {
   String get value {
     switch (this) {
       case AttachmentOption.camera:
-        return 'Camera';
+        return AppLocalization.camera;
       case AttachmentOption.gallery:
-        return 'Gallery';
+        return AppLocalization.gallery;
       case AttachmentOption.video:
-        return 'Video';
+        return AppLocalization.video;
       case AttachmentOption.file:
-        return 'File';
-      case AttachmentOption.contact:
-        return 'Contact';
+        return AppLocalization.file;
     }
   }
 }
@@ -52,8 +51,8 @@ extension AttachmentOptionExtension on AttachmentOption {
 // }
 
 class MultimediaController extends GetxController {
-  ConversationScreenController _screenController = Get.find();
-  ConversationController _conversationController = Get.find();
+  // ConversationScreenController _screenController = Get.find();
+  final ConversationController _conversationController = Get.find();
 
   DirectoryPath directoryPath = DirectoryPath();
 
@@ -65,25 +64,7 @@ class MultimediaController extends GetxController {
     } else if (option == AttachmentOption.video) {
       pickVideoFromGallery();
     } else if (option == AttachmentOption.file) {
-      // ignore: unused_local_variable
       await pickFiles();
-      // Future<List<String>> listFiles = await pickFiles();
-      // listFiles.then((files) {
-      //   if (files != null) {
-      //     files.forEach((customFile) {
-      //       if (customFile != null) {
-      //         print('Name: ${customFile.name}');
-      //         print('Path: ${customFile.path}');
-      //         print('Type (Extension): ${customFile.type}');
-      //         print('-----------------------');
-      //       }
-      //     });
-      //   } else {
-      //     print('No files selected or an error occurred.');
-      //   }
-      // });
-    } else if (option == AttachmentOption.contact) {
-      //TODO: Send Contact
     }
     Get.back();
   }
@@ -94,8 +75,6 @@ class MultimediaController extends GetxController {
 
     if (pickedFile != null) {
       Get.to(() => SendingVideoViewPage(path: pickedFile.path));
-      // _screenController.conversationController
-      //     .sendMultimediaMessage(pickedFile.path);
     }
   }
 
@@ -109,31 +88,9 @@ class MultimediaController extends GetxController {
       }
     } catch (e) {}
   }
-  // Future<void> takeCameraPhoto() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(source: ImageSource.camera);
-
-  //   if (pickedFile != null) {
-  //     _screenController.conversationController
-  //         .sendMultimediaMessage(pickedFile.path);
-  //   }
-  // }
 
   void goToCameraScreen() async {
     Get.to(() => CameraScreen());
-  }
-
-  Future<void> sendMultiMedia(List<String> paths, List<String> captions) async {
-    // final result = await FilePicker.platform.pickFiles(
-    //   type: FileType.custom,
-    //   allowedExtensions: ['pdf', 'docx'],
-    // );
-
-    // if (result != null && result.files.isNotEmpty) {
-    // final file = File(result.files.single.path!);
-    // // ignore: unused_local_variable
-    // final filePath = file.path;
-    // }
   }
 
   Future<void> pickFiles() async {
@@ -153,7 +110,7 @@ class MultimediaController extends GetxController {
         for (String path in pickedFilesPaths) {
           if (path != "") {
             print("file path: $path");
-            _screenController.conversationController
+            Get.find<ConversationScreenController>()
                 .sendMultimediaMessage(path);
           }
         }
@@ -168,6 +125,7 @@ class MultimediaController extends GetxController {
     required String fileName,
     required String fileType,
     required int multimediaLocalId,
+    required int messageLocalId,
     CancelToken? cancelToken,
     void Function(int, int)? onReceiveProgress,
   }) async {
@@ -179,6 +137,7 @@ class MultimediaController extends GetxController {
         url: fileUrl,
         savePath: filePath,
         multimediaLocalId: multimediaLocalId,
+        messageLocalId: messageLocalId,
         onReceiveProgress: onReceiveProgress,
         cancelToken: cancelToken,
       );

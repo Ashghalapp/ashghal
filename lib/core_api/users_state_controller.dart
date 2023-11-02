@@ -10,6 +10,7 @@ import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class UsersStateController extends GetxController {
   RxList<int> onlineUsersIds = <int>[].obs;
+  final bool isSubscribed = false;
   final StreamController<List<int>> _onlineUsersController =
       StreamController<List<int>>.broadcast();
   Stream<List<int>> get onlineUsersStream => _onlineUsersController.stream;
@@ -20,10 +21,12 @@ class UsersStateController extends GetxController {
       _onlineUsersController.add(onlineIds);
     });
     super.onInit();
-    subscribeToOnlineUsersChannel();
+    // subscribeToOnlineUsersChannel();
     AppServices.networkInfo.onStatusChanged.listen((isConnected) async {
       if (isConnected) {
+        // if(!isSubscribed){
         await subscribeToOnlineUsersChannel();
+        // }
       } else {
         await unsubscribeFromOnlineUsersChannel();
       }
@@ -85,6 +88,7 @@ class UsersStateController extends GetxController {
 
     await AppServices.pusher
         .subscribeToChannel(ChannelsEventsNames.userStateUpdatedChannel);
+    // await AppServices.pusher.connect();
   }
 
   Future<void> unsubscribeFromOnlineUsersChannel() async {

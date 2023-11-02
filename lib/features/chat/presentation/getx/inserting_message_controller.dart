@@ -13,18 +13,14 @@ enum TypingEventType {
 }
 
 class InsertingMessageController extends GetxController {
-  // final int conversationId;
-  // InsertingMessageController({required this.conversationId});
-
   //A flag to track toggling between send and regiter button
   RxBool sendButtonEnabled = false.obs;
   //A flag to indicate if the emoji picker is showed or not
   RxBool emojiPickerShowing = false.obs;
-
+  ConversationController conversationController = Get.find();
   final TextEditingController messageTextEdittingController =
       TextEditingController();
   final FocusNode messageFieldFocusNode = FocusNode();
-  final ConversationScreenController _screenController = Get.find();
   final ChatController _chatController = Get.find();
   final Duration typingEventDuration = const Duration(seconds: 5);
   Timer? _startTypingTimer;
@@ -37,10 +33,9 @@ class InsertingMessageController extends GetxController {
     messageFieldFocusNode.addListener(() async {
       if (messageFieldFocusNode.hasFocus) {
         emojiPickerShowing.value = false;
-        // _conversationScreenController.scrollToFirstOrBottom(0);
       }
       //is used to dispatch stop typing event based on some conditions
-      await focuschange();
+      await messageTextFieldOnFocusChange();
     });
 
     messageTextEdittingController.addListener(() {
@@ -50,14 +45,12 @@ class InsertingMessageController extends GetxController {
         sendButtonEnabled.value = false;
       }
     });
-    focuschange();
+    messageTextFieldOnFocusChange();
   }
 
   //onChange
   Future<void> sendTypingNotification(String value) async {
-    if (value != "" &&
-        _chatController.isSubscribed &&
-        await AppServices.networkInfo.isConnected) {
+    if (value != "" && _chatController.isSubscribed) {
       print("sendTypingNotification");
       //if the start timer is active we return, becuase no need to send a notification becuase its already sent
       if (_startTypingTimer?.isActive ?? false) return;
@@ -83,30 +76,24 @@ class InsertingMessageController extends GetxController {
     }
   }
 
-  //onFocusChanged
-  Future<void> focuschange() async {
-    // messageFieldFocusNode.addListener(
-    //   () {
+  Future<void> messageTextFieldOnFocusChange() async {
     //if no typing notification sent, or if a typing notification already sent and
     //we receive focus on the text field we do nothing
     //other than that we stop the typing timer and send a stop typing notification
-    print("focuschange");
     if (_startTypingTimer == null ||
         (_startTypingTimer != null && messageFieldFocusNode.hasFocus)) {
       return;
     }
-    // if(_stopTypingTimer.isActive)
     print("Typing stop event dispatched");
     _stopTypingTimer?.cancel();
     await _dispatchTypingEvent(TypingEventType.stop);
-    //   },
-    // );
   }
 
   Future<void> _dispatchTypingEvent(TypingEventType eventType) async {
-    if (_screenController.conversation.remoteId != null) {
-      await _screenController.conversationController.dispatchTypingEvent(
-          eventType, _screenController.conversation.remoteId!);
+    if (_chatController.isSubscribed) {
+      await conversationController.dispatchTypingEvent(
+        eventType,
+      );
     }
   }
 
@@ -114,56 +101,28 @@ class InsertingMessageController extends GetxController {
     if (!emojiPickerShowing.value) {
       //unfocus message field so that the keyboard disappeared
       messageFieldFocusNode.unfocus();
-      // messageFieldFocusNode.canRequestFocus = false;
     } else {
       messageFieldFocusNode.requestFocus();
     }
     emojiPickerShowing.value = !emojiPickerShowing.value;
   }
 
-  Future<bool> backButtonPressed() {
-    if (emojiPickerShowing.value) {
-      emojiPickerShowing.value = false;
-      return Future.value(false);
-    }
-    // else if (messageFieldFocusNode.hasFocus) {
-    //   messageFieldFocusNode.unfocus();
-    //   return Future.value(false);
-    // }
-    else if (_screenController.selectionEnabled.value ||
-        _screenController.isSearching.value) {
-      _screenController.resetToNormalMode();
-      return Future.value(false);
-    } else {
-      _screenController.conversationController.markConversationMessagesAsRead();
-      return Future.value(true);
-    }
-    // return Future.value(false);
-  }
-
   Future<void> sendMessage() async {
-    if (sendButtonEnabled.value) {
-      // SendMessageRequest request = SendMessageRequest.withBody(
-      //   conversationId: _conversationScreenController.conversationId,
-      //   body: messageTextEdittingController.text,
-      // );
-      _screenController.conversationController
+    if (sendButtonEnabled.value &&
+        messageTextEdittingController.text.trim() != "") {
+      Get.find<ConversationScreenController>()
           .sendTextMessage(messageTextEdittingController.text);
-      // await _conversationController.sendMessage(request);
       messageTextEdittingController.clear();
-      // _startTypingTimer?.cancel();
-      // _stopTypingTimer?.cancel();
-      _screenController.scrollToFirstOrBottom(true);
     }
   }
 
   @override
   void onClose() {
-    // _videoPlayerController.dispose();
     messageTextEdittingController.dispose();
     if (_stopTypingTimer != null && _stopTypingTimer!.isActive) {
       _dispatchTypingEvent(TypingEventType.stop);
     }
+    Get.delete<ConversationScreenController>();
     super.onClose();
   }
 }

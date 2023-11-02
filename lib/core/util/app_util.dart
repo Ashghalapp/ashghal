@@ -415,9 +415,9 @@ class AppUtil {
     //   return '$bytes B';
     // }
     // else
-    if (bytes < 1024) {
+    if (bytes < 100) {
       return '$bytes B';
-    } else if (bytes < 1024 * 1024) {
+    } else if (bytes < 1024 * 10) {
       final fileSizeKB = (bytes / 1024).toStringAsFixed(2);
       return '$fileSizeKB KB';
     } else if (bytes < 1024 * 1024 * 1024) {

@@ -1,41 +1,32 @@
-import 'package:ashghal_app_frontend/config/app_souds.dart';
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/services/directory_path.dart';
-import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/multimedia_controller.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
+import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:record_mp3/record_mp3.dart';
 
 class AudioController extends GetxController {
-  final _isRecordPlaying = false.obs,
-      isRecording = false.obs,
-      isSending = false.obs,
-      isUploading = false.obs;
+  RxBool isRecording = false.obs;
+  RxBool isRecordingCompleted = false.obs;
+  RxString recordPath = "".obs;
+  RxBool isRecordPlaying = false.obs;
+  RxBool isPlayerPrepared = false.obs;
 
   ///the id of the current audio i am dealing with
-  final _currentId = 999999.obs;
+  RxInt currentId = (-1).obs;
   final start = DateTime.now().obs;
   final end = DateTime.now().obs;
-  String _total = "";
-  String get total => _total;
-  var completedPercentage = 0.0.obs;
-  var currentDuration = 0.obs;
-  var totalDuration = 0.obs;
 
-  // Rx<Duration> duration =  Duration().obs;
-  // Rx<Duration> position = const Duration();
-
-  bool get isRecordPlaying => _isRecordPlaying.value;
-  bool get isRecordingValue => isRecording.value;
-  late final AudioPlayerService _audioPlayerService;
-  int get currentId => _currentId.value;
+  // int get currentId => _currentId.value;
   late String recordFilePath;
-  MultimediaController _multimediaController = Get.find();
-  ConversationController _conversationController = Get.find();
+  // final MultimediaController _multimediaController = Get.find();
+  // final ConversationController _conversationController = Get.find();
 
-  RxDouble playSpeed = 1.0.obs;
+  PlayerController currentPlayer = PlayerController();
+  RecorderController recorderController = RecorderController();
+  RxInt recordingDurationInSeconds = 0.obs;
 
   // RxBool isLoading = false.obs;
   // int increasingDuration = 0;
@@ -44,141 +35,33 @@ class AudioController extends GetxController {
 
   @override
   void onInit() {
-    _audioPlayerService = AudioPlayerAdapter();
-
-    //An event is going to be sent as soon as the audio duration is available
-    //(it might take a while to download or buffer it).
-    //set the audio total duration
-    _audioPlayerService.getAudioPlayer.onDurationChanged.listen((d) {
-      // print("first Listener");
-      // print(d.inSeconds);
-      // _duration = duration;
-      totalDuration.value = d.inSeconds;
+    recorderController.onCurrentDuration.listen((event) {
+      recordingDurationInSeconds.value = event.inSeconds;
     });
-//Roughly fires every 200 milliseconds. Will continuously update the
-//position of the playback if the status is [PlayerState.playing].
-    //get the current duration of the played audio, and update the percentage
-    _audioPlayerService.getAudioPlayer.onPositionChanged.listen((d) {
-      // print("second Listener");
-      currentDuration.value = d.inSeconds;
-      // print(d.inSeconds);
-
-      // print("currentDuration: ${currentDuration.value}");
-      completedPercentage.value =
-          currentDuration.value.toDouble() / totalDuration.value.toDouble();
-      // if (d.inSeconds == 5) {
-      //     increasingDuration = 5;
-      //   }
-      // print("completedPercentage: ${completedPercentage.value}");
+    recorderController.onRecordingEnded.listen((event) {
+      recordingDurationInSeconds.value = event.inSeconds;
     });
-
-    //Events are sent every time an audio is finished, therefore no event is sent
-    //when an audio is paused or stopped.
-    _audioPlayerService.getAudioPlayer.onPlayerComplete.listen((event) async {
-      // print("Third Listener");
-      //Moves the cursor to zero
-      await _audioPlayerService.getAudioPlayer.seek(Duration.zero);
-      // completedPercentage.value = 0.0;
-
-      _isRecordPlaying.value = false;
-      currentDuration.value = 0;
-      completedPercentage.value = 0;
-    });
-
     super.onInit();
-  }
-
-  //total duration=25
-  //current duration = 4
-  //percent=0.16
-  void increasePlayingSpeed() {
-    if (playSpeed == 2.0) {
-      playSpeed.value = 1.0;
-    } else {
-      playSpeed.value += 0.5;
-    }
-    _audioPlayerService.getAudioPlayer.setPlaybackRate(playSpeed.value);
-  }
-
-  void seekTo(double secondDuration) {
-    _audioPlayerService.getAudioPlayer
-        .seek(Duration(seconds: secondDuration.toInt()));
   }
 
   @override
   void onClose() {
-    _audioPlayerService.dispose();
+    currentPlayer.dispose();
+    recorderController.dispose();
     super.onClose();
   }
 
-  // Future<void> changeProg() async {
-  //   if (isRecordPlaying) {
-  //     _audioPlayerService.getAudioPlayer.onDurationChanged.listen((duration) {
-  //       totalDuration.value = duration.inMicroseconds;
-  //     });
-
-  //     _audioPlayerService.getAudioPlayer.onPositionChanged.listen((duration) {
-  //       currentDuration.value = duration.inMicroseconds;
-  //       completedPercentage.value =
-  //           currentDuration.value.toDouble() / totalDuration.value.toDouble();
-  //     });
-  //   }
-  // }
-
-  void onPressedPlayButton(int id, String path) async {
-    if (_currentId.value != id) {
-      print("New audio");
-      _currentId.value = id;
-      // await _audioPlayerService.getAudioPlayer.setSourceDeviceFile(path);
-      // totalDuration.value =
-      //     (await _audioPlayerService.getAudioPlayer.getDuration())!
-      //         .inMilliseconds;
-      currentDuration.value = 0;
-      completedPercentage.value = 0;
-      await _playRecord(path);
-    } else if (isRecordPlaying) {
-      await _pauseRecord();
-      print("puase audio");
-    } else if (_audioPlayerService.getAudioPlayer.state ==
-        PlayerState.completed) {
-      await _playRecord(path);
-      print("replay adio");
-    } else {
-      await _resumeRecord();
-      print("resume audio");
+  /// a function to kepp tracking of audios plaing
+  /// so that only one audio is played at a time
+  Future<void> onNewAudioPlayed(
+      int id, PlayerController newPlayerController) async {
+    AppPrint.printInfo("onNewAudioPlayed ");
+    if (currentId.value != id || currentId.value == -1) {
+      currentPlayer.pausePlayer();
+      AppPrint.printInfo("onNewAudioPlayed ");
+      currentId.value = id;
+      currentPlayer = newPlayerController;
     }
-
-    // if (isRecordPlaying) {
-    //   await _pauseRecord();
-    // } else {
-    //   await _playRecord(path);
-    // }
-  }
-
-  calcDuration() {
-    var a = end.value.difference(start.value).inSeconds;
-    format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
-    _total = format(Duration(seconds: a));
-  }
-
-  Future<void> _pauseRecord() async {
-    _isRecordPlaying.value = false;
-    await _audioPlayerService.pause();
-  }
-
-  Future<void> _playRecord(String path) async {
-    // isLoading.value = true;
-    _isRecordPlaying.value = true;
-    await _audioPlayerService.play(path);
-
-    // isLoading.value = false;
-  }
-
-  Future<void> _resumeRecord() async {
-    _isRecordPlaying.value = true;
-    await _audioPlayerService.resume();
-
-    // isLoading.value = false;
   }
 
   Future<bool> checkPermission() async {
@@ -197,104 +80,363 @@ class AudioController extends GetxController {
       recordFilePath = await getPathFile.getPath("record");
       recordFilePath =
           "$recordFilePath/$userName${DateTime.now().microsecondsSinceEpoch}.mp3";
-      start.value = DateTime.now();
-      RecordMp3.instance.start(recordFilePath, (type) {
-        print("**********Error************$type");
-        // setState(() {});
-      });
-    } else {}
-    // setState(() {});
+      isRecording.value = true;
+      await recorderController.record(path: recordFilePath);
+    } else {
+      AppUtil.buildErrorDialog(
+          "Recording failure,couldn't grant permission to access microphone");
+    }
+  }
+
+  _preparePlayer() async {
+    if (recordPath.value != "") {
+      currentId.value = -1;
+      currentPlayer.pausePlayer();
+      currentPlayer = PlayerController();
+      await currentPlayer.preparePlayer(path: recordPath.value).then(
+        (value) {
+          isPlayerPrepared.value = true;
+        },
+      );
+    }
+  }
+
+  void cancelRecord() {
+    isRecording.value = false;
+    isPlayerPrepared.value = false;
+    isRecordingCompleted.value = false;
+    isRecordPlaying.value = false;
+    currentPlayer.stopPlayer();
+    currentPlayer = PlayerController();
+    recordingDurationInSeconds.value = 0;
   }
 
   void stopRecord() async {
-    bool stop = RecordMp3.instance.stop();
-    end.value = DateTime.now();
-    calcDuration();
-    var ap = AudioPlayer();
-    await ap.play(AssetSource(AppSounds.startRecording));
-    ap.onPlayerComplete.listen((a) {});
-    if (stop) {
-      isRecording.value = false;
-      isSending.value = true;
-      await uploadAudio();
+    if (isRecording.value) {
+      recorderController.reset();
+      recordPath.value = await recorderController.stop(false) ?? "";
+
+      if (recordPath.value != "") {
+        isRecordingCompleted.value = true;
+        isRecording.value = false;
+        await _preparePlayer();
+      }
     }
+  }
+
+  Future<void> playPauseRecord() async {
+    if (isRecordPlaying.value) {
+      AppPrint.printInfo("Record stoped playing");
+      currentPlayer.stopPlayer();
+      isRecordPlaying.value = false;
+    } else {
+      AppPrint.printInfo("Record started playing");
+
+      currentPlayer.startPlayer(finishMode: FinishMode.loop);
+      isRecordPlaying.value = true;
+    }
+    // if(currentId == -1 && cu)
   }
 
   uploadAudio() async {
     try {
-      await _conversationController.sendMultimediaMessage(recordFilePath);
-      // _multimediaController.sendMultiMedia([recordFilePath], []);
-      // _multimediaController.uploadFile(filePath: filePath, fileType: fileType, messageLocalId: messageLocalId)
-      isSending.value = false;
+      cancelRecord();
+      await Get.find<ConversationScreenController>()
+          .sendMultimediaMessage(recordPath.value);
     } catch (e) {
-      isSending.value = false;
+      AppUtil.buildErrorDialog(
+          "Something went wrong, couldn't send the record");
     }
   }
 }
 
-abstract class AudioPlayerService {
-  void dispose();
-  Future<void> play(String url);
-  Future<void> resume();
-  Future<void> pause();
-  Future<void> release();
+// class AudioController extends GetxController {
+//   RxBool isRecordPlaying = false.obs,
+//       isRecording = false.obs,
+//       isSending = false.obs,
+//       isUploading = false.obs;
 
-  AudioPlayer get getAudioPlayer;
-}
+//   ///the id of the current audio i am dealing with
+//   final _currentId = 999999.obs;
+//   final start = DateTime.now().obs;
+//   final end = DateTime.now().obs;
+//   String _total = "";
+//   String get total => _total;
+//   var completedPercentage = 0.0.obs;
+//   var currentDuration = 0.obs;
+//   var totalDuration = 0.obs;
 
-class AudioPlayerAdapter implements AudioPlayerService {
-  late AudioPlayer _audioPlayer;
+//   // Rx<Duration> duration =  Duration().obs;
+//   // Rx<Duration> position = const Duration();
 
-  @override
-  AudioPlayer get getAudioPlayer => _audioPlayer;
+//   // bool get isRecordPlaying => isRecordPlaying.value;
+//   bool get isRecordingValue => isRecording.value;
+//   late final AudioPlayerService _audioPlayerService;
+//   int get currentId => _currentId.value;
+//   late String recordFilePath;
+//   // final MultimediaController _multimediaController = Get.find();
+//   final ConversationController _conversationController = Get.find();
 
-  AudioPlayerAdapter() {
-    _audioPlayer = AudioPlayer();
-    // _audioPlayer.s
-  }
+//   RxDouble playSpeed = 1.0.obs;
 
-  @override
-  void dispose() async {
-    await _audioPlayer.dispose();
-  }
+//   // RxBool isLoading = false.obs;
+//   // int increasingDuration = 0;
 
-  @override
-  Future<void> pause() async {
-    await _audioPlayer.pause();
-  }
+//   var getPathFile = DirectoryPath();
 
-  @override
-  Future<void> play(String url) async {
-    await _audioPlayer.play(DeviceFileSource(url));
-  }
+//   @override
+//   void onInit() {
+//     _audioPlayerService = AudioPlayerAdapter();
 
-  @override
-  Future<void> release() async {
-    await _audioPlayer.release();
-  }
+//     //An event is going to be sent as soon as the audio duration is available
+//     //(it might take a while to download or buffer it).
+//     //set the audio total duration
+//     _audioPlayerService.getAudioPlayer.onDurationChanged.listen((d) {
+//       // print("first Listener");
+//       // print(d.inSeconds);
+//       // _duration = duration;
+//       totalDuration.value = d.inSeconds;
+//     });
+// //Roughly fires every 200 milliseconds. Will continuously update the
+// //position of the playback if the status is [PlayerState.playing].
+//     //get the current duration of the played audio, and update the percentage
+//     _audioPlayerService.getAudioPlayer.onPositionChanged.listen((d) {
+//       // print("second Listener");
+//       currentDuration.value = d.inSeconds;
+//       // print(d.inSeconds);
 
-  @override
-  Future<void> resume() async {
-    await _audioPlayer.resume();
-  }
-}
+//       // print("currentDuration: ${currentDuration.value}");
+//       completedPercentage.value =
+//           currentDuration.value.toDouble() / totalDuration.value.toDouble();
+//       // if (d.inSeconds == 5) {
+//       //     increasingDuration = 5;
+//       //   }
+//       // print("completedPercentage: ${completedPercentage.value}");
+//     });
 
-// class AudioDuration {
-//   static double calculate(Duration soundDuration) {
-//     if (soundDuration.inSeconds > 60) {
-//       return 70;
-//     } else if (soundDuration.inSeconds > 50) {
-//       return 65;
-//     } else if (soundDuration.inSeconds > 40) {
-//       return 60;
-//     } else if (soundDuration.inSeconds > 30) {
-//       return 55;
-//     } else if (soundDuration.inSeconds > 20) {
-//       return 50;
-//     } else if (soundDuration.inSeconds > 10) {
-//       return 45;
+//     //Events are sent every time an audio is finished, therefore no event is sent
+//     //when an audio is paused or stopped.
+//     _audioPlayerService.getAudioPlayer.onPlayerComplete.listen((event) async {
+//       // print("Third Listener");
+//       //Moves the cursor to zero
+//       await _audioPlayerService.getAudioPlayer.seek(Duration.zero);
+//       // completedPercentage.value = 0.0;
+
+//       isRecordPlaying.value = false;
+//       currentDuration.value = 0;
+//       completedPercentage.value = 0;
+//     });
+
+//     super.onInit();
+//   }
+
+//   //total duration=25
+//   //current duration = 4
+//   //percent=0.16
+//   void increasePlayingSpeed() {
+//     if (playSpeed == 2.0) {
+//       playSpeed.value = 1.0;
 //     } else {
-//       return 40;
+//       playSpeed.value += 0.5;
+//     }
+//     _audioPlayerService.getAudioPlayer.setPlaybackRate(playSpeed.value);
+//   }
+
+//   void seekTo(double secondDuration) {
+//     _audioPlayerService.getAudioPlayer
+//         .seek(Duration(seconds: secondDuration.toInt()));
+//   }
+
+//   @override
+//   void onClose() {
+//     _audioPlayerService.dispose();
+//     super.onClose();
+//   }
+
+//   // Future<void> changeProg() async {
+//   //   if (isRecordPlaying) {
+//   //     _audioPlayerService.getAudioPlayer.onDurationChanged.listen((duration) {
+//   //       totalDuration.value = duration.inMicroseconds;
+//   //     });
+
+//   //     _audioPlayerService.getAudioPlayer.onPositionChanged.listen((duration) {
+//   //       currentDuration.value = duration.inMicroseconds;
+//   //       completedPercentage.value =
+//   //           currentDuration.value.toDouble() / totalDuration.value.toDouble();
+//   //     });
+//   //   }
+//   // }
+
+//   void onPressedPlayButton(int id, String path) async {
+//     if (_currentId.value != id) {
+//       print("New audio");
+//       _currentId.value = id;
+//       // await _audioPlayerService.getAudioPlayer.setSourceDeviceFile(path);
+//       // totalDuration.value =
+//       //     (await _audioPlayerService.getAudioPlayer.getDuration())!
+//       //         .inMilliseconds;
+//       currentDuration.value = 0;
+//       completedPercentage.value = 0;
+//       await _playRecord(path);
+//     } else if (isRecordPlaying.value) {
+//       await _pauseRecord();
+//       print("puase audio");
+//     } else if (_audioPlayerService.getAudioPlayer.state ==
+//         PlayerState.completed) {
+//       await _playRecord(path);
+//       print("replay adio");
+//     } else {
+//       await _resumeRecord();
+//       print("resume audio");
+//     }
+
+//     // if (isRecordPlaying) {
+//     //   await _pauseRecord();
+//     // } else {
+//     //   await _playRecord(path);
+//     // }
+//   }
+
+//   calcDuration() {
+//     var a = end.value.difference(start.value).inSeconds;
+//     format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
+//     _total = format(Duration(seconds: a));
+//   }
+
+//   Future<void> _pauseRecord() async {
+//     isRecordPlaying.value = false;
+//     await _audioPlayerService.pause();
+//   }
+
+//   Future<void> _playRecord(String path) async {
+//     // isLoading.value = true;
+//     isRecordPlaying.value = true;
+//     await _audioPlayerService.play(path);
+
+//     // isLoading.value = false;
+//   }
+
+//   Future<void> _resumeRecord() async {
+//     isRecordPlaying.value = true;
+//     await _audioPlayerService.resume();
+
+//     // isLoading.value = false;
+//   }
+
+//   Future<bool> checkPermission() async {
+//     if (!await Permission.microphone.isGranted) {
+//       PermissionStatus status = await Permission.microphone.request();
+//       if (status != PermissionStatus.granted) {
+//         return false;
+//       }
+//     }
+//     return true;
+//   }
+
+//   void startRecord(String userName) async {
+//     bool hasPermission = await checkPermission();
+//     if (hasPermission) {
+//       recordFilePath = await getPathFile.getPath("record");
+//       recordFilePath =
+//           "$recordFilePath/$userName${DateTime.now().microsecondsSinceEpoch}.mp3";
+//       start.value = DateTime.now();
+//       RecordMp3.instance.start(recordFilePath, (type) {
+//         print("**********Error************$type");
+//         // setState(() {});
+//       });
+//     } else {}
+//     // setState(() {});
+//   }
+
+//   void stopRecord() async {
+//     bool stop = RecordMp3.instance.stop();
+//     end.value = DateTime.now();
+//     calcDuration();
+//     var ap = AudioPlayer();
+//     await ap.play(AssetSource(AppSounds.startRecording));
+//     ap.onPlayerComplete.listen((a) {});
+//     if (stop) {
+//       isRecording.value = false;
+//       isSending.value = true;
+//       await uploadAudio();
+//     }
+//   }
+
+//   uploadAudio() async {
+//     try {
+//       await _conversationController.sendMultimediaMessage(recordFilePath);
+//       // _multimediaController.sendMultiMedia([recordFilePath], []);
+//       // _multimediaController.uploadFile(filePath: filePath, fileType: fileType, messageLocalId: messageLocalId)
+//       isSending.value = false;
+//     } catch (e) {
+//       isSending.value = false;
 //     }
 //   }
 // }
+
+// abstract class AudioPlayerService {
+//   void dispose();
+//   Future<void> play(String url);
+//   Future<void> resume();
+//   Future<void> pause();
+//   Future<void> release();
+
+//   AudioPlayer get getAudioPlayer;
+// }
+
+// class AudioPlayerAdapter implements AudioPlayerService {
+//   late AudioPlayer _audioPlayer;
+
+//   @override
+//   AudioPlayer get getAudioPlayer => _audioPlayer;
+
+//   AudioPlayerAdapter() {
+//     _audioPlayer = AudioPlayer();
+//     // _audioPlayer.s
+//   }
+
+//   @override
+//   void dispose() async {
+//     await _audioPlayer.dispose();
+//   }
+
+//   @override
+//   Future<void> pause() async {
+//     await _audioPlayer.pause();
+//   }
+
+//   @override
+//   Future<void> play(String url) async {
+//     await _audioPlayer.play(DeviceFileSource(url));
+//   }
+
+//   @override
+//   Future<void> release() async {
+//     await _audioPlayer.release();
+//   }
+
+//   @override
+//   Future<void> resume() async {
+//     await _audioPlayer.resume();
+//   }
+// }
+
+// // class AudioDuration {
+// //   static double calculate(Duration soundDuration) {
+// //     if (soundDuration.inSeconds > 60) {
+// //       return 70;
+// //     } else if (soundDuration.inSeconds > 50) {
+// //       return 65;
+// //     } else if (soundDuration.inSeconds > 40) {
+// //       return 60;
+// //     } else if (soundDuration.inSeconds > 30) {
+// //       return 55;
+// //     } else if (soundDuration.inSeconds > 20) {
+// //       return 50;
+// //     } else if (soundDuration.inSeconds > 10) {
+// //       return 45;
+// //     } else {
+// //       return 40;
+// //     }
+// //   }
+// // }

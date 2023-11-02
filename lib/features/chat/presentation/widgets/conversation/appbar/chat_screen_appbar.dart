@@ -27,7 +27,7 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 1,
-      leadingWidth: 45,
+      leadingWidth: 48,
       leading: builLeading(),
       title: buildTitle(),
       actions: [
@@ -105,10 +105,19 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
                 },
                 child: const Icon(Icons.arrow_back),
               )
-            : PressableIconBackground(
+            :
+            // InkWell(
+            //     onTap: _screenController.toggleSearchMode,
+            //     child: const Icon(
+            //       Icons.search,
+            //       size: 24,
+            //     ),
+            //   );
+            PressableIconBackground(
                 icon: Icons.search,
                 onTap: _screenController.toggleSearchMode,
                 borderRadius: 0,
+                padding: 10,
               );
       },
     );
@@ -178,11 +187,12 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       }
     } else {
       return PressableIconBackground(
-        padding: 1,
+        padding: 0,
         borderRadius: 0,
         onTap: () {},
         child: buildPopupMenuButton(normalModePopupmenuButtons),
       );
+      // buildPopupMenuButton(normalModePopupmenuButtons);
     }
   }
 
@@ -220,7 +230,6 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       itemBuilder: (BuildContext ctx) {
         return items;
       },
-      // ),
     );
   }
 
@@ -229,30 +238,32 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
             PopupMenuItem(
               value: ChatPopupMenuItemsValues.autoReply,
               child: Text(
-                ChatPopupMenuItemsValues.autoReply.value,
+                ChatPopupMenuItemsValues.autoReply.value.tr,
               ),
             ),
             PopupMenuItem(
               value: ChatPopupMenuItemsValues.search,
               child: Text(
-                ChatPopupMenuItemsValues.search.value,
+                ChatPopupMenuItemsValues.search.value.tr,
               ),
             ),
             PopupMenuItem(
               value: ChatPopupMenuItemsValues.starredMessages,
               child: Text(
-                ChatPopupMenuItemsValues.starredMessages.value,
+                ChatPopupMenuItemsValues.starredMessages.value.tr,
               ),
             ),
             PopupMenuItem(
               value: ChatPopupMenuItemsValues.blockedChats,
               child: Text(
-                ChatPopupMenuItemsValues.blockedChats.value,
+                ChatPopupMenuItemsValues.blockedChats.value.tr,
               ),
             ),
             PopupMenuItem(
               value: ChatPopupMenuItemsValues.settings,
-              child: Text(ChatPopupMenuItemsValues.settings.value),
+              child: Text(
+                ChatPopupMenuItemsValues.settings.value.tr,
+              ),
             ),
           ];
 
@@ -261,13 +272,19 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
             PopupMenuItem(
               value: ChatPopupMenuItemsValues.viewProfile,
               child: Text(
-                ChatPopupMenuItemsValues.viewProfile.value,
+                ChatPopupMenuItemsValues.viewProfile.value.tr,
               ),
             ),
             PopupMenuItem(
               value: ChatPopupMenuItemsValues.markMessagesAsRead,
               child: Text(
-                ChatPopupMenuItemsValues.markMessagesAsRead.value,
+                ChatPopupMenuItemsValues.markMessagesAsRead.value.tr,
+              ),
+            ),
+            PopupMenuItem(
+              value: ChatPopupMenuItemsValues.blockChat,
+              child: Text(
+                ChatPopupMenuItemsValues.blockChat.value.tr,
               ),
             ),
             selectAllPopMenuButton
@@ -277,14 +294,14 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       PopupMenuItem(
         value: ChatPopupMenuItemsValues.selectAll,
         child: Text(
-          ChatPopupMenuItemsValues.selectAll.value,
+          ChatPopupMenuItemsValues.selectAll.value.tr,
         ),
       );
   PopupMenuItem<ChatPopupMenuItemsValues> get unselectAllMenuButton =>
       PopupMenuItem(
         value: ChatPopupMenuItemsValues.unselectAll,
         child: Text(
-          ChatPopupMenuItemsValues.unselectAll.value,
+          ChatPopupMenuItemsValues.unselectAll.value.tr,
         ),
       );
 }

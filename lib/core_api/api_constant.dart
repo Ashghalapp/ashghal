@@ -1,7 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
-
 class ApiConstants {
   static const String baseUrl = "http://10.0.2.2:8000/api/";
   // static const String baseUrl = "http://192.168.128.175:8000/api/";

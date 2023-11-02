@@ -625,6 +625,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
   final String? body;
   final int senderId;
   final int conversationId;
+  final int? replyTo;
   final DateTime? sentAt;
   final DateTime? recievedAt;
   final bool receivedLocally;
@@ -639,6 +640,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       this.body,
       required this.senderId,
       required this.conversationId,
+      this.replyTo,
       this.sentAt,
       this.recievedAt,
       required this.receivedLocally,
@@ -661,6 +663,8 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
           .mapFromDatabaseResponse(data['${effectivePrefix}sender_id'])!,
       conversationId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}conversation_id'])!,
+      replyTo: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}reply_to']),
       sentAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}sent_at']),
       recievedAt: const DateTimeType()
@@ -691,6 +695,9 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
     }
     map['sender_id'] = Variable<int>(senderId);
     map['conversation_id'] = Variable<int>(conversationId);
+    if (!nullToAbsent || replyTo != null) {
+      map['reply_to'] = Variable<int?>(replyTo);
+    }
     if (!nullToAbsent || sentAt != null) {
       map['sent_at'] = Variable<DateTime?>(sentAt);
     }
@@ -717,6 +724,9 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       body: body == null && nullToAbsent ? const Value.absent() : Value(body),
       senderId: Value(senderId),
       conversationId: Value(conversationId),
+      replyTo: replyTo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(replyTo),
       sentAt:
           sentAt == null && nullToAbsent ? const Value.absent() : Value(sentAt),
       recievedAt: recievedAt == null && nullToAbsent
@@ -741,6 +751,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       body: serializer.fromJson<String?>(json['body']),
       senderId: serializer.fromJson<int>(json['senderId']),
       conversationId: serializer.fromJson<int>(json['conversationId']),
+      replyTo: serializer.fromJson<int?>(json['replyTo']),
       sentAt: serializer.fromJson<DateTime?>(json['sentAt']),
       recievedAt: serializer.fromJson<DateTime?>(json['recievedAt']),
       receivedLocally: serializer.fromJson<bool>(json['receivedLocally']),
@@ -760,6 +771,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       'body': serializer.toJson<String?>(body),
       'senderId': serializer.toJson<int>(senderId),
       'conversationId': serializer.toJson<int>(conversationId),
+      'replyTo': serializer.toJson<int?>(replyTo),
       'sentAt': serializer.toJson<DateTime?>(sentAt),
       'recievedAt': serializer.toJson<DateTime?>(recievedAt),
       'receivedLocally': serializer.toJson<bool>(receivedLocally),
@@ -777,6 +789,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
           String? body,
           int? senderId,
           int? conversationId,
+          int? replyTo,
           DateTime? sentAt,
           DateTime? recievedAt,
           bool? receivedLocally,
@@ -791,6 +804,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
         body: body ?? this.body,
         senderId: senderId ?? this.senderId,
         conversationId: conversationId ?? this.conversationId,
+        replyTo: replyTo ?? this.replyTo,
         sentAt: sentAt ?? this.sentAt,
         recievedAt: recievedAt ?? this.recievedAt,
         receivedLocally: receivedLocally ?? this.receivedLocally,
@@ -808,6 +822,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
           ..write('body: $body, ')
           ..write('senderId: $senderId, ')
           ..write('conversationId: $conversationId, ')
+          ..write('replyTo: $replyTo, ')
           ..write('sentAt: $sentAt, ')
           ..write('recievedAt: $recievedAt, ')
           ..write('receivedLocally: $receivedLocally, ')
@@ -827,6 +842,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
       body,
       senderId,
       conversationId,
+      replyTo,
       sentAt,
       recievedAt,
       receivedLocally,
@@ -844,6 +860,7 @@ class LocalMessage extends DataClass implements Insertable<LocalMessage> {
           other.body == this.body &&
           other.senderId == this.senderId &&
           other.conversationId == this.conversationId &&
+          other.replyTo == this.replyTo &&
           other.sentAt == this.sentAt &&
           other.recievedAt == this.recievedAt &&
           other.receivedLocally == this.receivedLocally &&
@@ -860,6 +877,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
   final Value<String?> body;
   final Value<int> senderId;
   final Value<int> conversationId;
+  final Value<int?> replyTo;
   final Value<DateTime?> sentAt;
   final Value<DateTime?> recievedAt;
   final Value<bool> receivedLocally;
@@ -874,6 +892,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
     this.body = const Value.absent(),
     this.senderId = const Value.absent(),
     this.conversationId = const Value.absent(),
+    this.replyTo = const Value.absent(),
     this.sentAt = const Value.absent(),
     this.recievedAt = const Value.absent(),
     this.receivedLocally = const Value.absent(),
@@ -889,6 +908,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
     this.body = const Value.absent(),
     required int senderId,
     required int conversationId,
+    this.replyTo = const Value.absent(),
     this.sentAt = const Value.absent(),
     this.recievedAt = const Value.absent(),
     this.receivedLocally = const Value.absent(),
@@ -905,6 +925,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
     Expression<String?>? body,
     Expression<int>? senderId,
     Expression<int>? conversationId,
+    Expression<int?>? replyTo,
     Expression<DateTime?>? sentAt,
     Expression<DateTime?>? recievedAt,
     Expression<bool>? receivedLocally,
@@ -920,6 +941,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
       if (body != null) 'body': body,
       if (senderId != null) 'sender_id': senderId,
       if (conversationId != null) 'conversation_id': conversationId,
+      if (replyTo != null) 'reply_to': replyTo,
       if (sentAt != null) 'sent_at': sentAt,
       if (recievedAt != null) 'recieved_at': recievedAt,
       if (receivedLocally != null) 'received_locally': receivedLocally,
@@ -937,6 +959,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
       Value<String?>? body,
       Value<int>? senderId,
       Value<int>? conversationId,
+      Value<int?>? replyTo,
       Value<DateTime?>? sentAt,
       Value<DateTime?>? recievedAt,
       Value<bool>? receivedLocally,
@@ -951,6 +974,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
       body: body ?? this.body,
       senderId: senderId ?? this.senderId,
       conversationId: conversationId ?? this.conversationId,
+      replyTo: replyTo ?? this.replyTo,
       sentAt: sentAt ?? this.sentAt,
       recievedAt: recievedAt ?? this.recievedAt,
       receivedLocally: receivedLocally ?? this.receivedLocally,
@@ -979,6 +1003,9 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
     }
     if (conversationId.present) {
       map['conversation_id'] = Variable<int>(conversationId.value);
+    }
+    if (replyTo.present) {
+      map['reply_to'] = Variable<int?>(replyTo.value);
     }
     if (sentAt.present) {
       map['sent_at'] = Variable<DateTime?>(sentAt.value);
@@ -1015,6 +1042,7 @@ class MessagesCompanion extends UpdateCompanion<LocalMessage> {
           ..write('body: $body, ')
           ..write('senderId: $senderId, ')
           ..write('conversationId: $conversationId, ')
+          ..write('replyTo: $replyTo, ')
           ..write('sentAt: $sentAt, ')
           ..write('recievedAt: $recievedAt, ')
           ..write('receivedLocally: $receivedLocally, ')
@@ -1067,6 +1095,11 @@ class $MessagesTable extends Messages
       requiredDuringInsert: true,
       $customConstraints:
           'NOT NULL REFERENCES conversations(local_id) ON DELETE CASCADE');
+  final VerificationMeta _replyToMeta = const VerificationMeta('replyTo');
+  @override
+  late final GeneratedColumn<int?> replyTo = GeneratedColumn<int?>(
+      'reply_to', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _sentAtMeta = const VerificationMeta('sentAt');
   @override
   late final GeneratedColumn<DateTime?> sentAt = GeneratedColumn<DateTime?>(
@@ -1129,6 +1162,7 @@ class $MessagesTable extends Messages
         body,
         senderId,
         conversationId,
+        replyTo,
         sentAt,
         recievedAt,
         receivedLocally,
@@ -1172,6 +1206,10 @@ class $MessagesTable extends Messages
               data['conversation_id']!, _conversationIdMeta));
     } else if (isInserting) {
       context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('reply_to')) {
+      context.handle(_replyToMeta,
+          replyTo.isAcceptableOrUnknown(data['reply_to']!, _replyToMeta));
     }
     if (data.containsKey('sent_at')) {
       context.handle(_sentAtMeta,
@@ -1237,6 +1275,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
   final String? url;
   final String fileName;
   final int messageId;
+  final bool isCanceled;
   final DateTime createdAt;
   final DateTime updatedAt;
   LocalMultimedia(
@@ -1248,6 +1287,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
       this.url,
       required this.fileName,
       required this.messageId,
+      required this.isCanceled,
       required this.createdAt,
       required this.updatedAt});
   factory LocalMultimedia.fromData(
@@ -1271,6 +1311,8 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
           .mapFromDatabaseResponse(data['${effectivePrefix}file_name'])!,
       messageId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}message_id'])!,
+      isCanceled: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_canceled'])!,
       createdAt: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
       updatedAt: const DateTimeType()
@@ -1294,6 +1336,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
     }
     map['file_name'] = Variable<String>(fileName);
     map['message_id'] = Variable<int>(messageId);
+    map['is_canceled'] = Variable<bool>(isCanceled);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -1311,6 +1354,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
       url: url == null && nullToAbsent ? const Value.absent() : Value(url),
       fileName: Value(fileName),
       messageId: Value(messageId),
+      isCanceled: Value(isCanceled),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -1328,6 +1372,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
       url: serializer.fromJson<String?>(json['url']),
       fileName: serializer.fromJson<String>(json['fileName']),
       messageId: serializer.fromJson<int>(json['messageId']),
+      isCanceled: serializer.fromJson<bool>(json['isCanceled']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -1344,6 +1389,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
       'url': serializer.toJson<String?>(url),
       'fileName': serializer.toJson<String>(fileName),
       'messageId': serializer.toJson<int>(messageId),
+      'isCanceled': serializer.toJson<bool>(isCanceled),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -1358,6 +1404,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
           String? url,
           String? fileName,
           int? messageId,
+          bool? isCanceled,
           DateTime? createdAt,
           DateTime? updatedAt}) =>
       LocalMultimedia(
@@ -1369,6 +1416,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
         url: url ?? this.url,
         fileName: fileName ?? this.fileName,
         messageId: messageId ?? this.messageId,
+        isCanceled: isCanceled ?? this.isCanceled,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -1383,6 +1431,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
           ..write('url: $url, ')
           ..write('fileName: $fileName, ')
           ..write('messageId: $messageId, ')
+          ..write('isCanceled: $isCanceled, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1391,7 +1440,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
 
   @override
   int get hashCode => Object.hash(localId, remoteId, type, path, size, url,
-      fileName, messageId, createdAt, updatedAt);
+      fileName, messageId, isCanceled, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1404,6 +1453,7 @@ class LocalMultimedia extends DataClass implements Insertable<LocalMultimedia> {
           other.url == this.url &&
           other.fileName == this.fileName &&
           other.messageId == this.messageId &&
+          other.isCanceled == this.isCanceled &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -1417,6 +1467,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
   final Value<String?> url;
   final Value<String> fileName;
   final Value<int> messageId;
+  final Value<bool> isCanceled;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const MultimediaCompanion({
@@ -1428,6 +1479,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
     this.url = const Value.absent(),
     this.fileName = const Value.absent(),
     this.messageId = const Value.absent(),
+    this.isCanceled = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -1440,6 +1492,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
     this.url = const Value.absent(),
     required String fileName,
     required int messageId,
+    this.isCanceled = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   })  : type = Value(type),
@@ -1455,6 +1508,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
     Expression<String?>? url,
     Expression<String>? fileName,
     Expression<int>? messageId,
+    Expression<bool>? isCanceled,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -1467,6 +1521,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
       if (url != null) 'url': url,
       if (fileName != null) 'file_name': fileName,
       if (messageId != null) 'message_id': messageId,
+      if (isCanceled != null) 'is_canceled': isCanceled,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -1481,6 +1536,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
       Value<String?>? url,
       Value<String>? fileName,
       Value<int>? messageId,
+      Value<bool>? isCanceled,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
     return MultimediaCompanion(
@@ -1492,6 +1548,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
       url: url ?? this.url,
       fileName: fileName ?? this.fileName,
       messageId: messageId ?? this.messageId,
+      isCanceled: isCanceled ?? this.isCanceled,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -1524,6 +1581,9 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
     if (messageId.present) {
       map['message_id'] = Variable<int>(messageId.value);
     }
+    if (isCanceled.present) {
+      map['is_canceled'] = Variable<bool>(isCanceled.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1544,6 +1604,7 @@ class MultimediaCompanion extends UpdateCompanion<LocalMultimedia> {
           ..write('url: $url, ')
           ..write('fileName: $fileName, ')
           ..write('messageId: $messageId, ')
+          ..write('isCanceled: $isCanceled, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1609,6 +1670,14 @@ class $MultimediaTable extends Multimedia
       requiredDuringInsert: true,
       $customConstraints:
           'NOT NULL REFERENCES messages(local_id) ON DELETE CASCADE');
+  final VerificationMeta _isCanceledMeta = const VerificationMeta('isCanceled');
+  @override
+  late final GeneratedColumn<bool?> isCanceled = GeneratedColumn<bool?>(
+      'is_canceled', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_canceled IN (0, 1))',
+      defaultValue: const Constant(false));
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
   @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
@@ -1633,6 +1702,7 @@ class $MultimediaTable extends Multimedia
         url,
         fileName,
         messageId,
+        isCanceled,
         createdAt,
         updatedAt
       ];
@@ -1685,6 +1755,12 @@ class $MultimediaTable extends Multimedia
     } else if (isInserting) {
       context.missing(_messageIdMeta);
     }
+    if (data.containsKey('is_canceled')) {
+      context.handle(
+          _isCanceledMeta,
+          isCanceled.isAcceptableOrUnknown(
+              data['is_canceled']!, _isCanceledMeta));
+    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -1716,11 +1792,8 @@ abstract class _$ChatDatabase extends GeneratedDatabase {
   late final $MessagesTable messages = $MessagesTable(this);
   late final $MultimediaTable multimedia = $MultimediaTable(this);
   late final ConversationLocalSource conversationLocalSource =
-      ConversationLocalSource(this as ChatDatabase);
-  late final MessageLocalSource messageLocalSource =
-      MessageLocalSource(this as ChatDatabase);
-  late final MultimediaLocalSource multimediaLocalSource =
-      MultimediaLocalSource(this as ChatDatabase);
+      ConversationLocalSource();
+  late final MessageLocalSource messageLocalSource = MessageLocalSource();
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override

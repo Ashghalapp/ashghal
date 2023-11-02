@@ -15,23 +15,22 @@ class AttachmentOptionInfo {
 
 final List<AttachmentOptionInfo> attachmentOptionsInfo = [
   AttachmentOptionInfo(
-      color: Colors.pink,
-      icon: Icons.photo_camera,
-      option: AttachmentOption.camera),
+    color: Colors.pink,
+    icon: Icons.photo_camera,
+    option: AttachmentOption.camera,
+  ),
   AttachmentOptionInfo(
-      color: Colors.purple,
-      icon: Icons.photo,
-      option: AttachmentOption.gallery),
+    color: Colors.purple,
+    icon: Icons.photo,
+    option: AttachmentOption.gallery,
+  ),
   AttachmentOptionInfo(
       color: Colors.blue, icon: Icons.videocam, option: AttachmentOption.video),
   AttachmentOptionInfo(
-      color: Colors.indigo,
-      icon: Icons.insert_drive_file,
-      option: AttachmentOption.file),
-  AttachmentOptionInfo(
-      color: Colors.green,
-      icon: Icons.contacts,
-      option: AttachmentOption.contact),
+    color: Colors.indigo,
+    icon: Icons.insert_drive_file,
+    option: AttachmentOption.file,
+  ),
 ];
 
 Future<void> showAttachmentBottomSheet(
@@ -41,23 +40,6 @@ Future<void> showAttachmentBottomSheet(
     Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        // const Padding(
-        //   padding: EdgeInsets.all(16.0),
-        //   child: Text(
-        //     'Attach a file',
-        //     style: TextStyle(
-        //       fontWeight: FontWeight.bold,
-        //       fontSize: 18,
-        //       color: Colors.blue,
-        //     ),
-        //   ),
-        // ),
-        //   Container(
-        // padding: EdgeInsets.all(10),
-        // height: 260,
-        // width: MediaQuery.sizeOf(context).width,
-        // child: Card(
-        //   child:
         GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
@@ -70,7 +52,8 @@ Future<void> showAttachmentBottomSheet(
             return GestureDetector(
               onTap: () {
                 multimediaController.handleAttachmentOption(
-                    attachmentOptionsInfo[index].option);
+                  attachmentOptionsInfo[index].option,
+                );
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -95,7 +78,9 @@ Future<void> showAttachmentBottomSheet(
                     attachmentOptionsInfo[index].option.value,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        color: Colors.black87, fontWeight: FontWeight.bold),
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -112,80 +97,3 @@ Future<void> showAttachmentBottomSheet(
     backgroundColor: Colors.white,
   );
 }
-  // await showModalBottomSheet(
-  //   context: Get.context!,
-
-  //   backgroundColor: Colors.white,
-  //   // backgroundColor: Colors.transparent,
-  //   builder: (BuildContext context) {
-  //     // return
-  //     return Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: <Widget>[
-  //         // const Padding(
-  //         //   padding: EdgeInsets.all(16.0),
-  //         //   child: Text(
-  //         //     'Attach a file',
-  //         //     style: TextStyle(
-  //         //       fontWeight: FontWeight.bold,
-  //         //       fontSize: 18,
-  //         //       color: Colors.blue,
-  //         //     ),
-  //         //   ),
-  //         // ),
-  //         //   Container(
-  //         // padding: EdgeInsets.all(10),
-  //         // height: 260,
-  //         // width: MediaQuery.sizeOf(context).width,
-  //         // child: Card(
-  //         //   child:
-  //         GridView.builder(
-  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //             crossAxisCount: 3,
-  //             childAspectRatio: 1.2,
-  //           ),
-  //           itemCount: attachmentOptionsInfo.length,
-  //           shrinkWrap: true,
-  //           physics: const NeverScrollableScrollPhysics(),
-  //           itemBuilder: (BuildContext context, int index) {
-  //             return GestureDetector(
-  //               onTap: () {
-  //                 multimediaController.handleAttachmentOption(
-  //                     attachmentOptionsInfo[index].option);
-  //               },
-  //               child: Column(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 children: [
-  //                   Container(
-  //                     width: 60,
-  //                     height: 60,
-  //                     decoration: BoxDecoration(
-  //                       shape: BoxShape.circle,
-  //                       color: attachmentOptionsInfo[index].color,
-  //                     ),
-  //                     child: Center(
-  //                       child: Icon(
-  //                         attachmentOptionsInfo[index].icon,
-  //                         size: 40,
-  //                         color: Colors.white,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   const SizedBox(height: 8),
-  //                   Text(
-  //                     attachmentOptionsInfo[index].option.value,
-  //                     textAlign: TextAlign.center,
-  //                     style: const TextStyle(
-  //                         color: Colors.black87, fontWeight: FontWeight.bold),
-  //                   ),
-  //                 ],
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //         //   ),
-  //         // );
-  //       ],
-  //     );
-  //   },
-  // );

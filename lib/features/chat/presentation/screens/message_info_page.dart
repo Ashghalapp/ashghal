@@ -33,7 +33,7 @@ class MessageInfoPage extends StatelessWidget {
               ),
               child: SizedBox(
                 width: 700,
-                child: MessageWidget(
+                child: MessageRowWidget(
                   message: message,
                 ),
               ),

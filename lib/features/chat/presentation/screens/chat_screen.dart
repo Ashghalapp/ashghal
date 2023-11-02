@@ -11,13 +11,14 @@ import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_contro
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class ChatScreen extends StatelessWidget {
-  final ParticipantModel? userId;
-  ChatScreen({super.key, this.userId});
-  final ChatScreenController _screenController =
-      Get.put(ChatScreenController());
+  final ParticipantModel? user;
+  ChatScreen({super.key, this.user})
+      : _screenController = Get.put(ChatScreenController(user: user));
+  final ChatScreenController _screenController;
 
   final ChatController _chatController = Get.find();
 
@@ -41,13 +42,12 @@ class ChatScreen extends StatelessWidget {
                       : buildFilterButtons(),
                 ),
                 Expanded(
-                  child: Obx(
-                    () {
-                      if (_chatController.isLoaing.value ||
+                  child: GetX<ChatController>(
+                    builder: (chatController) {
+                      if (chatController.isLoaing.value ||
                           _screenController.isLoading.value) {
                         return AppUtil.addProgressIndicator(50);
-                      } else if (_chatController
-                              .filteredConversations.isEmpty &&
+                      } else if (chatController.filteredConversations.isEmpty &&
                           !_screenController.isSearching.value) {
                         return _buildNoConversationsyet();
                       } else if (_screenController.isSearching.value &&
@@ -58,17 +58,16 @@ class ChatScreen extends StatelessWidget {
                       } else if (_screenController.isSearching.value &&
                           _screenController.forwardSelectionEnabled.value &&
                           !_screenController.isSearchTextEmpty.value) {
-                        return _chatController
-                                .searchMatchedConversations.isEmpty
+                        return chatController.searchMatchedConversations.isEmpty
                             ? _buildNoMatchSearchText(
                                 AppLocalization.noConversationsMatchedSearch,
                               )
                             : _builConversationsListView(
-                                _chatController.searchMatchedConversations,
+                                chatController.searchMatchedConversations,
                               );
                       }
                       return _builConversationsListView(
-                        _chatController.filteredConversations,
+                        chatController.filteredConversations,
                       );
                     },
                   ),
@@ -176,15 +175,31 @@ class ChatScreen extends StatelessWidget {
         margin: const EdgeInsets.all(0),
         elevation: 2,
         child: ListView(
-          padding: const EdgeInsets.only(left: 12),
+          padding: const EdgeInsets.only(left: 15),
           scrollDirection: Axis.horizontal,
           children: [
             Obx(
               () => Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildFilterButton(ChatFilters.all),
-                  _buildFilterButton(ChatFilters.recentMessages),
+                  Obx(
+                    () =>
+                        _chatController.getConversationsWithNewMessagesCount > 0
+                            ? _buildWidgetWithCountAvatar(
+                                _buildFilterButton(ChatFilters.all),
+                                _chatController
+                                    .getConversationsWithNewMessagesCount,
+                              )
+                            : _buildFilterButton(ChatFilters.all),
+                  ),
+                  Obx(
+                    () => _chatController.getNewMessagesCount > 0
+                        ? _buildWidgetWithCountAvatar(
+                            _buildFilterButton(ChatFilters.recentMessages),
+                            _chatController.getNewMessagesCount,
+                          )
+                        : _buildFilterButton(ChatFilters.recentMessages),
+                  ),
                   _buildFilterButton(ChatFilters.active),
                   _buildFilterButton(ChatFilters.favorite),
                   _buildFilterButton(ChatFilters.archived),
@@ -197,10 +212,51 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
+  Stack _buildWidgetWithCountAvatar(Widget widget, int count) {
+    return Stack(
+      children: [
+        widget,
+        Positioned(
+          right: 4,
+          bottom: 2,
+          child: Opacity(
+            opacity: 1,
+            child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4,
+                  horizontal: 8,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    50,
+                  ),
+                  color: Get.theme.primaryColor,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      count > 999 ? "999" : count.toString(),
+                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                    if (count > 999)
+                      const Icon(
+                        FontAwesomeIcons.plus,
+                        size: 13,
+                        color: Colors.white,
+                      ),
+                  ],
+                )),
+          ),
+        ),
+      ],
+    );
+  }
+
   /// Filter outlined button
   Padding _buildFilterButton(ChatFilters filter) {
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(right: 13),
       child: CustomOutlineButton(
         isFilled:
             _screenController.chatController.appliedFilter.value == filter,
@@ -240,19 +296,18 @@ class ChatScreen extends StatelessWidget {
           _buildSearchResultResourceText(AppLocalization.conversations),
           GetX<ChatController>(
             builder: (controller) {
-              if (_chatController.searchMatchedConversations.isEmpty) {
+              if (controller.searchMatchedConversations.isEmpty) {
                 return _buildNoMatchSearchText(
                   AppLocalization.noConversationsMatchedSearch,
                 );
               }
               return ListView.builder(
                 shrinkWrap: true,
-                itemCount: _chatController.searchMatchedConversations.length,
+                itemCount: controller.searchMatchedConversations.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return ConversationWidget(
-                    conversation:
-                        _chatController.searchMatchedConversations[index],
+                    conversation: controller.searchMatchedConversations[index],
                   );
                 },
               );
@@ -262,20 +317,19 @@ class ChatScreen extends StatelessWidget {
           _buildSearchResultResourceText(AppLocalization.messages),
           GetX<ChatController>(
             builder: (controller) {
-              if (_chatController.searchMatchedConversationMessages.isEmpty) {
+              if (controller.searchMatchedConversationMessages.isEmpty) {
                 return _buildNoMatchSearchText(
                   AppLocalization.noMessagesMatchedSearch,
                 );
               }
               return ListView.builder(
                 shrinkWrap: true,
-                itemCount:
-                    _chatController.searchMatchedConversationMessages.length,
+                itemCount: controller.searchMatchedConversationMessages.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return ConversationSearchWidget(
-                    matchedConversation: _chatController
-                        .searchMatchedConversationMessages[index],
+                    matchedConversation:
+                        controller.searchMatchedConversationMessages[index],
                     searchText: _screenController.searchFeildController.text,
                   );
                 },

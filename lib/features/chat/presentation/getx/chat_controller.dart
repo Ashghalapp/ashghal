@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
@@ -10,13 +12,17 @@ import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_d
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_last_message_and_count_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_and_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/block_unblock_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/block_unblock_conversation.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/conversation_messages_read.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_conversation.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/use_cases/search_in_conversations.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_blocked_conversations.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_conversations.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_conversations_with_last_message_and_count.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_starred_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/search_in_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/start_conversation_with.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/subscribe_to_chat_channels.dart';
@@ -27,6 +33,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/use_cases/unsubscribe_
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_all_conversations.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/watch_conversations_last_message_and_count.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/streames_manager.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -53,9 +60,41 @@ extension ChatFiltersExtension on ChatFilters {
 class ChatController extends GetxController {
   RxList<ConversationWithCountAndLastMessage> conversations =
       <ConversationWithCountAndLastMessage>[].obs;
-  UsersStateController stateController = Get.find();
 
+  UsersStateController stateController = Get.find();
+  StreamSubscription<List<LocalConversation>>? subscription;
   RxList<int> typingUsers = <int>[].obs;
+  final StreamsManager streamsManager = StreamsManager();
+
+  int get getNewMessagesCount {
+    return conversations.fold<int>(
+      0,
+      (sum, conversation) {
+        if (conversation.conversation.isArchived ||
+            conversation.conversation.isBlocked ||
+            conversation.conversation.isDeletedLocally) {
+          return sum;
+        }
+        return sum + conversation.newMessagesCount;
+      },
+    );
+  }
+
+  int get getConversationsWithNewMessagesCount {
+    return conversations.fold<int>(
+      0,
+      (sum, conversation) {
+        if (conversation.conversation.isArchived ||
+            conversation.conversation.isBlocked ||
+            conversation.conversation.isDeletedLocally) {
+          AppPrint.printWarning(
+              "Conversation ${conversation.conversation.remoteId} doesn't satisfied condition");
+          return sum;
+        }
+        return sum + (conversation.newMessagesCount > 0 ? 1 : 0);
+      },
+    );
+  }
 
   RxBool isLoaing = false.obs;
 
@@ -64,48 +103,106 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    isLoaing.value = true;
 
-    AppServices.networkInfo.onStatusChanged.listen((isConected) async {
-      if (isConected) {
-        AppPrint.printInfo(
-            "/////////////////////////_syncronizeConversations Network Connects//////////////////");
-        await _syncronizeConversations();
-      } else {
-        await unsubscribeFromChatChannels();
-        isSubscribed = false;
-        AppPrint.printInfo(
-            "/////////////////////////_syncronizeConversations Network Disconnects//////////////////");
-      }
-    });
-    _syncronizeConversations();
+    // WatchAllConversations watchAllConversations = di.getIt();
+    // conversations.bindStream(watchAllConversations.call());
+    getAllConversationsWithLastMessageAndCount().then(
+      (_) {
+        _syncronizeConversations();
+        AppServices.networkInfo.onStatusChanged.listen(
+          (isConected) async {
+            if (isConected) {
+              AppPrint.printInfo(
+                  "/////////////////////////_syncronizeConversations Network Connects//////////////////");
+              // if (!isSubscribed) {
+              await _syncronizeConversations();
+              // }
+            } else {
+              await unsubscribeFromChatChannels();
+              // isSubscribed = false;
+              AppPrint.printInfo(
+                  "/////////////////////////_syncronizeConversations Network Disconnects//////////////////");
+            }
+          },
+        );
+      },
+    );
+    AppPrint.printInfo("On init started");
     _listenToConversations();
     _listenToConversationsLastMessageAndCount();
   }
 
-  // Future<void> getAllConversations() async {
-  //   GetAllConversationsUseCase useCase = di.getIt();
-  //   (await useCase.call()).fold(
-  //     (failure) => {},
-  //     (localConversations) {
-  //       for (var localConversation in localConversations) {
-  //         _insertOrReplaceLocalConversation(localConversation);
-  //       }
-  //     },
-  //   );
-  // }
-
-  Future<void> _syncronizeConversations() async {
-    SynchronizeConversations synchronizeConversations = di.getIt();
-    await synchronizeConversations.call().then(
-      (value) async {
-        AppPrint.printInfo("Subscribtion state $isSubscribed");
-        if (!isSubscribed) {
-          await _subscribeToChatEventsChannels();
-          isSubscribed = true;
+  Future<void> getAllConversations() async {
+    GetAllConversationsUseCase useCase = di.getIt();
+    (await useCase.call()).fold(
+      (failure) => {},
+      (localConversations) {
+        for (var localConversation in localConversations) {
+          _insertOrReplaceLocalConversation(localConversation);
         }
       },
     );
+    isLoaing.value = false;
+  }
+
+  Future<void> getAllConversationsWithLastMessageAndCount() async {
+    isLoaing.value = true;
+    GetAllConversationsWithLastMessageAndCountUseCase useCase = di.getIt();
+    (await useCase.call()).fold(
+      (failure) {
+        AppUtil.buildErrorDialog(failure.message);
+      },
+      (localConversations) {
+        sortMessage(localConversations);
+        conversations.addAll(localConversations);
+        // getConversationsWithNewMessagesCount
+        // for (var c in localConversations) {
+        //   newMessagesCount.value += c.newMessagesCount;
+        //   conversationsWithNewMessages.value += c.newMessagesCount > 0 ? 1 : 0;
+        // }
+        // for (var localConversation in localConversations) {
+        // _insertOrReplaceLocalConversation(localConversation);
+        // }
+      },
+    );
+    isLoaing.value = false;
+  }
+
+  sortMessage(List<ConversationWithCountAndLastMessage> unsortedConversations) {
+    unsortedConversations.sort((a, b) {
+      final lastMessageA = a.lastMessage;
+      final lastMessageB = b.lastMessage;
+
+      if (lastMessageA != null && lastMessageB != null) {
+        // Both conversations have last messages, so compare them by createdAt.
+        return lastMessageB.createdAt.compareTo(lastMessageA.createdAt);
+      } else if (lastMessageA != null && lastMessageB == null) {
+        // Conversation A has a last message, but B doesn't.
+        return -1; // Place A before B.
+      } else if (lastMessageB != null && lastMessageA == null) {
+        // Conversation B has a last message, but A doesn't.
+        return 1; // Place B before A.
+      } else {
+        // Both conversations don't have last messages, so compare them by updatedAt.
+        return b.conversation.updatedAt.compareTo(a.conversation.updatedAt);
+      }
+    });
+  }
+
+  Future<void> _syncronizeConversations() async {
+    // isSubscribed = true;
+    if (await AppServices.networkInfo.isConnected) {
+      SynchronizeConversations synchronizeConversations = di.getIt();
+      synchronizeConversations.call().then(
+        (value) async {
+          AppPrint.printInfo("Subscribtion state $isSubscribed");
+          // if (!isSubscribed) {
+          _subscribeToChatEventsChannels().then((value) => isSubscribed = true);
+
+          // }
+        },
+      );
+    }
   }
 
   Future<void> _subscribeToChatEventsChannels() async {
@@ -123,37 +220,61 @@ class ChatController extends GetxController {
     );
   }
 
-  void _listenToConversations() {
+  void _listenToConversations() async {
     WatchAllConversations watchAllConversations = di.getIt();
-    watchAllConversations.call().listen((localConversations) {
+    // var oldSubscription = subscription;
+    // if (oldSubscription != null) {
+    //   await oldSubscription.cancel();
+    //   AppPrint.printInfo("Old subscribtion canceled");
+    // }
+    streamsManager.listenToConversationsStream(watchAllConversations.call(),
+        (localConversations) {
       AppPrint.printInfo(
           "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to conversations got updates :${localConversations.length}");
       for (var localConversation in localConversations) {
+        // AppPrint.printData(localConversation.toString());
         _insertOrReplaceLocalConversation(localConversation);
       }
-      isLoaing.value = false;
     });
+
+    // subscription = watchAllConversations.call().listen((localConversations) {
+    //   AppPrint.printInfo(
+    //       "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to conversations got updates :${localConversations.length}");
+    //   for (var localConversation in localConversations) {
+    //     AppPrint.printData(localConversation.toString());
+    //     _insertOrReplaceLocalConversation(localConversation);
+    //   }
+    //   isLoaing.value = false;
+    // });
   }
 
   void _insertOrReplaceLocalConversation(LocalConversation conversation) {
     int index = conversations.indexWhere(
         (element) => element.conversation.localId == conversation.localId);
     if (index == -1) {
-      conversations.add(ConversationWithCountAndLastMessage(
-        conversation: conversation,
-      ));
+      conversations.insert(
+        0,
+        ConversationWithCountAndLastMessage(
+          conversation: conversation,
+        ),
+      );
     } else {
-      conversations[index] = conversations[index].copyWith(
+      ConversationWithCountAndLastMessage updatedConversation =
+          conversations[index].copyWith(
         conversation: conversation,
       );
+      conversations.removeAt(index);
+      conversations.insert(0, updatedConversation);
     }
     filteredConversations.refresh();
   }
 
   void _listenToConversationsLastMessageAndCount() {
-    WatchConversationsLastMessageAndCount watchConversationLastMessageAndCount =
-        di.getIt();
-    watchConversationLastMessageAndCount().listen((lastMessagesAndCounts) {
+    // AppPrint.printInfo(
+    //     "_listenToConversationsLastMessageAndCount on chat controller started");
+    WatchConversationsLastMessageAndCountUseCase useCase = di.getIt();
+    streamsManager.listenToConversationsLastMessageAndCountStream(
+        useCase.call(), (lastMessagesAndCounts) {
       AppPrint.printInfo(
           "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to conversations last message and count got updates :${lastMessagesAndCounts.length}");
       for (var lastMessageAndCount in lastMessagesAndCounts) {
@@ -162,16 +283,40 @@ class ChatController extends GetxController {
         );
       }
     });
+    // useCase.call().listen(
+    //   (lastMessagesAndCounts) {
+    //     AppPrint.printInfo(
+    //         "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to conversations last message and count got updates :${lastMessagesAndCounts.length}");
+    //     for (var lastMessageAndCount in lastMessagesAndCounts) {
+    //       _insertOrReplaceConversationLastMessageAndCount(
+    //         lastMessageAndCount as ConversationLastMessageAndCountModel,
+    //       );
+    //     }
+    //   },
+    // );
+  }
+
+  void deleteConversationsLastMessageAndCount(int conversationLocalId) {
+    int index = conversations.indexWhere(
+      (element) => element.conversation.localId == conversationLocalId,
+    );
+
+    AppPrint.printInfo("Clear chat coversation idex ${index}");
+    if (index != -1) {
+      conversations[index] = ConversationWithCountAndLastMessage(
+        conversation: conversations[index].conversation,
+      );
+    }
   }
 
   void _insertOrReplaceConversationLastMessageAndCount(
-      ConversationLastMessageAndCountModel message) {
+      ConversationLastMessageAndCountModel lMsgCnt) {
     int index = conversations.indexWhere((element) =>
-        element.conversation.localId == message.lastMessage.conversationId);
+        element.conversation.localId == lMsgCnt.lastMessage.conversationId);
     if (index != -1) {
       conversations[index] = conversations[index].copyWith(
-        lastMessage: message.lastMessage,
-        newMessagesCount: message.newMessagesCount,
+        lastMessage: lMsgCnt.lastMessage,
+        newMessagesCount: lMsgCnt.newMessagesCount,
       );
       filteredConversations.refresh();
     } else {}
@@ -189,10 +334,7 @@ class ChatController extends GetxController {
     StartConversationWithUseCase useCase = di.getIt();
     return (await useCase.call(request)).fold(
       (failure) {
-        AppUtil.showMessage(
-          AppLocalization.startChatingFailer.tr,
-          Colors.red,
-        );
+        AppUtil.buildErrorDialog(failure.message);
         return null;
       },
       (success) {
@@ -201,19 +343,18 @@ class ChatController extends GetxController {
     );
   }
 
-  Future<void> deleteConversations(List<int> conversationslocalIds) async {
+  Future<void> deleteConversations(List<int> conversationsLocalIds) async {
     DeleteConversationUseCase deleteConversationUseCase = di.getIt();
-    (await deleteConversationUseCase(conversationslocalIds)).fold(
+    (await deleteConversationUseCase(conversationsLocalIds)).fold(
       (failure) {
         AppUtil.showMessage(
             AppLocalization.conversationDeletedFail.tr, Colors.red);
       },
       (success) {
         if (success) {
-          conversations.removeWhere(
-            (element) =>
-                conversationslocalIds.contains(element.conversation.localId),
-          );
+          conversations.removeWhere((element) =>
+              conversationsLocalIds.contains(element.conversation.localId));
+
           filteredConversations.refresh();
           AppUtil.showMessage(
               AppLocalization.conversationDeletedSuccess.tr, Colors.green);
@@ -326,7 +467,22 @@ class ChatController extends GetxController {
     }
   }
 
-  Future<void> toggleBlockConversation(
+  Future<bool> unblockConversation(int conversationRemoteId) async {
+    // int index = conversations.indexWhere(
+    //   (element) => element.conversation.localId == conversationLocalId,
+    // );
+    // if (conversations[index].conversation.remoteId != null) {
+    return await toggleBlockConversation(
+      conversationRemoteId,
+      false,
+    );
+    // } else {
+    //   AppUtil.showMessage(
+    //       AppLocalization.failToBlockConversation.tr, Colors.red);
+    // }
+  }
+
+  Future<bool> toggleBlockConversation(
       int conversationRemoteId, bool blockConversation) async {
     if (await AppServices.networkInfo.isConnected) {
       BlockUnblockConversationRequest request = BlockUnblockConversationRequest(
@@ -334,19 +490,26 @@ class ChatController extends GetxController {
         block: blockConversation,
       );
       BlockUnblockConversationUseCase useCase = di.getIt();
-      (await useCase(request)).fold(
+      return (await useCase(request)).fold<bool>(
         (failure) {
           if (blockConversation) {
             AppUtil.showMessage(
-                AppLocalization.failToBlockConversation.tr, Colors.red);
+              AppLocalization.failToBlockConversation.tr,
+              Colors.red,
+            );
           } else {
             AppUtil.showMessage(
-                AppLocalization.failToUnblockConversation.tr, Colors.red);
+              AppLocalization.failToUnblockConversation.tr,
+              Colors.red,
+            );
           }
+          return false;
         },
         (success) {
           if (success) {
             if (blockConversation) {
+              conversations.removeWhere((element) =>
+                  element.conversation.remoteId == conversationRemoteId);
               AppUtil.showMessage(
                   AppLocalization.conversationBlockedsuccess.tr, Colors.red);
             } else {
@@ -354,10 +517,12 @@ class ChatController extends GetxController {
                   AppLocalization.conversationUnblockedsuccess.tr, Colors.red);
             }
           }
+          return true;
         },
       );
     } else {
       AppUtil.showMessage(ErrorString.OFFLINE_ERROR.tr, Colors.red);
+      return false;
     }
   }
 
@@ -367,6 +532,7 @@ class ChatController extends GetxController {
   }
 
   Future<void> unsubscribeFromChatChannels() async {
+    isSubscribed = false;
     UnsubscribeFromRemoteChannelsUseCase useCase = di.getIt();
     await useCase.call();
     print("Unsubscribed from chat channels");
@@ -375,8 +541,8 @@ class ChatController extends GetxController {
   @override
   void onClose() {
     unsubscribeFromChatChannels();
-    // AppServices.pusher.unsubscribeFromChannel("presence-chat");
-    AppServices.pusher.disconnect();
+    streamsManager.cancelConversationsListener();
+    streamsManager.cancelToConversationsLastMessageAndCountListener();
     super.onClose();
   }
 
@@ -404,7 +570,8 @@ class ChatController extends GetxController {
         return conversations
             .where(
               (c) =>
-                  stateController.onlineUsersIds
+                  Get.find<UsersStateController>()
+                      .onlineUsersIds
                       .contains(c.conversation.userId) &&
                   !c.conversation.isArchived,
             )
@@ -430,7 +597,7 @@ class ChatController extends GetxController {
   }
 
   void _startOnlineUsersStreamListenerToRefershfilteredData() {
-    stateController.onlineUsersStream.listen(
+    Get.find<UsersStateController>().onlineUsersStream.listen(
       (event) {
         if (appliedFilter.value == ChatFilters.active) {
           filteredConversations.refresh();
@@ -518,4 +685,52 @@ class ChatController extends GetxController {
   }
 
   //============================ End search section ============================//
+
+  Future<List<ConversationAndMessageModel>> fetchAllStarredMessages() async {
+    GetStarredMessagesUseCase useCase = di.getIt();
+    return (await useCase()).fold<List<ConversationAndMessageModel>>(
+      (failure) {
+        AppUtil.showMessage(
+            AppLocalization.failureShwoingStarredMessages.tr, Colors.red);
+        return [];
+      },
+      (starredMessages) {
+        AppPrint.printInfo("Got ${starredMessages.length} starred messages");
+        List<ConversationAndMessageModel> messages = [];
+        for (var starredMessage in starredMessages) {
+          LocalConversation? conversation = conversations
+              .firstWhereOrNull(
+                (element) =>
+                    element.conversation.localId ==
+                    starredMessage.message.conversationId,
+              )
+              ?.conversation;
+          if (conversation == null) {
+            continue;
+          }
+          messages.add(
+            ConversationAndMessageModel(
+              message: starredMessage,
+              conversation: conversation,
+            ),
+          );
+        }
+        return messages;
+      },
+    );
+  }
+
+  Future<List<LocalConversation>> fetchAllBlockedConversations() async {
+    GetAllBlockedConversationsCountUseCase useCase = di.getIt();
+    return (await useCase.call()).fold<List<LocalConversation>>(
+      (failure) {
+        AppUtil.showMessage(
+            AppLocalization.failureShwoingStarredMessages.tr, Colors.red);
+        return [];
+      },
+      (blockedConversations) {
+        return blockedConversations;
+      },
+    );
+  }
 }

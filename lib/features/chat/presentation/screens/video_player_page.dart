@@ -56,7 +56,7 @@ class VideoPlayerPage extends StatelessWidget {
                                       _controller.videoPlayerController,
                                   aspectRatio: ASPECT_RATIO,
                                   autoInitialize: false,
-                                  autoPlay: false,
+                                  autoPlay: true,
                                   deviceOrientationsAfterFullScreen: [
                                     DeviceOrientation.portraitUp
                                   ],

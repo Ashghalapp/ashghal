@@ -1,11 +1,13 @@
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/conversation_messages_read.dart';
 
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/auto_reply_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/blocked_chats_screen.dart';
@@ -27,6 +29,7 @@ enum ChatPopupMenuItemsValues {
   markMessagesAsRead, //تمييز كمقروءة
   selectAll,
   unselectAll,
+  blockChat,
 }
 
 extension ChatPopupMenuItemsValuesExtension on ChatPopupMenuItemsValues {
@@ -50,12 +53,14 @@ extension ChatPopupMenuItemsValuesExtension on ChatPopupMenuItemsValues {
         return AppLocalization.selectAll;
       case ChatPopupMenuItemsValues.unselectAll:
         return AppLocalization.unselectAll;
+      case ChatPopupMenuItemsValues.blockChat:
+        return AppLocalization.blockChat;
     }
   }
 }
 
 class ChatScreenController extends GetxController {
-  final ChatController chatController = Get.put(ChatController());
+  final ChatController chatController = Get.find();
   FocusNode searchFeildFocusNode = FocusNode();
   RxBool isLoading = false.obs;
   final ParticipantModel? user;
@@ -77,6 +82,9 @@ class ChatScreenController extends GetxController {
     if (conversation != null) {
       goToConversationScreen(conversation);
     }
+    //  else {
+    //   AppUtil.buildErrorDialog(AppLocalization.failureStartChatingUser);
+    // }
     // isLoading.value = false;
   }
 
@@ -88,8 +96,6 @@ class ChatScreenController extends GetxController {
     } else if (value == ChatPopupMenuItemsValues.blockedChats) {
       goToBlockedChatsScreen();
     } else if (value == ChatPopupMenuItemsValues.settings) {
-      // AppLocallcontroller controller = Get.find();
-      // controller.changLang("en");
       goToSettingsScreen();
     } else if (value == ChatPopupMenuItemsValues.search) {
       toggleSearchMode();
@@ -101,6 +107,8 @@ class ChatScreenController extends GetxController {
       selectAllConvesations();
     } else if (value == ChatPopupMenuItemsValues.unselectAll) {
       toggleSelectionMode();
+    } else if (value == ChatPopupMenuItemsValues.blockChat) {
+      blockSelectedConversation();
     }
   }
 
@@ -122,10 +130,6 @@ class ChatScreenController extends GetxController {
         .userName;
   }
 
-  // Future<void> startConversationWith(int userId) async {
-  //   chatController.startConversationWith(userId);
-  // }
-
   Future<void> deleteConversation(int conversationId) async {
     await chatController.deleteConversations([conversationId]);
   }
@@ -139,7 +143,7 @@ class ChatScreenController extends GetxController {
   }
 
   void goToBlockedChatsScreen() {
-    Get.to(() => const BlockedChatsScreen());
+    Get.to(() => BlockedChatsScreen());
   }
 
   void goToAutoReplyScreen() {
@@ -147,7 +151,17 @@ class ChatScreenController extends GetxController {
   }
 
   void goToStarredMessagesScreen() {
-    Get.to(() => const StarredMessagesScreen());
+    // i injected the ConversationScreenController so i can use the messages widgets
+    //in the starred messages screen, becuase most of conversations widgets depends on that
+    // if (chatController.conversations.isNotEmpty) {
+    //   Get.put(
+    //     ConversationScreenController(
+    //       conversation: chatController.conversations[0].conversation,
+    //     ),
+    //   );
+    // }
+
+    Get.to(() => StarredMessagesScreen());
   }
 
   void goToChatProfileScreen(LocalConversation conversation) {
@@ -175,29 +189,25 @@ class ChatScreenController extends GetxController {
         ?.conversation;
   }
 
-  // void goToChatProfileScreenWithUserId(int userId) {
-  //   LocalConversation? conversation = chatController.conversations
-  //       .firstWhereOrNull((element) => element.conversation.userId == userId)
-  //       ?.conversation;
-  //   if (conversation != null) {
-  //     goToChatProfileScreen(conversation);
-  //   }
-  // }
-
-  // void goToConversationScreenWithUserId(int userId) {
-  //   LocalConversation? conversation = chatController.conversations
-  //       .firstWhereOrNull((element) => element.conversation.userId == userId)
-  //       ?.conversation;
-  //   if (conversation != null) {
-  //     goToChatProfileScreen(conversation);
-  //   }
-  // }
-
   void goToConversationScreen(LocalConversation conversation,
       [LocalMessage? matchedMessage]) {
-    Get.delete<ConversationScreenController>();
-    Get.put(ConversationScreenController(conversation: conversation));
-    Get.to(() => ConversationScreen(conversation: conversation));
+    // Get.delete<ConversationScreenController>();
+    // ConversationScreenController controller =
+    // Get.put(
+    //   ConversationController(
+    //     currentConversation: conversation,
+    //   ),
+    // );
+    // ConversationScreenController controller =
+    Get.put(
+      ConversationScreenController(
+        currentConversation: conversation,
+        targetMessage: matchedMessage,
+      ),
+    );
+    Get.to(() => ConversationScreen(
+          conversation: conversation,
+        ));
   }
 
   void goToConversationScreenWithSearchData(
@@ -207,11 +217,6 @@ class ChatScreenController extends GetxController {
       matchedConversation.conversation,
       matchedConversation.message,
     );
-    // Get.delete<ConversationScreenController>();
-    // Get.put(ConversationScreenController(
-    //     conversation: matchedConversation.conversation));
-    // Get.to(() =>
-    //     ConversationScreen(conversation: matchedConversation.conversation));
   }
 
   resetToNormalMode() {
@@ -306,6 +311,15 @@ class ChatScreenController extends GetxController {
             .map((element) => element.conversation.localId)
             .toList(),
       );
+    }
+  }
+
+  Future<void> blockSelectedConversation() async {
+    if (selectedConversationsIds.isNotEmpty) {
+      await chatController.blockConversation(
+        selectedConversationsIds[0],
+      );
+      toggleSelectionMode();
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_last_message_and_count.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/block_unblock_conversation_request.dart';
@@ -192,4 +193,7 @@ abstract class ConversationRepository {
 
   Future<Either<Failure, bool>> toggleArchiveConversation(
       int conversationLocalId, bool addToArchive);
+  Future<Either<Failure, List<ConversationWithCountAndLastMessage>>>
+      getAllConversationsWithLastMessageAndCount();
+  Future<Either<Failure, List<LocalConversation>>> getAllBlockedConversations();
 }

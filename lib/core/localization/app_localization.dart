@@ -395,7 +395,7 @@ class AppLocalization {
   static String online = "Online".tr;
   static String offline = "Offline".tr;
   static String typingNow = "Typing Now".tr;
-  static String archive = "Archive".tr;
+
   static String delete = "Delete".tr;
   static String cofirmDeleteConversationMessage =
       "Are you sure you want to delete this chat?".tr;
@@ -464,6 +464,62 @@ class AppLocalization {
   static String successToStarMessage = "Message starred successfully";
 
   static String unselectAll = "Unselect All";
+
+  static String failureStartChatingUser =
+      "Failure start chatting with this user";
+  static String canNotStartChatWithBlockedUser =
+      "You can not chat with a user you blocked";
+
+  static String failureShwoingStarredMessages =
+      "Failure showing your starred messages, please try later";
+
+  static String mine = "Mine";
+
+  static String others = "Others";
+
+  static String noStarredMessagesMatchedSearch =
+      "No starred messages matched search text";
+
+  static String noStarredMessages = "No starred messages";
+
+  static String noStarredMessagesBelongsToYou =
+      "No starred messages belongs to you";
+
+  static String noStarredMessagesBelongsToOthers =
+      "No starred messages belongs to others";
+
+  static String blockChat = "Block Chat";
+
+  static String confirmUnblockChat = "Do you realy want to unblock this chat?";
+
+  static String unblockAll = "Unblock All";
+
+  static String confirmUnblockAllChat =
+      "Do you realy want to unblock all chats?"; //حضر المحادثة
+
+  static String image = "Image";
+
+  static String video = "Video";
+
+  static String audio = "Audio";
+
+  static String archive = "Archive";
+
+  static String file = "File";
+
+  static String imageMessage = "Image message";
+
+  static String voiceMessage = "Voice message";
+
+  static String videoMessage = "Video message";
+
+  static String fileMessage = "File message";
+
+  static String archiveMessage = "Archived message";
+
+  static String camera = "Camera";
+
+  static String gallery = "Gallery";
 
 //================================ End chat messages ================================//
 }

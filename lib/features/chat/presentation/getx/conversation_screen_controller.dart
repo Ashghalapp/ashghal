@@ -1,19 +1,26 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/message_and_multimedia.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/requests/send_message_request.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/starred_messages_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/message_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+
+import '../screens/profile_chat_screen.dart';
 // Import the custom FuzzyMatch class.
 
 enum ConversationPopupMenuItemsValues {
@@ -21,7 +28,8 @@ enum ConversationPopupMenuItemsValues {
   media,
   goToFirstMessage,
   clearChat,
-  block
+  block,
+  unblock,
 }
 
 extension ConversationPopupMenuItemsValuesExtension
@@ -38,6 +46,8 @@ extension ConversationPopupMenuItemsValuesExtension
         return AppLocalization.clearChat;
       case ConversationPopupMenuItemsValues.block:
         return AppLocalization.block;
+      case ConversationPopupMenuItemsValues.unblock:
+        return AppLocalization.unblock;
     }
   }
 }
@@ -45,17 +55,26 @@ extension ConversationPopupMenuItemsValuesExtension
 class ConversationScreenController extends GetxController {
   // final int conversationId;
 
-  late final LocalConversation conversation;
-  ConversationScreenController({required this.conversation})
-      : conversationController = Get.put(
+  final LocalConversation currentConversation;
+  final LocalMessage? targetMessage;
+  ConversationScreenController({
+    required this.currentConversation,
+    this.targetMessage,
+  }) : conversationController = Get.put(
           ConversationController(
-            conversationId: conversation.localId,
+            currentConversation: currentConversation,
           ),
         );
 
-  int get conversationId => conversation.localId;
+  Rx<MessageAndMultimediaModel?> replyMessage =
+      Rx<MessageAndMultimediaModel?>(null);
 
-  final ConversationController conversationController;
+  RxBool isReplyMessagePresent = false.obs;
+
+  RxBool isLoading = false.obs;
+  int get conversationId => currentConversation.localId;
+
+  final ConversationController conversationController; //= Get.find();
 
   /// A controller to handle messages scroling messages in the screen
   final ItemScrollController messagesScrollController = ItemScrollController();
@@ -94,37 +113,60 @@ class ConversationScreenController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    scrollListener.itemPositions.addListener(() {
-      // print("Listener started");
-      List<int> indexes = scrollListener.itemPositions.value
-          // .where((element) {
-          //   //itemLeadingEdge: determinates the distance between the top of the list view
-          //   //and the top of the item, it is between(0-1)
-          //   final isTopVisible = element.itemLeadingEdge >= 0;
-          //   //itemTrailingEdge: determinates the distance between the end of the list view
-          //   //and the bottom of the item, it is between(0-1)
-          //   final isBottomVisible = element.itemTrailingEdge <= 1;
-          //   return isTopVisible && isBottomVisible;
-          // })
-          .map((e) => e.index)
-          .toList();
-      // print(indexes);
-      if (indexes.isNotEmpty && indexes[0] > 2) {
-        showScrollDownIcon.value = true;
-        // print("Ok");
-      } else {
-        showScrollDownIcon.value = false;
-      }
-    });
-    // messagesScrollController.s
 
-    // messagesScrollController.addListener(() {
-    //   //offset: tells you how much(the total pixels) you scroll down from the top, its initial value is 0
-    //   //maxExtent: tells you how much hidden items in the top
-    //   if (messagesScrollController.position.atEdge) {
-    //     final isTop = messagesScrollController.position.pixels == 0;
-    //   }
-    // });
+    scrollListener.itemPositions.addListener(
+      () {
+        // print("Listener started");
+        List<int> indexes = scrollListener.itemPositions.value
+            // .where((element) {
+            //   //itemLeadingEdge: determinates the distance between the top of the list view
+            //   //and the top of the item, it is between(0-1)
+            //   final isTopVisible = element.itemLeadingEdge >= 0;
+            //   //itemTrailingEdge: determinates the distance between the end of the list view
+            //   //and the bottom of the item, it is between(0-1)
+            //   final isBottomVisible = element.itemTrailingEdge <= 1;
+            //   return isTopVisible && isBottomVisible;
+            // })
+            .map((e) => e.index)
+            .toList();
+        // print(indexes);
+        if (indexes.isNotEmpty && indexes[0] > 2) {
+          showScrollDownIcon.value = true;
+          // print("Ok");
+        } else {
+          showScrollDownIcon.value = false;
+        }
+      },
+    );
+    if (targetMessage != null) {
+      Future.delayed(
+        const Duration(seconds: 1),
+        () async {
+          scrollToMessageWithLocalIdAndHighLightItForAWhile(
+              targetMessage!.localId, 4);
+          // int index = conversationController.messages.indexWhere(
+          //     (element) => element.message.localId == targetMessage!.localId);
+          // if (index != -1) {
+          //   searchSelectedMessage.value = index;
+          //   scrollToPosition(index, 0.5);
+          //   // after 4 seconds disable selecting the message
+          //   Future.delayed(
+          //     const Duration(seconds: 4),
+          //     () {
+          //       searchSelectedMessage.value = -1;
+          //     },
+          //   );
+          // }
+          // for (int i = 0; i < conversationController.messages.length; i++) {
+          //   if (conversationController.messages[i].message.localId ==
+          //       message!.localId) {
+          //     // matchedMsgIndixes.add(i);
+
+          //   }
+          // }
+        },
+      );
+    }
   }
 
   @override
@@ -152,9 +194,40 @@ class ConversationScreenController extends GetxController {
     } else if (value == ConversationPopupMenuItemsValues.goToFirstMessage) {
       scrollToFirstOrBottom(false);
     } else if (value == ConversationPopupMenuItemsValues.clearChat) {
-      conversationController.clearChat();
+      // conversationController.clearChat();
+      clearChat();
+      //  _chatScreenController
     } else if (value == ConversationPopupMenuItemsValues.block) {
       conversationController.blockConversation();
+    } else if (value == ConversationPopupMenuItemsValues.unblock) {
+      conversationController.unblockConversation();
+    }
+  }
+
+  void goToChatProfileScreen() {
+    Get.to(
+      () => ProfileChatScreen(
+        conversation: currentConversation,
+      ),
+    );
+  }
+
+  void closeThisConversationScreen() {
+    conversationController.markConversationMessagesAsRead();
+    Get.back();
+  }
+
+  Future<bool> backButtonPressed() {
+    InsertingMessageController insertingController = Get.find();
+    if (insertingController.emojiPickerShowing.value) {
+      insertingController.emojiPickerShowing.value = false;
+      return Future.value(false);
+    } else if (selectionEnabled.value || isSearching.value) {
+      resetToNormalMode();
+      return Future.value(false);
+    } else {
+      closeThisConversationScreen();
+      return Future.value(true);
     }
   }
 
@@ -170,18 +243,101 @@ class ConversationScreenController extends GetxController {
     forwardedMessage = null;
   }
 
+  Future<void> clearChat() async {
+    await conversationController.clearChat();
+    ChatController chatController = Get.find();
+    // AppPrint.printInfo("Clear chat started");
+    chatController.deleteConversationsLastMessageAndCount(conversationId);
+  }
+
   void goToConversationMediaScreen() {}
 
   void viewMessageInfo() {
     if (selectedMessagesIds.length == 1) {
-      // LocalMessage msg =
-      //     conversationController.messages[selectedMessagesIds[0]].message;
       Get.to(
         () => MessageInfoPage(
           message: conversationController.messages[selectedMessagesIds[0]],
         ),
       );
     }
+  }
+
+  void setReplyMessage(int messageRemoteId) {
+    AppPrint.printInfo("Message $messageRemoteId Swiped");
+    // AppPrint.printInfo("Message ${message.message.toString()} Swiped");
+    // AppPrint.printInfo("Message ${message.multimedia.toString()} Swiped");
+    replyMessage.value = getMessageWithRemoteId(messageRemoteId);
+    AppPrint.printInfo(
+        "Message ${replyMessage.value!.message.toString()} Swiped");
+    AppPrint.printInfo(
+        "Message ${replyMessage.value!.multimedia.toString()} Swiped");
+  }
+
+  void cancelReplyMessage() {
+    replyMessage.value = null;
+  }
+
+  void scrollToMessageReplyWithId(int messagelocalId) {
+    scrollToMessageWithLocalIdAndHighLightItForAWhile(messagelocalId, 2);
+    // int index = conversationController.messages
+    //     .indexWhere((element) => element.message.localId == messagelocalId);
+    // AppPrint.printInfo("scroll to index $index");
+    // if (index != -1) {
+    //   scrollToPosition(index, 0.5);
+    // }
+  }
+
+  MessageAndMultimediaModel? getMessageWithRemoteId(int messageRemoteId) {
+    // MessageAndMultimediaModel? message =
+    return conversationController.messages.firstWhereOrNull(
+        (element) => element.message.remoteId == messageRemoteId);
+    // AppPrint.printData("$messageRemoteId reply Message ${message.toString()}");
+    // return message;
+  }
+
+  Future<void> sendTextMessage(String body, [int? otherConversationId]) async {
+    // AppPrint.printData("Reply Message ${replyMessage!.message}");
+    SendMessageRequest request = SendMessageRequest.withBody(
+      conversationId: otherConversationId ?? conversationId,
+      replyTo: replyMessage.value == null
+          ? null
+          : replyMessage.value!.message.remoteId,
+      body: body,
+    );
+    // AppPrint.printData(request.toString());
+    cancelReplyMessage();
+    await conversationController.sendMessage(request);
+  }
+
+  Future<void> sendMultimediaMessage(String path,
+      [int? otherConversationId]) async {
+    SendMessageRequest request = SendMessageRequest.withMultimedia(
+      conversationId: otherConversationId ?? conversationId,
+      replyTo: replyMessage.value == null
+          ? null
+          : replyMessage.value!.message.remoteId,
+      filePath: path,
+      onSendProgress: (count, total) {},
+      cancelToken: null,
+    );
+    cancelReplyMessage();
+    await conversationController.sendMessage(request);
+  }
+
+  Future<void> sendTextAndMultimediaMessage(String body, String path,
+      [int? otherConversationId]) async {
+    SendMessageRequest request = SendMessageRequest.withBodyAndMultimedia(
+      conversationId: otherConversationId ?? conversationId,
+      replyTo: replyMessage.value == null
+          ? null
+          : replyMessage.value!.message.remoteId,
+      filePath: path,
+      body: body,
+      onSendProgress: (count, total) {},
+      cancelToken: null,
+    );
+    cancelReplyMessage();
+    await conversationController.sendMessage(request);
   }
 
   //============================ Start selection functions ============================//
@@ -205,6 +361,7 @@ class ConversationScreenController extends GetxController {
   }
 
   void selectMessage(int messageId) {
+    AppPrint.printInfo("Selected message $messageId");
     if (selectionEnabled.value) {
       if (selectedMessagesIds.contains(messageId)) {
         selectedMessagesIds.remove(messageId);
@@ -227,6 +384,9 @@ class ConversationScreenController extends GetxController {
       } else {
         ableToForwardSelectedMessage.value = false;
       }
+      if (selectedMessagesIds.isEmpty) {
+        resetToNormalMode();
+      }
     }
   }
 
@@ -236,39 +396,36 @@ class ConversationScreenController extends GetxController {
       selectionEnabled.value = false;
       await conversationController.toggleStarMessage(selectedMessagesIds[0]);
       selectedMessagesIds.clear();
+      // if we come from starred messages screen we should refresh the starred messages
+      try {
+        StarredMessagesScreenController controller = Get.find();
+        controller.refreshStarredMessages();
+      } catch (e) {}
     }
   }
 
   Future<void> forwardSelectedMessage() async {
     if (ableToForwardSelectedMessage.value && forwardedMessage != null) {
       Get.to(() => ChatScreen());
-      ChatScreenController controller = Get.find();
-      controller.forwardMessage((selectedconversationsIds) async {
+      ChatScreenController chatScreenController = Get.find();
+      chatScreenController.forwardMessage((selectedconversationsIds) async {
         print("Number of selected conversations $selectedconversationsIds");
-
-        // if (selectedconversationsIds.length > 1) {
-        //   Get.back();
-        // }
 
         if (forwardedMessage!.message.body != null &&
             forwardedMessage!.multimedia != null) {
           for (int id in selectedconversationsIds) {
-            conversationController.sendTextAndMultimediaMessage(
-                forwardedMessage!.message.body!,
-                forwardedMessage!.multimedia!.path!,
-                id);
+            sendTextAndMultimediaMessage(forwardedMessage!.message.body!,
+                forwardedMessage!.multimedia!.path!, id);
           }
         } else if (forwardedMessage!.message.body != null &&
             forwardedMessage!.multimedia == null) {
           for (int id in selectedconversationsIds) {
-            conversationController.sendTextMessage(
-                forwardedMessage!.message.body!, id);
+            sendTextMessage(forwardedMessage!.message.body!, id);
           }
         } else if (forwardedMessage!.message.body == null &&
             forwardedMessage!.multimedia != null) {
           for (int id in selectedconversationsIds) {
-            conversationController.sendMultimediaMessage(
-                forwardedMessage!.multimedia!.path!, id);
+            sendMultimediaMessage(forwardedMessage!.multimedia!.path!, id);
           }
         } else {
           return;
@@ -365,7 +522,7 @@ class ConversationScreenController extends GetxController {
   //   );
   // }
 
-  void scrollToPosition(int targetIndex) {
+  void scrollToPosition(int targetIndex, [double alignment = 0]) {
     // messagesScrollController.animateTo(
     //   messagesScrollController.position.maxScrollExtent,
     //   duration: const Duration(milliseconds: 500),
@@ -373,9 +530,9 @@ class ConversationScreenController extends GetxController {
     // );
     messagesScrollController.scrollTo(
       index: targetIndex,
-      // alignment: 0,
+      alignment: alignment,
       duration: const Duration(milliseconds: 500),
-      curve: Curves.easeIn,
+      curve: Curves.easeInOut,
     );
   }
 
@@ -416,5 +573,20 @@ class ConversationScreenController extends GetxController {
     }
   }
 
+  void scrollToMessageWithLocalIdAndHighLightItForAWhile(int messageLocalId,
+      [int durationInSeconds = 4, double alignment = 0.5]) {
+    int index = conversationController.messages
+        .indexWhere((element) => element.message.localId == messageLocalId);
+    if (index != -1) {
+      searchSelectedMessage.value = index;
+      scrollToPosition(index, alignment);
+      Future.delayed(
+        Duration(seconds: durationInSeconds),
+        () {
+          searchSelectedMessage.value = -1;
+        },
+      );
+    }
+  }
 //============================ End Scrolling functions ============================//
 }

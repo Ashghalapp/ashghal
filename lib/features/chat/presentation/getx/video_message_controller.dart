@@ -169,6 +169,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/video_player_page.dart';
 
@@ -229,10 +230,11 @@ class VideoMessageController extends GetxController {
         // maxHeight: 64, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
         // quality: 75,
       );
-      print("Thumnail Url created");
+      AppPrint.printSuccess("Thumnail Url created");
       thumbnailReady.value = true;
     } catch (e) {
       thumbnailReady.value = false;
+      AppPrint.printError("Error getting thumbnail from url: ${e.toString()}");
     }
   }
 

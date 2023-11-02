@@ -283,7 +283,7 @@ class ConversationWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                AppLocalization.archive,
+                AppLocalization.archived,
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
               const SizedBox(width: 10),

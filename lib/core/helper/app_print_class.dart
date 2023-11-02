@@ -38,6 +38,14 @@ class AppPrint {
     print('\x1B[37m$text\x1B[0m');
   }
 
+  static void _printCyan(String text) {
+    print('\x1B[36m$text\x1B[0m');
+  }
+
+  static void _printMagenta(String text) {
+    print('\x1B[35m$text\x1B[0m');
+  }
+
   static void printWarning(String text) {
     _printYellow(text);
   }
@@ -50,11 +58,23 @@ class AppPrint {
     _printGreen(text);
   }
 
+  static String duplicateText(String text, int times) {
+    StringBuffer buffer = StringBuffer();
+    for (int i = 0; i < times; i++) {
+      buffer.write(text);
+    }
+    return buffer.toString();
+  }
+
   static void printSeperator(String text) {
-    _printGreen(text);
+    _printGreen(duplicateText(text, 10));
   }
 
   static void printData(String text) {
     _printWhite(text);
+  }
+
+  static void printSuccess(String text) {
+    _printMagenta(text);
   }
 }
