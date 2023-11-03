@@ -1,7 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
 class ApiConstants {
-  static const String baseUrl = "http://10.0.2.2:8000/api/";
+  static const String baseIp = "192.168.122.175";
+  static const String baseUrl = "http://$baseIp:8000/api/";
   // static const String baseUrl = "http://192.168.128.175:8000/api/";
   static const String channelsAutherizingUrl = "${baseUrl}broadcasting/auth";
   //   static const String channelsAutherizingUrl =

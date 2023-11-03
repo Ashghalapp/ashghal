@@ -13,6 +13,7 @@ import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/starred_messages_screen_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_media_links_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/message_info_page.dart';
 import 'package:flutter/material.dart';
@@ -250,7 +251,9 @@ class ConversationScreenController extends GetxController {
     chatController.deleteConversationsLastMessageAndCount(conversationId);
   }
 
-  void goToConversationMediaScreen() {}
+  void goToConversationMediaScreen() {
+    Get.to(() => ChatMediaLinksDocsScreen());
+  }
 
   void viewMessageInfo() {
     if (selectedMessagesIds.length == 1) {

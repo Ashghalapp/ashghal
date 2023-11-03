@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:ashghal_app_frontend/config/app_patterns.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
+import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,7 +54,7 @@ class AppUtil {
 
   static String editUrl(String url) {
     // return url.replaceAll(RegExp(r'localhost'), '10.0.2.2:8000');
-    return url.replaceAll(RegExp(r'localhost'), '10.0.2.2');
+    return url.replaceAll(RegExp(r'localhost'), ApiConstants.baseIp);
   }
 
   static void showErrorToast(String title, String message) {
@@ -481,5 +483,23 @@ class AppUtil {
       default:
         return '';
     }
+  }
+
+  static bool hasURLInText(String text) {
+    // Check if the text contains a URL
+    // final urlPattern = RegExp(
+    //     r"http(s)?://[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,4})+(?:[^\s]*)?",
+    //     caseSensitive: false);
+
+    return AppPatterns.urlPattern.hasMatch(text);
+  }
+
+  static String? getURLInText(String text) {
+    // Check if the text contains a URL
+    // final urlPattern = RegExp(
+    //     r"http(s)?://[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,4})+(?:[^\s]*)?",
+    //     caseSensitive: false);
+
+    return AppPatterns.urlPattern.firstMatch(text)?[0];
   }
 }

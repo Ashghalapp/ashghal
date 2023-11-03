@@ -53,6 +53,9 @@ dependencies:
   video_thumbnail: ^0.5.3
   shimmer: ^3.0.0
   swipe_to: ^1.0.2
+  flutter_link_previewer: ^3.2.2
+  any_link_preview: ^3.0.1
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_lints: ^2.0.0

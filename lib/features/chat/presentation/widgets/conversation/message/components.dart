@@ -1,13 +1,20 @@
+import 'dart:async';
+
 import 'package:ashghal_app_frontend/config/app_images.dart';
+import 'package:ashghal_app_frontend/config/app_patterns.dart';
 import 'package:ashghal_app_frontend/config/chat_theme.dart';
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum MessageStatus {
   notSent,
@@ -150,22 +157,182 @@ class MessageBodyTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      body ?? "",
+    return body != null && AppUtil.hasURLInText(body!)
+        ? MessageBodyTextWithUrlsWidget(
+            body: body!,
+            isMine: isMine,
+          )
+        : Text(
+            body ?? "",
+            overflow: TextOverflow.visible,
+            softWrap: true,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontSize: 17,
+              color: isMine
+                  ? ChatStyle.ownMessageTextColor
+                  : Get.isPlatformDarkMode
+                      ? ChatStyle.otherMessageTextDarkColor
+                      : ChatStyle.otherMessageTextLightColor,
+            ),
+          );
+  }
+}
+
+class MessageBodyTextWithUrlsWidget extends StatelessWidget {
+  final String body;
+  final bool isMine;
+
+  const MessageBodyTextWithUrlsWidget(
+      {super.key, required this.body, required this.isMine});
+
+  @override
+  Widget build(BuildContext context) {
+    final urlPattern = AppPatterns.urlPattern;
+    final defaultStyle = TextStyle(
+      fontSize: 17,
+      color: isMine
+          ? ChatStyle.ownMessageTextColor
+          : Get.isPlatformDarkMode
+              ? ChatStyle.otherMessageTextDarkColor
+              : ChatStyle.otherMessageTextLightColor,
+    );
+
+    const urlStyle = TextStyle(
+      fontSize: 16,
+      color: Colors.blue,
+      decoration: TextDecoration.underline,
+      fontStyle: FontStyle.italic,
+    );
+
+    final textSpans = <TextSpan>[];
+    final matches = urlPattern.allMatches(body);
+
+    int start = 0;
+
+    for (final match in matches) {
+      if (start < match.start) {
+        final nonUrlText = body.substring(start, match.start);
+        textSpans.add(TextSpan(text: nonUrlText, style: defaultStyle));
+      }
+
+      final urlText = body.substring(match.start, match.end);
+
+      textSpans.add(
+        TextSpan(
+          text: urlText,
+          style: urlStyle,
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              showOptionsBottomSheet(context, urlText);
+            },
+        ),
+      );
+      start = match.end;
+    }
+
+    if (start < body.length) {
+      final nonUrlText = body.substring(start);
+      textSpans.add(TextSpan(text: nonUrlText, style: defaultStyle));
+    }
+
+    return RichText(
       overflow: TextOverflow.visible,
       softWrap: true,
       textAlign: TextAlign.left,
-      style: TextStyle(
-        fontSize: 17,
-        color: isMine
-            ? ChatStyle.ownMessageTextColor
-            : Get.isPlatformDarkMode
-                ? ChatStyle.otherMessageTextDarkColor
-                : ChatStyle.otherMessageTextLightColor,
+      text: TextSpan(
+        children: textSpans,
       ),
     );
   }
+
+  void showOptionsBottomSheet(BuildContext context, String url) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.open_in_browser),
+              title: const Text('Open'),
+              onTap: () {
+                Navigator.pop(context);
+                launchURL(url);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.content_copy),
+              title: const Text('Copy'),
+              onTap: () {
+                Navigator.pop(context);
+                Clipboard.setData(ClipboardData(text: url));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void launchURL(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      AppUtil.buildErrorDialog("Could not launch $url");
+    }
+  }
 }
+
+// class CustomTapGestureRecognizer extends TapGestureRecognizer {
+//   final GestureTapCallback onTap;
+//   final Function()? onLongPress;
+
+//   CustomTapGestureRecognizer({required this.onTap, this.onLongPress});
+// //  The handleTapDown method checks the tap duration, and if it's a long press (500 milliseconds in
+// //  this example), it invokes the onLongPress callback. If it's a short tap, it invokes the onTap callback.
+//   @override
+//   void handleTapDown({required PointerDownEvent down}) {
+//     super.handleTapDown(down: down);
+//     // We handle onLongPress in handleTapDown by checking the tap duration
+//     if (onLongPress != null) {
+//       Timer(const Duration(milliseconds: 500), () {
+//         if (onLongPress != null) {
+//           invokeCallback<void>('onLongPress', onLongPress!);
+//         }
+//       });
+//     }
+//   }
+// }
+
+// class CustomTapGestureRecognizer extends TapGestureRecognizer {
+//   // final GestureTapCallback? onTap;
+//   // final Function()? onLongPress;
+//   bool longPressTriggered = false;
+
+//   CustomTapGestureRecognizer({GestureTapCallback? onTap, Function()? onLongPress}):this.onTap=onTap;
+
+//   @override
+//   void handleTapDown({required PointerDownEvent down}) {
+//     super.handleTapDown(down: down);
+//     // We handle onLongPress in handleTapDown by checking the tap duration
+//     longPressTriggered = false;
+//     Timer(const Duration(milliseconds: 500), () {
+//       if (!longPressTriggered && onLongPress != null) {
+//         invokeCallback<void>('onLongPress', onLongPress!);
+//         longPressTriggered = true;
+//       }
+//     });
+//   }
+
+//   @override
+//   void handleTapUp(
+//       {required PointerDownEvent down, required PointerUpEvent up}) {
+//     if (!longPressTriggered && onTap != null) {
+//       invokeCallback<void>('onTap', onTap!);
+//     }
+//   }
+// }
 
 class DownloadUploadIconWithSizeWidget extends StatelessWidget {
   const DownloadUploadIconWithSizeWidget({
