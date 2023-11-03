@@ -27,8 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
         pageBuilder: (context, animation, secondaryAnimation) => _next(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.bounceOut;
+          const end = Offset(0.0, 0.0);
+          const curve = Curves.easeInOut;
 
           var tween =
               Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

@@ -52,7 +52,7 @@ class OnBoardingScreen extends GetView<OnBoardingController> {
                 ),
                 Text(
                   slider.subtitle,
-                  style: Get.textTheme.bodyMedium,
+                  style: Get.textTheme.bodyLarge,
                 ),
               ],
             ),
@@ -68,16 +68,17 @@ class OnBoardingScreen extends GetView<OnBoardingController> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (int i = 0; i < controller.sliders.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _getProperCircle(i),
-                    )
-                ],
-              ),
+              _getProperCircle(),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     for (int i = 0; i < controller.sliders.length; i++)
+              //       Padding(
+              //         padding: const EdgeInsets.all(8.0),
+              //         child: _getProperCircle(i),
+              //       )
+              //   ],
+              // ),
               SizedBox(
                 height: Get.mediaQuery.size.height * .03,
               ),
@@ -111,19 +112,40 @@ class OnBoardingScreen extends GetView<OnBoardingController> {
     );
   }
 
-  Widget _getProperCircle(int index) {
+  Widget _getProperCircle() {
     return Obx(
-      () => Container(
-        width: 10,
-        height: 10,
-        margin: const EdgeInsets.symmetric(horizontal: 5),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: index == controller.currentIndex.value
-              ? AppColors.appColorPrimary
-              : Get.theme.dividerColor,
-        ),
+      () =>
+       Center(
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          ...List.generate(
+             controller.sliders.length,
+              (index) => AnimatedContainer(
+                    height: 12,
+                    // width: 6,
+                    width: controller.currentIndex.value == index ? 22 : 12,
+                    decoration: BoxDecoration(
+                      color: AppColors.appColorPrimary,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    margin: const EdgeInsets.only(right: 10),
+                    // ignore: prefer_const_constructors
+                    duration: Duration(
+                      milliseconds: 500,
+                    ),
+                  ))
+        ]),
       ),
+      // Container(
+      //   width: 10,
+      //   height: 10,
+      //   margin: const EdgeInsets.symmetric(horizontal: 5),
+      //   decoration: BoxDecoration(
+      //     shape: BoxShape.circle,
+      //     color: index == controller.currentIndex.value
+      //         ? AppColors.appColorPrimary
+      //         : Get.theme.dividerColor,
+      //   ),
+      // ),
     );
   }
 }
