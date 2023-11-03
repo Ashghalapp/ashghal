@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
+import 'package:ashghal_app_frontend/app_library/public_entities/app_category.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
@@ -35,12 +37,15 @@ class SignUpController extends GetxController {
   // RxBool isLoading = RxBool(false);
   bool isVisible = true;
 
-  final RxList<Map<String, Object>> categoriesList = RxList([
-    {'id': "1", 'name': 'Developer'},
-    {'id': "2", 'name': 'Designer'},
-    {'id': "3", 'name': 'Consultant'},
-    {'id': "4", 'name': 'Student'},
-  ]);
+  // final RxList<Map<String, Object>> categoriesList = RxList([
+  //   {'id': "1", 'name': 'Developer'},
+  //   {'id': "2", 'name': 'Designer'},
+  //   {'id': "3", 'name': 'Consultant'},
+  //   {'id': "4", 'name': 'Student'},
+  // ]);
+
+  RxList<AppCategory> categories =
+      SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
 // RxString selectedItem = 'Item 1'.obs;
 
   @override
@@ -57,6 +62,10 @@ class SignUpController extends GetxController {
       emailController.text = "hezbr${Random().nextInt(1000)}@gmail.com";
       passwordController.text = "123456";
       nameController.text = "hezbr";
+      if (categories.isEmpty){
+        await AppUtil.loadCategories();
+        categories = SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
+      }
       // phoneController.text = Random(773170413).nextInt(1000000000).toString();
 
       // final ApiResponseModel response =
@@ -110,12 +119,13 @@ class SignUpController extends GetxController {
     }, (success) async {
       print(success.message);
       isProviderSignUp
-          ? Get.to(SignUpProviderDataScreen(
-              categories: categoriesList,
+          ? Get.to(() => SignUpProviderDataScreen(
+              categories:
+                  categories.map((category) => category.toJson()).toList(),
               categoryController: jobCategoryController,
               jobNameController: jobNameController,
               jobDescController: jobDescController,
-              nextButtonFunction: submitJobInfo,
+              nextButtonFunction: submitProviderData,
             ))
           : Get.to(() => ValidateScreen(
                 message: AppLocalization.pleaseEnterVerifyEmailCode,
@@ -149,7 +159,8 @@ class SignUpController extends GetxController {
     return await registerUserWithEmail.call(request);
   }
 
-  Future<void> submitJobInfo() async {
+  /// function used when submit provider data
+  Future<void> submitProviderData() async {
     // if (!(jobFormKey.currentState?.validate() ?? false)) return;
     EasyLoading.show(status: AppLocalization.loading);
     Get.focusScope!.unfocus(); // اخفاء الكيبورد

@@ -9,7 +9,7 @@ class PostsBuilderWidget extends StatelessWidget {
   final RxList<Post> posts;
   // final int lastIndexToGetNextPage;
   final void Function(int index) onIndexChange;
-  final PopupMenuButtonWidget Function(int postId) getPopupMenuFunction;
+  final PopupMenuButtonWidget Function(Post post) getPopupMenuFunction;
   final RxBool isRequestFinishWithoutData;
   final ScrollController? scrollController;
   final Widget faildDownloadWidget;
@@ -45,12 +45,8 @@ class PostsBuilderWidget extends StatelessWidget {
                 // "------------last loaded index ${postController.lastIndexToGetNewPage}");
                 if (index < posts.length) {
                   return PostCardWidget(
-                      // key: GlobalObjectKey(postController.postList[index].id),
                       post: posts[index],
-                      postMenuButton: getPopupMenuFunction(posts[index].id)
-                      // (
-                      // posts[index].id,
-                      // ),
+                      postMenuButton: getPopupMenuFunction(posts[index])
                       );
                 }
                 return null;

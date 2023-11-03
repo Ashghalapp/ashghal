@@ -3,9 +3,11 @@ import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/add_address_to_user_request.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/update_user_request.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/provider.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/add_address_to_user_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/delete_user_image_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/update_user_uc.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
 // TextEditingController? Email;
 class ShowEditProfileController extends GetxController {
   late Rx<User> userData; // = Rx(getCurrentUserDataOffline);
+
+  // define variables to represent user data  to determine whether modifications have occurred
   final String assetMaleImage = "assets/images/unKnown.jpg";
   final String assetFemaleImage = "assets/images/unKnown.jpg";
   RxString imagePath = "".obs;
@@ -32,12 +36,12 @@ class ShowEditProfileController extends GetxController {
   TextEditingController jobNameController = TextEditingController();
   TextEditingController jobDescController = TextEditingController();
 
-  final List<Map<String, Object>> categoriesList = [
-    {'id': "1", 'name': 'Developer'},
-    {'id': "2", 'name': 'Designer'},
-    {'id': "3", 'name': 'Consultant'},
-    {'id': "4", 'name': 'Student'},
-  ];
+  // final List<Map<String, Object>> categoriesList = [
+  //   {'id': "1", 'name': 'Developer'},
+  //   {'id': "2", 'name': 'Designer'},
+  //   {'id': "3", 'name': 'Consultant'},
+  //   {'id': "4", 'name': 'Student'},
+  // ];
 
   User get getCurrentUserDataOffline {
     return SharedPref.getCurrentUserData()!;
@@ -50,6 +54,7 @@ class ShowEditProfileController extends GetxController {
     setValues();
   }
 
+  /// set the user data to variables
   void setValues() {
     imagePath.value = "";
     name.value = userData.value.name;
@@ -82,7 +87,7 @@ class ShowEditProfileController extends GetxController {
       request.gender = Gender.values.byName(selectedGender.value);
     }
 
-    // ارسال بيانات الموقع لتحديثها في حالة كان المستخدم لديه موقع 
+    // ارسال بيانات الموقع لتحديثها في حالة كان المستخدم لديه موقع
     // وكذلك في حالة تم التعديل على بيانات الموقع
     if (userData.value.address != null) {
       if (city.value != userData.value.address?.city ||
@@ -126,17 +131,40 @@ class ShowEditProfileController extends GetxController {
     if (image != null) imagePath.value = image.path;
   }
 
-  Future<void> deleteProfileImage() async{
+  Future<void> deleteProfileImage() async {
     EasyLoading.show(status: AppLocalization.loading);
     DeleteUserImageUseCase deleteImageUC = di.getIt();
 
-    (await deleteImageUC.call()).fold((failure){
+    (await deleteImageUC.call()).fold((failure) {
       AppUtil.hanldeAndShowFailure(failure);
-    }, (success){
+    }, (success) {
       AppUtil.showMessage(success.message, Colors.green);
       userData.value.imageUrl = null;
       imagePath.value = "";
       imagePath.refresh();
+    });
+    EasyLoading.dismiss();
+  }
+
+  Future<void> addAddressToUser({
+    required String city,
+    required String street,
+    String? desc,
+  }) async {
+    EasyLoading.show(status: AppLocalization.loading);
+    AddAddrressToUserUseCase addAddressUC = di.getIt();
+    final result = addAddressUC.call(
+      AddAddressToUserRequest(city: city, street: street, desc: desc),
+    );
+
+    (await result).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+    }, (user) {
+      AppUtil.showMessage(AppLocalization.successModifyYourData, Colors.green);
+      Get.back();
+      userData.value = user;
+      setValues();
+      SharedPref.setCurrentUserData(user);
     });
     EasyLoading.dismiss();
   }

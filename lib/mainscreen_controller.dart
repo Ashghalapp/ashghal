@@ -2,6 +2,7 @@ import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/account/current_user_account_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
@@ -93,12 +94,12 @@ class MainScreenController extends GetxController {
           //   ),
           ),
       BottomNavigationBarItem(
-          icon: myIcons(svgAssetUrl: AppIcons.chatBorder),
+          icon: myIcons(svgAssetUrl: AppIcons.heartBorder),
           activeIcon: myIcons(
-            svgAssetUrl: AppIcons.chat,
+            svgAssetUrl: AppIcons.heart,
             color: AppColors.appColorPrimary,
           ),
-          label: 'Chat'
+          label: 'Favorite'
           // activeIcon: Icon(
           //     Iconsax.heart5,
           //     // Icons.heart_broken_outlined
@@ -142,23 +143,29 @@ class MainScreenController extends GetxController {
     // index 1 => Search for posts or users
     AppSearchScreen(),
 
-    // index 2 => Add Post
+    // index 2 => Add Post screen
     AddUpdatePostScreen(),
     // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [Center(child: Text("Add Post"))],
     // ),
-    Column(
+
+    // index 3 => favorit screen
+    const Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-            onPressed: () {
-              print(SharedPref.getUserToken());
-              Get.to(() => ChatScreen());
-            },
-            child: Text("Open Chat"))
-      ],
+      children: [Center(child: Text("Favorite Posts"))],
     ),
+    // Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [
+    //     ElevatedButton(
+    //         onPressed: () {
+    //           print(SharedPref.getUserToken());
+    //           Get.to(() => ChatScreen());
+    //         },
+    //         child: Text("Open Chat"))
+    //   ],
+    // ),
     // AccountScreen(),
     if (SharedPref.getCurrentUserData() != null) CurrentUserAccountScreen(),
     // if (SharedPref.getCurrentUserData() == null)
@@ -183,9 +190,14 @@ class MainScreenController extends GetxController {
   ];
 
   changePage(int index) async {
+    // if ((index == 2 || index == 3 || index == 4) &&
+    //     SharedPref.getCurrentUserData() == null) {
+    //   await DialogUtil.showSignInDialog();
+    //   return;
+    // }
+
     if ((index == 2 || index == 3 || index == 4) &&
-        SharedPref.getCurrentUserData() == null) {
-      await AppUtil.showSignInDialog();
+        !AppUtil.checkUserLoginAndNotifyUser()) {
       return;
     }
 

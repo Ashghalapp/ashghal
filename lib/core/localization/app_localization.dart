@@ -35,7 +35,7 @@ class AppLocalization {
   static String writeComment = 'writeComment'.tr;
   static String comments = 'comments'.tr;
   static String viewAll = 'viewAll'.tr;
-  static String allowComments = 'allowComments'.tr;
+
   static String newComment = 'newComment'.tr;
 
 //////////////
@@ -323,14 +323,25 @@ class AppLocalization {
   static String selectCategory = 'Select category';
   // static String NotFoundDataInOfflineMode = 'Not found data in offline mode'.tr;
 
-  /////////////////////// Post Messages /////////////////////////////////////
+//============================ Start Post Messages ===================================
   static String successAddPost = "The post has been added successfully";
   static String successEditPost = "The post has been edited successfully";
   static String thereIsSomethingError = "There is something error.. Try later";
   static String recentPosts = "Recent Posts";
   static String incompletePosts = "Incomplete Posts";
   static String completedPosts = "Completed Posts";
+  static String copy = "Copy";
+  static String postContentCopied = "Post content copied";
 
+  ///// add post message
+  static String title = "Title";
+  static String enterTitle = "Enter title";
+  static String content = "Content";
+  static String enterContent = "Enter content";
+  static String allowComments = 'Allow comments';
+//============================ End Post Messages ===================================
+  
+  
   ///////////////////////Comment and replies Messages/////////////////////////////////////
   static String areYouSureToDeleteYourComment =
       "Are you sure to delete your comment?";

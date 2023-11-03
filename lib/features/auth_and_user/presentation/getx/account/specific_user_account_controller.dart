@@ -2,6 +2,7 @@ import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/account/current_user_account_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
@@ -61,9 +62,11 @@ class SpecificUserAccountController extends GetxController {
     await getSpecificUserPosts();
 
     meFollowHim.value =
-        SharedPref.getCurrentUserData()?.followingUsers.contains(userId) ?? false;
+        SharedPref.getCurrentUserData()?.followingUsers.contains(userId) ??
+            false;
     heFollowMe.value =
-        SharedPref.getCurrentUserData()?.followersUsers.contains(userId) ?? false;
+        SharedPref.getCurrentUserData()?.followersUsers.contains(userId) ??
+            false;
   }
 
   Future<void> getSpecificUserData() async {
@@ -127,10 +130,14 @@ class SpecificUserAccountController extends GetxController {
 
   void submitFollowButton() {
     if (meFollowHim.value && heFollowMe.value) {
-      AppUtil.buildDialog("", AppLocalization.unfollowFriend, () {
-        unfollowUser(userId);
-        Get.back();
-      }, submitButtonText: AppLocalization.unFollow);
+      DialogUtil.showDialog(
+        message: AppLocalization.unfollowFriend,
+        onSubmit: () {
+          unfollowUser(userId);
+          Get.back();
+        },
+        submitText: AppLocalization.unFollow,
+      );
     } else if (meFollowHim.value) {
       unfollowUser(userId);
     } else {
@@ -190,26 +197,26 @@ class SpecificUserAccountController extends GetxController {
     EasyLoading.dismiss();
   }
 
-  PopupMenuButtonWidget getPostMenuButtonValuesWidget(int postId) {
-    return PopupMenuButtonWidget(
-      items: OperationsOnPostPopupMenuValues.values.asNameMap().keys.toList(),
-      onSelected: (value) {
-        return postPopupMenuButtonOnSelected(value, postId);
-      },
-    );
-  }
+  // PopupMenuButtonWidget getPostMenuButtonValuesWidget(int postId) {
+  //   return PopupMenuButtonWidget(
+  //     items: OperationsOnPostPopupMenuValues.values.asNameMap().keys.toList(),
+  //     onSelected: (value) {
+  //       return postPopupMenuButtonOnSelected(value, postId);
+  //     },
+  //   );
+  // }
 
-  void postPopupMenuButtonOnSelected(String value, int postId) async {
-    if (value == OperationsOnCurrentUserPostPopupMenuValues.delete.name) {
-      deletePost(postId);
-    } else if (value == OperationsOnCurrentUserPostPopupMenuValues.edit.name) {
-      Get.to(() => AddUpdatePostScreen(
-            isUpdatePost: true,
-            post: postList.firstWhere((element) => element.id == postId),
-          ));
-      // Post p = postList.firstWhere((element) => element.id == postId);
-      // ClipboardData clipboardData = ClipboardData(text: p.content);
-      // await Clipboard.setData(clipboardData);
-    }
-  }
+  // void postPopupMenuButtonOnSelected(String value, int postId) async {
+  //   if (value == OperationsOnCurrentUserPostPopupMenuValues.delete.name) {
+  //     deletePost(postId);
+  //   } else if (value == OperationsOnCurrentUserPostPopupMenuValues.edit.name) {
+  //     Get.to(() => AddUpdatePostScreen(
+  //           isUpdatePost: true,
+  //           post: postList.firstWhere((element) => element.id == postId),
+  //         ));
+  // Post p = postList.firstWhere((element) => element.id == postId);
+  // ClipboardData clipboardData = ClipboardData(text: p.content);
+  // await Clipboard.setData(clipboardData);
+  // }
+  // }
 }

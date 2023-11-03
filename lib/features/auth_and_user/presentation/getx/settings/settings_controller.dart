@@ -4,6 +4,7 @@ import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
     as di;
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/delete_account_uc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -16,28 +17,29 @@ class SettingsController extends GetxController {
   }
 
   Future<void> submitDeleteAccount() async {
-    AppUtil.buildDialog(
-      AppLocalization.warning,
-      AppLocalization.areYouSureToDeleteYourAccount,
-      submitButtonText: AppLocalization.sure,
-      () {
+    DialogUtil.showDialog(
+      title: AppLocalization.warning,
+      message: AppLocalization.areYouSureToDeleteYourAccount,
+      submitText: AppLocalization.sure,
+      onSubmit: () {
         Get.back();
-        AppUtil.buildDialog(
-          AppLocalization.warning,
-          AppLocalization.noteForDeleteAccount,
-          () {
+        DialogUtil.showDialog(
+          title: AppLocalization.warning,
+          message: AppLocalization.noteForDeleteAccount,
+          onSubmit: () {
             Get.back();
-            AppUtil.buildDialog(
-              AppLocalization.warning,
-              AppLocalization.noteForDeleteAccountThatWillDeleteAllPosts,
-              () {
+            DialogUtil.showDialog(
+              title: AppLocalization.warning,
+              message:
+                  AppLocalization.noteForDeleteAccountThatWillDeleteAllPosts,
+              onSubmit: () {
                 Get.back();
                 deleteAccount();
               },
-              submitButtonText: AppLocalization.delete,
+              submitText: AppLocalization.delete,
             );
           },
-          submitButtonText: AppLocalization.confirm,
+          submitText: AppLocalization.confirm,
         );
       },
     );

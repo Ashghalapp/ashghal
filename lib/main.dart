@@ -31,20 +31,11 @@ import 'core/services/app_services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialServices();
-  loadCategories();
+  AppUtil.loadCategories();
   
   // (await SharedPreferences.getInstance()).clear();
   runApp(const MyApp());
   configLoading();
-}
-
-Future<void> loadCategories() async {
-  (await ApiUtil.getCategoriesFromApi()).fold((failure) {
-    AppUtil.hanldeAndShowFailure(failure);
-  }, (resultCategories) {
-    SharedPref.setCategories(resultCategories);
-    // categories.value = resultCategories;
-  });
 }
 
 void configLoading() {

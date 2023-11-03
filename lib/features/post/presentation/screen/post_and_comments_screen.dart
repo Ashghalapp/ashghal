@@ -36,7 +36,6 @@ class PostCommentsScreen extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () => commentController.getPostComments(post.id),
-
       child: SafeArea(
         child: Scaffold(
           // backgroundColor: const Color(0xFFEDF0F6),
@@ -70,8 +69,8 @@ class PostCommentsScreen extends StatelessWidget {
                           commentController.sentCommentCounts.value;
                       return PostCardWidget(
                         post: post,
-                        postMenuButton: PostController()
-                            .getPostMenuButtonValuesWidget(post.id),
+                        postMenuButton:
+                            AppUtil.getPostMenuButtonValuesWidget(post),
                       );
                     }),
 
@@ -128,7 +127,8 @@ class PostCommentsScreen extends StatelessWidget {
                     margin: const EdgeInsets.only(top: 9),
                     padding: const EdgeInsets.only(top: 9),
                     decoration: BoxDecoration(
-                        border: Border(top: BorderSide(color: Get.theme.dividerColor))),
+                        border: Border(
+                            top: BorderSide(color: Get.theme.dividerColor))),
                     child: commentController.sendingComments[i],
                   ),
 
@@ -137,7 +137,8 @@ class PostCommentsScreen extends StatelessWidget {
                     margin: const EdgeInsets.only(top: 9),
                     padding: const EdgeInsets.only(top: 9),
                     decoration: BoxDecoration(
-                        border: Border(top: BorderSide(color: Get.theme.dividerColor))),
+                        border: Border(
+                            top: BorderSide(color: Get.theme.dividerColor))),
                     child: CommentWidget(
                       comment: commentController.commentsList[i],
                     ),

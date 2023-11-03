@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
@@ -204,7 +205,7 @@ class ConversationWidget extends StatelessWidget {
           // Widget dismissed from right to left
           //to prevent the widget from beeing deleted from the tree until it is updated
           //I will fire the updating action here and return false so the dissmisssble widget will not delete the wiget
-          return AppUtil.showConfirmationDialog(
+          return DialogUtil.showConfirmationDialog(
             AppLocalization.cofirmArchiveConversationMessage,
           );
           //   .then((value) {
@@ -216,7 +217,7 @@ class ConversationWidget extends StatelessWidget {
           // return Future.value(false);
         } else if (direction == DismissDirection.startToEnd) {
           // Widget dismissed from left to right
-          return AppUtil.showConfirmationDialog(
+          return DialogUtil.showConfirmationDialog(
             AppLocalization.cofirmDeleteConversationMessage,
           );
         }

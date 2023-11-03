@@ -1,5 +1,6 @@
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core/widget/check_password_widget.dart';
 import 'package:ashghal_app_frontend/features/account/Resetert_Email_Screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/change_email_screen.dart';
@@ -44,7 +45,7 @@ class AccountSettingsGroupWidget extends StatelessWidget {
           label: AppLocalization.changePassword,
           data: "******",
           onTap: () {
-            AppUtil.buildDialogForWidget(
+            DialogUtil.showDialogForWidget(
               child: CheckPasswordWidget(
                 ifValidCheck: () {
                   // close the dialog
@@ -65,7 +66,7 @@ class AccountSettingsGroupWidget extends StatelessWidget {
           label: AppLocalization.changeEmail,
           data: user.email,
           onTap: () {
-            AppUtil.buildDialogForWidget(
+            DialogUtil.showDialogForWidget(
               child: CheckPasswordWidget(
                 ifValidCheck: () {
                   // close the dialog

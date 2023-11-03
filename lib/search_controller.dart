@@ -94,6 +94,9 @@ class AppSearchController extends GetxController {
     Get.focusScope?.unfocus();
     EasyLoading.show(status: AppLocalization.loading);
     if (textController.text.isEmpty) {
+      if (recentPostsList.isEmpty){
+        await getRecentPosts();
+      }
       postsFilterModel.dataList.value = recentPostsList;
     } else {
       await _sendRequestToSearchPosts();

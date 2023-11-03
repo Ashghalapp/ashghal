@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AddressScreen extends StatelessWidget {
-  AddressScreen({super.key});
+  final void Function(
+      {required String city, required String street, String? desc}) onSubmit;
+  AddressScreen({super.key, required this.onSubmit});
 
   final addressController = Get.put(AddressController());
 
@@ -19,6 +21,7 @@ class AddressScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 20),
           Form(
+            key: addressController.addressFormKey,
             child: Column(
               children: [
                 // city form field
@@ -63,13 +66,25 @@ class AddressScreen extends StatelessWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 20),
+
+          // 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: AppGesterDedector(
-              onTap: () {},
               text: AppLocalization.next,
+              onTap: () {
+                Get.focusScope?.unfocus();
+                if (addressController.addressFormKey.currentState?.validate() ??
+                    false) {
+                  onSubmit(
+                    city: addressController.cityController.text,
+                    street: addressController.streetController.text,
+                    desc: addressController.descController.text,
+                  );
+                }
+              },
             ),
           )
         ],

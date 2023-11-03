@@ -6,6 +6,7 @@ import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 import 'package:ashghal_app_frontend/core_api/success/success.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/data/data_sources/user_remote_data_source.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/data/models/user_model.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/add_address_to_user_request.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/convert_user_to_provider_request.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/get_user_followers_followings_request.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/update_user_request.dart';
@@ -110,6 +111,14 @@ class UserRepositoryImpl implements UserRepository {
       return await userRemoteDS.searchForUsers(request);
     });
     return result is List<User> ? Right(result) : Left(result);
+  }
+
+  @override
+  Future<Either<Failure, UserModel>> addAddressToUser(AddAddressToUserRequest request) async{
+    var result = await _handleErrors(() async {
+      return await userRemoteDS.addAddressToUser(request);
+    });
+    return result is UserModel ? Right(result) : Left(result);
   }
 
   @override

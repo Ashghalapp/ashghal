@@ -42,7 +42,7 @@ class SpecificUserAccountScreen extends StatelessWidget {
                 userController.loadNextPageOfSpecificUserPosts();
               }
             },
-            getPopupMenuFunction: userController.getPostMenuButtonValuesWidget,
+            getPopupMenuFunction: AppUtil.getPostMenuButtonValuesWidget,
             isRequestFinishWithoutData:
                 userController.isRequestFinishWithoutData,
             faildDownloadWidget: buildFaildDownloadPostsWidget(),
