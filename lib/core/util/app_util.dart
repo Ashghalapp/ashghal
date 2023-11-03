@@ -1,18 +1,61 @@
 import 'dart:io';
 import 'package:ashghal_app_frontend/config/app_routes.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/dependency_injection.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
+import 'package:ashghal_app_frontend/core_api/api_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/check_password_uc.dart';
+import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/custom_report_buttomsheet.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class AppUtil {
+  static Future<void> loadCategories() async {
+    (await ApiUtil.getCategoriesFromApi()).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+    }, (resultCategories) {
+      SharedPref.setCategories(resultCategories);
+    });
+  }
+  static bool checkUserLoginAndNotifyUser() {
+    if (SharedPref.getCurrentUserData() == null) {
+      DialogUtil.showSignInDialog();
+      return false;
+    } 
+    return true;
+  }
+
+  static PopupMenuButtonWidget getPostMenuButtonValuesWidget(Post post) {
+    final values = [AppLocalization.copy, AppLocalization.report];
+
+    return PopupMenuButtonWidget(
+      items: values,
+      onSelected: (value) {
+        return postPopupMenuButtonOnSelected(value, post);
+      },
+    );
+  }
+
+  static void postPopupMenuButtonOnSelected(String value, Post post) async {
+    if (value == AppLocalization.copy) {
+      ClipboardData clipboardData = ClipboardData(text: post.content);
+      await Clipboard.setData(clipboardData);
+      showMessage(AppLocalization.postContentCopied, Colors.grey);
+    } else if (value == AppLocalization.report) {
+      Get.bottomSheet(CustomBottomSheet());
+    }
+  }
+
   static void hideKeyboard(BuildContext context) {
     FocusScope.of(context).requestFocus(FocusNode());
   }
@@ -29,23 +72,6 @@ class AppUtil {
             AlwaysStoppedAnimation<Color>(color ?? Get.theme.primaryColor),
       ),
     ));
-  }
-
-  static Future buildErrorDialog(String message) {
-    final size = Get.mediaQuery.size;
-    return Get.defaultDialog(
-      title: "Error!",
-      titlePadding: const EdgeInsets.only(top: 20, bottom: 10),
-      content: Container(
-        width: size.width,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Text(message),
-      ),
-      confirm: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: AppGesterDedector(onTap: () => Get.back(), text: "Ok"),
-      ),
-    );
   }
 
   ///دالة لفحص الانترنت
@@ -78,7 +104,7 @@ class AppUtil {
   static void hanldeAndShowFailure(Failure failure, {String prefixText = ""}) {
     if (failure is NotSpecificFailure) {
       // if (!failure.message.contains("DioException")) {
-      buildErrorDialog("$prefixText ${failure.message}");
+      DialogUtil.showErrorDialog("$prefixText ${failure.message}");
       // }
     } else {
       String message = failure.message;
@@ -108,92 +134,11 @@ class AppUtil {
     ));
   }
 
-  static showSignInDialog() {
-    return buildDialogForWidget(
-      child: Container(
-        width: Get.width,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15, top: 5),
-              child: Text(
-                AppLocalization.signUpForAccount,
-                style: Get.textTheme.bodyLarge,
-              ),
-            ),
-            SizedBox(
-              width: Get.width,
-              height: 35,
-              child: TextButton(
-                onPressed: () => Get.toNamed(AppRoutes.logIn),
-                child: Text(AppLocalization.signUp),
-              ),
-            ),
-            const Divider(),
-            SizedBox(
-              width: Get.width,
-              height: 35,
-              child: TextButton(
-                onPressed: () => Get.back(),
-                child: Text(AppLocalization.cancel,
-                    style: Get.textTheme.bodyMedium),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static buildDialog(
-    String title,
-    String message,
-    void Function() onSubmitPresed, {
-    bool isShowCancelButton = true,
-    String? cancelButtonText,
-    String? submitButtonText,
-  }) {
-    return Get.defaultDialog(
-      backgroundColor: Get.theme.dialogBackgroundColor,
-      title: title,
-      titlePadding: title.isEmpty ? EdgeInsets.zero : null,
-      titleStyle:
-          TextStyle(color: Get.theme.primaryColor, fontWeight: FontWeight.bold),
-      middleText: message,
-      actions: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Get.theme.primaryColor,
-          ),
-          onPressed: onSubmitPresed,
-          child: Text(
-            submitButtonText ?? AppLocalization.submit,
-            style: Get.theme.primaryTextTheme.labelSmall,
-          ),
-        ),
-        if (isShowCancelButton)
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Get.theme.primaryColor,
-            ),
-            onPressed: () {
-              Get.back();
-            },
-            child: Text(
-              cancelButtonText ?? AppLocalization.cancel,
-              style: Get.theme.primaryTextTheme.labelSmall,
-            ),
-          )
-      ],
-    );
-  }
-
   static Future<bool> exitApp(BuildContext context) {
-    buildDialog(
-      AppLocalization.warning,
-      AppLocalization.doyouwanttoexitApp,
-      () {
+    DialogUtil.showDialog(
+      title: AppLocalization.warning,
+      message: AppLocalization.doyouwanttoexitApp,
+      onSubmit: () {
         exit(0);
       },
     );
@@ -209,15 +154,6 @@ class AppUtil {
         height: Get.height,
         color: Colors.grey[300],
       ),
-    );
-  }
-
-  static Future buildDialogForWidget({required Widget child}) {
-    return Get.defaultDialog(
-      title: "",
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
-      content: child,
     );
   }
 
@@ -290,31 +226,6 @@ class AppUtil {
       final year = dateTime.year.toString().substring(2);
       return '$day/$month/$year';
     }
-  }
-
-  static Future<bool?> showConfirmationDialog(String confirmText,
-      [String confirmLabel = "yes", String abortLabel = "No"]) async {
-    return Get.defaultDialog<bool>(
-      title: 'Confirmation'.tr,
-      middleText: confirmText,
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Get.back(
-                result: true); // Close the dialog and return true as the result
-          },
-          child: Text(confirmLabel),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Get.back(
-                result:
-                    false); // Close the dialog and return false as the result
-          },
-          child: Text(abortLabel),
-        ),
-      ],
-    );
   }
 
   static String getFormatedFileSize(int bytes) {

@@ -1,5 +1,6 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -118,7 +119,7 @@ class CommentInputWidget extends StatelessWidget {
                           );
                         } else {
                           Get.focusScope?.unfocus();
-                          AppUtil.showSignInDialog();
+                          DialogUtil.showSignInDialog();
                         }
                       }
                     },

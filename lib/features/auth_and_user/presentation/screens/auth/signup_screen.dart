@@ -111,8 +111,9 @@ class SignUpScreen extends GetView<SignUpController> {
                   ),
                   const SizedBox(height: 20),
 
+                  // next button
                   AppGesterDedector(
-                    text: AppLocalization.signIn,
+                    text: AppLocalization.next,
                     color: Theme.of(context).primaryColor,
                     onTap: () async => await controller
                         .submitEmailNamePass(isProviderSignUp ?? false),

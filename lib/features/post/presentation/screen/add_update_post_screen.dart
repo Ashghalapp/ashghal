@@ -18,7 +18,8 @@ class AddUpdatePostScreen extends StatelessWidget {
   // final PostImageController postImageController =
   //     Get.put(PostImageController());
 
-  late final addPostController = Get.find<AddUpdatePostController>();
+  late final addPostController =
+      Get.find<AddUpdatePostController>(tag: isUpdatePost ? 'update' : 'add');
   @override
   Widget build(BuildContext context) {
     if (isUpdatePost && post != null) {
@@ -42,12 +43,11 @@ class AddUpdatePostScreen extends StatelessWidget {
                 children: [
                   // Title Input Field
                   AppTextFormField(
-                    // labelText: "Enter title",
-                    hintText: "Enter title",
+                    labelText: AppLocalization.title,
+                    hintText: AppLocalization.enterTitle,
                     obscureText: false,
                     controller: addPostController.titleController,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     validator: (newValue) {
                       if (newValue?.isEmpty ?? true) {
@@ -59,12 +59,11 @@ class AddUpdatePostScreen extends StatelessWidget {
 
                   // Content Input Field
                   AppTextFormField(
-                    // labelText: "Enter content",
-                    hintText: "Enter content",
+                    labelText: AppLocalization.content,
+                    hintText: AppLocalization.enterContent,
                     obscureText: false,
                     controller: addPostController.contentController,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     minLines: 4,
                     maxLines: 6,
@@ -78,7 +77,6 @@ class AddUpdatePostScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 5),
 
             // Category Dropdown
@@ -107,7 +105,7 @@ class AddUpdatePostScreen extends StatelessWidget {
               obscureText: false,
               controller: addPostController.expireDateController,
               padding: const EdgeInsets.symmetric(horizontal: 15),
-              margin: const EdgeInsets.only(bottom: 5),
+              margin: const EdgeInsets.symmetric(vertical: 5),
               readOnly: true,
               onTap: () async {
                 await _selectDate(addPostController.expireDate);
@@ -126,7 +124,10 @@ class AddUpdatePostScreen extends StatelessWidget {
             // allow comment widget
             Obx(
               () => CheckboxListTile(
-                title: Text('Allow Comment'),
+                title: Text(
+                  AppLocalization.allowComments.tr,
+                  style: Get.textTheme.bodyMedium,
+                ),
                 value: addPostController.allowComment.value,
                 contentPadding: EdgeInsets.only(
                   left: Get.locale?.languageCode == 'en' ? 5 : 0,
@@ -153,22 +154,6 @@ class AddUpdatePostScreen extends StatelessWidget {
                 print(addPostController.imagesPaths);
               },
             ),
-            // PostButton(
-            //   text: isUpdatePost
-            //       ? AppLocalization.update
-            //       : AppLocalization.send,
-            //   onPressed: () async {
-            //     if (isUpdatePost && post != null) {
-            //       addPostController.updatePost(post!.id);
-            //     } else {
-            //       addPostController.submitAddButton();
-            //     }
-            //     print(addPostController.imagesPaths);
-            //   },
-            //   icon: Icons.send,
-            //   secondaryColor: Colors.green,
-            // )
-            // : const Text("")
           ],
         ),
       ),

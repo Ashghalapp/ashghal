@@ -121,7 +121,9 @@ class ShowEditProfileScreen extends StatelessWidget {
           icon: Icons.location_on,
           label: AppLocalization.address,
           data: AppLocalization.tapToAdd,
-          onTap: () => Get.to(AddressScreen()),
+          onTap: () => Get.to(
+            () => AddressScreen(onSubmit: editProfileController.addAddressToUser),
+          ),
         )
       ];
     }
@@ -188,13 +190,16 @@ class ShowEditProfileScreen extends StatelessWidget {
     Widget imageWidget;
     if (editProfileController.imagePath.value.isEmpty &&
         editProfileController.userData.value.imageUrl == null) {
-      imageWidget = SizedBox(width: 150,height: 150,
-        child: ClipRRect(borderRadius: BorderRadius.circular(150),
-          child: Image.asset(fit: BoxFit.fill,
-               editProfileController.userData.value.gender == Gender.male
+      imageWidget = SizedBox(
+        width: 150,
+        height: 150,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(150),
+          child: Image.asset(
+              editProfileController.userData.value.gender == Gender.male
                   ? editProfileController.assetMaleImage
                   : editProfileController.assetFemaleImage,
-             ),
+              fit: BoxFit.fill),
         ),
       );
     } else if (editProfileController.imagePath.value.isNotEmpty) {

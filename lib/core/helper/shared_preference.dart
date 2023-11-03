@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:ashghal_app_frontend/app_library/public_entities/app_category.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/data/models/user_model.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +164,7 @@ class SharedPref {
         return user;
       }
     } catch (e) {
-      AppUtil.buildDialog("Error", e.toString(), () {});
+      DialogUtil.showErrorDialog(e.toString());
     }
     // AppUtil.showMessage(
     //     AppLocalization.thereIsSomethingError, Get.theme.colorScheme.error);

@@ -2,6 +2,7 @@ import 'package:ashghal_app_frontend/app_library/public_entities/app_category.da
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/delete_some_post_multimedia_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/multimedia.dart';
@@ -17,9 +18,8 @@ import '../../../../core/services/dependency_injection.dart' as di;
 
 class AddUpdatePostController extends GetxController {
   final formKey = GlobalKey<FormState>();
-  final titleController = TextEditingController();
-  final contentController = TextEditingController();
-
+  late TextEditingController titleController;
+  late TextEditingController contentController;
   late TextEditingController expireDateController;
   Rx<DateTime> expireDate = Rx(DateTime.now().add(const Duration(days: 30)));
 
@@ -55,10 +55,24 @@ class AddUpdatePostController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    titleController = TextEditingController();
+    contentController = TextEditingController();
     expireDateController = TextEditingController();
     expireDateController.text = expireDate.value.toString().split(' ')[0];
+
+    if (categories.isEmpty) {
+      await AppUtil.loadCategories();
+      categories = SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
+    }
+  }
+
+  @override
+  void onClose() {
+    titleController.dispose();
+    contentController.dispose();
+    expireDateController.dispose();
     
-    // await loadCategories();
+    super.onClose();
   }
 
   // Future<void> loadCategories() async {
@@ -195,10 +209,10 @@ class AddUpdatePostController extends GetxController {
 
   // حذف صورة وحذف مسارها واضافتها الى قائمة الصور التي سيتم حذفها في حالةكانت العملية تعديل بوست
   void removeImage(int index) {
-    AppUtil.buildDialog(
-      AppLocalization.warning,
-      AppLocalization.areYouSureToDelete,
-      () {
+    DialogUtil.showDialog(
+     title: AppLocalization.warning,
+     message: AppLocalization.areYouSureToDelete,
+     onSubmit: () {
         Get.back();
         int multimediaIndex = multiMediaToEdit
             .indexWhere((element) => element.url == imagesPaths[index]);
@@ -210,7 +224,7 @@ class AddUpdatePostController extends GetxController {
         //     .id);
         imagesPaths.removeAt(index);
       },
-      submitButtonText: AppLocalization.ok,
+      submitText: AppLocalization.ok,
     );
   }
 }

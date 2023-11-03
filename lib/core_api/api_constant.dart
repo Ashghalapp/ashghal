@@ -98,6 +98,7 @@ class ApiConstants {
   static String UNFOLLOW_ME = "${USER_ENDPOINT}unfollow-me/";
   static String SEARCH_FOR_USERS = "${USER_ENDPOINT}search";
   static String DELETE_USER_IMAGE = "${USER_ENDPOINT}delete-image";
+  static String ADD_ADDRESS_TO_USER = "${USER_ENDPOINT}add-address-to-user";
   static String DELETE_ACCOUNT = "${USER_ENDPOINT}delete";
 }
 

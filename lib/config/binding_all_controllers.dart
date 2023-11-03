@@ -38,7 +38,8 @@ class BindingAllControllers extends Bindings {
 
     /////////////////////////////////////
     Get.lazyPut(() => PostController(), fenix: true);
-    Get.lazyPut(() => AddUpdatePostController(), fenix: true);
+    Get.lazyPut(() => AddUpdatePostController(), fenix: true, tag: 'add');
+    Get.lazyPut(() => AddUpdatePostController(), fenix: true, tag: 'update');
     Get.lazyPut(() => CurrentUserAccountController(), fenix: true);
     Get.lazyPut(() => ShowEditProfileController(), fenix: true);
     Get.lazyPut(() => ShowEditProviderController(), fenix: true);

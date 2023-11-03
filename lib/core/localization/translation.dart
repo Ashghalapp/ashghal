@@ -121,7 +121,7 @@ class MyTranslation extends Translations {
           "writeComment": "اكتب تعليق",
           "comments": "تعليقات",
           "viewAll": "عرض الكل",
-          "allowComments": "السماح بالتعليقات",
+
           "newComment": "تعليق جديد",
           "top": "أعلى",
           "trending": "الشائع",
@@ -297,9 +297,18 @@ class MyTranslation extends Translations {
           AppLocalization.recentPosts: "حديثه",
           AppLocalization.incompletePosts: "منشورات غير مكتملة",
           AppLocalization.completedPosts: "منشورات مكتملة",
-          AppLocalization.recentPosts: "",
-          AppLocalization.recentPosts: "",
-          AppLocalization.recentPosts: "",
+          AppLocalization.copy: "نسخ",
+          AppLocalization.postContentCopied: "تم نسخ محتوى المنشور",
+          AppLocalization.recentPosts: "", 
+
+          ///// add post message
+          AppLocalization.title: "العنوان", 
+          AppLocalization.enterTitle: "ادخل عنوان", 
+          AppLocalization.content: "المحتوى", 
+          AppLocalization.enterContent: "ادخل محتوى", 
+          AppLocalization.allowComments: "السماح بالتعليقات",
+          AppLocalization.recentPosts: "", 
+          AppLocalization.recentPosts: "", 
 //================================== End Posts Messages ==============================
 
 //====================== Start settings messages =======================

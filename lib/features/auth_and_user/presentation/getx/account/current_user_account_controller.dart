@@ -4,6 +4,7 @@ import 'package:ashghal_app_frontend/core/app_functions.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/show_edit_profile_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
@@ -211,8 +212,8 @@ class CurrentUserAccountController extends GetxController {
   }
 
   /// function to get the operations that can do it on a post as list of string
-  PopupMenuButtonWidget getPostMenuButtonValuesWidget(int postId) {
-    final post = postList.firstWhere((element) => element.id == postId);
+  PopupMenuButtonWidget getPostMenuButtonValuesWidget(Post post) {
+    // final post = postList.firstWhere((element) => element.id == postId);
     final values = ['Edit'];
     if (!post.isComplete) {
       values.add('Mark this post as complete');
@@ -228,44 +229,43 @@ class CurrentUserAccountController extends GetxController {
       items: values,
       //  OperationsOnCurrentUserPostPopupMenuValues.values.asNameMap().keys.toList(),
       onSelected: (value) {
-        return postPopupMenuButtonOnSelected(value, postId);
+        return postPopupMenuButtonOnSelected(value, post);
       },
     );
   }
 
-  void postPopupMenuButtonOnSelected(String value, int postId) async {
+  void postPopupMenuButtonOnSelected(String value, Post post) async {
     if (value == "Edit") {
-      final indexPost = postList.indexWhere((element) => element.id == postId);
-      final post = postList.firstWhere((element) => element.id == postId);
-      if (postList[indexPost].isComplete) {
+      // final indexPost = postList.indexWhere((element) => element.id == post);
+      if (post.isComplete) {
         AppUtil.showErrorToast(AppLocalization.youCanOnlyEditIncompletePost);
       } else {
         Get.to(
           () => AddUpdatePostScreen(
             isUpdatePost: true,
-            post: postList[indexPost],
+            post: post,
           ),
         )?.then((value) {
           if (value != null) {
-            return postList[indexPost] = value;
+            return postList = value;
           }
         });
       }
     } else if (value == "Mark this post as complete") {
-      markPostAsComplete(postId);
+      markPostAsComplete(post.id);
     } else if (value == "Allow comments to this post") {
-      allowCommentForPost(postId);
+      allowCommentForPost(post.id);
     } else if (value == "Disallow comments to this post") {
-      disallowCommentForPost(postId);
+      disallowCommentForPost(post.id);
     } else if (value == "Delete") {
-      AppUtil.buildDialog(
-        AppLocalization.warning,
-        AppLocalization.areYouSureToDelete,
-        () {
+      DialogUtil.showDialog(
+        title: AppLocalization.warning,
+        message: AppLocalization.areYouSureToDelete,
+        onSubmit: () {
           Get.back();
-          deletePost(postId);
+          deletePost(post.id);
         },
-        submitButtonText: AppLocalization.ok,
+        submitText: AppLocalization.ok,
       );
     }
     // else if (value = ""){}

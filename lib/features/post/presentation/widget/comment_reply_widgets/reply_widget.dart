@@ -1,5 +1,6 @@
 //================================================================
 import 'package:ashghal_app_frontend/core/util/bottom_sheet_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -78,10 +79,10 @@ class ReplyWidget extends CommentReplyWidgetAbstract {
 
   @override
   void onDelete() {
-    AppUtil.buildDialog(
-      AppLocalization.warning,
-      AppLocalization.areYouSureToDeleteYourReply,
-      () async {
+    DialogUtil.showDialog(
+      title: AppLocalization.warning,
+      message: AppLocalization.areYouSureToDeleteYourReply,
+      onSubmit: () async {
         Get.back();
         replyController.submitDeleteReplyButton(reply.id);
       },

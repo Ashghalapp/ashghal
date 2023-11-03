@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/services/directory_path.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/download_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/upload_request.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
@@ -201,7 +202,7 @@ class MultimediaController extends GetxController {
       // String filePath = '$storePath/$fileName';
       // filePath = await getUniqueFileName(filePath);
       if (!await File(filePath).exists()) {
-        AppUtil.buildErrorDialog("File doesn't exists");
+        DialogUtil.showErrorDialog("File doesn't exists");
         return false;
       }
       UploadRequest request = UploadRequest(

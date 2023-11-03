@@ -61,9 +61,12 @@ class PostController extends GetxController {
   // RxList<Post> completePostsList = <Post>[].obs;
 
   PostAndPaginationRequestModel allPostsModel = PostAndPaginationRequestModel();
-  PostAndPaginationRequestModel recentPostsModel = PostAndPaginationRequestModel();
-  PostAndPaginationRequestModel alivePostsModel = PostAndPaginationRequestModel();
-  PostAndPaginationRequestModel completePostsModel = PostAndPaginationRequestModel();
+  PostAndPaginationRequestModel recentPostsModel =
+      PostAndPaginationRequestModel();
+  PostAndPaginationRequestModel alivePostsModel =
+      PostAndPaginationRequestModel();
+  PostAndPaginationRequestModel completePostsModel =
+      PostAndPaginationRequestModel();
   // Rx<RequestStatus>
   // final title = ''.obs;
   // final content = ''.obs;
@@ -114,7 +117,7 @@ class PostController extends GetxController {
     }
   }
 
-  /// property to get the last index in which a new page of 
+  /// property to get the last index in which a new page of
   /// filtered posts was retrieved
   int get lastIndexToGetNextPage {
     switch (appliedFilter.value) {
@@ -414,25 +417,35 @@ class PostController extends GetxController {
     });
   }
 
-  PopupMenuButtonWidget getPostMenuButtonValuesWidget(int postId) {
-    return PopupMenuButtonWidget(
-      items: OperationsOnPostPopupMenuValues.values.asNameMap().keys.toList(),
-      onSelected: (value) {
-        return postPopupMenuButtonOnSelected(value, postId);
-      },
-    );
-  }
+  // PopupMenuButtonWidget getPostMenuButtonValuesWidget(Post post) {
+  //   final values = [AppLocalization.copy, AppLocalization.report];
 
-  void postPopupMenuButtonOnSelected(String value, int postId) async {
-    if (value == OperationsOnPostPopupMenuValues.save.name) {
-    } else if (value == OperationsOnPostPopupMenuValues.report.name) {
-      Get.bottomSheet(CustomBottomSheet());
-    } else if (value == OperationsOnPostPopupMenuValues.copy.name) {
-      Post p = alivePostsModel.posts.firstWhere((element) => element.id == postId);
-      ClipboardData clipboardData = ClipboardData(text: p.content);
-      await Clipboard.setData(clipboardData);
-    }
-  }
+  //   return PopupMenuButtonWidget(
+  //     items: values,
+  //     onSelected: (value) {
+  //       return postPopupMenuButtonOnSelected(value, post);
+  //     },
+  //   );
+  // }
+
+  // void postPopupMenuButtonOnSelected(String value, Post post) async {
+  //   if (value == AppLocalization.copy) {
+
+  //     ClipboardData clipboardData = ClipboardData(text: post.content);
+  //     await Clipboard.setData(clipboardData);
+  //   } else if (value == AppLocalization.report) {
+  //     Get.bottomSheet(CustomBottomSheet());
+  //   }
+    // if (value == OperationsOnPostPopupMenuValues.save.name) {
+    // } else if (value == OperationsOnPostPopupMenuValues.report.name) {
+    //   Get.bottomSheet(CustomBottomSheet());
+    // } else if (value == OperationsOnPostPopupMenuValues.copy.name) {
+    //   Post p =
+    //       alivePostsModel.posts.firstWhere((element) => element.id == postId);
+    //   ClipboardData clipboardData = ClipboardData(text: p.content);
+    //   await Clipboard.setData(clipboardData);
+    // }
+  // }
 
   // trying() async{
   //   GetSpecificPostUseCase t = di.getIt();

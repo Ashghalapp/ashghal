@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/app_library/public_request/search_request.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/success/success.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/add_address_to_user_request.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/convert_user_to_provider_request.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/get_user_followers_followings_request.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/Requsets/user_requests.dart/update_user_request.dart';
@@ -35,6 +36,8 @@ abstract class UserRepository {
   Future<Either<Failure, Success>> unfollowMe(int userId);
 
   Future<Either<Failure, List<User>>> searchForUsers(SearchRequest request);
+
+  Future<Either<Failure, UserModel>> addAddressToUser(AddAddressToUserRequest request);
 
   Future<Either<Failure, Success>> deleteUserImage();
   

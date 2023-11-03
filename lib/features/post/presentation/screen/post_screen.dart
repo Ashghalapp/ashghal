@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/posts_builder_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/filled_outline_button.dart';
@@ -49,9 +50,15 @@ class PostsScreen extends StatelessWidget {
                       width: 25,
                       height: 25,
                       colorFilter: const ColorFilter.mode(
-                          AppColors.iconColor, BlendMode.srcIn),
+                        AppColors.iconColor,
+                        BlendMode.srcIn,
+                      ),
                     ),
-                    onPressed: () => Get.to(() => ChatScreen()),
+                    onPressed: () {
+                      if (AppUtil.checkUserLoginAndNotifyUser()) {
+                        Get.to(() => ChatScreen());
+                      }
+                    },
                   ),
                 ],
                 bottom: Obx(() => buildFilterButtons()),
@@ -84,8 +91,7 @@ class PostsScreen extends StatelessWidget {
                       // if (index == searchController.postsList.length - 3 &&
                       //     index != searchController.postLastIndexToGetNextPage) {
                     },
-                    getPopupMenuFunction:
-                        postController.getPostMenuButtonValuesWidget,
+                    getPopupMenuFunction: AppUtil.getPostMenuButtonValuesWidget,
                     isRequestFinishWithoutData:
                         postController.isRequestFinishWithoutData,
                     // searchController.isPostsRequestFinishWithoutData,

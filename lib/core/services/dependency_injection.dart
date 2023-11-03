@@ -12,6 +12,7 @@ import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/reg
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/register_user_with_phone_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/reset_password_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/send_email_verification_code_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/add_address_to_user_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/change_password_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/check_password_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/convert_client_to_provider_uc.dart';
@@ -124,6 +125,7 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => UnfollowUserUseCase(getIt()));
   getIt.registerLazySingleton(() => UnfollowMeUseCase(getIt()));
   getIt.registerLazySingleton(() => SearchForUsersUseCase(getIt()));
+  getIt.registerLazySingleton(() => AddAddrressToUserUseCase(getIt()));
   getIt.registerLazySingleton(() => DeleteUserImageUseCase(getIt()));
   getIt.registerLazySingleton(() => DeleteAccountUseCase(getIt()));
 //=============================End Auth and User Dependencey Injection==================================//

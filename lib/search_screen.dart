@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/posts_builder_widget.dart';
 import 'package:ashghal_app_frontend/core/widget/user_card_widget.dart';
@@ -77,7 +78,7 @@ class AppSearchScreen extends StatelessWidget {
                       }
                     },
                     getPopupMenuFunction:
-                        searchController.getPostMenuButtonValuesWidget,
+                        AppUtil.getPostMenuButtonValuesWidget,
                     isRequestFinishWithoutData:
                         // searchController.isPostsRequestFinishWithoutData,
                         searchController.postsFilterModel.isRequestFinishWithoutData,
