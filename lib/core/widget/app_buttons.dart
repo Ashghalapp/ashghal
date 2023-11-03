@@ -36,7 +36,7 @@ class AppGesterDedector extends StatelessWidget {
           //   Colors.purple.shade900,
           // ],
           // ),
-          color: color ?? Theme.of(context).primaryColorDark,
+          color: color ?? Theme.of(context).primaryColor,
         ),
         child: Text(
           text,

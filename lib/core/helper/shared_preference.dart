@@ -43,6 +43,9 @@ class SharedPref {
   static void setUserLoggedInAsGuest(bool isGuest) {
     _appServices.prefs.setBool('isGuest', isGuest);
   }
+   static bool isUserLoggedInAsGuest() {
+    return _appServices.prefs.getBool('isGuest') ?? false;
+  }
 
   static bool isUserLoggedIn() {
     return _appServices.prefs.getBool('isLoggedIn') ?? false;
@@ -102,6 +105,13 @@ class SharedPref {
     _appServices.prefs.remove('authKey');
 
     _appServices.prefs.clear();
+  }
+  static void logout() {
+    setUserLoggedIn(false);
+    _appServices.prefs.remove('authKey');
+
+    _appServices.prefs.remove('current_user_data');
+    _appServices.prefs.remove('current_user_basic_data');
   }
 
   static void setLanguage(String lang) {

@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
   void logOut() {
-    SharedPref.clearPreferences();
+    SharedPref.logout();
     Get.offAllNamed(AppRoutes.logIn);
   }
 

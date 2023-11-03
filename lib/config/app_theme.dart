@@ -93,6 +93,8 @@ class AppTheme {
           color: AppColors.blackHeadline, fontSize: FontSize.s24),
       titleMedium: getMediumStyle(
           color: AppColors.appColorPrimary, fontSize: FontSize.s16),
+      titleLarge: getMediumStyle(
+          color: AppColors.appColorPrimary, fontSize: FontSize.s28),
       labelSmall:
           getRegularStyle(color: AppColors.textgray, fontSize: FontSize.s12),
       labelMedium: getRegularStyle(
