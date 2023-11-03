@@ -24,7 +24,7 @@ class LoginController extends GetxController {
     emailController = TextEditingController();
     passwordController = TextEditingController();
 
-    emailController.text = "hezbr2@gmail.com";
+    emailController.text = "m7.alsayani.com";
     passwordController.text = "123456";
     super.onInit();
   }
@@ -34,36 +34,6 @@ class LoginController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
-  }
-
-  getData() async {
-    // CancelToken c= CancelToken(); 
-    try {
-      Dio d = Dio(BaseOptions(
-          method: 'get',
-          // persistentConnection: false,
-          // connectTimeout: Duration(seconds: 15),
-          // receiveDataWhenStatusError: false,
-          // followRedirects: false,
-          contentType: "Application/json"));
-      d.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
-      var result = await d.get(
-        "https://10.0.2.2:8000/user/get",
-      ).timeout(const Duration(seconds: 10));
-      // var result = await d.get(
-      //   "https://10.0.2.2:8000/user/get",
-      // ).timeout(Duration(seconds: 10));
-    } on DioExceptionType catch(e){
-      print("eeeeeeeeeeeeeeee$e");
-      throw Exception("eEEEEEEEEEEEEEEEEEEEEx");
-    } 
-    on DioException catch (e) {
-      print(">>>>>>>>>>>>>$e");
-      throw Exception("eEEEEEEEEEEEEEEEEEEEEx");
-    } catch (e) {
-      print("<<<<<<<<<<<<<<<$e>>>>>>>>>>>>>>>");
-      // throw Exception("eEEEEEEEEEEEEEEEEEEEEx$e");
-    }
   }
 
   /// تسجيل الدخول

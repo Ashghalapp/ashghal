@@ -16,11 +16,15 @@ import 'package:get/get.dart';
 
 import '../features/auth_and_user/presentation/getx/Auth/singup_controller.dart';
 import '../features/auth_and_user/presentation/getx/forgetpwd/forgetpassword_controller.dart';
+import '../features/onboarding/presentation/getx/onboarding_controller.dart';
 
-class BindingAllControllers extends Bindings{
+class BindingAllControllers extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => LoginController(), fenix: true,);
+    Get.lazyPut(
+      () => LoginController(),
+      fenix: true,
+    );
     // Get.lazyPut(() => SuccessResetPasswordControllerImp(), fenix: true);
     Get.lazyPut(() => ResetPasswordController(), fenix: true);
     // Get.lazyPut(() => ValidateResetPasswordController(), fenix: true);
@@ -30,7 +34,7 @@ class BindingAllControllers extends Bindings{
     Get.lazyPut(() => SignUpController(), fenix: true);
     // Get.lazyPut(() => VerficationSignUpController(), fenix: true);
     // Get.lazyPut(() => SuccessSignUpControllerImp(), fenix: true);
-
+    Get.lazyPut(() => OnBoardingController(), fenix: true);
 
     /////////////////////////////////////
     Get.lazyPut(() => PostController(), fenix: true);
@@ -39,11 +43,8 @@ class BindingAllControllers extends Bindings{
     Get.lazyPut(() => ShowEditProfileController(), fenix: true);
     Get.lazyPut(() => ShowEditProviderController(), fenix: true);
     Get.lazyPut(() => ChangeEmailController(), fenix: true);
-    
-    
+
     Get.lazyPut(() => AppSearchController(), fenix: true);
     Get.lazyPut(() => SettingsController(), fenix: true);
-
-
   }
 }

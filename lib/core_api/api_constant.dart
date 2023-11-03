@@ -2,7 +2,7 @@
 
 class ApiConstants {
   // static const String baseUrl = "http://10.0.2.2:8000/api/";
-  static const String baseUrl = "http://192.168.197.108:8000/api/";
+  static const String baseUrl = "http://192.168.30.89:8000/api/";
   static const String channelsAutherizingUrl = "${baseUrl}broadcasting/auth";
   //   static const String channelsAutherizingUrl =
   // "http://192.168.0.192:8000/api/broadcasting/auth";

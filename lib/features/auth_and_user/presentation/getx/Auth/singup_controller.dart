@@ -54,9 +54,9 @@ class SignUpController extends GetxController {
       jobDescController = TextEditingController();
       jobCategoryController = TextEditingController();
 
-      emailController.text = "hezbr${Random().nextInt(1000)}@gmail.com";
-      passwordController.text = "123456";
-      nameController.text = "hezbr";
+      // emailController.text = "hezbr${Random().nextInt(1000)}@gmail.com";
+      // passwordController.text = "123456";
+      // nameController.text = "hezbr";
       // phoneController.text = Random(773170413).nextInt(1000000000).toString();
 
       // final ApiResponseModel response =

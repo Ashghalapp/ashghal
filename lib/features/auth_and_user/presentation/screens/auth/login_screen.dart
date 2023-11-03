@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/config/app_icons.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:flutter/material.dart';
@@ -114,6 +115,7 @@ class LoginScreen extends GetView<LoginController> {
                     TextButton(
                       style: TextButton.styleFrom(shadowColor: Colors.white),
                       onPressed: () {
+                        SharedPref.setUserLoggedInAsGuest(true);
                         Get.offNamed(AppRoutes.mainScreen);
                       },
                       child: Text(

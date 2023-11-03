@@ -42,6 +42,9 @@ class SharedPref {
   static void setUserLoggedInAsGuest(bool isGuest) {
     _appServices.prefs.setBool('isGuest', isGuest);
   }
+   static bool isUserLoggedInAsGuest() {
+    return _appServices.prefs.getBool('isGuest') ?? false;
+  }
 
   static bool isUserLoggedIn() {
     return _appServices.prefs.getBool('isLoggedIn') ?? false;

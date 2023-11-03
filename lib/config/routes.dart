@@ -1,5 +1,7 @@
 import 'package:ashghal_app_frontend/core/middleware/app_middleware.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/signup_provider_data_screen.dart';
+import 'package:ashghal_app_frontend/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:ashghal_app_frontend/features/onboarding/splash_screen.dart';
 import 'package:ashghal_app_frontend/main_screen.dart';
 import 'package:get/get.dart';
 
@@ -12,18 +14,18 @@ import '../features/auth_and_user/presentation/screens/test_screen.dart';
 import 'app_routes.dart';
 
 List<GetPage<dynamic>>? routes = [
-  // GetPage(
-  //   name: '/',
-  //   page: () => const LanguageScreen(),
-  //   middlewares: [
-  //     AppMiddleware(),
-  //   ],
-  // ),
-//  GetPage(
-//     name: '/SignInGoogle',
-//     page: () =>   SignInGoogle(),
+  GetPage(
+    name: AppRoutes.splashScreen,
+    page: () => const SplashScreen(),
+    // middlewares: [
+    //   AppMiddleware(),
+    // ],
+  ),
+ GetPage(
+    name: AppRoutes.onBoarding,
+    page: () =>   const OnBoardingScreen(),
 
-//   ),
+  ),
 
   // GetPage(
   //   name: AppRoutes.mainScreen,
@@ -85,7 +87,7 @@ List<GetPage<dynamic>>? routes = [
   GetPage(
     name: AppRoutes.logIn,
     page: () => const LoginScreen(),
-    middlewares: [AppMiddleware()],
+
   ),
   GetPage(
     name: AppRoutes.signUp,

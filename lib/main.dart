@@ -103,7 +103,7 @@ class MyApp extends StatelessWidget {
       // initialRoute: AppRoutes.mainScreen-
 
       // home: SettingScreen(user: SharedPref.getCurrentUserData()),
-      initialRoute: AppRoutes.logIn,
+      initialRoute: AppRoutes.splashScreen,
       // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
       // home: Tester(),
