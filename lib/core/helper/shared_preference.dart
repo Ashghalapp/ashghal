@@ -138,6 +138,11 @@ class SharedPref {
     );
   }
 
+  static setUserFirstOpenAfterLogin(bool value){
+ _appServices.prefs.setBool("is_user_first_open", value);
+  }
+  static bool? get isUserFirstOpen=>_appServices.prefs.getBool("is_user_first_open" );
+
   static User getCurrentUserData() {
     String? data = SharedPref.getString("current_user_data");
     if (data != null) {

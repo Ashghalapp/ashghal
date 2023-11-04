@@ -401,6 +401,21 @@ class MessageRepositoryImp extends MessageRepository {
     }
   }
 
+  
+  @override
+  Future<void> confirmMessageRead(LocalMessage message) async {
+    try {
+      await _messageLocalSource
+          .markMessageAsReadLocally(message.localId,message.conversationId);
+      if (await networkInfo.isConnected && message.remoteId!=null) {
+        ReceivedReadMessageModel r =ReceivedReadMessageModel(id: message.remoteId!, at: DateTime.now());
+        await _confirmReadMessagesRemotely([r]);
+      }
+    } catch (e) {
+      print("Error: " + e.toString());
+    }
+  }
+
   @override
   Future<void> insertNewMessageFromRemote(
       RemoteMessageModel message, int conversationLocalId) async {

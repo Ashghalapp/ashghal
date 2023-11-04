@@ -49,7 +49,7 @@ class ConversationSearchWidget extends StatelessWidget {
                     child: Text(
                       matchedConversation.conversation.userName,
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
                       maxLines: 1,

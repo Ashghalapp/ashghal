@@ -83,13 +83,13 @@ class ConversationWidget extends StatelessWidget {
                                 text: conversation.conversation.userName,
                                 searchText: _screenController
                                     .searchFeildController.text,
-                                fontSize: 20,
+                                fontSize: 15,
                                 // textColor: Colors.black,
                               )
                             : Text(
                                 conversation.conversation.userName,
                                 style: const TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 maxLines: 1,
@@ -157,7 +157,7 @@ class ConversationWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
                         style: TextStyle(
-                          fontSize: 17,
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: conversation.newMessagesCount > 0 &&
                                   !_screenController

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ashghal_app_frontend/app_live_cycle_controller.dart';
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
@@ -62,6 +63,7 @@ class ChatController extends GetxController {
       <ConversationWithCountAndLastMessage>[].obs;
 
   UsersStateController stateController = Get.find();
+  AppLifeCycleController lifeCycleController = Get.find();
   StreamSubscription<List<LocalConversation>>? subscription;
   RxList<int> typingUsers = <int>[].obs;
   final StreamsManager streamsManager = StreamsManager();
@@ -109,6 +111,16 @@ class ChatController extends GetxController {
     getAllConversationsWithLastMessageAndCount().then(
       (_) {
         _syncronizeConversations();
+        lifeCycleController.isAppResumed.listen((value) async {
+          if (!isSubscribed && value) {
+            await _syncronizeConversations();
+            // await subscribeToOnlineUsersChannel();
+          } else if (isSubscribed && !value) {
+            await unsubscribeFromChatChannels();
+          }
+          AppPrint.printInfo(
+              "Listener on ChatController got isAppResumed:$value");
+        });
         AppServices.networkInfo.onStatusChanged.listen(
           (isConected) async {
             if (isConected) {

@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/app_live_cycle_controller.dart';
 import 'package:ashghal_app_frontend/config/app_theme.dart';
 import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
@@ -30,6 +31,7 @@ class AppServices extends GetxService {
 
     // Get.lazyPut(() => OnBoardingControllerImp());
     Get.lazyPut(() => AppLocallcontroller());
+     Get.lazyPut(()=>AppLifeCycleController());
     cameras = await availableCameras();
 
     pusher = PusherService();

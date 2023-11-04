@@ -15,6 +15,7 @@ import 'package:ashghal_app_frontend/features/chat/domain/requests/send_message_
 import 'package:ashghal_app_frontend/features/chat/domain/requests/upload_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/block_unblock_conversation.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/clear_chat.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/confirm_message_read.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/conversation_messages_read.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/dispatch_typing_event.dart';
@@ -63,6 +64,18 @@ class ConversationController extends GetxController {
     // print("Conversation ID" + conversationId.toString());
     ConversationMessagesReadUseCase conversationMessagesRead = di.getIt();
     conversationMessagesRead.call(conversationId);
+    // .then((value) {
+    //   _getAllMessages().then((value) {
+    //     _listenToMultimedia();
+    //     _listenToAllMessages();
+    //   });
+    // });
+  }
+
+    Future<void> markMessageAsRead(LocalMessage message) async {
+    // print("Conversation ID" + conversationId.toString());
+    ConfirmMessageReadUseCase conversationMessagesRead = di.getIt();
+   await conversationMessagesRead.call(message);
     // .then((value) {
     //   _getAllMessages().then((value) {
     //     _listenToMultimedia();
@@ -151,8 +164,14 @@ class ConversationController extends GetxController {
     int index = messages
         .indexWhere((element) => element.message.localId == message.localId);
     if (index == -1) {
+      if(message.readAt==null){
+        markMessageAsRead(message);
+      }else{
       messages.insert(
           0, MessageAndMultimediaModel(message: message, multimedia: null));
+      }
+
+
     } else {
       messages[index] = messages[index].copyWith(message: message);
     }
@@ -164,7 +183,12 @@ class ConversationController extends GetxController {
         (element) => element.message.localId == msgAndMul.message.localId);
     if (index == -1) {
       // AppPrint.printInfo("Inserted");
-      messages.insert(0, msgAndMul);
+      if(msgAndMul.message.readAt==null){
+        markMessageAsRead(msgAndMul.message);
+      }else{
+messages.insert(0, msgAndMul);
+      }
+      
       // messages.add(
       //   MessageAndMultimediaModel(
       //     //we added a random message object with the real localId, and it will be replaced with the real message object when it comes in the messages listner

@@ -15,6 +15,7 @@ import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecase
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/user_usecases/update_user_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_email_uc.dart';
 import 'package:ashghal_app_frontend/features/auth/domain/use_cases/verify_reset_password_code_uc.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/confirm_message_read.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_blocked_conversations.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_conversations_with_last_message_and_count.dart';
@@ -207,6 +208,8 @@ void setupDependencies() {
       () => GetStarredMessagesUseCase(repository: getIt()));
   getIt.registerLazySingleton(
       () => GetAllBlockedConversationsCountUseCase(repository: getIt()));
+        getIt.registerLazySingleton(
+      () => ConfirmMessageReadUseCase(repository: getIt()));
   // repository injection
   getIt.registerLazySingleton<ConversationRepository>(
       () => ConversationRepositoryImp());

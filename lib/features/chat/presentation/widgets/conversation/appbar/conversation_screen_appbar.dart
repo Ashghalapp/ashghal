@@ -239,6 +239,11 @@ class ConversationScreenAppBar extends StatelessWidget
           ),
         ],
       ),
+      titleTextStyle: const TextStyle(
+                // fontWeight: FontWeight.w500,
+                fontSize: 15,
+                // color: Colors.white,
+              ),
       title: InkWell(
         onTap: _screenController.goToChatProfileScreen,
         child: Column(
@@ -247,11 +252,11 @@ class ConversationScreenAppBar extends StatelessWidget
           children: [
             Text(
               conversation.userName,
-              // style: const TextStyle(
-              //   fontWeight: FontWeight.w500,
-              //   fontSize: 20,
-              //   // color: Colors.white,
-              // ),
+              style: const TextStyle(
+                // fontWeight: FontWeight.w500,
+                fontSize: 16,
+                // color: Colors.white,
+              ),
             ),
             const SizedBox(height: 5),
             UserStatusTextWidget(

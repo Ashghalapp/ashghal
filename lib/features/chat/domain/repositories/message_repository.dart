@@ -71,6 +71,8 @@ abstract class MessageRepository {
 
   Future<Either<Failure, bool>> clearChat(ClearChatRequest request);
 
+  Future<void> confirmMessageRead(LocalMessage message);
+
   Future<Either<Failure, List<LocalMessage>>> searchInMessages(
       String searchText);
   Future<Either<Failure, List<MessageAndMultimediaModel>>> getStarredMessages();

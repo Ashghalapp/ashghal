@@ -785,6 +785,23 @@ class MessageLocalSource extends DatabaseAccessor<ChatDatabase>
     return count;
   }
 
+    
+  Future<int> markMessageAsReadLocally(
+      int messageLocalId,conversationLocalId) async {
+    int count = await (update(db.messages)
+          ..where((message) => message.localId.equals(messageLocalId)))
+        .write(
+      MessagesCompanion(
+        readAt: Value(DateTime.now()),
+        readLocally: const Value(true),
+      ),
+    );
+
+    messagesDataUpdatedWithLocalId([messageLocalId]);
+    conversationLastMessageAndCountUpdated(conversationLocalId);
+    return count;
+  }
+
   @override
   Future<List<LocalConversation>> getDeletedLocallyConversations() async {
     return await (select(db.conversations)

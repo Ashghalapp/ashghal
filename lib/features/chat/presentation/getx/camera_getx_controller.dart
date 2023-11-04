@@ -61,7 +61,7 @@ class CameraGetxController extends GetxController {
     if (isFlashOn.value) toggleFlash();
     // List<String>? paths =
     // await
-    Get.to<List<String>>(() => SendingImageViewPage(paths: [file.path]));
+    Get.off<List<String>>(() => SendingImageViewPage(paths: [file.path]));
     // Get.back<List<String>>(result: paths);
   }
 
@@ -76,7 +76,7 @@ class CameraGetxController extends GetxController {
 
     // String? paths =
     // await
-    Get.to<String>(() => SendingVideoViewPage(path: videoPath.path));
+    Get.off<String>(() => SendingVideoViewPage(path: videoPath.path));
     // Get.back<String>(result: paths);
   }
 

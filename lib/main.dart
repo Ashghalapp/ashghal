@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/app_live_cycle_observer.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
 
@@ -43,48 +44,49 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final CommentInputController con = Get.put(CommentInputController(), permanent: true);
     AppLocallcontroller controller = Get.find();
-    return GetMaterialApp(
-      darkTheme: AppTheme.darkTheme,
-      builder: EasyLoading.init(),
-      onInit: () {},
-      title: 'Ashghal App',
-      theme: AppTheme.lightTheme,
-      debugShowCheckedModeBanner: false,
-      locale: controller.language,
-      translations: MyTranslation(),
-      initialBinding: BindingAllControllers(),
-      // theme: ThemeData(
-      //   primaryColor: Colors.blue,
-      //   useMaterial3: true,
-      // ),
-
-      // initialRoute: AppRoutes.singUpScreenJob,
-      // initialRoute: AppRoutes.languageScreen,
-      // initialRoute: HomeScreen(),
-      // home: ProfileAccountHeaderWidget(user: User(id: 1, name: "name", birthDate: DateTime.now(), gender: Gender.male, isBlocked: true, createdAt: DateTime.now(), updatededAt: DateTime.now(), followersUsers: [], followingUsers: [], followersRequestsWait: [], followRequestsSent: []),),
-      // home: CommentCardWidget(comment: CommentController().commentsListToTry[0]),
-      // initialRoute: AppRoutes.singUpJobScreen,
-      // initialRoute: AppRoutes.chooseUserTypeScreen,
-      // initialRoute: AppRoutes.mainScreen-
-      initialRoute: AppRoutes.logIn,
-      // initialRoute: AppRoutes.mainScreen,
-      // initialRoute: AppRoutes.logIn,
-      // home: Tester(),
-      // home: TestDownloading(),
-      // home: Center(
-      //   child: ElevatedButton(
-      //     onPressed: () {
-      //       Get.to(() => ChatScreen());
-      //     },
-      //     child: const Text("Open Chat"),
-      //   ),
-      // ),
-      // initialRoute: '/tester',
-      // initialRoute: AppRoutes.testScreen,
-      getPages: routes,
-      themeMode: ThemeMode.light,
+    return AppLifeCycleManager(
+      child: GetMaterialApp(
+        darkTheme: AppTheme.darkTheme,
+        builder: EasyLoading.init(),
+        onInit: () {},
+        title: 'Ashghal App',
+        theme: AppTheme.lightTheme,
+        debugShowCheckedModeBanner: false,
+        locale: controller.language,
+        translations: MyTranslation(),
+        initialBinding: BindingAllControllers(),
+        // theme: ThemeData(
+        //   primaryColor: Colors.blue,
+        //   useMaterial3: true,
+        // ),
+    
+        // initialRoute: AppRoutes.singUpScreenJob,
+        // initialRoute: AppRoutes.languageScreen,
+        // initialRoute: HomeScreen(),
+        // home: ProfileAccountHeaderWidget(user: User(id: 1, name: "name", birthDate: DateTime.now(), gender: Gender.male, isBlocked: true, createdAt: DateTime.now(), updatededAt: DateTime.now(), followersUsers: [], followingUsers: [], followersRequestsWait: [], followRequestsSent: []),),
+        // home: CommentCardWidget(comment: CommentController().commentsListToTry[0]),
+        // initialRoute: AppRoutes.singUpJobScreen,
+        // initialRoute: AppRoutes.chooseUserTypeScreen,
+        // initialRoute: AppRoutes.mainScreen-
+        initialRoute: AppRoutes.logIn,
+        // initialRoute: AppRoutes.mainScreen,
+        // initialRoute: AppRoutes.logIn,
+        // home: Tester(),
+        // home: TestDownloading(),
+        // home: Center(
+        //   child: ElevatedButton(
+        //     onPressed: () {
+        //       Get.to(() => ChatScreen());
+        //     },
+        //     child: const Text("Open Chat"),
+        //   ),
+        // ),
+        // initialRoute: '/tester',
+        // initialRoute: AppRoutes.testScreen,
+        getPages: routes,
+        themeMode: ThemeMode.light,
+      ),
     );
   }
 }
