@@ -182,15 +182,7 @@ class ReadyVideoMessageWidget extends StatelessWidget {
                 ),
           //if the file is mine, and the file exists value is false, and the path exists
 
-          PressableCircularContianerWidget(
-            childPadding: const EdgeInsets.all(5),
-            onPress: _videoMessageController.playVideo,
-            child: const Icon(
-              Icons.play_arrow_sharp,
-              color: Colors.white,
-              size: 32,
-            ),
-          ),
+          PlayVideoIconWidget(onPlayVideo: _videoMessageController.playVideo),
         ],
 
         // ),

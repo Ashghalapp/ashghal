@@ -285,8 +285,9 @@ class ConversationScreenAppBar extends StatelessWidget
             child: Text(ConversationPopupMenuItemsValues.search.value.tr),
           ),
           PopupMenuItem(
-            value: ConversationPopupMenuItemsValues.media,
-            child: Text(ConversationPopupMenuItemsValues.media.value.tr),
+            value: ConversationPopupMenuItemsValues.mediaDocsLinks,
+            child:
+                Text(ConversationPopupMenuItemsValues.mediaDocsLinks.value.tr),
           ),
           PopupMenuItem(
             value: ConversationPopupMenuItemsValues.goToFirstMessage,

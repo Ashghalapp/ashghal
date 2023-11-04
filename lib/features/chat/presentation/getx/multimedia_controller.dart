@@ -5,6 +5,7 @@ import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/directory_path.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/download_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/upload_request.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
@@ -12,6 +13,7 @@ import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversatio
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/camera_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/sending_image_view_page.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/sending_video_view_page.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/video_player_page.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
@@ -200,6 +202,14 @@ class MultimediaController extends GetxController {
     } while (await File(newFilePath).exists());
 
     return newFilePath;
+  }
+
+  playVideo(LocalMultimedia multimedia) {
+    Get.to(
+      () => VideoPlayerPage(
+        multimedia: multimedia,
+      ),
+    );
   }
 
   // Future<void> pickCameraImage() async {

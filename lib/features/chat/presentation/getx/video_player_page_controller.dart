@@ -204,9 +204,8 @@ class VideoPlayerPageController extends GetxController {
       CachedVideoControllerService(DefaultCacheManager());
 
   final LocalMultimedia multimedia;
-  final bool isMine;
 
-  VideoPlayerPageController({required this.multimedia, required this.isMine});
+  VideoPlayerPageController({required this.multimedia});
 
   @override
   void onInit() {
@@ -222,7 +221,7 @@ class VideoPlayerPageController extends GetxController {
 
       videoPlayerController =
           VideoPlayerController.file(File(multimedia.path!));
-    } else if (!isMine && multimedia.url != null) {
+    } else if (multimedia.url != null) {
       print("Url Video");
 
       videoPlayerController =

@@ -521,5 +521,33 @@ class AppLocalization {
 
   static String gallery = "Gallery";
 
+  static String messageInfo = 'Message Info';
+
+  static String chatSent = 'Sent';
+
+  static String notSentYet = 'Not sent yet';
+
+  static String received = 'Received';
+
+  static String notReceivedYet = 'Not received yet';
+
+  static String read = 'Read';
+
+  static String notReadYet = 'Not read yet';
+
+  static String noMediaFound = "No media found";
+
+  static String noLinksFound = "No links found";
+
+  static String noDocsFound = "No links found";
+
+  static String chatMedia = "Media";
+
+  static String links = "Links";
+
+  static String docs = "Docs";
+
+  static String mediaDocsLinks = "Media, Docs, And Links";
+
 //================================ End chat messages ================================//
 }

@@ -26,7 +26,7 @@ import '../screens/profile_chat_screen.dart';
 
 enum ConversationPopupMenuItemsValues {
   search,
-  media,
+  mediaDocsLinks,
   goToFirstMessage,
   clearChat,
   block,
@@ -39,8 +39,8 @@ extension ConversationPopupMenuItemsValuesExtension
     switch (this) {
       case ConversationPopupMenuItemsValues.search:
         return AppLocalization.search;
-      case ConversationPopupMenuItemsValues.media:
-        return AppLocalization.media;
+      case ConversationPopupMenuItemsValues.mediaDocsLinks:
+        return AppLocalization.mediaDocsLinks;
       case ConversationPopupMenuItemsValues.goToFirstMessage:
         return AppLocalization.goToFirstMessage;
       case ConversationPopupMenuItemsValues.clearChat:
@@ -190,7 +190,7 @@ class ConversationScreenController extends GetxController {
   popupMenuButtonOnSelected(ConversationPopupMenuItemsValues value) {
     if (value == ConversationPopupMenuItemsValues.search) {
       toggleSearchingMode();
-    } else if (value == ConversationPopupMenuItemsValues.media) {
+    } else if (value == ConversationPopupMenuItemsValues.mediaDocsLinks) {
       goToConversationMediaScreen();
     } else if (value == ConversationPopupMenuItemsValues.goToFirstMessage) {
       scrollToFirstOrBottom(false);
@@ -252,16 +252,22 @@ class ConversationScreenController extends GetxController {
   }
 
   void goToConversationMediaScreen() {
-    Get.to(() => ChatMediaLinksDocsScreen());
+    Get.to(() => ChatMediaLinksDocsScreen(
+          userName: currentConversation.userName,
+        ));
   }
 
   void viewMessageInfo() {
     if (selectedMessagesIds.length == 1) {
-      Get.to(
-        () => MessageInfoPage(
-          message: conversationController.messages[selectedMessagesIds[0]],
-        ),
-      );
+      var message = conversationController.messages
+          .firstWhereOrNull((m) => m.message.localId == selectedMessagesIds[0]);
+      if (message != null) {
+        Get.to(
+          () => MessageInfoPage(
+            message: message,
+          ),
+        );
+      }
     }
   }
 

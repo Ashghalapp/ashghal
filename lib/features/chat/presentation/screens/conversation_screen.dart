@@ -2,6 +2,7 @@ import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/audio_controller.dart';
@@ -315,7 +316,7 @@ class ConversationScreen extends StatelessWidget {
     } else if (messageDate == yesterday) {
       difference = "Yesterday";
     } else {
-      difference = AppUtil.formatDateTimeyMMMd(dateTime);
+      difference = DateTimeFormatter.formatDateTimeyMMMd(dateTime);
     }
 
     return difference;

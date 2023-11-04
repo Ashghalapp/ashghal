@@ -2,6 +2,7 @@ import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_and_message.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/audio_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/starred_messages_screen_controller.dart';
@@ -197,41 +198,71 @@ class StarredMessagesScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildAvatar(isMine, currentStarred),
-                            const SizedBox(width: 8),
-                            Text(
-                              isMine
-                                  ? AppLocalization.you.tr
-                                  : currentStarred.conversation.userName,
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: Get.isPlatformDarkMode
-                                    ? null
-                                    : Colors.black,
+                        Expanded(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildAvatar(isMine, currentStarred),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        isMine
+                                            ? AppLocalization.you.tr
+                                            : currentStarred
+                                                .conversation.userName,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Get.isPlatformDarkMode
+                                              ? null
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                    const Icon(Icons.arrow_right),
+                                    Expanded(
+                                      child: Text(
+                                        isMine
+                                            ? currentStarred
+                                                .conversation.userName
+                                            : AppLocalization.you.tr,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Get.isPlatformDarkMode
+                                              ? null
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            const Icon(Icons.arrow_right),
-                            Text(
-                              isMine
-                                  ? currentStarred.conversation.userName
-                                  : AppLocalization.you.tr,
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: Get.isPlatformDarkMode
-                                    ? null
-                                    : Colors.black,
-                              ),
-                            ),
-                          ],
+                              // const Icon(Icons.arrow_right),
+                              // Expanded(
+                              //   child: Text(
+                              //     " isMine ? currentStarred.conversation.userName: AppLocalization.you.tr",
+                              //     overflow: TextOverflow.ellipsis,
+                              //     maxLines: 1,
+                              //     style: TextStyle(
+                              //       fontSize: 17,
+                              //       color: Get.isPlatformDarkMode
+                              //           ? null
+                              //           : Colors.black,
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
                         ),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              AppUtil.formatDateTime(
+                              DateTimeFormatter.formatDateTime(
                                   currentStarred.message.message.createdAt),
                             ),
                             _buildForwardIcon(index),

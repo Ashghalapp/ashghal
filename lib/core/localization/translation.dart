@@ -316,7 +316,20 @@ class MyTranslation extends Translations {
 
           //================================ Start chat messages ================================//
           AppLocalization.conversationDeletedSuccess: "تم حذف المحادثة بنجاح",
-          AppLocalization.conversationDeletedFail: "فشل حذف المحادثة"
+          AppLocalization.conversationDeletedFail: "فشل حذف المحادثة",
+          AppLocalization.messageInfo: "معلومات الرسالة",
+          AppLocalization.chatSent: "تم إرسالها",
+          AppLocalization.notSentYet: "لم يتم إرسالها بعد",
+          AppLocalization.received: "تم إستلامها",
+          AppLocalization.notReceivedYet: "لم يتم إستلامها بعد",
+          AppLocalization.read: "تم قرائتها",
+          AppLocalization.notReadYet: "لم يتم قرائتها بعد",
+          AppLocalization.noMediaFound: "لم يتم العثور على وسائط",
+          AppLocalization.noLinksFound: "لم يتم العثور على روابط",
+          AppLocalization.noDocsFound: "لم يتم العثور على مستندات",
+          AppLocalization.chatMedia: "وسائط",
+          AppLocalization.links: "روابط",
+          AppLocalization.docs: "مستندات",
           //================================ End chat messages ================================//
         },
 

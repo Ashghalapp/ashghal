@@ -244,7 +244,6 @@ class VideoMessageController extends GetxController {
     Get.to(
       () => VideoPlayerPage(
         multimedia: multimedia,
-        isMine: isMine,
       ),
     );
   }

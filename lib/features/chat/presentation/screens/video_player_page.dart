@@ -11,15 +11,13 @@ const ASPECT_RATIO = 3 / 2;
 
 class VideoPlayerPage extends StatelessWidget {
   final LocalMultimedia multimedia;
-  final bool isMine;
+
   final VideoPlayerPageController _controller;
   VideoPlayerPage({
     super.key,
     required this.multimedia,
-    required this.isMine,
   }) : _controller = Get.put(VideoPlayerPageController(
           multimedia: multimedia,
-          isMine: isMine,
         ));
 
   @override

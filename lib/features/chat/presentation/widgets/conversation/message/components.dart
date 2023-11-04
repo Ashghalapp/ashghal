@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/config/app_images.dart';
 import 'package:ashghal_app_frontend/config/app_patterns.dart';
 import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
@@ -15,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 enum MessageStatus {
   notSent,
@@ -137,6 +141,126 @@ class MessageStatusIcon extends StatelessWidget {
   }
 }
 
+class ImageWithPlaceholderWidget extends StatelessWidget {
+  final String path;
+  const ImageWithPlaceholderWidget({super.key, required this.path});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: File(path).exists(),
+      builder: (_, snapShot) {
+        if (snapShot.hasData && snapShot.data!) {
+          return Image.file(File(path));
+        }
+        return Image.asset(AppImages.imagePlaceholder);
+      },
+    );
+  }
+}
+
+class ImageVideoWithPlaceholderWidget extends StatelessWidget {
+  final String path;
+  final MultimediaTypes type;
+  final BoxFit fit;
+  final Function() onPlayVideoPressed;
+  const ImageVideoWithPlaceholderWidget({
+    super.key,
+    required this.path,
+    required this.type,
+    this.fit = BoxFit.cover,
+    required this.onPlayVideoPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: File(path).exists(),
+      builder: (_, snapShot) {
+        if (snapShot.connectionState == ConnectionState.waiting) {
+          return const ImageVideoPlaceHolderWidget(
+            loadingPlaceHolder: true,
+          );
+        }
+        if (snapShot.hasData && snapShot.data != null && snapShot.data!) {
+          if (type == MultimediaTypes.image) {
+            return Image.file(
+              File(path),
+              fit: fit,
+            );
+          } else {
+            return VideoMemoryThumbnialWidget(
+              path: path,
+              onPlayVideoPressed: onPlayVideoPressed,
+            );
+          }
+        }
+        return const ImageVideoPlaceHolderWidget();
+      },
+    );
+  }
+}
+
+class VideoMemoryThumbnialWidget extends StatelessWidget {
+  final String path;
+  final Function() onPlayVideoPressed;
+  const VideoMemoryThumbnialWidget({
+    super.key,
+    required this.path,
+    required this.onPlayVideoPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        FutureBuilder<Uint8List?>(
+          future: getMemoryThumnial(path),
+          builder: (_, innerShot) {
+            if (innerShot.hasData && innerShot.data != null) {
+              return Image.memory(
+                innerShot.data!,
+                fit: BoxFit.cover,
+              );
+            }
+            return const ImageVideoPlaceHolderWidget();
+          },
+        ),
+        PlayVideoIconWidget(onPlayVideo: onPlayVideoPressed)
+      ],
+    );
+  }
+
+  Future<Uint8List?> getMemoryThumnial(String path) async {
+    return await VideoThumbnail.thumbnailData(
+      video: path,
+      imageFormat: ImageFormat.JPEG,
+    );
+  }
+}
+
+class PlayVideoIconWidget extends StatelessWidget {
+  final Function() onPlayVideo;
+  const PlayVideoIconWidget({
+    super.key,
+    required this.onPlayVideo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PressableCircularContianerWidget(
+      childPadding: const EdgeInsets.all(5),
+      onPress: onPlayVideo,
+      child: const Icon(
+        Icons.play_arrow_sharp,
+        color: Colors.white,
+        size: 32,
+      ),
+    );
+  }
+}
+
 class MessageCtreatedAtTextWidget extends StatelessWidget {
   final DateTime date;
   const MessageCtreatedAtTextWidget({
@@ -146,7 +270,7 @@ class MessageCtreatedAtTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(AppUtil.getHourMinuteDateFormat(date));
+    return Text(DateTimeFormatter.getHourMinuteDateFormat(date));
   }
 }
 
@@ -224,7 +348,7 @@ class MessageBodyTextWithUrlsWidget extends StatelessWidget {
           style: urlStyle,
           recognizer: TapGestureRecognizer()
             ..onTap = () {
-              showOptionsBottomSheet(context, urlText);
+              showLinkOptionsBottomSheet(context, urlText);
             },
         ),
       );
@@ -245,45 +369,44 @@ class MessageBodyTextWithUrlsWidget extends StatelessWidget {
       ),
     );
   }
+}
 
-  void showOptionsBottomSheet(BuildContext context, String url) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.open_in_browser),
-              title: const Text('Open'),
-              onTap: () {
-                Navigator.pop(context);
-                launchURL(url);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.content_copy),
-              title: const Text('Copy'),
-              onTap: () {
-                Navigator.pop(context);
-                Clipboard.setData(ClipboardData(text: url));
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void launchURL(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      AppUtil.buildErrorDialog("Could not launch $url");
-    }
+Future<void> launchURL(String url) async {
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url));
+  } else {
+    AppUtil.buildErrorDialog("Could not launch $url");
   }
 }
 
+void showLinkOptionsBottomSheet(BuildContext context, String url) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.open_in_browser),
+            title: const Text('Open'),
+            onTap: () {
+              Navigator.pop(context);
+              launchURL(url);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.content_copy),
+            title: const Text('Copy'),
+            onTap: () {
+              Navigator.pop(context);
+              Clipboard.setData(ClipboardData(text: url));
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 // class CustomTapGestureRecognizer extends TapGestureRecognizer {
 //   final GestureTapCallback onTap;
 //   final Function()? onLongPress;
@@ -378,14 +501,14 @@ class MultimediaSizeTextWidget extends StatelessWidget {
   const MultimediaSizeTextWidget({
     super.key,
     required this.size,
-    required this.isMine,
+    this.isMine,
     this.fontSize = 14,
     this.color,
   });
 
   final int size;
   final double fontSize;
-  final bool isMine;
+  final bool? isMine;
   final Color? color;
   @override
   Widget build(BuildContext context) {
@@ -393,7 +516,7 @@ class MultimediaSizeTextWidget extends StatelessWidget {
       AppUtil.getFormatedFileSize(size),
       style: TextStyle(
         color: color ??
-            (isMine
+            (isMine != null && isMine!
                 ? ChatStyle.ownMessageTextColor.withOpacity(0.7)
                 : Get.isPlatformDarkMode
                     ? ChatStyle.otherMessageTextDarkColor.withOpacity(0.7)
@@ -408,19 +531,19 @@ class MultimediaExtentionTextWidget extends StatelessWidget {
   const MultimediaExtentionTextWidget({
     super.key,
     required this.path,
-    required this.isMine,
+    this.isMine,
     this.fontSize = 14,
   });
 
   final String path;
   final double fontSize;
-  final bool isMine;
+  final bool? isMine;
   @override
   Widget build(BuildContext context) {
     return Text(
       path.split('.').last,
       style: TextStyle(
-        color: isMine
+        color: isMine != null && isMine!
             ? ChatStyle.ownMessageTextColor.withOpacity(0.7)
             : Get.isPlatformDarkMode
                 ? ChatStyle.otherMessageTextDarkColor.withOpacity(0.7)

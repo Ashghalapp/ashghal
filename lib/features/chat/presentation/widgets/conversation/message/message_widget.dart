@@ -10,6 +10,7 @@ import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversa
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/file_message_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/image_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/links_preview_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/reply_message_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/video_message_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
@@ -323,117 +324,5 @@ class MessageWidget extends StatelessWidget {
         ),
       );
     }
-  }
-}
-
-class LinksPreviewWidget extends StatefulWidget {
-  const LinksPreviewWidget({
-    super.key,
-    required this.isMine,
-    required this.message,
-  });
-
-  final bool isMine;
-  final MessageAndMultimediaModel message;
-
-  @override
-  State<LinksPreviewWidget> createState() => _LinksPreviewWidgetState();
-}
-
-class _LinksPreviewWidgetState extends State<LinksPreviewWidget> {
-  PreviewData? previewData;
-  String? link;
-  @override
-  void initState() {
-    link = AppUtil.getURLInText(widget.message.message.body!);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0, top: 5.0),
-      child: Row(
-        children: [
-          // Container(
-          //   decoration: const BoxDecoration(
-          //     color: Colors.black,
-          //     borderRadius: BorderRadius.only(
-          //       topLeft: Radius.circular(30),
-          //       bottomLeft: Radius.circular(30),
-          //     ),
-          //   ),
-          //   width: 7,
-          //   height: 155,
-          //   // child: Col,
-          //   // height: double.maxFinite,
-          // ),
-          Expanded(
-            child: AnyLinkPreview(
-              // previewHeight: 170,
-              link: link!,
-              displayDirection: UIDirection.uiDirectionVertical,
-              showMultimedia: true,
-              bodyMaxLines: 6,
-              bodyTextOverflow: TextOverflow.ellipsis,
-              titleStyle: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
-              bodyStyle: const TextStyle(color: Colors.black, fontSize: 12),
-              errorBody: 'Show my custom error body',
-              errorTitle: 'Show my custom error title',
-              errorWidget: const SizedBox.shrink(),
-              // Container(
-              //   color: Colors.grey[300],
-              //   child: const Text('Oops!'),
-              // ),
-              // errorImage: "https://google.com/",
-              cache: const Duration(days: 7),
-              // backgroundColor: Colors.grey[300],
-              backgroundColor: widget.isMine
-                  ? Colors.black38
-                  : Get.isPlatformDarkMode
-                      ? Colors.white38
-                      : Colors.white60,
-              // borderRadius: 15,
-              removeElevation: false,
-              boxShadow: const [BoxShadow(blurRadius: 1, color: Colors.grey)],
-              onTap: () async {
-                if (await canLaunchUrl(Uri.parse(link!))) {
-                  await launchUrl(Uri.parse(link!));
-                } else {
-                  AppUtil.buildErrorDialog("Could not launch $link");
-                }
-              }, // This disables tap event
-            ),
-          ),
-        ],
-      ),
-    );
-    // LinkPreview(
-    //   openOnPreviewImageTap: true,
-    //   openOnPreviewTitleTap: true,
-    //   hideImage: false,
-    //   width: double.maxFinite,
-    //   previewBuilder: (ctx,data){
-
-    //   },
-    //   //  widget.isMine
-    //   //     ? MediaQuery.sizeOf(context).width - 120
-    //   //     : MediaQuery.sizeOf(context).width - 140,
-    //   enableAnimation: true,
-    //   onPreviewDataFetched: (data) {
-    //     setState(() {
-    //       previewData = data;
-    //     });
-    //   },
-    //   onLinkPressed: (link) {},
-    //   previewData: previewData,
-    //   text: widget.message.message.body!,
-
-    //   // width: MediaQuery.of(context).size.width,
-    // );
   }
 }

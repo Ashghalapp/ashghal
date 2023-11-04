@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
@@ -23,8 +24,9 @@ class ConversationWidget extends StatelessWidget {
   final ChatController _chatController = Get.find();
 
   String getLastMessageStringDate() {
-    return AppUtil.formatDateTime(conversation.lastMessage?.createdAt ??
-        conversation.conversation.updatedAt);
+    return DateTimeFormatter.formatDateTime(
+        conversation.lastMessage?.createdAt ??
+            conversation.conversation.updatedAt);
   }
 
   bool get lastMessageMine => conversation.lastMessage == null

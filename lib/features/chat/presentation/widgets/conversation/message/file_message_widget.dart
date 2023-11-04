@@ -133,7 +133,8 @@ class FileMessageWidget extends StatelessWidget {
 
 class ReadyFileMessageWidget extends StatelessWidget {
   final LocalMultimedia multimedia;
-  final bool isMine;
+  final bool? isMine;
+  final double leftBorderRaduis;
   openfile() {
     if (multimedia.path != null) {
       try {
@@ -150,16 +151,15 @@ class ReadyFileMessageWidget extends StatelessWidget {
   const ReadyFileMessageWidget({
     super.key,
     required this.multimedia,
-    required this.isMine,
+    this.isMine,
+    this.leftBorderRaduis = 5,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        if (multimedia.path != null) {
-          // _controller.openfile();
-        }
+      onTap: () async {
+        await openfile();
       },
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -172,7 +172,9 @@ class ReadyFileMessageWidget extends StatelessWidget {
                 width: 90,
                 decoration: BoxDecoration(
                   color: Colors.white70,
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(leftBorderRaduis),
+                      bottomLeft: Radius.circular(leftBorderRaduis)),
                   image: const DecorationImage(
                     fit: BoxFit.contain,
                     image: AssetImage(
@@ -189,24 +191,28 @@ class ReadyFileMessageWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                // mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    multimedia.fileName,
-                    softWrap: true,
-                    textAlign: TextAlign.right,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: isMine
-                          ? ChatStyle.ownMessageTextColor
-                          : Get.isPlatformDarkMode
-                              ? ChatStyle.otherMessageTextDarkColor
-                              : ChatStyle.otherMessageTextLightColor,
-                      fontSize: 17,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        multimedia.fileName,
+                        softWrap: true,
+                        textAlign: TextAlign.left,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: isMine != null && isMine!
+                              ? ChatStyle.ownMessageTextColor
+                              : Get.isPlatformDarkMode
+                                  ? ChatStyle.otherMessageTextDarkColor
+                                  : ChatStyle.otherMessageTextLightColor,
+                          fontSize: 17,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 15),
                   Row(
                     children: [
                       MultimediaSizeTextWidget(
