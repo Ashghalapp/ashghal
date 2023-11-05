@@ -89,8 +89,8 @@ class MoreAccountDetailsScreen extends StatelessWidget {
       groupTitle: AppLocalization.address,
       labeledData: [
         if (address.city != null) {'label': AppLocalization.city, 'data': address.city!},
-        if (address.street != null)
-          {'label': AppLocalization.street, 'data': address.street!},
+        if (address.district != null)
+          {'label': AppLocalization.street, 'data': address.district!},
         if (address.desc != null)
           {'label':AppLocalization.description, 'data': address.desc!},
       ],

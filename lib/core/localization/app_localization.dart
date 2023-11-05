@@ -12,6 +12,7 @@ class AppLocalization {
   static String ended = 'ended'.tr;
   static String ago = 'ago'.tr;
   static String current = 'current'.tr;
+  static String skip = 'skip'.tr;
 
   static String selected = 'selected'.tr;
   static String you = 'you'.tr;
@@ -64,7 +65,7 @@ class AppLocalization {
   static String next = 'next'.tr;
 
   static String pleaseGrantRequiredPermission =
-      "pleaseGrantRequiredPermission".tr;
+      "please Grant Required Location Permission".tr;
 
   static String noInternet = 'noInternet.'.tr;
   static String noData = 'noData'.tr;

@@ -146,7 +146,7 @@ class ShowEditProfileScreen extends StatelessWidget {
         ),
 
       // street
-      if (editProfileController.userData.value.address?.street != null)
+      if (editProfileController.userData.value.address?.district != null)
         SettingItemWidget(
           icon: Icons.location_history,
           label: AppLocalization.street,

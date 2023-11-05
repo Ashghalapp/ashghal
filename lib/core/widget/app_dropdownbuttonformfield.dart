@@ -37,7 +37,7 @@ class AppDropDownButton extends StatelessWidget {
         ...items.map((e) {
           return DropdownMenuItem(
             value: e['id'],
-            child: Text("${e['name']}"),
+            child:Text("${e['name']}"),
           );
         }).toList()
       ],

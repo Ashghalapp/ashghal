@@ -49,15 +49,15 @@ class SignUpProviderDataScreen extends StatelessWidget {
               key: formKey,
               child: Column(
                 children: [
-                  AppDropDownButton(
-                    items: categories,
-                    hintText: AppLocalization.selectCategory,
-                    labelText: AppLocalization.category,
-                    onChange: (selectedValue) {
-                      categoryController.text =
-                          selectedValue?.toString() ?? "";
-                    },
-                  ),
+                    AppDropDownButton(
+                      items: categories,
+                      hintText: AppLocalization.selectCategory,
+                      labelText: AppLocalization.category,
+                      onChange: (selectedValue) {
+                        categoryController.text =
+                            selectedValue?.toString() ?? "";
+                      },
+                    ),
 
                   const SizedBox(height: 20),
 

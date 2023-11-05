@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+
 
 import '../../../../app_library/app_data_types.dart';
 import '../../../../app_library/public_entities/address.dart';
@@ -13,7 +13,7 @@ class RegisterUserRequest {
   final String? phoneVerifiedAt;	//should be included if the registration by phone
   final DateTime birthDate;
   final Gender gender;
-  final Uint8List? image;
+  final String? image;
   final Address? address;
   final Provider? provider;
   final DateTime? updatedAt;
@@ -41,7 +41,7 @@ class RegisterUserRequest {
     required String emailVerificationCode,
     required DateTime birthDate,
     required Gender gender,
-    Uint8List? image,
+    String? image,
     Address? address,
     Provider? provider,
     DateTime? updatedAt,
@@ -66,7 +66,7 @@ class RegisterUserRequest {
     required String phoneVerifiedAt,
     required DateTime birthDate,
     required Gender gender,
-    Uint8List? image,
+    String? image,
     Address? address,
     Provider? provider,
         DateTime? updatedAt,

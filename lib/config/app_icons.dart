@@ -11,7 +11,10 @@ class AppIcons {
   static const String search = 'assets/icons/search.svg';
   static const String plus = 'assets/icons/Plus.svg';
   static const String heart = 'assets/icons/heart.svg';
+
+
   static const String arrowLeft = 'assets/icons/Arrow_Left.svg';
+  static const String arrowDown = 'assets/icons/Arrow_Down.svg';
 
   static const String homeBorder = 'assets/icons/Home_Border.svg';
   static const String searchBorder = 'assets/icons/Search_Border.svg';
@@ -19,6 +22,9 @@ class AppIcons {
   static const String heartBorder = 'assets/icons/Heart_Border.svg';
   static const String userBorder = 'assets/icons/User_Border.svg';
   static const String chatBorder = 'assets/icons/chat_border.svg';
+
+  static const String calendarBorder = 'assets/icons/Calendar_border.svg';
+  static const String calendar = 'assets/icons/Calendar.svg';
 
   static const String employees = 'assets/icons/employees.svg';
   static const String employeesBorder = 'assets/icons/employees_Border.svg';
