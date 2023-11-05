@@ -1,5 +1,6 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/app_icons.dart';
+import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
@@ -26,58 +27,64 @@ class AppSearchScreen extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    // category drop down
-                    Flexible(
-                      child: AppDropDownButton(
-                        margin: EdgeInsets.only(
-                          left: Get.locale?.languageCode == 'ar' ? 8 : 0,
-                          right: Get.locale?.languageCode == 'en' ? 8 : 0,
+                GetX<AppSearchController>(builder: (_) {
+                  return Row(
+                    children: [
+                      // category drop down
+                      if (searchController.appliedFilter.value !=
+                          SearchFilters.users)
+                        Flexible(
+                          child: AppDropDownButton(
+                            labelText: AppLocalization.category,
+                            initialValue: searchController.selectedCategory.value,
+                            items: searchController.categories
+                                .map((element) => element.toJson())
+                                .toList(),
+                            margin: EdgeInsets.only(
+                              left: Get.locale?.languageCode == 'ar' ? 8 : 0,
+                              right: Get.locale?.languageCode == 'en' ? 8 : 0,
+                            ),
+                            onChange: (newValue) {
+                              searchController.selectedCategory.value =
+                                  int.parse(newValue?.toString() ?? "1");
+                            },
+                          ),
                         ),
-                        labelText: AppLocalization.category,
-                        items: searchController.categories
-                            .map((element) => element.toJson())
-                            .toList(),
-                        onChange: (newValue) {
-                          searchController.selectedCategory =
-                              int.parse(newValue?.toString() ?? "1");
-                        },
-                      ),
-                    ),
 
-                    // city dropdown
-                    Flexible(
-                      child: AppDropDownButton(
-                        labelText: AppLocalization.city,
-                        items: searchController.categories
-                            .map((element) => element.toJson())
-                            .toList(),
-                        margin: EdgeInsets.only(
-                          left: Get.locale?.languageCode == 'ar' ? 8 : 0,
-                          right: Get.locale?.languageCode == 'en' ? 8 : 0,
+                      // city dropdown
+                      Flexible(
+                        child: AppDropDownButton(
+                          labelText: AppLocalization.city,
+                          initialValue: searchController.selectedCityId.value,
+                          items: searchController.cities
+                              .map((city) => city.toJson())
+                              .toList(),
+                          margin: EdgeInsets.only(
+                            left: Get.locale?.languageCode == 'ar' ? 8 : 0,
+                            right: Get.locale?.languageCode == 'en' ? 8 : 0,
+                          ),
+                          onChange: searchController.onCityChange,
                         ),
-                        onChange: (newValue) {
-                          searchController.selectedCategory =
-                              int.parse(newValue?.toString() ?? "1");
-                        },
                       ),
-                    ),
 
-                    // street dropdown
-                    Flexible(
-                      child: AppDropDownButton(
-                        items: searchController.categories
-                            .map((element) => element.toJson())
-                            .toList(),
-                        onChange: (newValue) {
-                          searchController.selectedCategory =
-                              int.parse(newValue?.toString() ?? "1");
-                        },
+                      // district dropdown
+                      Flexible(
+                        child: AppDropDownButton(
+                          labelText: AppLocalization.district,
+                          initialValue:
+                              searchController.selectedDistrictId.value,
+                          items: searchController.districts
+                              .map((district) => district.toJson())
+                              .toList(),
+                          onChange: (newValue) {
+                            searchController.selectedCategory.value =
+                                int.parse(newValue?.toString() ?? "1");
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  );
+                }),
 
                 // search textFormField and search icon button
                 Row(

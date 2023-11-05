@@ -1,5 +1,6 @@
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
+import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
@@ -29,7 +30,9 @@ class ShowEditProfileController extends GetxController {
   RxString selectedGender = "".obs;
   Rx<DateTime> birthDate = DateTime.now().obs;
   RxString city = "".obs;
-  RxString street = "".obs;
+  Rx<int?> selectedCityId = Rx(null);
+  Rx<int?> selectedDistrictId = Rx(null);
+  RxString district = "".obs;
   RxString addressDesc = "".obs;
 
   TextEditingController categoryController = TextEditingController();
@@ -51,7 +54,15 @@ class ShowEditProfileController extends GetxController {
   void onInit() {
     super.onInit();
     userData = Rx(getCurrentUserDataOffline);
+
     setValues();
+  }
+
+  List<District>? getDistricts() {
+    if (selectedCityId.value != null) {
+      return City.getCityById(selectedCityId.value!)?.districts;
+    }
+    return null;
   }
 
   /// set the user data to variables
@@ -60,11 +71,24 @@ class ShowEditProfileController extends GetxController {
     name.value = userData.value.name;
     selectedGender.value = userData.value.gender.name;
     birthDate.value = userData.value.birthDate;
+    selectedCityId.value = null;
     if (userData.value.address != null) {
       city.value = userData.value.address?.city ?? "";
-      street.value = userData.value.address?.district ?? "";
+      district.value = userData.value.address?.district ?? "";
       addressDesc.value = userData.value.address?.desc ?? "";
+
+      selectedCityId.value =
+          City.getCityByNameEn(userData.value.address!.city!)?.id;
+      selectedDistrictId.value =
+          City.getCityByNameEn(userData.value.address!.city!)
+              ?.getDistrictByNameEn(userData.value.address!.district!)
+              ?.id;
     }
+    printInfo(info:  City.getCityByNameEn(userData.value.address!.city!)?.id.toString()?? "nuuull");
+    printInfo(info: City.getCityByNameEn(userData.value.address!.city!)
+              ?.getDistrictByNameEn(userData.value.address!.district!)
+              ?.id.toString()?? "nulll");
+    printInfo(info: selectedDistrictId.value?.toString()??"");
   }
 
   bool areThereChanges() =>
@@ -73,7 +97,12 @@ class ShowEditProfileController extends GetxController {
       selectedGender.value != userData.value.gender.name ||
       birthDate.value != userData.value.birthDate ||
       city.value != (userData.value.address?.city ?? "") ||
-      street.value != (userData.value.address?.district ?? "") ||
+      City.getCityById(selectedCityId.value ?? -1)?.nameEn !=
+          userData.value.address?.city ||
+      City.getCityById(selectedCityId.value ?? -1)
+              ?.getDistrictsNameById(selectedDistrictId.value ?? -1) !=
+          userData.value.address?.district ||
+      district.value != (userData.value.address?.district ?? "") ||
       addressDesc.value != (userData.value.address?.desc ?? "");
 
   UpdateUserRequest getUpdatedDataRequest() {
@@ -91,19 +120,33 @@ class ShowEditProfileController extends GetxController {
     // وكذلك في حالة تم التعديل على بيانات الموقع
     if (userData.value.address != null) {
       if (city.value != userData.value.address?.city ||
-          street.value != userData.value.address?.district ||
-          addressDesc.value != userData.value.address?.desc) {
+          district.value != userData.value.address?.district ||
+          addressDesc.value != userData.value.address?.desc ||
+          City.getCityById(selectedCityId.value ?? -1)?.nameEn !=
+              userData.value.address?.city ||
+              City.getCityById(selectedCityId.value ?? 1)
+                  ?.getDistrictsNameById(
+                      selectedDistrictId.value ??
+                          1) != userData.value.address?.district
+              ) {
         Address address = Address.updateRequest(
-          city: city.value != userData.value.address?.city ? city.value : null,
-          street: street.value != userData.value.address?.district
-              ? street.value
-              : null,
+          // city: city.value != userData.value.address?.city ? city.value : null,
+          city: City.getCityById(selectedCityId.value ?? -1)?.nameEn,
+          district: City.getCityById(selectedCityId.value ?? 1)
+                  ?.getDistrictsNameById(
+                      selectedDistrictId.value ??
+                          1),
+          // district.value != userData.value.address?.district
+          //     ? district.value
+          //     : null,
           desc: addressDesc.value != userData.value.address?.desc
               ? addressDesc.value
               : null,
         );
         request.address = address;
       }
+
+    printInfo(info: "<<<<<<<<Address: ${request.address?.toJson()}>>>>>>>>");
     }
 
     print("<<<<<<<<<<${request.address?.toJson()}>>>>>>>>>>");
@@ -111,6 +154,15 @@ class ShowEditProfileController extends GetxController {
   }
 
   Future<void> updateUserData() async {
+    printInfo(
+        info: City.getCityById(selectedCityId.value ?? -1)?.nameEn ?? "nuuul");
+    printInfo(info: selectedDistrictId.value.toString());
+    printInfo(info: City.getCityById(selectedCityId.value ?? 1)
+                  ?.getDistrictsNameById(
+                      selectedDistrictId.value ??
+                          1)?? "");
+    printInfo(info: userData.value.address?.district?.toString() ?? "nulll");
+    // return;
     EasyLoading.show(status: AppLocalization.loading);
     final UpdateUserUseCase updateUserUS = di.getIt();
 

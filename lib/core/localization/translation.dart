@@ -392,6 +392,7 @@ class MyTranslation extends Translations {
           AppLocalization.posts: "منشورات",
           AppLocalization.users: "مستخدمين",
           AppLocalization.writeToSearch: "اكتب للبحث",
+          AppLocalization.district: "المديرية",
 //================================ End Search messages ==============================
 
 

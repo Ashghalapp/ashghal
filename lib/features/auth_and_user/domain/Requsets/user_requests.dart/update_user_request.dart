@@ -28,7 +28,7 @@ class UpdateUserRequest {
 
     print("<<<<<<<<${address?.toJson()}>>>>>>>>");
     print("<<<<<<<<${birthDate}>>>>>>>>");
-    return FormData.fromMap({
+    var data = FormData.fromMap({
       if (name != null) 'name': name,
       if (image != null) 'image': image,
       if (birthDate != null) 'birth_date': birthDate,
@@ -36,5 +36,8 @@ class UpdateUserRequest {
       if (address != null) 'address': address!.toJson(),
       if (provider != null) 'provider': provider!.toJson(),
     }, ListFormat.multiCompatible);
+
+    print("===Update user request${data.fields}>>>>>>>>>>>>>>");
+    return data;
   }
 }

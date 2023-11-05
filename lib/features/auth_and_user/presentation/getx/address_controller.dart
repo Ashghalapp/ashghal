@@ -11,7 +11,7 @@ class AddressController extends GetxController {
   RxList<District> districts= <District>[].obs;
 
   Rx<int?> selectedCityId = Rx(null);
-  Rx<int?> selectedDistrict = Rx(null);
+  Rx<int?> selectedDistrictId = Rx(null);
 
   @override
   void onInit() {

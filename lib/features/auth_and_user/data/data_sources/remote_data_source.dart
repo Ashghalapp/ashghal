@@ -87,7 +87,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     print(":::::::: in registerUserWithEmail");
 
     ApiResponseModel response =
-        await dio.post(ApiConstants.REGISTER_USER, request.toJson());
+        await dio.post(ApiConstants.REGISTER_USER, await request.toJson());
     if (response.status) {
       // SharedPref.setUserToken(response.data['token']);
       print("::: S End registerUserWithEmail func in remote datasource");

@@ -71,6 +71,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<User> updateUser(UpdateUserRequest request) async {
+    
     return UserModel.fromJson((await _sendRequest(
       method: 'post',
       endpoint: ApiConstants.UPDATE_USER,

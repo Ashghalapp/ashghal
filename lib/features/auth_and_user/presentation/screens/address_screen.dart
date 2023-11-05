@@ -1,5 +1,7 @@
 import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core/util/validinput.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
@@ -120,7 +122,7 @@ class AddressScreen extends StatelessWidget {
                     labelText: 'District',
                     hintText: 'Select a district',
                     onChange: (selectedValue) {
-                      addressController.selectedDistrict.value =
+                      addressController.selectedDistrictId.value =
                           int.parse(selectedValue?.toString() ?? '1');
                       // controller.selectedDistrict =
                       //     int.parse(selectedValue.toString());
@@ -148,89 +150,100 @@ class AddressScreen extends StatelessWidget {
 
           // submit address button
           AppGesterDedector(
-            text: AppLocalization.next,
-            onTap: () {
-              String cityName = "";
-              String districtName = "";
-              // final int cityIndex = citiess.indexWhere(
-              //     (city) => city.id == addressController.selectedCity.value);
+              text: AppLocalization.next,
+              onTap: () {
+                try {
+                  String cityName = "";
+                  String districtName = "";
+                  // final int cityIndex = citiess.indexWhere(
+                  //     (city) => city.id == addressController.selectedCity.value);
 
-              final City? selectedCity = City.getCityById(
-                  addressController.selectedCityId.value ?? -1);
-              // cityName = City.getCityNameById(
-              //         citiess, addressController.selectedCityId.value ?? -1) ??
-              //     "";
+                  final City? selectedCity = City.getCityById(
+                      addressController.selectedCityId.value ?? -1);
+                  // cityName = City.getCityNameById(
+                  //         citiess, addressController.selectedCityId.value ?? -1) ??
+                  //     "";
 
-              final District? selectedDistrict = selectedCity?.getDistrictById(
-                  addressController.selectedDistrict.value ?? -1);
-              districtName = "1";
+                  final District? selectedDistrict =
+                      selectedCity?.getDistrictById(
+                          addressController.selectedDistrictId.value ?? -1);
 
-               printInfo(info: "========city index: ${addressController.selectedCityId.value}");
-               printInfo(info: "========district index: ${addressController.selectedDistrict.value}");
+                  printInfo(
+                      info:
+                          "========city index: ${addressController.selectedCityId.value}");
+                  printInfo(
+                      info:
+                          "========district index: ${addressController.selectedDistrictId.value}");
 
-              // // final int districtIndex = citiess
-              // //         .firstWhere((city) =>
-              // //             city.id == addressController.selectedCityId.value)
-              // //         .cityDistricts[addressController.selectedCityId.value]
-              // //         ?.indexWhere((district) =>
-              // //             district['id'] ==
-              // //             addressController.selectedDistrict.value) ??
-              // //     -1;
-              // cityDistricts[addressController.selectedCityId.value]?.indexWhere(
-              //         (district) =>
-              //             district['id'] ==
-              //             addressController.selectedDistrict.value) ??
-              //     -1;
+                  // // final int districtIndex = citiess
+                  // //         .firstWhere((city) =>
+                  // //             city.id == addressController.selectedCityId.value)
+                  // //         .cityDistricts[addressController.selectedCityId.value]
+                  // //         ?.indexWhere((district) =>
+                  // //             district['id'] ==
+                  // //             addressController.selectedDistrict.value) ??
+                  // //     -1;
+                  // cityDistricts[addressController.selectedCityId.value]?.indexWhere(
+                  //         (district) =>
+                  //             district['id'] ==
+                  //             addressController.selectedDistrict.value) ??
+                  //     -1;
 
-              printInfo(info: "<<<<<<<<<city name: ${selectedCity?.name}");
-              printInfo(
-                  info: "<<<<<<<<<district name: ${selectedDistrict?.name}");
-              // final int cityIndex = cities.indexWhere(
-              //     (city) => city['id'] == addressController.selectedCity.value);
+                  printInfo(info: "<<<<<<<<<city name: ${selectedCity?.name}");
+                  printInfo(
+                      info:
+                          "<<<<<<<<<district name: ${selectedDistrict?.name}");
+                  // final int cityIndex = cities.indexWhere(
+                  //     (city) => city['id'] == addressController.selectedCity.value);
 
-              // printInfo(info: "========city index: $cityIndex");
-              // if (cityIndex != -1) {
-              //   cityName = cities[cityIndex]['name_en'].toString();
-              // }
+                  // printInfo(info: "========city index: $cityIndex");
+                  // if (cityIndex != -1) {
+                  //   cityName = cities[cityIndex]['name_en'].toString();
+                  // }
 
-              // final int districtIndex =
-              //     cityDistricts[addressController.selectedCity.value]
-              //             ?.indexWhere((district) =>
-              //                 district['id'] ==
-              //                 addressController.selectedDistrict.value) ??
-              //         -1;
-              // printInfo(info: "========district index: $districtIndex");
-              // if (districtIndex != -1) {
-              //   districtName = cityDistricts[addressController.selectedCity]
-              //               ?[districtIndex]['name_en']
-              //           .toString() ??
-              //       "";
-              // }
-              // printInfo(info: "<<<<<<<<<city name: $cityName");
-              // printInfo(info: "<<<<<<<<<district name: $districtName");
+                  // final int districtIndex =
+                  //     cityDistricts[addressController.selectedCity.value]
+                  //             ?.indexWhere((district) =>
+                  //                 district['id'] ==
+                  //                 addressController.selectedDistrict.value) ??
+                  //         -1;
+                  // printInfo(info: "========district index: $districtIndex");
+                  // if (districtIndex != -1) {
+                  //   districtName = cityDistricts[addressController.selectedCity]
+                  //               ?[districtIndex]['name_en']
+                  //           .toString() ??
+                  //       "";
+                  // }
+                  // printInfo(info: "<<<<<<<<<city name: $cityName");
+                  // printInfo(info: "<<<<<<<<<district name: $districtName");
 
-              Get.focusScope?.unfocus();
-              if (addressController.addressFormKey.currentState?.validate() ??
-                  false) {
-                onSubmit(
-                  city: cityName,
-                  district: districtName,
-                  desc: addressController.descController.text,
-                );
+                  Get.focusScope?.unfocus();
+                  if (addressController.addressFormKey.currentState
+                          ?.validate() ??
+                      false) {
+                    onSubmit(
+                      city: selectedCity!.nameEn,
+                      district: selectedDistrict!.nameEn,
+                      desc: addressController.descController.text,
+                    );
+                  }
+                } catch (e) {
+                  DialogUtil.showErrorDialog(
+                      AppLocalization.thereIsSomethingError);
+                }
               }
-            },
-            // onTap: () {
-            //   Get.focusScope?.unfocus();
-            //   if (addressController.addressFormKey.currentState?.validate() ??
-            //       false) {
-            //     onSubmit(
-            //       city: addressController.cityController.text,
-            //       street: addressController.streetController.text,
-            //       desc: addressController.descController.text,
-            //     );
-            //   }
-            // },
-          )
+              // onTap: () {
+              //   Get.focusScope?.unfocus();
+              //   if (addressController.addressFormKey.currentState?.validate() ??
+              //       false) {
+              //     onSubmit(
+              //       city: addressController.cityController.text,
+              //       street: addressController.streetController.text,
+              //       desc: addressController.descController.text,
+              //     );
+              //   }
+              // },
+              )
         ],
       ),
     );
