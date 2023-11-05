@@ -10,6 +10,7 @@ import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/account/header_widgets/statistics_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/account/header_widgets/user_image_with_back_shape_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -21,7 +22,7 @@ class UserAccountHeaderWidget extends StatelessWidget {
 
   late final userController =
       Get.find<SpecificUserAccountController>(tag: user.id.toString());
-      
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -107,13 +108,23 @@ class UserAccountHeaderWidget extends StatelessWidget {
               icon: SvgPicture.asset(
                 AppIcons.chatBorder,
                 height: 20,
-                colorFilter: const ColorFilter.mode(AppColors.iconColor, BlendMode.srcIn),
+                colorFilter: const ColorFilter.mode(
+                    AppColors.iconColor, BlendMode.srcIn),
               ),
               onPressed: () {
-                Get.to(() => ChatScreen(conversationId: userController.userId));
+                if (userController.userData.value != null) {
+                  ParticipantModel participant = ParticipantModel(
+                    id: userController.userId,
+                    name: userController.userData.value!.name,
+                    email: userController.userData.value!.email,
+                    phone: userController.userData.value!.phone,
+                    imageUrl: userController.userData.value!.imageUrl,
+                  );
+                  Get.to(() => ChatScreen(user: participant));
+                }
               },
               text: Text(
-               AppLocalization.message,
+                AppLocalization.message,
                 style: Get.textTheme.bodyMedium
                     ?.copyWith(color: Get.textTheme.bodyMedium?.color),
               ),

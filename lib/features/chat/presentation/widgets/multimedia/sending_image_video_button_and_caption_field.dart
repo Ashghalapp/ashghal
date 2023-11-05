@@ -1,6 +1,8 @@
 import 'package:ashghal_app_frontend/config/app_icons.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SendingImageVideoButtonAndCaptionField extends StatelessWidget {
   const SendingImageVideoButtonAndCaptionField({
@@ -27,10 +29,8 @@ class SendingImageVideoButtonAndCaptionField extends StatelessWidget {
                     borderRadius: BorderRadius.circular(26),
                   ),
                   child: AppTextFormField(
-                    labelText: 'Add caption...',
-                    hintText: 'Add caption...',
-                    //           onPressed: () =>
-                    //  SelectImageFromGalleryButton(receiverId: '123').pickImagesFromGallery(context),
+                    hintText: AppLocalization.addCaption.tr,
+                    labelText: AppLocalization.addCaption.tr,
                     obscureText: false,
                     controller: captionController,
                     iconName: AppIcons.plus,

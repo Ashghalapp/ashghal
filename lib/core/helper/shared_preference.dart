@@ -43,7 +43,8 @@ class SharedPref {
   static void setUserLoggedInAsGuest(bool isGuest) {
     _appServices.prefs.setBool('isGuest', isGuest);
   }
-   static bool isUserLoggedInAsGuest() {
+
+  static bool isUserLoggedInAsGuest() {
     return _appServices.prefs.getBool('isGuest') ?? false;
   }
 
@@ -59,15 +60,15 @@ class SharedPref {
     _appServices.prefs.setInt('userId', id);
   }
 
-  static int? get currentUserId => _appServices.prefs.get('userId') as int?;
+  static int? get currentUserId => getCurrentUserData()?.id;
+  // static int? get currentUserId => _appServices.prefs.get('userId') as int?;
   // static int? get currentUserId => 11;
 
   static setUserName(String name) {
     _appServices.prefs.setString('userName', name);
   }
 
-  static String? get currentUserName =>
-      _appServices.prefs.get('userName') as String?;
+  static String? get currentUserName => getCurrentUserData()?.name;
 
   static setUserEmail(String? email) {
     if (email != null) {
@@ -75,8 +76,7 @@ class SharedPref {
     }
   }
 
-  static String? get currentUserEmail =>
-      _appServices.prefs.get('userEmail') as String?;
+  static String? get currentUserEmail => getCurrentUserData()?.email;
 
   static setUserPhone(String? phone) {
     if (phone != null) {
@@ -84,8 +84,7 @@ class SharedPref {
     }
   }
 
-  static String? get currentUserPhone =>
-      _appServices.prefs.get('userPhone') as String?;
+  static String? get currentUserPhone => getCurrentUserData()?.phone;
 
   static setUserImageUrl(String? url) {
     if (url != null) {
@@ -93,8 +92,9 @@ class SharedPref {
     }
   }
 
-  static String? get currentUserImageUrl =>
-      _appServices.prefs.get('userImageUrl') as String?;
+  static String? get currentUserImageUrl => getCurrentUserData()?.imageUrl;
+  // static String? get currentUserImageUrl =>
+  //     _appServices.prefs.get('userImageUrl') as String?;
 
   static String? getUserToken() {
     return _appServices.prefs.get('authKey') as String?;
@@ -106,6 +106,7 @@ class SharedPref {
 
     _appServices.prefs.clear();
   }
+
   static void logout() {
     setUserLoggedIn(false);
     setUserLoggedInAsGuest(false);
@@ -119,8 +120,8 @@ class SharedPref {
     _appServices.prefs.setString('language', lang);
   }
 
-  static String getLanguage() {
-    return _appServices.prefs.get('language') as String? ?? 'en';
+  static String? getLanguage() {
+    return _appServices.prefs.getString('language');
   }
 
   static Future<bool> setString(String key, String value) {
@@ -139,7 +140,7 @@ class SharedPref {
     String? data = SharedPref.getString("current_user_basic_data");
     if (data != null) {
       return jsonDecode(data);
-    } 
+    }
     // else {
     //   // AppUtil.showMessage(
     //   //     AppLocalization.thereIsSomethingError, Get.theme.colorScheme.error);
@@ -174,17 +175,26 @@ class SharedPref {
     return null;
   }
 
-  static setCategories(List<AppCategory> categories){
-    setString(_categoriesKey, jsonEncode(categories.map((e) => e.toJson()).toList()));
+  static setCategories(List<AppCategory> categories) {
+    setString(
+        _categoriesKey, jsonEncode(categories.map((e) => e.toJson()).toList()));
   }
 
-  static List<AppCategory>? getCategories(){
+  static List<AppCategory>? getCategories() {
     final stringData = getString(_categoriesKey);
-    if (stringData != null){
-      final jsonData= (jsonDecode(stringData) as List).cast<Map<String, dynamic>>();
+    if (stringData != null) {
+      final jsonData =
+          (jsonDecode(stringData) as List).cast<Map<String, dynamic>>();
       print("<<<<<<<<<<<<<<categories: $jsonData>>>>>>>>>>>>>>");
       return AppCategory.fromJsonList(jsonData);
     }
     return null;
   }
+
+  static setUserFirstOpenAfterLogin(bool value) {
+    _appServices.prefs.setBool("is_user_first_open", value);
+  }
+
+  static bool? get isUserFirstOpen =>
+      _appServices.prefs.getBool("is_user_first_open");
 }

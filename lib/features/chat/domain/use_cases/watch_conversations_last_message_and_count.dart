@@ -1,13 +1,13 @@
 import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_last_message_and_count.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/repositories/conversation_repository.dart';
 
-class WatchConversationsLastMessageAndCount {
+class WatchConversationsLastMessageAndCountUseCase {
   final ConversationRepository repository;
-  WatchConversationsLastMessageAndCount({
+  WatchConversationsLastMessageAndCountUseCase({
     required this.repository,
   });
 
-  Stream<List<ConversationlastMessageAndCount>> call() {
-    return repository.watchConversationsLastMessageAndCount();
+  Stream<List<ConversationlastMessageAndCount>> call() async* {
+    yield* repository.watchConversationsLastMessageAndCount();
   }
 }

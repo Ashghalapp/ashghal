@@ -1,27 +1,12 @@
-import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
+import 'package:ashghal_app_frontend/app_live_cycle_observer.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/binding_all_controllers.dart';
 import 'package:ashghal_app_frontend/config/theme_controller.dart';
-import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
-import 'package:ashghal_app_frontend/core_api/api_util.dart';
-import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/signup_details_screen.dart';
-import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/signup_screen.dart';
-import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/settings_screen.dart';
-import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/change_password_screen.dart';
-import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/account/header_widgets/profile_account_header_widget.dart';
-import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
-import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/test_screen.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/comment_card_widget.dart';
-import 'package:ashghal_app_frontend/test.dart';
-import 'package:ashghal_app_frontend/tester.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/app_routes.dart';
 import 'config/app_theme.dart';
@@ -64,20 +49,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final CommentInputController con = Get.put(CommentInputController(), permanent: true);
     AppLocallcontroller controller = Get.find();
     ThemeController themeController = Get.find();
-    return GetMaterialApp(
+    return AppLifeCycleManager(
+        child: GetMaterialApp(
       darkTheme: AppTheme.darkTheme,
-      // darkTheme: AppServices.apptheme,
       builder: EasyLoading.init(),
       onInit: () {},
       title: 'Ashghal App',
       theme: AppTheme.lightTheme,
-      // theme: AppServices.apptheme,
-      // themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      locale: controller.language,
+      locale: controller.initialLang,
       translations: MyTranslation(),
       initialBinding: BindingAllControllers(),
       // theme: ThemeData(
@@ -95,7 +77,7 @@ class MyApp extends StatelessWidget {
       // initialRoute: AppRoutes.mainScreen-
 
       // home: SettingScreen(user: SharedPref.getCurrentUserData()),
-      // initialRoute: AppRoutes.splashScreen,
+      initialRoute: AppRoutes.splashScreen,
       // home: SignUpScreen(),
       initialRoute: AppRoutes.splashScreen,
       // initialRoute: AppRoutes.logIn,
@@ -113,6 +95,6 @@ class MyApp extends StatelessWidget {
       // initialRoute: AppRoutes.testScreen,
       getPages: routes,
       themeMode: themeController.themeMode.value,
-    );
+    ));
   }
 }

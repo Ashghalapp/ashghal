@@ -1,23 +1,28 @@
+import 'package:ashghal_app_frontend/app_live_cycle_controller.dart';
+import 'package:ashghal_app_frontend/app_live_cycle_observer.dart';
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'mainscreen_controller.dart';
 
 class MainScreen extends GetView<MainScreenController> {
-  const MainScreen({super.key});
+  MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     Get.put(MainScreenController(),permanent: true);
     // print();
-    print("--------------------------------------------------------------");
-    print("Theme is dark ${Get.isDarkMode}");
-    print("Theme is dark ${Theme.of(context).brightness == Brightness.dark}");
-    print("--------------------------------------------------------------");
+    // print("--------------------------------------------------------------");
+    // print("Theme is dark ${Get.isDarkMode}");
+    // print("Theme is dark ${Theme.of(context).brightness == Brightness.dark}");
+    // print("--------------------------------------------------------------");
 
+    // printError(info: "<<<<<<<<<<<${Get.isDarkMode} ${Get.isPlatformDarkMode}");
     return GetBuilder<MainScreenController>(
       init: MainScreenController(),
       initState: (_) {},
       builder: (controller) {
+        AppPrint.printInfo("Main Screen rebuilt");
         return Scaffold(
           // onBack: () => AppUtil.exitApp(context),
           bottomNavigationBar: BottomNavigationBar(

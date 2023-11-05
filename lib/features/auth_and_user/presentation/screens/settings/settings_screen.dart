@@ -6,6 +6,7 @@ import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/se
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/settings/show_edit_profile_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/account_settings_group_widget.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/language_settings_group_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/setting_item_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/theme_settings_group_widget.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,8 @@ class SettingScreen extends GetView<ShowEditProfileController> {
       body: ListView(
         children: [
           AccountSettingsGroupWidget(user: user),
-          const ThemeSettingsGroupWidget(),
+          ThemeSettingsGroupWidget(),
+          LanguageSettingsGroupWidget(),
 
           // delete account
           SettingItemWidget(

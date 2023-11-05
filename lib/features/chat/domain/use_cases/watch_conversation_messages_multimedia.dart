@@ -1,4 +1,4 @@
-import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/repositories/message_repository.dart';
 
 class WatchConversationMessagesMultimediaUseCase {
@@ -7,7 +7,7 @@ class WatchConversationMessagesMultimediaUseCase {
     required this.repository,
   });
 
-  Stream<List<LocalMultimedia>> call(int conversationId) {
+  Stream<List<MessageAndMultimediaModel>> call(int conversationId) {
     return repository.watchConversationMessagesMultimedia(conversationId);
   }
 }

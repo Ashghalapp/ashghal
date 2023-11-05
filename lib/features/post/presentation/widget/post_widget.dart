@@ -1,10 +1,12 @@
 import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
     as di;
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
+import 'package:ashghal_app_frontend/core/widget/user_status_Widgets.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/account/specific_user_account_screen.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/mark_unmark_post_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
@@ -61,13 +63,29 @@ class PostCardWidget extends StatelessWidget {
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 3),
                 // user image
-                leading: CircleCachedNetworkImageWidget(
-                  imageUrl: post.basicUserData['image_url']?.toString(),
-                  onTap: () => Get.to(
-                    () => SpecificUserAccountScreen(
-                      userId: int.parse(post.basicUserData['id'].toString()),
+                leading: Stack(
+                  children: [
+                    // if(SharedPref.currentUserId!=null)
+
+                    CircleCachedNetworkImageWidget(
+                      imageUrl: post.basicUserData['image_url']?.toString(),
+                      onTap: () => Get.to(
+                        () => SpecificUserAccountScreen(
+                          userId:
+                              int.parse(post.basicUserData['id'].toString()),
+                        ),
+                      ),
                     ),
-                  ),
+                    if (post.basicUserData['id'] != null)
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: UserStatusAvatar(
+                          userId:
+                              int.parse(post.basicUserData['id'].toString()),
+                        ),
+                      ),
+                  ],
                 ),
                 // user name
                 title: SelectableText(

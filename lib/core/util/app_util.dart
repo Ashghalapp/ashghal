@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ashghal_app_frontend/config/app_patterns.dart';
 import 'package:ashghal_app_frontend/config/app_routes.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
@@ -8,6 +9,7 @@ import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core_api/api_util.dart';
+import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/check_password_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
@@ -27,11 +29,12 @@ class AppUtil {
       SharedPref.setCategories(resultCategories);
     });
   }
+
   static bool checkUserLoginAndNotifyUser() {
     if (SharedPref.getCurrentUserData() == null) {
       DialogUtil.showSignInDialog();
       return false;
-    } 
+    }
     return true;
   }
 
@@ -83,7 +86,8 @@ class AppUtil {
   }
 
   static String editUrl(String url) {
-    return url.replaceAll(RegExp(r'localhost'), '10.0.2.2:8000');
+    // return url.replaceAll(RegExp(r'localhost'), '10.0.2.2:8000');
+    return url.replaceAll(RegExp(r'localhost'), ApiConstants.baseIp);
   }
 
   static void showErrorToast(String message) {
@@ -155,6 +159,186 @@ class AppUtil {
         height: Get.height,
         color: Colors.grey[300],
       ),
+    );
+  }
+
+  static Future buildBottomsheet({double height = 200, required Widget child}) {
+    return Get.bottomSheet(
+      Container(
+        width: double.infinity,
+        height: height,
+        decoration: BoxDecoration(
+          color: Get.theme.cardColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        padding: const EdgeInsets.all(8.0),
+        child: Stack(
+          children: [
+            Positioned(
+              right: Get.locale?.languageCode == 'en' ? 10 : null,
+              left: Get.locale?.languageCode == 'ar' ? 10 : null,
+              child: IconButton(
+                icon: const Icon(Icons.close_rounded),
+                onPressed: () => Get.back(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 25),
+              child: child,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Future buildButtomSheetToEditField({
+    required String title,
+    required String initialValue,
+    required void Function(String newValue) onSave,
+    double height = 200,
+    bool autoFocuse = true,
+  }) {
+    var textController = TextEditingController();
+    RxBool enableSaveButton = true.obs;
+    textController.text = initialValue;
+    textController.addListener(() {
+      enableSaveButton.value = textController.text.isNotEmpty;
+    });
+
+    return buildBottomsheet(
+      height: height,
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            alignment: AlignmentDirectional.centerStart,
+            margin: EdgeInsets.only(
+              right: Get.locale?.languageCode == 'ar' ? 10 : 0,
+              left: Get.locale?.languageCode == 'en' ? 10 : 0,
+            ),
+            child: Text(
+              title,
+              style: Get.textTheme.titleMedium,
+            ),
+          ),
+          AppTextFormField(
+            controller: textController,
+            hintText: '',
+            obscureText: false,
+            onSuffixIconPressed: () {},
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+            autoFocuse: autoFocuse,
+          ),
+          const SizedBox(height: 5),
+          Container(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Obx(
+              () => TextButton(
+                onPressed: () {
+                  Get.focusScope?.unfocus();
+                  onSave(textController.text);
+                  Get.back();
+                },
+                child: Text(
+                  AppLocalization.save.tr,
+                  style: Get.textTheme.titleMedium?.copyWith(
+                      color: enableSaveButton.value ? null : Colors.grey),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Future buildButtomsheetToEditRadio({
+    required String title,
+    required List<String> values,
+    required String initialValue,
+    required void Function(String newValue) onSave,
+    double height = 250,
+  }) {
+    RxString selectedValue = initialValue.obs;
+    return buildBottomsheet(
+      height: height,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: AlignmentDirectional.centerStart,
+              margin: EdgeInsets.only(
+                right: Get.locale?.languageCode == 'ar' ? 10 : 0,
+                left: Get.locale?.languageCode == 'en' ? 10 : 0,
+              ),
+              child: Text(
+                title,
+                style: Get.textTheme.titleMedium,
+              ),
+            ),
+            for (int i = 0; i < values.length; i++)
+              Obx(
+                () => RadioListTile(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                  title: Text(values[i]),
+                  value: values[i].tr,
+                  groupValue: selectedValue.value,
+                  onChanged: (Object? value) {
+                    selectedValue.value = value.toString();
+                  },
+                ),
+              ),
+            const SizedBox(height: 5),
+            Container(
+              alignment: AlignmentDirectional.centerEnd,
+              child: TextButton(
+                onPressed: () {
+                  Get.focusScope?.unfocus();
+                  onSave(selectedValue.value);
+                  Get.back();
+                },
+                child: Text(
+                  "Save ",
+                  style: Get.textTheme.titleMedium,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Future<bool?> showConfirmationDialog(String confirmText,
+      [String confirmLabel = "yes", String abortLabel = "No"]) async {
+    return Get.defaultDialog<bool>(
+      title: 'Confirmation'.tr,
+      middleText: confirmText,
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Get.back(
+                result: true); // Close the dialog and return true as the result
+          },
+          child: Text(confirmLabel),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Get.back(
+                result:
+                    false); // Close the dialog and return false as the result
+          },
+          child: Text(abortLabel),
+        ),
+      ],
     );
   }
 
@@ -238,17 +422,16 @@ class AppUtil {
     // }
 
     // final bytes = file.lengthSync();
-    if (bytes < 100) {
-      return '$bytes B';
-    }
-    // else if (bytes < 1024) {
+    // if (bytes < 100) {
     //   return '$bytes B';
     // }
-    // else if (bytes < 1024 * 1024) {
-    //   final fileSizeKB = (bytes / 1024).toStringAsFixed(2);
-    //   return '$fileSizeKB KB';
-    // }
-    else if (bytes < 1024 * 1024 * 1024) {
+    // else
+    if (bytes < 100) {
+      return '$bytes B';
+    } else if (bytes < 1024 * 10) {
+      final fileSizeKB = (bytes / 1024).toStringAsFixed(2);
+      return '$fileSizeKB KB';
+    } else if (bytes < 1024 * 1024 * 1024) {
       final fileSizeMB = (bytes / (1024 * 1024)).toStringAsFixed(2);
       return '$fileSizeMB MB';
     } else {
@@ -272,42 +455,21 @@ class AppUtil {
     }
   }
 
-  static String formatDateTimeyMMMd(DateTime dateTime) {
-    final String year = dateTime.year.toString();
-    final String month = _getMonthAbbreviation(dateTime.month);
-    final String day = dateTime.day.toString();
+  static bool hasURLInText(String text) {
+    // Check if the text contains a URL
+    // final urlPattern = RegExp(
+    //     r"http(s)?://[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,4})+(?:[^\s]*)?",
+    //     caseSensitive: false);
 
-    return '$year $month $day';
+    return AppPatterns.urlPattern.hasMatch(text);
   }
 
-  static String _getMonthAbbreviation(int month) {
-    switch (month) {
-      case DateTime.january:
-        return 'Jan';
-      case DateTime.february:
-        return 'Feb';
-      case DateTime.march:
-        return 'Mar';
-      case DateTime.april:
-        return 'Apr';
-      case DateTime.may:
-        return 'May';
-      case DateTime.june:
-        return 'Jun';
-      case DateTime.july:
-        return 'Jul';
-      case DateTime.august:
-        return 'Aug';
-      case DateTime.september:
-        return 'Sep';
-      case DateTime.october:
-        return 'Oct';
-      case DateTime.november:
-        return 'Nov';
-      case DateTime.december:
-        return 'Dec';
-      default:
-        return '';
-    }
+  static String? getURLInText(String text) {
+    // Check if the text contains a URL
+    // final urlPattern = RegExp(
+    //     r"http(s)?://[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,4})+(?:[^\s]*)?",
+    //     caseSensitive: false);
+
+    return AppPatterns.urlPattern.firstMatch(text)?[0];
   }
 }

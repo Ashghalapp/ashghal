@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:ashghal_app_frontend/app_live_cycle_controller.dart';
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
@@ -10,6 +12,8 @@ import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class UsersStateController extends GetxController {
   RxList<int> onlineUsersIds = <int>[].obs;
+  bool isSubscribed = false;
+  AppLifeCycleController lifeCycleController = Get.find();
   final StreamController<List<int>> _onlineUsersController =
       StreamController<List<int>>.broadcast();
   Stream<List<int>> get onlineUsersStream => _onlineUsersController.stream;
@@ -20,10 +24,23 @@ class UsersStateController extends GetxController {
       _onlineUsersController.add(onlineIds);
     });
     super.onInit();
-    subscribeToOnlineUsersChannel();
+    _checkUserFirstEnter();
+    lifeCycleController.isAppResumed.listen((value) async {
+      if (!isSubscribed && value) {
+        await subscribeToOnlineUsersChannel();
+      } else if (isSubscribed && !value) {
+        await unsubscribeFromOnlineUsersChannel();
+      }
+      AppPrint.printInfo(
+          "Listener on UsersStateController got isAppResumed:$value");
+    });
     AppServices.networkInfo.onStatusChanged.listen((isConnected) async {
       if (isConnected) {
+        // if(!isSubscribed){
+        // if(!isSubscribed){
         await subscribeToOnlineUsersChannel();
+        // }
+        // }
       } else {
         await unsubscribeFromOnlineUsersChannel();
       }
@@ -38,7 +55,8 @@ class UsersStateController extends GetxController {
   }
 
   Future<void> subscribeToOnlineUsersChannel() async {
-    if (!await NetworkInfoImpl().isConnected) {
+    if (!await NetworkInfoImpl().isConnected &&
+        SharedPref.currentUserId != null) {
       return;
     }
     // await AppServices.pusher.initializePusher();
@@ -47,7 +65,7 @@ class UsersStateController extends GetxController {
     Channelhandler handler = Channelhandler(
       channel: AppChannel(
         channelName: ChannelsEventsNames.userStateUpdatedChannel,
-        eventName: 'message.read',
+        eventName: ChannelsEventsNames.userStateUpdatedEvent,
       ),
       onEvent: (PusherEvent event) async {
         print("Pusher event received: $event");
@@ -65,6 +83,7 @@ class UsersStateController extends GetxController {
         for (var memberId in membersIds) {
           addMember(memberId);
         }
+        isSubscribed = true;
         print(SharedPref.currentUserId);
         print(
             "<><><><>><><><><> My onSubscriptionSucceeded works ${onlineUsersIds.length} -- ${onlineUsersIds}");
@@ -85,16 +104,25 @@ class UsersStateController extends GetxController {
 
     await AppServices.pusher
         .subscribeToChannel(ChannelsEventsNames.userStateUpdatedChannel);
+    // await AppServices.pusher.connect();
   }
 
   Future<void> unsubscribeFromOnlineUsersChannel() async {
     await AppServices.pusher
         .unsubscribeFromChannel(ChannelsEventsNames.userStateUpdatedChannel);
+    isSubscribed = false;
   }
 
   @override
   void onClose() {
     unsubscribeFromOnlineUsersChannel();
     super.onClose();
+  }
+
+  void _checkUserFirstEnter() async {
+    if (SharedPref.isUserFirstOpen != null && SharedPref.isUserFirstOpen!) {
+      SharedPref.setUserFirstOpenAfterLogin(false);
+      await subscribeToOnlineUsersChannel();
+    }
   }
 }

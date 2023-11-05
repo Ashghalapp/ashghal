@@ -1,13 +1,14 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
 import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/avatar.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/components.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/highlightable_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,8 +25,9 @@ class ConversationWidget extends StatelessWidget {
   final ChatController _chatController = Get.find();
 
   String getLastMessageStringDate() {
-    return AppUtil.formatDateTime(conversation.lastMessage?.createdAt ??
-        conversation.conversation.updatedAt);
+    return DateTimeFormatter.formatDateTime(
+        conversation.lastMessage?.createdAt ??
+            conversation.conversation.updatedAt);
   }
 
   bool get lastMessageMine => conversation.lastMessage == null
@@ -35,79 +37,75 @@ class ConversationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _buildDismissibleWidget(
-      child: InkWell(
-        onTap: () =>
-            _screenController.goToConversationScreen(conversation.conversation),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          child: Row(
-            children: [
-              UserImageAvatarWithStatusWidget(
-                userId: conversation.conversation.userId,
-                userName: conversation.conversation.userName,
-                raduis: 26,
-                boderThickness: 1,
-                borderColor: Get.theme.primaryColor,
-                // borderColor: Theme.of(context).primaryColor,
-                imageUrl: conversation.conversation.userImageUrl,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Obx(
-                        () {
-                          return _screenController.isSearching.value
-                              ? HighlightableTextWidget(
-                                  text: conversation.conversation.userName,
-                                  searchText: _screenController
-                                      .searchFeildController.text,
-                                  fontSize: 20,
-                                  // textColor: Colors.black,
-                                )
-                              : Text(
-                                  conversation.conversation.userName,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                );
-                        },
-                      ),
-                      const SizedBox(height: 7),
-                      Obx(
-                        () {
-                          return _chatController.typingUsers
-                                  .contains(conversation.conversation.userId)
-                              ? Text(
-                                  "${AppLocalization.typingNow}...",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontSize: 16,
-                                  ),
-                                )
-                              : conversation.lastMessage != null
-                                  ? Opacity(
-                                      opacity: 0.9,
-                                      child: buildLastMessageRow(),
-                                    )
-                                  : const SizedBox.shrink();
-                        },
-                      ),
-                    ],
-                  ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        child: Row(
+          children: [
+            UserImageAvatarWithStatusWidget(
+              userId: conversation.conversation.userId,
+              userName: conversation.conversation.userName,
+              raduis: 26,
+              boderThickness: 1,
+              borderColor: Get.theme.primaryColor,
+              imageUrl: conversation.conversation.userImageUrl,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Obx(
+                      () {
+                        return _screenController.isSearching.value &&
+                                !_screenController.isSearchTextEmpty.value
+                            ? HighlightableTextWidget(
+                                text: conversation.conversation.userName,
+                                searchText: _screenController
+                                    .searchFeildController.text,
+                                fontSize: 15,
+                              )
+                            : Text(
+                                conversation.conversation.userName,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              );
+                      },
+                    ),
+                    const SizedBox(height: 7),
+                    Obx(
+                      () {
+                        return _chatController.typingUsers
+                                .contains(conversation.conversation.userId)
+                            ? Text(
+                                "${AppLocalization.typingNow.tr}...",
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 16,
+                                ),
+                              )
+                            : conversation.lastMessage != null
+                                ? Opacity(
+                                    opacity: 0.9,
+                                    child: buildLastMessageRow(),
+                                  )
+                                : const SizedBox.shrink();
+                      },
+                    ),
+                  ],
                 ),
               ),
-              _buildTimeAgoAndNumberOfNewMessages()
-            ],
-          ),
+            ),
+            _buildTimeAgoAndNumberOfNewMessages()
+          ],
         ),
       ),
+      // ),
     );
   }
 
@@ -139,9 +137,11 @@ class ConversationWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
                         style: TextStyle(
-                          fontSize: 17,
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: conversation.newMessagesCount > 0
+                          color: conversation.newMessagesCount > 0 &&
+                                  !_screenController
+                                      .forwardSelectionEnabled.value
                               ? Get.theme.primaryColor
                               : null,
                         ),
@@ -161,7 +161,7 @@ class ConversationWidget extends StatelessWidget {
             return _stateController.onlineUsersIds
                     .contains(conversation.conversation.userId)
                 ? Text(
-                    AppLocalization.online,
+                    AppLocalization.online.tr,
                     style: TextStyle(
                       color: Get.theme.primaryColor,
                       fontSize: 16,
@@ -173,7 +173,8 @@ class ConversationWidget extends StatelessWidget {
           },
         ),
         const SizedBox(height: 10),
-        if (conversation.newMessagesCount > 0)
+        if (conversation.newMessagesCount > 0 &&
+            !_screenController.forwardSelectionEnabled.value)
           Container(
             decoration: BoxDecoration(
               color: Get.theme.primaryColor,
@@ -200,7 +201,7 @@ class ConversationWidget extends StatelessWidget {
       key: Key(conversation.conversation.localId
           .toString()), //?? DateTime.now().microsecondsSinceEpoch.toString()),
       direction: DismissDirection.horizontal,
-      confirmDismiss: (direction) {
+      confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
           // Widget dismissed from right to left
           //to prevent the widget from beeing deleted from the tree until it is updated
@@ -223,13 +224,15 @@ class ConversationWidget extends StatelessWidget {
         }
         return Future.value(false);
       },
-      onDismissed: (direction) {
+      onDismissed: (direction) async {
         if (direction == DismissDirection.endToStart) {
           // Widget dismissed from right to left
           // TODO: Archive chat
+          await _screenController
+              .archiveConversation(conversation.conversation.localId);
         } else if (direction == DismissDirection.startToEnd) {
           // Widget dismissed from left to right
-          _screenController
+          await _screenController
               .deleteConversation(conversation.conversation.localId);
         }
       },
@@ -245,7 +248,7 @@ class ConversationWidget extends StatelessWidget {
               const Icon(Icons.delete, color: Colors.white),
               const SizedBox(width: 10),
               Text(
-                AppLocalization.delete,
+                AppLocalization.delete.tr,
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
             ],
@@ -262,7 +265,7 @@ class ConversationWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                AppLocalization.archive,
+                AppLocalization.archived.tr,
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
               const SizedBox(width: 10),

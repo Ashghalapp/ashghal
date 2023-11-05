@@ -1,22 +1,16 @@
+import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key, required this.user}) : super(key: key);
+class ProfileChatScreen extends StatelessWidget {
+  const ProfileChatScreen({Key? key, required this.conversation})
+      : super(key: key);
 
-  final UserModel user;
+  final LocalConversation conversation;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(user.username),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert),
-          ),
-        ],
-      ),
+      appBar: _buildAppBar(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,12 +22,19 @@ class ProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              user.username,
+              conversation.userName,
               style: const TextStyle(fontSize: 24),
             ),
+
             const SizedBox(height: 10),
             Text(
-              user.phoneNumber,
+              conversation.userEmail ?? "",
+              style: const TextStyle(fontSize: 24),
+            ),
+
+            const SizedBox(height: 10),
+            Text(
+              conversation.userPhone ?? "",
               style: const TextStyle(
                 fontSize: 20,
                 color: Colors.grey,
@@ -41,10 +42,25 @@ class ProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              "Last seen ${lastSeenMessage(user.lastSeen)} ago",
-              style: const TextStyle(color: Colors.grey),
+              "user_id : ${conversation.userId}",
+              style: const TextStyle(fontSize: 18),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            Text(
+              "conversation_local_id : ${conversation.localId}",
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "conversation_remote_id : ${conversation.remoteId}",
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            // Text(
+            //   "Last seen ${lastSeenMessage(user.lastSeen)} ago",
+            //   style: const TextStyle(color: Colors.grey),
+            // ),
+            // const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -103,7 +119,7 @@ class ProfilePage extends StatelessWidget {
                 Icons.group,
                 color: Colors.green,
               ),
-              title: Text('Create group with ${user.username}'),
+              title: Text('Create group with ${conversation.userName}'),
             ),
             const SizedBox(height: 20),
             ListTile(
@@ -112,7 +128,7 @@ class ProfilePage extends StatelessWidget {
                 color: Colors.red,
               ),
               title: Text(
-                'Block ${user.username}',
+                'Block ${conversation.userName}',
                 style: const TextStyle(
                   color: Colors.red,
                 ),
@@ -124,7 +140,7 @@ class ProfilePage extends StatelessWidget {
                 color: Colors.red,
               ),
               title: Text(
-                'Report ${user.username}',
+                'Report ${conversation.userName}',
                 style: const TextStyle(
                   color: Colors.red,
                 ),
@@ -134,6 +150,18 @@ class ProfilePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text(conversation.userName),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.more_vert),
+        ),
+      ],
     );
   }
 
@@ -157,23 +185,4 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-}
-
-class UserModel {
-  final String username;
-  final String phoneNumber;
-  final String lastSeen;
-  final String profileImageUrl;
-
-  UserModel({
-    required this.username,
-    required this.phoneNumber,
-    required this.lastSeen,
-    required this.profileImageUrl,
-  });
-}
-
-String lastSeenMessage(String lastSeen) {
-  // Implement your logic to calculate the last seen message here
-  return "2 hours";
 }

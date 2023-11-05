@@ -6,8 +6,6 @@ import 'package:ashghal_app_frontend/manager/values_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
-
 import '../../core/helper/shared_preference.dart';
 import '../auth_and_user/presentation/screens/auth/login_screen.dart';
 import '../auth_and_user/presentation/widgets/logo.dart';
@@ -22,7 +20,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: AppConstants.splashDelay)).then((value) {
+    Future.delayed(const Duration(seconds: AppConstants.splashDelay))
+        .then((value) {
       Navigator.of(context).pushReplacement(PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => _next(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -54,8 +53,8 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-     const LogoWidget(),
-     const SizedBox(height:15),
+            const LogoWidget(),
+            const SizedBox(height: 15),
             Center(
               child: RichText(
                 textAlign: TextAlign.center,
@@ -64,10 +63,9 @@ class _SplashScreenState extends State<SplashScreen> {
                     TextSpan(
                       text: 'A',
                       style: Get.textTheme.displayLarge!.copyWith(
-                        fontSize: AppSize.s28,
-                        color: AppColors.appColorPrimary),
+                          fontSize: AppSize.s28,
+                          color: AppColors.appColorPrimary),
                     ),
-
                     TextSpan(
                       text: ' s h g h a l',
                       style: Get.textTheme.headlineLarge!.copyWith(
@@ -95,13 +93,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!hasSeenOnboarding) {
       // If the user hasn't seen the onboarding screen, redirect to it.
-   return const OnBoardingScreen();
+      return const OnBoardingScreen();
     } else if (isUserLoggedIn || isUserLoggedInAsGuest) {
       // If the user is logged in, redirect to the main screen.
-   return const MainScreen();
+      return MainScreen();
     } else {
       // If the user has seen the onboarding but isn't logged in, redirect to the login screen.
- return const LoginScreen();
+      return const LoginScreen();
     }
   }
 }

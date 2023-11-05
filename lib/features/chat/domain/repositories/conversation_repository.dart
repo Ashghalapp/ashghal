@@ -1,7 +1,7 @@
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_last_message_and_count.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/block_unblock_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_conversation_request.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/start_conversation_request.dart';
@@ -48,7 +48,7 @@ abstract class ConversationRepository {
     ) onTypingEvent,
   );
 
-  Future<Either<Failure, List<LocalMessage>>> searchInConversations(
+  Future<Either<Failure, List<LocalConversation>>> searchInConversations(
       String searchText);
 
   /// Starts a conversation with the specified user, both locally and remotely, based on the provided [StartConversationRequest].
@@ -74,7 +74,7 @@ abstract class ConversationRepository {
   /// ```
   /// - [request]: A [StartConversationRequest] object specifying the user to start a conversation with.
   /// - Returns a boolean value indicating whether the conversation was created successfully.
-  Future<Either<Failure, bool>> startConversationWith(
+  Future<Either<Failure, LocalConversation>> startConversationWith(
       StartConversationRequest request);
 
   /// Streams updates to a list of local conversations from the local data source.
@@ -154,7 +154,8 @@ abstract class ConversationRepository {
   /// }
   /// ```
   /// - [request]: A [DeleteConversationRequest] object specifying the conversation to delete.
-  Future<Either<Failure, bool>> deleteConversation(int conversationLocalId);
+  Future<Either<Failure, bool>> deleteConversations(
+      List<int> conversationsLocalIds);
 
   /// Blocks or unblocks a conversation based on the provided [BlockUnblockConversationRequest].
   ///
@@ -186,4 +187,12 @@ abstract class ConversationRepository {
   /// Throws a [NotSpecificFailure] if an exception occurs during the blocking/unblocking process.
   Future<Either<Failure, bool>> blockUnblockConversation(
       BlockUnblockConversationRequest request);
+  Future<Either<Failure, bool>> toggleFavoriteConversation(
+      int conversationLocalId, bool addToFavorite);
+
+  Future<Either<Failure, bool>> toggleArchiveConversation(
+      int conversationLocalId, bool addToArchive);
+  Future<Either<Failure, List<ConversationWithCountAndLastMessage>>>
+      getAllConversationsWithLastMessageAndCount();
+  Future<Either<Failure, List<LocalConversation>>> getAllBlockedConversations();
 }

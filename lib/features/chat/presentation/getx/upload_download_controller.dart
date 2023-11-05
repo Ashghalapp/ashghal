@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/directory_path.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/requests/download_request.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/requests/upload_request.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/multimedia_controller.dart';
 import 'package:dio/dio.dart';
@@ -21,11 +21,6 @@ class UploadDownloadController extends GetxController {
 
   RxDouble progress = 0.0.obs;
   final MultimediaController _controller = Get.find();
-  // final String fileName;
-
-  // RxString filePath = "".obs;
-
-  // RxString fileUrl = "".obs;
 
   late CancelToken cancelToken;
 
@@ -39,6 +34,29 @@ class UploadDownloadController extends GetxController {
   void onInit() {
     super.onInit();
     checkFileExit();
+    Future.delayed(const Duration(seconds: 1), () {
+      _checkMultimediaUploadDownloadState();
+    });
+  }
+
+  // Future<void> _checkMultimediaUploadDownloadState() async {
+  //   if (isMine && multimedia.url == null && !multimedia.isCanceled) {
+  //     startUploading();
+  //   } else if (!isMine && multimedia.path == null && !multimedia.isCanceled) {
+  //     startDownload();
+  //   }
+  // }
+
+  Future<void> _checkMultimediaUploadDownloadState() async {
+    // ConversationController conversationController =
+    int index = Get.find<ConversationController>().messages.indexWhere(
+        (element) => element.message.localId == multimedia.messageId);
+
+    if (isMine && multimedia.url == null && index == 0) {
+      startUploading();
+    } else if (!isMine && multimedia.path == null && index == 0) {
+      startDownload();
+    }
   }
 
   startDownload() async {
@@ -53,6 +71,7 @@ class UploadDownloadController extends GetxController {
         fileName: multimedia.fileName,
         fileType: multimedia.type,
         multimediaLocalId: multimedia.localId,
+        messageLocalId: multimedia.messageId,
         cancelToken: cancelToken,
         onReceiveProgress: (count, total) {
           progress.value = (count / total);
@@ -61,7 +80,6 @@ class UploadDownloadController extends GetxController {
       print(downloaded.toString());
 
       dowloading.value = false;
-      // checkFileExit();
       fileExists.value = downloaded;
       print(multimedia);
     } catch (e) {
@@ -74,7 +92,10 @@ class UploadDownloadController extends GetxController {
     dowloading.value = true;
     progress.value = 0;
     try {
-      bool uploaded = await _controller.uploadFile(
+      AppPrint.printInfo(multimedia.path!);
+      AppPrint.printInfo(multimedia.type);
+      AppPrint.printInfo(multimedia.url ?? "no Url");
+      await _controller.uploadFile(
         filePath: multimedia.path!,
         fileType: multimedia.type,
         messageLocalId: multimedia.messageId,
@@ -106,16 +127,13 @@ class UploadDownloadController extends GetxController {
   }
 
   checkFileExit() async {
-    print("checkFileExit ${multimedia.path}");
     if (multimedia.path != null) {
       bool fileExistCheck = await File(multimedia.path!).exists();
-      // print(fileExistCheck.toString());
       fileExists.value = fileExistCheck;
     } else {
       fileExists.value = false;
     }
     isCheckingFileExistance.value = false;
-    print(fileExists.value);
   }
 
   openfile() {
@@ -124,13 +142,9 @@ class UploadDownloadController extends GetxController {
         OpenFile.open(multimedia.path);
       } catch (e) {
         AppUtil.hanldeAndShowFailure(
-            const NotSpecificFailure(message: "Unable to open this file"));
+          NotSpecificFailure(message: AppLocalization.unableToOpenThisFile.tr),
+        );
       }
     }
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

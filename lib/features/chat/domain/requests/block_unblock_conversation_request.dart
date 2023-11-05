@@ -1,13 +1,13 @@
 class BlockUnblockConversationRequest {
-  final int conversationId;
+  final int conversationRemoteId;
   final bool block;
 
   BlockUnblockConversationRequest({
-    required this.conversationId,
+    required this.conversationRemoteId,
     required this.block,
   });
 
   Map<String, dynamic> toJson() {
-    return {'conversation_id': conversationId};
+    return {'conversation_id': conversationRemoteId};
   }
 }

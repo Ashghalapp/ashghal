@@ -9,11 +9,4 @@ class UploadRequest {
     this.onSendProgress,
     this.cancelToken,
   });
-
-  // MultimediaCompanion toLocalOnDownload() {
-  //   return MultimediaCompanion(
-  //     path: Value(savePath),
-  //     updatedAt: Value(DateTime.now()),
-  //   );
-  // }
 }

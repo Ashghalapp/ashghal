@@ -1,5 +1,4 @@
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
-import 'package:ashghal_app_frontend/config/app_routes.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
 import 'package:get/get.dart';

@@ -77,12 +77,12 @@ Future<ThumbnailResult> genThumbnail(ThumbnailRequest r) async {
   int _imageDataSize = bytes!.length;
   print("image size: $_imageDataSize");
 
-  final _image = Image.memory(bytes);
-  _image.image
+  final image = Image.memory(bytes);
+  image.image
       .resolve(ImageConfiguration())
       .addListener(ImageStreamListener((ImageInfo info, bool _) {
     completer.complete(ThumbnailResult(
-      image: _image,
+      image: image,
       dataSize: _imageDataSize,
       height: info.image.height,
       width: info.image.width,

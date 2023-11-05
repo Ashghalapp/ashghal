@@ -4,6 +4,7 @@ import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/posts_builder_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/filled_outline_button.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/post_controller.dart';
@@ -13,6 +14,7 @@ import 'package:ashghal_app_frontend/features/post/presentation/widget/post_widg
 import 'package:ashghal_app_frontend/features/post/presentation/widget/post_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../../../config/app_icons.dart';
@@ -32,6 +34,7 @@ class PostsScreen extends StatelessWidget {
     // if (postController.postList.isEmpty) {
     //   postController.getAlivePosts();
     // }
+    ChatController chatController = Get.find();
 
     return RefreshIndicator(
       onRefresh: postController.refreshFilteredPosts,
@@ -44,20 +47,15 @@ class PostsScreen extends StatelessWidget {
                 pageScrollController: scrollController,
                 title: "Posts",
                 action: [
-                  IconButton(
-                    icon: SvgPicture.asset(
-                      AppIcons.chatBorder,
-                      width: 25,
-                      height: 25,
-                      colorFilter: const ColorFilter.mode(
-                        AppColors.iconColor,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    onPressed: () {
-                      if (AppUtil.checkUserLoginAndNotifyUser()) {
-                        Get.to(() => ChatScreen());
+                  Obx(
+                    () {
+                      if (chatController.getNewMessagesCount > 0) {
+                        return _buildWidgetWithCountAvatar(
+                          _buildChatIcon(),
+                          chatController.getNewMessagesCount,
+                        );
                       }
+                      return _buildChatIcon();
                     },
                   ),
                 ],
@@ -121,6 +119,66 @@ class PostsScreen extends StatelessWidget {
     // )),
   }
 
+  IconButton _buildChatIcon() {
+    return IconButton(
+      icon: SvgPicture.asset(
+        AppIcons.chatBorder,
+        width: 25,
+        height: 25,
+        colorFilter: const ColorFilter.mode(
+          AppColors.iconColor,
+          BlendMode.srcIn,
+        ),
+      ),
+      onPressed: () {
+        if (AppUtil.checkUserLoginAndNotifyUser()) {
+          Get.to(() => ChatScreen());
+        }
+      },
+    );
+  }
+
+  Stack _buildWidgetWithCountAvatar(Widget widget, int count) {
+    return Stack(
+      children: [
+        widget,
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: Opacity(
+            opacity: 1,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 4,
+                horizontal: 8,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  50,
+                ),
+                color: Colors.red,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    count > 999 ? "999" : count.toString(),
+                    style: const TextStyle(fontSize: 12, color: Colors.white),
+                  ),
+                  if (count > 999)
+                    const Icon(
+                      FontAwesomeIcons.plus,
+                      size: 13,
+                      color: Colors.white,
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
   // Widget postsBuilder() {
   //   final posts = postController.filteredPosts;
   //   return posts.isNotEmpty
