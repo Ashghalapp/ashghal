@@ -1,7 +1,7 @@
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/directory_path.dart';
-import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:get/get.dart';
@@ -77,7 +77,7 @@ class AudioController extends GetxController {
       isRecording.value = true;
       await recorderController.record(path: recordFilePath);
     } else {
-      AppUtil.buildErrorDialog(
+      DialogUtil.showErrorDialog(
         AppLocalization.recordingFailureCouldNotGrantPermision.tr,
       );
     }
@@ -138,7 +138,7 @@ class AudioController extends GetxController {
       await Get.find<ConversationScreenController>()
           .sendMultimediaMessage(recordPath.value);
     } catch (e) {
-      AppUtil.buildErrorDialog(AppLocalization.couldNotSendTheSound.tr);
+      DialogUtil.showErrorDialog(AppLocalization.couldNotSendTheSound.tr);
     }
   }
 }

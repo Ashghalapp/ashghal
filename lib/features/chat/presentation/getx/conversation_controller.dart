@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/clear_chat_request.dart';
@@ -65,7 +66,7 @@ class ConversationController extends GetxController {
     isLoading.value = true;
     GetConversationMessagesWithMultimediaUsecase usecase = di.getIt();
     (await usecase(conversationId)).fold((failure) {
-      AppUtil.buildErrorDialog(failure.message);
+      DialogUtil.showErrorDialog(failure.message);
     }, (messagesWithMultimedia) {
       messages.insertAll(0, messagesWithMultimedia);
       isLoading.value = false;
@@ -222,7 +223,7 @@ class ConversationController extends GetxController {
       ChatController chatController = Get.find();
       await chatController.unblockConversation(currentConversation.remoteId!);
     } else {
-      AppUtil.buildErrorDialog(AppLocalization.failToUnblockConversation.tr);
+      DialogUtil.showErrorDialog(AppLocalization.failToUnblockConversation.tr);
     }
   }
 

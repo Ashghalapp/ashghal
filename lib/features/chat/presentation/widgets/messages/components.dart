@@ -8,6 +8,7 @@ import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/chat_style.dart';
@@ -375,7 +376,7 @@ Future<void> launchURL(String url) async {
   if (await canLaunchUrl(Uri.parse(url))) {
     await launchUrl(Uri.parse(url));
   } else {
-    AppUtil.buildErrorDialog("${AppLocalization.couldNotLuanchUrl.tr} $url");
+    DialogUtil.showErrorDialog("${AppLocalization.couldNotLuanchUrl.tr} $url");
   }
 }
 

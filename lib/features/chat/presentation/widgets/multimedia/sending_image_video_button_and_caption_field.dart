@@ -30,7 +30,7 @@ class SendingImageVideoButtonAndCaptionField extends StatelessWidget {
                   ),
                   child: AppTextFormField(
                     hintText: AppLocalization.addCaption.tr,
-                    label: AppLocalization.addCaption.tr,
+                    labelText: AppLocalization.addCaption.tr,
                     obscureText: false,
                     controller: captionController,
                     iconName: AppIcons.plus,

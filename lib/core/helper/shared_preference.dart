@@ -60,7 +60,7 @@ class SharedPref {
     _appServices.prefs.setInt('userId', id);
   }
 
-  static int? get currentUserId => getCurrentUserData().id;
+  static int? get currentUserId => getCurrentUserData()?.id;
   // static int? get currentUserId => _appServices.prefs.get('userId') as int?;
   // static int? get currentUserId => 11;
 
@@ -95,7 +95,7 @@ class SharedPref {
     }
   }
 
-  static String? get currentUserImageUrl => getCurrentUserData().imageUrl;
+  static String? get currentUserImageUrl => getCurrentUserData()?.imageUrl;
   // static String? get currentUserImageUrl =>
   //     _appServices.prefs.get('userImageUrl') as String?;
 
@@ -192,4 +192,11 @@ class SharedPref {
     }
     return null;
   }
+
+  static setUserFirstOpenAfterLogin(bool value) {
+    _appServices.prefs.setBool("is_user_first_open", value);
+  }
+
+  static bool? get isUserFirstOpen =>
+      _appServices.prefs.getBool("is_user_first_open");
 }

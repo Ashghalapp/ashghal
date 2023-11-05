@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/config/app_images.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
@@ -139,7 +140,7 @@ class ReadyFileMessageWidget extends StatelessWidget {
                 "${AppLocalization.unableToOpenThisFile.tr} ${e.toString()}"));
       }
     } else {
-      AppUtil.buildErrorDialog(
+      DialogUtil.showErrorDialog(
           AppLocalization.fileIsDeletedFromYourLocalDevice.tr);
     }
   }

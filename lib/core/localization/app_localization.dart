@@ -666,8 +666,6 @@ class AppLocalization {
 
   static String open = 'Open';
 
-  static String copy = 'Copy';
-
   static String imageDeletedFromYourLocalDevice =
       "Image deleted from your local device";
 

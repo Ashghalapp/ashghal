@@ -7,6 +7,7 @@ import 'package:ashghal_app_frontend/core/services/app_services.dart';
 import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
     as di;
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/error_strings.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
@@ -160,7 +161,7 @@ class ChatController extends GetxController {
     GetAllConversationsWithLastMessageAndCountUseCase useCase = di.getIt();
     (await useCase.call()).fold(
       (failure) {
-        AppUtil.buildErrorDialog(failure.message);
+        DialogUtil.showErrorDialog(failure.message);
       },
       (localConversations) {
         sortMessage(localConversations);
@@ -303,7 +304,7 @@ class ChatController extends GetxController {
     StartConversationWithUseCase useCase = di.getIt();
     return (await useCase.call(request)).fold(
       (failure) {
-        AppUtil.buildErrorDialog(failure.message);
+        DialogUtil.showErrorDialog(failure.message);
         return null;
       },
       (success) {

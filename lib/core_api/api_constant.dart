@@ -2,7 +2,7 @@
 
 class ApiConstants {
   // static const String baseIp = "192.168.122.175";
-  static const String baseIp = "192.168.128.122";
+  static const String baseIp = "10.0.2.2";
   static const String baseUrl = "http://$baseIp:8000/api/";
   // static const String baseUrl = "http://192.168.30.89:8000/api/";
   // static const String baseUrl = "http://192.168.197.108:8000/api/";
