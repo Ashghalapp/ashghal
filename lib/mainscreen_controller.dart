@@ -32,6 +32,10 @@ class MainScreenController extends GetxController {
   var location = ''.obs;
   var jobTitle = ''.obs;
 
+  void updateUp() {
+    update();
+  }
+
   void searchFilter() {
     debugPrint(
         'Performing search with location: ${location.value} and job title: ${jobTitle.value}');
@@ -278,31 +282,32 @@ class TestChatScreen extends StatelessWidget {
           child: Opacity(
             opacity: 1,
             child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 4,
-                  horizontal: 8,
+              padding: const EdgeInsets.symmetric(
+                vertical: 4,
+                horizontal: 8,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  50,
                 ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    50,
+                color: Colors.red,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    count > 999 ? "999" : count.toString(),
+                    style: const TextStyle(fontSize: 12, color: Colors.white),
                   ),
-                  color: Colors.red,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      count > 999 ? "999" : count.toString(),
-                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                  if (count > 999)
+                    const Icon(
+                      FontAwesomeIcons.plus,
+                      size: 13,
+                      color: Colors.white,
                     ),
-                    if (count > 999)
-                      const Icon(
-                        FontAwesomeIcons.plus,
-                        size: 13,
-                        color: Colors.white,
-                      ),
-                  ],
-                )),
+                ],
+              ),
+            ),
           ),
         ),
       ],

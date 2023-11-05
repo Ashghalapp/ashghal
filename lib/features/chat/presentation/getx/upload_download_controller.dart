@@ -6,6 +6,7 @@ import 'package:ashghal_app_frontend/core/services/directory_path.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/multimedia_controller.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
@@ -38,10 +39,22 @@ class UploadDownloadController extends GetxController {
     });
   }
 
+  // Future<void> _checkMultimediaUploadDownloadState() async {
+  //   if (isMine && multimedia.url == null && !multimedia.isCanceled) {
+  //     startUploading();
+  //   } else if (!isMine && multimedia.path == null && !multimedia.isCanceled) {
+  //     startDownload();
+  //   }
+  // }
+
   Future<void> _checkMultimediaUploadDownloadState() async {
-    if (isMine && multimedia.url == null && !multimedia.isCanceled) {
+    // ConversationController conversationController =
+    int index = Get.find<ConversationController>().messages.indexWhere(
+        (element) => element.message.localId == multimedia.messageId);
+
+    if (isMine && multimedia.url == null && index == 0) {
       startUploading();
-    } else if (!isMine && multimedia.path == null && !multimedia.isCanceled) {
+    } else if (!isMine && multimedia.path == null && index == 0) {
       startDownload();
     }
   }

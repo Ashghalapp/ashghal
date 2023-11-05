@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -8,22 +9,38 @@ class AppLocallcontroller extends GetxController {
   // Locale? language =Locale('ar');
   // Locale? language;
 
-  Locale initialLang = SharedPref.getLanguage() == null
-      ? Get.deviceLocale ?? const Locale('en')
-      : Locale(SharedPref.getLanguage()!);
+  Locale initialLang =
+      (SharedPref.getLanguage() == null || SharedPref.getLanguage() == "sys")
+          ? Get.deviceLocale ?? const Locale('en')
+          : Locale(SharedPref.getLanguage()!);
 
   void changeLanguage(String langCode) {
-    Locale locale = Locale(langCode);
+    AppPrint.printData("$langCode");
+    Locale locale;
+    if (langCode == 'sys') {
+      locale = Get.deviceLocale ?? const Locale('en');
+    } else {
+      locale = Locale(langCode);
+    }
+
     SharedPref.setLanguage(langCode);
+    language.value = langCode;
     Get.updateLocale(locale);
+    AppPrint.printData("${SharedPref.getLanguage()}");
+    language.refresh();
   }
 
-  static String get language {
-    return (SharedPref.getLanguage() == null
-            ? Get.deviceLocale ?? const Locale('en')
-            : Locale(SharedPref.getLanguage()!))
-        .languageCode;
-  }
+  Rx<String> language =
+      (SharedPref.getLanguage() != null || SharedPref.getLanguage() != "sys")
+          ? SharedPref.getLanguage()!.obs
+          : "sys".obs;
+
+  // ((SharedPref.getLanguage() == null || SharedPref.getLanguage() == "sys")
+  //         ? Get.deviceLocale ?? const Locale('en')
+  //         : Locale(SharedPref.getLanguage()!))
+  //     .languageCode
+  //     .obs;
+}
 
   // // ThemeData appTheme = enTheme;
 
@@ -55,4 +72,4 @@ class AppLocallcontroller extends GetxController {
   //     language = Locale(Get.deviceLocale!.languageCode);
   //   }
   // }
-}
+

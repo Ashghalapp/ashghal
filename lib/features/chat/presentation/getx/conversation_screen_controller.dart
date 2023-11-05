@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/account/specific_user_account_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/message_and_multimedia.dart';
@@ -168,11 +169,7 @@ class ConversationScreenController extends GetxController {
   }
 
   void goToUserProfileScreen() {
-    Get.to(
-      () => ProfileChatScreen(
-        conversation: currentConversation,
-      ),
-    );
+    Get.to(() => SpecificUserAccountScreen(userId: currentConversation.userId));
   }
 
   void closeThisConversationScreen() {

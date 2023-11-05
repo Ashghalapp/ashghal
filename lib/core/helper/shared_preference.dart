@@ -68,8 +68,7 @@ class SharedPref {
     _appServices.prefs.setString('userName', name);
   }
 
-  static String? get currentUserName =>
-      _appServices.prefs.get('userName') as String?;
+  static String? get currentUserName => getCurrentUserData()?.name;
 
   static setUserEmail(String? email) {
     if (email != null) {
@@ -77,8 +76,7 @@ class SharedPref {
     }
   }
 
-  static String? get currentUserEmail =>
-      _appServices.prefs.get('userEmail') as String?;
+  static String? get currentUserEmail => getCurrentUserData()?.email;
 
   static setUserPhone(String? phone) {
     if (phone != null) {
@@ -86,8 +84,7 @@ class SharedPref {
     }
   }
 
-  static String? get currentUserPhone =>
-      _appServices.prefs.get('userPhone') as String?;
+  static String? get currentUserPhone => getCurrentUserData()?.phone;
 
   static setUserImageUrl(String? url) {
     if (url != null) {

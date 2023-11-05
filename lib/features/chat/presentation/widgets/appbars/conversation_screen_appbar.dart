@@ -196,8 +196,9 @@ class ConversationScreenAppBar extends StatelessWidget
           children: [
             Text(
               conversation.userName,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
+                color: Get.isPlatformDarkMode ? Colors.white : Colors.black,
               ),
             ),
             const SizedBox(height: 5),

@@ -93,6 +93,7 @@ class ConversationController extends GetxController {
           "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to Multimedia got updates :${messagesAndMultimedia.length}");
 
       for (var msgAndMul in messagesAndMultimedia) {
+        AppPrint.printData(msgAndMul.multimedia!.toString());
         _insertOrReplaceMultimediaAndMessage(msgAndMul);
       }
     });
@@ -104,10 +105,9 @@ class ConversationController extends GetxController {
     if (index == -1) {
       if (message.readAt == null) {
         markMessageAsRead(message);
-      } else {
-        messages.insert(
-            0, MessageAndMultimediaModel(message: message, multimedia: null));
-      }
+      } else {}
+      messages.insert(
+          0, MessageAndMultimediaModel(message: message, multimedia: null));
     } else {
       messages[index] = messages[index].copyWith(message: message);
     }
@@ -120,9 +120,8 @@ class ConversationController extends GetxController {
     if (index == -1) {
       if (msgAndMul.message.readAt == null) {
         markMessageAsRead(msgAndMul.message);
-      } else {
-        messages.insert(0, msgAndMul);
-      }
+      } else {}
+      messages.insert(0, msgAndMul);
     } else {
       messages[index] = msgAndMul;
     }

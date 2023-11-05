@@ -565,6 +565,15 @@ class MyTranslation extends Translations {
           AppLocalization.addCaption: "إضافة تعليق...",
 
           //================================ End chat messages ================================//
+
+          AppLocalization.appLanguage: "لغة التطبيق",
+          AppLocalization.english: "الإنجليزية",
+          AppLocalization.arabic: "العربية",
+          AppLocalization.systemLanguage: "لغة النضام",
+          AppLocalization.light: "فاتح",
+          AppLocalization.dark: "غامق",
+          AppLocalization.system: "مظهر النظام",
+          AppLocalization.themeMode: "المظهر",
         },
 
         ///========================English=====================///

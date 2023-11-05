@@ -1,5 +1,6 @@
 import 'package:ashghal_app_frontend/app_live_cycle_controller.dart';
 import 'package:ashghal_app_frontend/app_live_cycle_observer.dart';
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'mainscreen_controller.dart';
@@ -21,6 +22,7 @@ class MainScreen extends GetView<MainScreenController> {
       init: MainScreenController(),
       initState: (_) {},
       builder: (controller) {
+        AppPrint.printInfo("Main Screen rebuilt");
         return Scaffold(
           // onBack: () => AppUtil.exitApp(context),
           bottomNavigationBar: BottomNavigationBar(

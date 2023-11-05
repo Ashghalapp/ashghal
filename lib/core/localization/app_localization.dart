@@ -676,6 +676,21 @@ class AppLocalization {
       "Video deleted from your local device";
 
   static String addCaption = 'Add caption...';
-
 //================================ End chat messages ================================//
+
+  static String appLanguage = "App Langauge";
+
+  static String english = "English";
+
+  static String arabic = "Arabic";
+
+  static String systemLanguage = "System Language";
+
+  static String system = "System";
+
+  static String light = "Light";
+
+  static String dark = "Dark";
+
+  static String themeMode = "Theme Mode";
 }
