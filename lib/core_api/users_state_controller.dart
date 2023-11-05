@@ -14,9 +14,15 @@ class UsersStateController extends GetxController {
   RxList<int> onlineUsersIds = <int>[].obs;
   bool isSubscribed = false;
   AppLifeCycleController lifeCycleController = Get.find();
+  final StreamController<List<int>> _onlineUsersController =
+      StreamController<List<int>>.broadcast();
+  Stream<List<int>> get onlineUsersStream => _onlineUsersController.stream;
 
   @override
   void onInit() {
+    onlineUsersIds.listen((onlineIds) {
+      _onlineUsersController.add(onlineIds);
+    });
     super.onInit();
     _checkUserFirstEnter();
     lifeCycleController.isAppResumed.listen((value) async {
