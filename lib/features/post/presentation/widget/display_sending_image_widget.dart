@@ -98,8 +98,8 @@ class DisplaySendingImageWidget extends StatelessWidget {
               ),
               child: AppTextFormField(
                 controller: captionController,
+                labelText: 'caption',
                 hintText: 'caption',
-                label: 'caption',
                 obscureText: false,
                 // onSuffixIconPressed: () {},
                 padding:

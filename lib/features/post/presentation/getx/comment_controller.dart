@@ -1,4 +1,4 @@
-import 'package:ashghal_app_frontend/config/app_routes.dart';
+
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
@@ -98,17 +98,17 @@ class CommentController extends GetxController {
     }
   }
 
-  List<Comment> filterComments(List<Comment> comments) {
-    String currentUserId =
-        SharedPref.getCurrentUserBasicData()['id']?.toString() ?? "";
-    for (var element in comments) {
-      if (element.basicUserData['id'] == currentUserId) {
-        comments.insert(0, element);
-        comments.remove(element);
-      }
-    }
-    return comments;
-  }
+  // List<Comment> filterComments(List<Comment> comments) {
+  //   String currentUserId =
+  //       SharedPref.getCurrentUserBasicData()['id']?.toString() ?? "";
+  //   for (var element in comments) {
+  //     if (element.basicUserData['id'] == currentUserId) {
+  //       comments.insert(0, element);
+  //       comments.remove(element);
+  //     }
+  //   }
+  //   return comments;
+  // }
 
   /// function to get object of Comment class by only post id and content
   Comment _getCommentInstance(int postId, String content, {String? imagepath}) {
@@ -161,7 +161,8 @@ class CommentController extends GetxController {
       // to controll it easily
       widgetCreatedAt = widgetCreatedAt ?? DateTime.now();
 
-      // remove tha faild sending widget to replace it with sending widget
+      // send comment widget with sending status 
+      // or remove tha faild sending widget to replace it with sending widget
       _replaceSendingCommentWidgetStatus(
           widgetTime: widgetCreatedAt,
           comment: commentToSend,

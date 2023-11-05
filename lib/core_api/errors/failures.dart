@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable{
+  final String? code;
   final String message;
   final dynamic errors;
 
-  const Failure({required this.message, this.errors});// = "There is something wrong. please try again...";
+  const Failure({this.code, required this.message, this.errors});// = "There is something wrong. please try again...";
 }
 
 // لتمثيل الاخطاء القادمة من جهة المستخدم في حالة عدم الاتصال بالانترنت
@@ -17,7 +18,7 @@ class OfflineFailure extends Failure{
 
 // لتمثيل الاخطاء القادة من جهة السرفر
 class ServerFailure extends Failure{
-  const ServerFailure({required super.message, super.errors});
+  const ServerFailure({super.code, required super.message, super.errors});
 
   @override
   List<Object?> get props => [];

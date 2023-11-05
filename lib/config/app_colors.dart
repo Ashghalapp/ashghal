@@ -21,7 +21,6 @@ class AppColors {
 // Tertiary
   static const bodyWhite = Color(0xFF6F7F92);
   static const bodyDark = Color(0xFFF5F5F5);
-  static const dividerColorLight = Color(0xffEEEEEE);
   static const textgray = Color(0xFF9E9E9E);
   static const iconColor = Color(0xFF9E9E9E);
 
@@ -38,6 +37,7 @@ class AppColors {
   static const appFillColorDark = Color(0xff1F222A);
   static const appFillColorlight = Color(0xffEEEEEE);
   static const appDividerColorDark = Color(0xff35383F);
+  static const appDividerColorLight = Color(0xffEEEEEE);
 
 //new colors
   static Color grey1 = const Color(0xff707070);

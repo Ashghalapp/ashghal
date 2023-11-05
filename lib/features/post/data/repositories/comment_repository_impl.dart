@@ -3,6 +3,7 @@ import 'package:ashghal_app_frontend/core_api/errors/exceptions.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 import 'package:ashghal_app_frontend/core_api/success/success.dart';
+import 'package:ashghal_app_frontend/features/post/data/data_sources/comment_local_data_source.dart';
 import 'package:ashghal_app_frontend/features/post/data/data_sources/comment_remote_data_source.dart';
 import 'package:ashghal_app_frontend/features/post/data/data_sources/post_local_data_source.dart';
 import 'package:ashghal_app_frontend/features/post/data/models/comment_model.dart';
@@ -13,6 +14,11 @@ import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_reque
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/get_user_comments_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/get_user_replies_on_comment_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/update_comment_or_reply_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/delete_some_post_multimedia_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/get_category_posts_request.dart';
+import 'package:ashghal_app_frontend/app_library/public_request/pagination_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/get_user_posts_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/comment.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/reply.dart';
 import 'package:ashghal_app_frontend/features/post/domain/repositories/comment_repository.dart';
@@ -20,8 +26,7 @@ import 'package:dartz/dartz.dart';
 
 class CommentRepositoryImpl extends CommentRepository {
   CommentRemoteDataSource commentRemoteDS = CommentRemoteDataSourceImpl();
-  PostCommentLocalDataSource postCommentLocalDS =
-      PostCommentLocalDataSourceImpl();
+  CommentLocalDataSource postCommentLocalDS = CommentLocalDataSourceImpl();
   NetworkInfo networkInfo = NetworkInfoImpl();
 
   // @override
@@ -86,7 +91,7 @@ class CommentRepositoryImpl extends CommentRepository {
         postCommentLocalDS.cashePostComments(comments);
         return Right(comments);
       } else {
-        return Right(postCommentLocalDS.getCashePostComments());
+        return Right(postCommentLocalDS.getCashedPostComments());
       }
     } on AppException catch (e) {
       return Left(e.failure);

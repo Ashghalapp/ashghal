@@ -3,7 +3,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../../core_api/errors/failures.dart';
-import '../../Requsets/pagination_request.dart';
+import '../../../../../app_library/public_request/pagination_request.dart';
 import '../../entities/post.dart';
 import '../../repositories/post_repository.dart';
 

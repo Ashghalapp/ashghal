@@ -6,13 +6,13 @@ class AppTextFormField extends StatelessWidget {
   final TextDirection? textDirection;
   final List<TextInputFormatter>? inputformater;
   final TextInputType? textInputtype;
-  final String? label;
+  final String? hintText;
   final String? prefixtext;
-  final String hintText;
+  final String? labelText;
   final String? iconName;
   final String? sufficxIconDataName;
   final bool obscureText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String? Function(String?)? validator;
   final void Function()? onSuffixIconPressed;
   final EdgeInsetsGeometry padding;
@@ -21,14 +21,17 @@ class AppTextFormField extends StatelessWidget {
   final double radius;
   final int? minLines;
   final int? maxLines;
+  final String? errorText;
+  final bool readOnly;
+  final void Function()? onTap;
 
   const AppTextFormField({
     Key? key,
-    required this.hintText,
+    this.labelText,
     this.iconName,
-    this.label,
+    this.hintText,
     required this.obscureText,
-    required this.controller,
+   this.controller,
     this.validator,
     this.sufficxIconDataName,
     this.onSuffixIconPressed,
@@ -40,8 +43,11 @@ class AppTextFormField extends StatelessWidget {
     this.margin = const EdgeInsets.all(0),
     this.autoFocuse = false,
     this.radius = 12,
-    this.minLines,
-    this.maxLines,
+    this.minLines = 1,
+    this.maxLines = 1,
+    this.errorText,
+    this.readOnly = false,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -51,6 +57,8 @@ class AppTextFormField extends StatelessWidget {
       child: TextFormField(
         keyboardType: textInputtype,
         inputFormatters: inputformater,
+        readOnly: readOnly,
+        onTap: onTap,
         validator: validator,
         controller: controller,
         obscureText: obscureText,
@@ -64,6 +72,7 @@ class AppTextFormField extends StatelessWidget {
           decorationThickness: 0,
         ),
         decoration: InputDecoration(
+          errorText: errorText,
           filled: true,
           fillColor: Theme.of(context).inputDecorationTheme.fillColor,
           prefixText: prefixtext,
@@ -86,8 +95,14 @@ class AppTextFormField extends StatelessWidget {
             ),
             // borderSide: BorderSide.none
           ),
-          hintText: label,
+          hintText: hintText,
           hintStyle: Theme.of(context).textTheme.labelSmall,
+          labelText: labelText,
+          labelStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context).textTheme.labelSmall?.color,
+              ),
+          alignLabelWithHint: false,
+
           prefixIcon: iconName != null
               ? IconButton(
                   onPressed: null,
@@ -124,11 +139,11 @@ class AppTextFormField extends StatelessWidget {
               : null,
           contentPadding: padding,
           // const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          label: Text(
-            "",
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          // label: Text(
+          //   "",
+          //   style: Theme.of(context).textTheme.labelSmall,
+          // ),
 
           // borderSide: const BorderSide(color: AppColors.gray),
         ),

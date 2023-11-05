@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PostShimmer extends StatelessWidget {
@@ -22,7 +23,7 @@ class PostShimmer extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 2.5 , vertical: 5),
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Get.theme.cardColor,
         borderRadius: BorderRadius.circular(25.0),
       ),
       child: Shimmer.fromColors(

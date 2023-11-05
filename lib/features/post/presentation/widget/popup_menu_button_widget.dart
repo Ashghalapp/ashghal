@@ -3,9 +3,10 @@ import 'package:get/get.dart';
 
 class PopupMenuButtonWidget extends StatelessWidget {
   final Function(String value) onSelected;
-  final List<String> values;
+  final List<String> items;
+  // final List<void Function()?>? onValuesTapList;
 
-  const PopupMenuButtonWidget({super.key, required this.onSelected, required this.values});
+  const PopupMenuButtonWidget({super.key, required this.onSelected, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +14,15 @@ class PopupMenuButtonWidget extends StatelessWidget {
       padding: EdgeInsets.zero,
       position: PopupMenuPosition.under,
       onSelected: onSelected,
-      itemBuilder: (BuildContext ctx) {
+      itemBuilder: (_) {
         return [
-          for(var value in values)
+          for(int i=0; i<items.length; i++)
           PopupMenuItem(
-            value: value,
-            child: Text(value.tr),
+            value: items[i],
+            // onTap: () {
+            //   onValuesTapList![i]!();
+            // },
+            child: Text(items[i].tr),
           ),
           // const PopupMenuItem(
           //   value: PostPopupMenuItemsValues.save,

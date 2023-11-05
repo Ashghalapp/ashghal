@@ -15,7 +15,8 @@ class Post extends Equatable {
   int commentsCount;
   final Address? address;
   final List<MultimediaModel>? multimedia;
-  final int categoryId;
+  // final int categoryId;
+  final Map<String, Object?> categoryData;
   final DateTime createdAt;
   final DateTime updatedAt;
   
@@ -30,7 +31,8 @@ class Post extends Equatable {
     required this.commentsCount,
     this.address,
     this.multimedia,
-    required this.categoryId,
+    // required this.categoryId,
+    required this.categoryData,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -52,7 +54,8 @@ class Post extends Equatable {
         commentsCount,
         address,
         multimedia,
-        categoryId,
+        // categoryId,
+        categoryData,
         createdAt,
         updatedAt,
       ];

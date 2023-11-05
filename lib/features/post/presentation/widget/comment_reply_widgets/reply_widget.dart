@@ -1,4 +1,6 @@
 //================================================================
+import 'package:ashghal_app_frontend/core/util/bottom_sheet_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,6 +31,7 @@ class ReplyWidget extends CommentReplyWidgetAbstract {
           content: reply.content,
           // replyController: replyController,
           imageUrl: reply.imageUrl,
+          time: reply.createdAt,
         );
 
   // String getCommentOwnerName(int commentId){
@@ -76,10 +79,10 @@ class ReplyWidget extends CommentReplyWidgetAbstract {
 
   @override
   void onDelete() {
-    AppUtil.buildDialog(
-      AppLocalization.warning,
-      AppLocalization.areYouSureToDeleteYourReply,
-      () async {
+    DialogUtil.showDialog(
+      title: AppLocalization.warning,
+      message: AppLocalization.areYouSureToDeleteYourReply,
+      onSubmit: () async {
         Get.back();
         replyController.submitDeleteReplyButton(reply.id);
       },
@@ -88,13 +91,15 @@ class ReplyWidget extends CommentReplyWidgetAbstract {
 
   @override
   void onEdit() {
-    AppUtil.buildButtomSheetToEditField(
+    BottomSheetUtil.buildButtomSheetToEditField(
       title: AppLocalization.editYourReply,
       initialValue: reply.content,
       onSave: (newContent) async {
-        if (await replyController.updateReply(reply.id, newContent)) {
-          Get.back();
-        }
+        // if (
+          await replyController.updateReply(reply.id, newContent);
+          // {
+          // Get.back();
+        // }
       },
     );
   }

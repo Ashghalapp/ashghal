@@ -1,4 +1,5 @@
 class AppRoutes {
+  static const String splashScreen = '/';
   static const String onBoarding = '/onboarding';
   static const String languageScreen = '/language';
   static const String logIn = '/login';
@@ -8,7 +9,7 @@ class AppRoutes {
   static const String signUp = '/signup';
   static const String singUpScreenEmail = '/signupscreenemail';
   static const String singUpScreenLocation = '/signupscreenlocation';
-  static const String singUpJobScreen = '/signupscreenjob';
+  // static const String singUpJobScreen = '/signupscreenjob';
   static const String succesSignUp = '/successignup';
   static const String verficationSignUp = '/verficationsignup';
 

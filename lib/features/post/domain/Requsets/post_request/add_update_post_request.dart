@@ -30,15 +30,15 @@ abstract class _AddUpdatePostRequestAbstract {
     this.multimediaPaths,
   });
 
-  /// Map ارجاع البيانات على شكل 
+  /// Map ارجاع البيانات على شكل
   Map<String, Object?> getDataAsMap() {
     return {
       if (title != null) 'title': title,
       if (content != null) 'content': content,
       if (categoryId != null) 'category_id': categoryId,
-      if (allowComment != null) 'allow_comment': allowComment,
+      if (allowComment != null) 'allow_comment': (allowComment ?? true) ? 1 : 0,
       if (expireDate != null) 'expire_date': expireDate.toString(),
-      if (isComplete != null) 'is_complete': isComplete,
+      if (isComplete != null) 'is_complete': (isComplete ?? false) ? 1 : 0,
       if (address != null) 'address': address?.toJson(),
     };
   }
@@ -66,10 +66,12 @@ class AddPostRequest extends _AddUpdatePostRequestAbstract {
         multimedia.add(await MultipartFile.fromFile(path));
       }
     }
-    return FormData.fromMap({
+    var data = FormData.fromMap({
       ...(super.getDataAsMap()),
       if (multimedia.isNotEmpty) 'multimedia': multimedia,
     }, ListFormat.multiCompatible);
+    print("[[[[[[[add post request data: ${data.fields}]]]]]]]");
+    return data;
   }
 }
 

@@ -1,3 +1,5 @@
+import 'package:ashghal_app_frontend/core/util/bottom_sheet_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/comment.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,7 @@ class CommentWidget extends CommentReplyWidgetAbstract {
           userImageUrl: comment.basicUserData['image_url'].toString(),
           content: comment.content,
           imageUrl: comment.imageUrl,
+          time: comment.createdAt,
         );
   final CommentController commentController = Get.find<CommentController>();
   late ReplyController replyController;
@@ -105,10 +108,10 @@ class CommentWidget extends CommentReplyWidgetAbstract {
 
   @override
   void onDelete() {
-    AppUtil.buildDialog(
-      AppLocalization.warning,
-      AppLocalization.areYouSureToDeleteYourComment,
-      () async {
+    DialogUtil.showDialog(
+      title: AppLocalization.warning,
+      message: AppLocalization.areYouSureToDeleteYourComment,
+      onSubmit: () async {
         Get.back();
         commentController.submitDeleteCommentButton(comment.id);
       },
@@ -117,7 +120,7 @@ class CommentWidget extends CommentReplyWidgetAbstract {
 
   @override
   void onEdit() {
-     AppUtil.buildButtomSheetToEditField(
+     BottomSheetUtil.buildButtomSheetToEditField(
       title: AppLocalization.editYourComment,
       initialValue: comment.content,
       onSave: (newContent) async {
@@ -132,14 +135,17 @@ class CommentWidget extends CommentReplyWidgetAbstract {
     return Column(
       children: [
         for (int i = 0; i < replyController.repliesList.length; i++) ...{
-          const Divider(),
+          Divider(color: Get.theme.dividerColor, thickness: 2),
           ReplyWidget(
             reply: replyController.repliesList[i],
             replyController: replyController,
           ),
         },
         for (int i = 0; i < replyController.sendingReplies.length; i++)
-          ...{const Divider(), replyController.sendingReplies[i]}.toList(),
+          ...{
+            Divider(color: Get.theme.dividerColor, thickness: 2),
+            replyController.sendingReplies[i]
+          }.toList(),
 
         // عرض الزر الخاص بعرض المزيد من الردود
         if (comment.repliesCount > PER_PAGE_REPLIES &&
@@ -157,7 +163,7 @@ class CommentWidget extends CommentReplyWidgetAbstract {
     return PostCommentsFunctionWidgets.buildShowMoreTextButton(
       moreCounts: moreCommentCounts,
       onTap: () => replyController.loadNextPageOfCommentReplies(comment.id),
-      isReply: false,
+      isReply: true,
     );
   }
 }

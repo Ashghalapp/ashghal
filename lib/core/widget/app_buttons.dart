@@ -17,7 +17,7 @@ class AppGesterDedector extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 53,
+        height: 50,
         width: double.infinity,
         margin: const EdgeInsets.symmetric(horizontal: 0),
         alignment: Alignment.center,
@@ -36,7 +36,7 @@ class AppGesterDedector extends StatelessWidget {
           //   Colors.purple.shade900,
           // ],
           // ),
-          color: color ?? Theme.of(context).primaryColorDark,
+          color: color ?? Theme.of(context).primaryColor,
         ),
         child: Text(
           text,

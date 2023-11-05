@@ -1,16 +1,14 @@
-import 'dart:io';
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
+import 'package:ashghal_app_frontend/app_library/public_request/pagination_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_all_alive_post_us.dart';
-import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_current_user_posts_uc.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_all_complete_post_us.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_all_posts_us.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_recent_posts_us.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/custom_report_buttomsheet.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
-import 'package:ashghal_app_frontend/features/post/presentation/widget/post_widget.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
@@ -19,101 +17,435 @@ import '../../../../core/services/dependency_injection.dart' as di;
 
 import '../../domain/entities/post.dart';
 
+enum PostFilters {
+  all,
+  recent,
+  incomplete,
+  complete,
+}
+
+extension PostFiltersExtension on PostFilters {
+  String get value {
+    switch (this) {
+      case PostFilters.all:
+        return AppLocalization.all;
+      case PostFilters.recent:
+        return AppLocalization.recentPosts;
+      case PostFilters.incomplete:
+        return AppLocalization.incompletePosts;
+      case PostFilters.complete:
+        return AppLocalization.completedPosts;
+    }
+  }
+}
+
+class PostAndPaginationRequestModel {
+  RxList<Post> posts = <Post>[].obs;
+  RxBool isRequestFinishWithoutData = false.obs;
+
+  int pageNumber = 1;
+  int perPage = 15;
+  int lastIndexToGetNewPage = 0;
+}
+
 class PostController extends GetxController {
   // List<String> postsOptions = ['Save', 'Report', 'Copy'];
   // RxBool isimageUrlValid = true.obs;
   // RxString trueUrlOrReturnBlank = "".obs;
   RxBool isFavorite = false.obs;
-  RxList<Post> postList = <Post>[].obs;
+  Rx<PostFilters> appliedFilter = PostFilters.all.obs;
+
+  // RxList<Post> allPostsList = <Post>[].obs;
+  // RxList<Post> recentPostsList = <Post>[].obs;
+  // RxList<Post> alivePostsList = <Post>[].obs;
+  // RxList<Post> completePostsList = <Post>[].obs;
+
+  PostAndPaginationRequestModel allPostsModel = PostAndPaginationRequestModel();
+  PostAndPaginationRequestModel recentPostsModel =
+      PostAndPaginationRequestModel();
+  PostAndPaginationRequestModel alivePostsModel =
+      PostAndPaginationRequestModel();
+  PostAndPaginationRequestModel completePostsModel =
+      PostAndPaginationRequestModel();
+  // Rx<RequestStatus>
   // final title = ''.obs;
   // final content = ''.obs;
 
-  int pageNumber = 1;
-  int perPage = 15;
+  // int pageNumber = 1;
+  // int perPage = 15;
   // List<Post> alivesPosts = [];
 
-  bool isRequestFinishWithoutData = false;
+  // bool isRequestFinishWithoutData = false;
 
   // اخر بوست تم من عنده عمل طلب لجلب صفحة index متغير لتخزين
   // جديدة من البوستات وذلك حتى لا يتم تكرار الطلب عدة مرات
-  int lastIndexToGetNewPage = 0;
-
-  final GetAllAlivePostsUseCase _getAlivePostsUS = di.getIt();
+  // int lastIndexToGetNewPage = 0;
 
   @override
   void onInit() {
     super.onInit();
-    pageNumber = 1;
-    perPage = 15;
-    isRequestFinishWithoutData = false;
+    // pageNumber = 1;
+    // // perPage = 15;
+    // isRequestFinishWithoutData = false;
     // alivesPosts = [];
-    getAlivePosts();
+    // getAlivePosts();
+    getAllPosts();
+    // filteredPosts;
 
     // trueUrlOrReturnBlank = "".obs;
   }
 
   /// function to refresh the posts and get it from api
-  void refreshPosts() {
-    postList.value = [];
-    isRequestFinishWithoutData = false;
-    getAlivePosts();
+  // void refreshPosts() {
+  //   alivePostsList.value = [];
+  //   isRequestFinishWithoutData = false;
+  //   getAlivePosts();
+  // }
+
+  /// property to store the last index to retrieve a new page of filtered posts
+  /// so that the page is not retrieved again
+  set lastIndexToGetNextPage(int lastIndex) {
+    switch (appliedFilter.value) {
+      case PostFilters.all:
+        allPostsModel.lastIndexToGetNewPage = lastIndex;
+      case PostFilters.recent:
+        recentPostsModel.lastIndexToGetNewPage = lastIndex;
+      case PostFilters.incomplete:
+        alivePostsModel.lastIndexToGetNewPage = lastIndex;
+      case PostFilters.complete:
+        completePostsModel.lastIndexToGetNewPage = lastIndex;
+    }
   }
 
-  Future<void> getAlivePosts() async {
-    pageNumber = 1;
-    perPage = 15;
-    final result = _getAlivePostsUS
-        .call(PaginationRequest(pageNumber: pageNumber, perPage: perPage));
-    (await result).fold((failure) {
+  /// property to get the last index in which a new page of
+  /// filtered posts was retrieved
+  int get lastIndexToGetNextPage {
+    switch (appliedFilter.value) {
+      case PostFilters.all:
+        return allPostsModel.lastIndexToGetNewPage;
+      case PostFilters.recent:
+        return recentPostsModel.lastIndexToGetNewPage;
+      case PostFilters.incomplete:
+        return alivePostsModel.lastIndexToGetNewPage;
+      case PostFilters.complete:
+        return completePostsModel.lastIndexToGetNewPage;
+    }
+  }
+
+  RxBool get isRequestFinishWithoutData {
+    switch (appliedFilter.value) {
+      case PostFilters.all:
+        return allPostsModel.isRequestFinishWithoutData;
+      case PostFilters.recent:
+        return recentPostsModel.isRequestFinishWithoutData;
+      case PostFilters.incomplete:
+        return alivePostsModel.isRequestFinishWithoutData;
+      case PostFilters.complete:
+        return completePostsModel.isRequestFinishWithoutData;
+    }
+  }
+
+  RxList<Post> get filteredPosts {
+    switch (appliedFilter.value) {
+      case PostFilters.all:
+        return allPostsModel.posts;
+      case PostFilters.recent:
+        return recentPostsModel.posts;
+      case PostFilters.incomplete:
+        return alivePostsModel.posts;
+      case PostFilters.complete:
+        return completePostsModel.posts;
+    }
+  }
+
+  /// function to apply specific filter on posts
+  void applyFilter(PostFilters filter) async {
+    printInfo(info: "---------apply filter: $filter");
+    if (filter != appliedFilter.value) {
+      appliedFilter.value = filter;
+      switch (appliedFilter.value) {
+        case PostFilters.all:
+          if (allPostsModel.posts.isEmpty) await getAllPosts();
+        case PostFilters.recent:
+          if (recentPostsModel.posts.isEmpty) await getRecentPosts();
+        case PostFilters.incomplete:
+          if (alivePostsModel.posts.isEmpty) await getAlivePosts();
+        case PostFilters.complete:
+          if (completePostsModel.posts.isEmpty) await getCompletePosts();
+      }
+    }
+  }
+
+  Future<void> refreshFilteredPosts() async {
+    // lastIndexToGetNewPage = 0;
+    switch (appliedFilter.value) {
+      case PostFilters.all:
+        allPostsModel.lastIndexToGetNewPage = 0;
+        await getAllPosts();
+      case PostFilters.recent:
+        recentPostsModel.lastIndexToGetNewPage = 0;
+        await getRecentPosts();
+      case PostFilters.incomplete:
+        alivePostsModel.lastIndexToGetNewPage = 0;
+        await getAlivePosts();
+      case PostFilters.complete:
+        completePostsModel.lastIndexToGetNewPage = 0;
+        await getCompletePosts();
+    }
+  }
+
+  void loadNextPageOfFilteredPosts() {
+    switch (appliedFilter.value) {
+      case PostFilters.all:
+        loadNextPageOfAllPosts();
+      case PostFilters.recent:
+        loadNextPageOfRecentPosts();
+      case PostFilters.incomplete:
+        loadNextPageOfAlivePosts();
+      case PostFilters.complete:
+        loadNextPageOfCompletePosts();
+    }
+  }
+
+  /// functions to get randomize posts to all filter
+  Future<void> getAllPosts() async {
+    // pageNumber = 1;
+    allPostsModel.pageNumber = 1;
+    // perPage = 15;
+    await _sendRequestToGetAllPosts(
+      PaginationRequest(
+        pageNumber: allPostsModel.pageNumber,
+        perPage: allPostsModel.perPage,
+      ),
+    );
+  }
+
+  /// functions to get next  page of randomize posts to all filter
+  Future<void> loadNextPageOfAllPosts() async {
+    // pageNumber++;
+    allPostsModel.pageNumber++;
+
+    await _sendRequestToGetAllPosts(
+      PaginationRequest(
+        pageNumber: allPostsModel.pageNumber,
+        perPage: allPostsModel.perPage,
+      ),
+      isNextPage: true,
+    );
+  }
+
+  /// functions to send reqest into api to get randomize posts
+  Future<void> _sendRequestToGetAllPosts(PaginationRequest request,
+      {bool isNextPage = false}) async {
+    final GetAllPostsUseCase getAllPostsUS = di.getIt();
+
+    allPostsModel.isRequestFinishWithoutData.value = false;
+    (await getAllPostsUS.call(request)).fold((failure) {
       AppUtil.hanldeAndShowFailure(failure);
-      isRequestFinishWithoutData = true;
-      postList.value = [];
+      allPostsModel.isRequestFinishWithoutData.value = true;
+      // allPostsModel.posts.value = [];
     }, (posts) {
-      isRequestFinishWithoutData = posts.isEmpty;
-      postList.value = posts;
-      print(">>>>>>>>>>>>>>>>>Done get alive Posts>>>>>>>>>>>>>>>");
+      allPostsModel.isRequestFinishWithoutData.value = posts.isEmpty;
+      printError(info: ":::::the length before ${allPostsModel.posts.length}");
+      if (isNextPage) {
+        // allPostsList.addAll(posts);
+        allPostsModel.posts.addAll(posts);
+      } else {
+        // allPostsList.value = posts;
+        allPostsModel.posts.value = posts;
+      }
+      printError(info: ":::::the length after ${allPostsModel.posts.length}");
+      printInfo(info: ">>>>>>Done get all Posts>>>>>");
     });
   }
 
-  Future<void> loadNextPageOfPosts() async {
+  Future<void> getAlivePosts() async {
+    // pageNumber = 1;
+    alivePostsModel.pageNumber = 1;
+    // perPage = 15;
+    await _sendRequestToGetAlivePosts(
+      PaginationRequest(
+        pageNumber: alivePostsModel.pageNumber,
+        perPage: alivePostsModel.perPage,
+      ),
+    );
+  }
+
+  Future<void> loadNextPageOfAlivePosts() async {
     if (await NetworkInfoImpl().isConnected) {
       printInfo(info: "Call loadNextPage");
-      pageNumber++;
-      final result = _getAlivePostsUS
-          .call(PaginationRequest(pageNumber: pageNumber, perPage: perPage));
-
-      (await result).fold((failure) {
-        AppUtil.hanldeAndShowFailure(failure);
-      }, (posts) {
-        postList.addAll(posts);
-        printInfo(info: "Done get page $pageNumber from alive Posts");
-        // alivesPosts = posts;
-      });
+      // pageNumber++;
+      alivePostsModel.pageNumber++;
+      await _sendRequestToGetAlivePosts(
+        PaginationRequest(
+          pageNumber: alivePostsModel.pageNumber,
+          perPage: alivePostsModel.perPage,
+        ),
+        isNextPage: true,
+      );
     } else {
       AppUtil.showMessage(
           AppLocalization.noInternet, Get.theme.colorScheme.error);
     }
   }
 
-  PopupMenuButtonWidget getPostMenuButtonValuesWidget(int postId) {
-    return PopupMenuButtonWidget(
-      values: OperationsOnPostPopupMenuValues.values.asNameMap().keys.toList(),
-      onSelected: (value) {
-        return postPopupMenuButtonOnSelected(value, postId);
-      },
+  /// functions to send reqest into api to get incomplete posts
+  Future<void> _sendRequestToGetAlivePosts(PaginationRequest request,
+      {bool isNextPage = false}) async {
+    final GetAllAlivePostsUseCase getAlivePostsUS = di.getIt();
+    alivePostsModel.isRequestFinishWithoutData.value = false;
+    (await getAlivePostsUS.call(request)).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+      alivePostsModel.isRequestFinishWithoutData.value = true;
+      // alivePostsModel.posts.value = [];
+    }, (posts) {
+      printError(
+          info: ":::::the length before ${alivePostsModel.posts.length}");
+      alivePostsModel.isRequestFinishWithoutData.value = posts.isEmpty;
+      if (isNextPage) {
+        // alivePostsList.addAll(posts);
+        alivePostsModel.posts.addAll(posts);
+      } else {
+        // alivePostsList.value = posts;
+        alivePostsModel.posts.value = posts;
+      }
+      printError(info: ":::::the length after ${alivePostsModel.posts.length}");
+      print(">>>>>>>>>>>>>>>>>Done get InComplete Posts>>>>>>>>>>>>>>>");
+    });
+  }
+
+  /// functions to get recent posts to recent filter
+  Future<void> getRecentPosts() async {
+    printInfo(info: "::::::::::In Get Recent Posts");
+    // pageNumber = 1;
+    recentPostsModel.pageNumber = 1;
+    // perPage = 15;
+    await _sendRequestToGetRecentPosts(
+      PaginationRequest(
+        pageNumber: recentPostsModel.pageNumber,
+        perPage: recentPostsModel.perPage,
+      ),
     );
   }
 
-  void postPopupMenuButtonOnSelected(String value, int postId) async {
-    if (value == OperationsOnPostPopupMenuValues.save.name) {
-    } else if (value == OperationsOnPostPopupMenuValues.report.name) {
-      Get.bottomSheet(CustomBottomSheet());
-    } else if (value == OperationsOnPostPopupMenuValues.copy.name) {
-      Post p = postList.firstWhere((element) => element.id == postId);
-      ClipboardData clipboardData = ClipboardData(text: p.content);
-      await Clipboard.setData(clipboardData);
-    }
+  /// functions to get next page of recent posts to recent filter
+  Future<void> loadNextPageOfRecentPosts() async {
+    printInfo(info: "::::::::::In Get load next page of Recent Posts");
+    // pageNumber++;
+    recentPostsModel.pageNumber++;
+    await _sendRequestToGetRecentPosts(
+      PaginationRequest(
+        pageNumber: recentPostsModel.pageNumber,
+        perPage: recentPostsModel.perPage,
+      ),
+      isNextPage: true,
+    );
   }
+
+  /// functions to send reqest into api to get recent posts
+  Future<void> _sendRequestToGetRecentPosts(PaginationRequest request,
+      {bool isNextPage = false}) async {
+    final GetRecentPostsUseCase getAllPostsUS = di.getIt();
+    recentPostsModel.isRequestFinishWithoutData.value = false;
+    (await getAllPostsUS.call(request)).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+      recentPostsModel.isRequestFinishWithoutData.value = true;
+      // recentPostsModel.posts.value = [];
+    }, (posts) {
+      recentPostsModel.isRequestFinishWithoutData.value = posts.isEmpty;
+      printError(
+          info: ":::::the length before ${recentPostsModel.posts.length}");
+      if (isNextPage) {
+        // recentPostsList.addAll(posts);
+        recentPostsModel.posts.addAll(posts);
+      } else {
+        // recentPostsList.value = posts;
+        recentPostsModel.posts.value = posts;
+      }
+      printError(
+          info: ":::::the length after ${recentPostsModel.posts.length}");
+      printInfo(info: ">>>>>>Done get recent Posts>>>>>");
+    });
+  }
+
+  /// functions to get complete posts to complete filter
+  Future<void> getCompletePosts() async {
+    printInfo(info: "::::::::::In Get Complete Posts");
+    completePostsModel.pageNumber = 1;
+    await _sendRequestToGetCompletePosts(
+      PaginationRequest(
+        pageNumber: completePostsModel.pageNumber,
+        perPage: completePostsModel.perPage,
+      ),
+    );
+  }
+
+  /// functions to get next page of recent posts to complete filter
+  Future<void> loadNextPageOfCompletePosts() async {
+    printInfo(info: "::::::::::In Get load next page of Recent Posts");
+    recentPostsModel.pageNumber++;
+    await _sendRequestToGetCompletePosts(
+      PaginationRequest(
+        pageNumber: recentPostsModel.pageNumber,
+        perPage: recentPostsModel.perPage,
+      ),
+      isNextPage: true,
+    );
+  }
+
+  /// functions to send reqest into api to get complete posts
+  Future<void> _sendRequestToGetCompletePosts(PaginationRequest request,
+      {bool isNextPage = false}) async {
+    final GetAllCompletePostsUseCase getCompletePostsUS = di.getIt();
+    completePostsModel.isRequestFinishWithoutData.value = false;
+    (await getCompletePostsUS.call(request)).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+      completePostsModel.isRequestFinishWithoutData.value = true;
+      completePostsModel.posts.value = [];
+    }, (posts) {
+      completePostsModel.isRequestFinishWithoutData.value = posts.isEmpty;
+      printError(
+          info: ":::the length before ${completePostsModel.posts.length}");
+      if (isNextPage) {
+        completePostsModel.posts.addAll(posts);
+      } else {
+        completePostsModel.posts.value = posts;
+      }
+      printError(
+          info: ":::the length after ${completePostsModel.posts.length}");
+      printInfo(info: ">>>>>>Done get complete Posts>>>>>");
+    });
+  }
+
+  // PopupMenuButtonWidget getPostMenuButtonValuesWidget(Post post) {
+  //   final values = [AppLocalization.copy, AppLocalization.report];
+
+  //   return PopupMenuButtonWidget(
+  //     items: values,
+  //     onSelected: (value) {
+  //       return postPopupMenuButtonOnSelected(value, post);
+  //     },
+  //   );
+  // }
+
+  // void postPopupMenuButtonOnSelected(String value, Post post) async {
+  //   if (value == AppLocalization.copy) {
+
+  //     ClipboardData clipboardData = ClipboardData(text: post.content);
+  //     await Clipboard.setData(clipboardData);
+  //   } else if (value == AppLocalization.report) {
+  //     Get.bottomSheet(CustomBottomSheet());
+  //   }
+    // if (value == OperationsOnPostPopupMenuValues.save.name) {
+    // } else if (value == OperationsOnPostPopupMenuValues.report.name) {
+    //   Get.bottomSheet(CustomBottomSheet());
+    // } else if (value == OperationsOnPostPopupMenuValues.copy.name) {
+    //   Post p =
+    //       alivePostsModel.posts.firstWhere((element) => element.id == postId);
+    //   ClipboardData clipboardData = ClipboardData(text: p.content);
+    //   await Clipboard.setData(clipboardData);
+    // }
+  // }
 
   // trying() async{
   //   GetSpecificPostUseCase t = di.getIt();
@@ -158,8 +490,6 @@ class PostController extends GetxController {
   //   return postListElements;
   //   // );
   // }
-
-
 
   // postPopupMenuButtonOnSelected(
   //     PostPopupMenuItemsValues value, int postId) async {
@@ -220,29 +550,29 @@ class PostController extends GetxController {
     }
   }
 
-  Future<Widget> getImage(String imageUrl) async {
-    try {
-      if (await isImage(imageUrl)) {
-        return CachedNetworkImage(
-          imageUrl: imageUrl,
-          // placeholder: ,
-          errorWidget: (context, url, error) => Text(error.toString()),
-        );
-      }
-      return Image.asset("assets/images/unKnown.jpg");
-    } on SocketException catch (e) {
-      print(e);
-      // return Image.asset("assets/images/unKnown.jpg");
-      throw Exception("hhhhhhhhhhhhhhhhhhh");
-    } on HttpException catch (e) {
-      print(e);
-      throw Exception("hhhhhhhhhhhhhhhhhhh");
-    } catch (e) {
-      print(e);
-      // return Image.asset("assets/images/unKnown.jpg");
-      throw Exception("hhhhhhhhhhhhhhhhhhh");
-    }
-  }
+  // Future<Widget> getImage(String imageUrl) async {
+  //   try {
+  //     if (await isImage(imageUrl)) {
+  //       return CachedNetworkImage(
+  //         imageUrl: imageUrl,
+  //         // placeholder: ,
+  //         errorWidget: (context, url, error) => Text(error.toString()),
+  //       );
+  //     }
+  //     return Image.asset("assets/images/unKnown.jpg");
+  //   } on SocketException catch (e) {
+  //     print(e);
+  //     // return Image.asset("assets/images/unKnown.jpg");
+  //     throw Exception("hhhhhhhhhhhhhhhhhhh");
+  //   } on HttpException catch (e) {
+  //     print(e);
+  //     throw Exception("hhhhhhhhhhhhhhhhhhh");
+  //   } catch (e) {
+  //     print(e);
+  //     // return Image.asset("assets/images/unKnown.jpg");
+  //     throw Exception("hhhhhhhhhhhhhhhhhhh");
+  //   }
+  // }
 
   final userData = {
     'id': 1,
@@ -261,7 +591,8 @@ class PostController extends GetxController {
       // imageUrl:
       //     "https://images.unsplash.com/photo-1545996124-0501ebae84d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhY2V8ZW58MHx8MHx8fDA=&w=1000&q=80",
       // userId: 1,
-      categoryId: 1,
+      // categoryId: 1,
+      categoryData: {},
       allowComment: true,
       basicUserData: const {
         'id': 1,
@@ -280,7 +611,8 @@ class PostController extends GetxController {
       title: "شخص يبحث عن مبرمج لتطوير تطبيق موبايل",
       content:
           "أنا أبحث عن مبرمج محترف يمكنه تطوير تطبيق موبايل لنظام Android و iOS. يجب أن يكون لديك خبرة في Flutter و Dart. يرجى التواصل معي إذا كنت مهتمًا.",
-      categoryId: 1,
+      // categoryId: 1,
+      categoryData: {},
       allowComment: true,
       basicUserData: const {
         'id': 1,
@@ -299,83 +631,8 @@ class PostController extends GetxController {
       title: "شخص يبحث عن مبرمج لتطوير تطبيق موبايل",
       content:
           "أنا أبحث عن مبرمج محترف يمكنه تطوير تطبيق موبايل لنظام Android و iOS. يجب أن يكون لديك خبرة في Flutter و Dart. يرجى التواصل معي إذا كنت مهتمًا.",
-      categoryId: 1,
-      allowComment: true,
-      basicUserData: const {
-        'id': 1,
-        'name': "ابراهيم علوان",
-        'image_url':
-            "https://images.unsplash.com/photo-1545996124-0501ebae84d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhY2V8ZW58MHx8MHx8fDA=&w=1000&q=80",
-      },
-      commentsCount: 10,
-      createdAt: DateTime.now(),
-      expireDate: DateTime.now(),
-      isComplete: false,
-      updatedAt: DateTime.now(),
-    ),
-    Post(
-      id: 4,
-      title: "شخص يبحث عن مبرمج لتطوير تطبيق موبايل",
-      content:
-          "أنا أبحث عن مبرمج محترف يمكنه تطوير تطبيق موبايل لنظام Android و iOS. يجب أن يكون لديك خبرة في Flutter و Dart. يرجى التواصل معي إذا كنت مهتمًا.",
-      categoryId: 1,
-      allowComment: true,
-      basicUserData: const {
-        'id': 1,
-        'name': "ابراهيم علوان",
-        'image_url':
-            "https://images.unsplash.com/photo-1545996124-0501ebae84d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhY2V8ZW58MHx8MHx8fDA=&w=1000&q=80",
-      },
-      commentsCount: 10,
-      createdAt: DateTime.now(),
-      expireDate: DateTime.now(),
-      isComplete: false,
-      updatedAt: DateTime.now(),
-    ),
-    Post(
-      id: 5,
-      title: "شخص يبحث عن مبرمج لتطوير تطبيق موبايل",
-      content:
-          "أنا أبحث عن مبرمج محترف يمكنه تطوير تطبيق موبايل لنظام Android و iOS. يجب أن يكون لديك خبرة في Flutter و Dart. يرجى التواصل معي إذا كنت مهتمًا.",
-      categoryId: 1,
-      allowComment: true,
-      basicUserData: const {
-        'id': 1,
-        'name': "ابراهيم علوان",
-        'image_url':
-            "https://images.unsplash.com/photo-1545996124-0501ebae84d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhY2V8ZW58MHx8MHx8fDA=&w=1000&q=80",
-      },
-      commentsCount: 10,
-      createdAt: DateTime.now(),
-      expireDate: DateTime.now(),
-      isComplete: false,
-      updatedAt: DateTime.now(),
-    ),
-    Post(
-      id: 6,
-      title: "شخص يبحث عن مبرمج لتطوير تطبيق موبايل",
-      content:
-          "أنا أبحث عن مبرمج محترف يمكنه تطوير تطبيق موبايل لنظام Android و iOS. يجب أن يكون لديك خبرة في Flutter و Dart. يرجى التواصل معي إذا كنت مهتمًا.",
-      categoryId: 1,
-      allowComment: true,
-      basicUserData: const {
-        'id': 1,
-        'name': "ابراهيم علوان",
-        'image_url':
-            "https://images.unsplash.com/photo-1545996124-0501ebae84d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhY2V8ZW58MHx8MHx8fDA=&w=1000&q=80",
-      },
-      commentsCount: 10,
-      createdAt: DateTime.now(),
-      expireDate: DateTime.now(),
-      isComplete: false,
-      updatedAt: DateTime.now(),
-    ),
-    Post(
-      id: 7,
-      title: "شخص يبحث عن مبرمج لتطوير تطبيق موبايل",
-      content:
-          "أنا أبحث عن مبرمج محترف يمكنه تطوير تطبيق موبايل لنظام Android و iOS. يجب أن يكون لديك خبرة في Flutter و Dart. يرجى التواصل معي إذا كنت مهتمًا.",
-      categoryId: 1,
+      // categoryId: 1,
+      categoryData: {},
       allowComment: true,
       basicUserData: const {
         'id': 1,

@@ -90,6 +90,7 @@ class ImagesPostDesignAsFacebook extends StatelessWidget {
       child: Row(
         children: [
           showOneImage(path1),
+          const SizedBox(width: 1),
           showOneImage(path2),
         ],
       ),
@@ -102,7 +103,7 @@ class ImagesPostDesignAsFacebook extends StatelessWidget {
         imageUrl: path,
         onTap: () => Get.to(() => ImagePage(imageUrl: path)),
         errorAssetImagePath: "assets/images/unKnown.jpg",
-        fit: BoxFit.fitHeight,
+        fit: BoxFit.cover,
         height: rowHeightConstant,
       ),
     );

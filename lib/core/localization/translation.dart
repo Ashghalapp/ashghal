@@ -5,6 +5,7 @@ class MyTranslation extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
         "ar": {
+          AppLocalization.signUpForAccount: "قم بالتسجيل للحصول على حساب",
           "chooseLanguage": "اختر اللغة",
           "2": " اختر المهنةالمناسبة لك",
           "3": "  قم بالتواصل مع العميل\n والاتفاق على العمل",
@@ -50,9 +51,10 @@ class MyTranslation extends Translations {
           "37": "ًتهانيناً\n",
           "Successfully Registered": "تم التسجيل بنجاح",
           "Successfully reset password": "تم تغيير كلمة السر بنجاح",
-          "40": "أعد تعيين كلمة مرورك",
-          "43": " الرجاء ادخال كلمة المرور الجديدة في الاسفل",
-          "44": "حقل مطلوب",
+          AppLocalization.resetYourPassword: "أعد تعيين كلمة مرورك",
+          AppLocalization.pleaseEnterYourNewPasswordDownHere:
+              " الرجاء ادخال كلمة المرور الجديدة في الاسفل",
+          AppLocalization.requiredField: "حقل مطلوب",
           "45": "بريد إلكتروني غير صالح",
           "46": "اسم مستخدم غير صالح",
           "47": "اسم المستخدم قصير",
@@ -87,8 +89,12 @@ class MyTranslation extends Translations {
           "about": "نبذة عنا",
           "addSomethingAboutPost": "أضف شيئًا حول المنشور",
 
+          "please Grant Required Location Permission":
+              "الرجاء السماح بصلاحيات الوصول للموقع",
           "left": "الباقي",
+          "Personal info": "التفاصيل الشخصية",
           "ended": "انتهى",
+          "skip": "تخطي",
           "ago": "منذ",
           "current": "حالي",
           "completed": "تم",
@@ -104,7 +110,7 @@ class MyTranslation extends Translations {
           "earning": "الأرباح",
           "withdraw": "سحب",
           "loading": "جار التحميل...",
-          "message": "رسالة",
+          AppLocalization.message: "رسالة",
           "newMessage": "رسالة جديدة",
           "reply": "رد",
           "forward": "إعادة توجيه",
@@ -119,7 +125,7 @@ class MyTranslation extends Translations {
           "writeComment": "اكتب تعليق",
           "comments": "تعليقات",
           "viewAll": "عرض الكل",
-          "allowComments": "السماح بالتعليقات",
+
           "newComment": "تعليق جديد",
           "top": "أعلى",
           "trending": "الشائع",
@@ -140,7 +146,7 @@ class MyTranslation extends Translations {
           "termsOfService": "شروط الخدمة",
           "welcome": "مرحبًا",
           "hi": "مرحبًا",
-          "profile": "الملف الشخصي",
+          AppLocalization.profile: "الملف الشخصي",
           "editProfile": "تعديل الملف الشخصي",
           "profileUpdated": "تم تحديث الملف الشخصي",
           "dontHaveAccount": "ليس لديك حساب؟",
@@ -212,9 +218,7 @@ class MyTranslation extends Translations {
               "قم بإنشاء حساب لتجاربنا الأفضل بالنسبة لك!",
           "pleaseEnterUserName": "الرجاء إدخال اسم المستخدم",
           "pleaseEnterValidUserName": "الرجاء إدخال اسم مستخدم صالح",
-          "enterNewPassword": "أدخل كلمة المرور الجديدة",
-          "enterConfirmPassword": "أدخل تأكيد كلمة المرور",
-          "enterOldPassword": "أدخل كلمة المرور القديمة",
+
           "pleaseEnterCategoryName": "الرجاء إدخال اسم الفئة",
           "pleaseEnterSliderName": "الرجاء إدخال اسم المنزلق",
           "pleaseEnterColorName": "الرجاء إدخال اسم اللون",
@@ -261,7 +265,11 @@ class MyTranslation extends Translations {
               "اختر ما إذا كنت تبحث عن عمل أو أنك مؤسسة/شركة تحتاج إلى موظفين",
           "Create New Account": "إنشاء حساب جديد",
           "Not found data in offline mode": "لا يوجد بيانات في وضع عدم الاتصال",
+          AppLocalization.successRegister: "تم التسجيل بنجاح",
+
+//================================== Start Posts Messages ==============================
           AppLocalization.successAddPost: "تم اضافة البوست بنجاح",
+          AppLocalization.successEditPost: "تم تعديل البوست بنجاح",
           AppLocalization.thereIsSomethingError: "هناك خطأ ما.. اعد المحاولة",
           AppLocalization.areYouSureToDeleteYourComment:
               "هل انت متأكد من حذف تعليقك؟",
@@ -287,7 +295,43 @@ class MyTranslation extends Translations {
           AppLocalization.areYouSureToDelete: "هل انت متأكد من عملية الحذف",
           AppLocalization.photo: "صورة",
           AppLocalization.photoVideo: "صورة/فيديو",
+          AppLocalization.comment: "تعليق",
+          AppLocalization.completed: "مكتمل",
+          AppLocalization.incomplete: "غير مكتمل",
+          AppLocalization.recentPosts: "حديثه",
+          AppLocalization.incompletePosts: "منشورات غير مكتملة",
+          AppLocalization.completedPosts: "منشورات مكتملة",
+          AppLocalization.copy: "نسخ",
+          AppLocalization.postContentCopied: "تم نسخ محتوى المنشور",
+          AppLocalization.mark: "اشارة",
+          AppLocalization.marked: "مؤشر",
+          AppLocalization.recentPosts: "",
 
+          ///// add post message
+          AppLocalization.title: "العنوان",
+          AppLocalization.enterTitle: "ادخل عنوان",
+          AppLocalization.content: "المحتوى",
+          AppLocalization.enterContent: "ادخل محتوى",
+          AppLocalization.allowComments: "السماح بالتعليقات",
+          AppLocalization.recentPosts: "",
+          AppLocalization.recentPosts: "",
+//================================== End Posts Messages ==============================
+
+//====================== Start settings messages =======================
+          AppLocalization.deleteAccount: "Delete your Account",
+          AppLocalization.areYouSureToDeleteYourAccount:
+              "هل انت متأكد من حذف حسابك؟",
+          AppLocalization.noteForDeleteAccount:
+              "ملاحظة: لا يمكن استرداد حسابك بعد حذفه!.\nهل أنت متأكد من الاستمرار في حذف الحساب؟",
+          AppLocalization.noteForDeleteAccountThatWillDeleteAllPosts:
+              "ملاحظة: حذف الحساب سيؤدي إلى حذف كل مشاركتك في التطبيق!.\nهل أنت متأكد من الاستمرار في حذف الحساب؟",
+          AppLocalization.sure: "متأكد",
+          AppLocalization.confirm: "تأكيد",
+          AppLocalization.confirm: "",
+          AppLocalization.confirm: "",
+//======================= End settings messages =======================
+
+//======================== Start account settings messages ==========================
           AppLocalization.providerData: "بيانات مقدم الخدمة",
           AppLocalization.gender: 'الجنس',
           AppLocalization.name: "الاسم",
@@ -297,12 +341,8 @@ class MyTranslation extends Translations {
           AppLocalization.address: "العنوان",
           AppLocalization.street: "الشارع",
           AppLocalization.description: "الوصف",
-          AppLocalization.comment: "تعليق",
-          AppLocalization.completed: "مكتمل",
-          AppLocalization.incomplete: "غير مكتمل",
           AppLocalization.settings: "الاعدادات",
           AppLocalization.provider: "مزود خدمة",
-          AppLocalization.password: "كلمة المرور",
           AppLocalization.theme: "ثيم التطبيق",
           AppLocalization.save: "حفظ",
           AppLocalization.male: "ذكر",
@@ -310,11 +350,64 @@ class MyTranslation extends Translations {
           AppLocalization.addressDescription: "وصف الموقع",
           AppLocalization.tapToAdd: "انقر للاضافة",
           AppLocalization.successModifyYourData: "تم تعديل بياناتك بنجاح",
-          AppLocalization.provider: "",
-          AppLocalization.provider: "",
-          AppLocalization.provider: "",
+          AppLocalization.unFollow: "الغاء المتابعة",
+          AppLocalization.unfollowFriend:
+              "أنت وهذا الشخص صديقان حاليًا. هل تريد إلغاء متابعة هذا الشخص؟",
+          AppLocalization.chat: "محادثة",
+          AppLocalization.notFound: "لا يوجد",
+          AppLocalization.successUpgradeToProviderAccount:
+              "تمت ترقية حسابك بنجاح إلى حساب مزود خدمة",
+          AppLocalization.selectCategory: "حدد فئة",
+          AppLocalization.category: "الفئة",
+          AppLocalization.youCanOnlyEditIncompletePost:
+              "يمكنك تعديل المنشورات الغير مكتملة فقط.",
+          AppLocalization.deleteProfileImage: "حذف صورة الملف الشخصي",
 
-          //================================ Start chat messages ================================//
+          // change password messages
+          AppLocalization.forgetPassword: "هل نسيت كلمة السر؟",
+          AppLocalization.oldPassword: "كلمة السر القديمة",
+          AppLocalization.password: "كلمة المرور",
+          AppLocalization.newPassword: "كلمة السر الجديدة",
+          AppLocalization.confirmPassword: "تأكيد كلمة السر",
+          AppLocalization.enterNewPassword: "أدخل كلمة المرور الجديدة",
+          AppLocalization.enterConfirmPassword: "أدخل تأكيد كلمة المرور",
+          AppLocalization.enterOldPassword: "أدخل كلمة المرور القديمة",
+          AppLocalization.changePassword: "تغيير كلمة السر",
+          AppLocalization.changeYourPassword: "تغيير كلمة السر",
+          AppLocalization.enterYourPassword: "ادخل كلمة السر",
+          AppLocalization.oldPassword: "",
+          AppLocalization.oldPassword: "",
+          AppLocalization.oldPassword: "",
+          AppLocalization.incorrectPassword: "كلمة السر غير صحيحة",
+          AppLocalization.pleaseEnterYourPassword:
+              "الرجاء ادخال كلمة السر الخاصة بك",
+          AppLocalization.pleaseEnterOldPasswordThenNewPasswordThenConfirmIt:
+              "الرجاء ادخال كلمة السر القديمة، ثم كلمة السر الجديدة، ثم تأكيدها.",
+          AppLocalization.successChangePassword: "تم تغيير كلمة السر بنجاح",
+          AppLocalization.check: "فحص",
+          // change email messages
+          AppLocalization.changeYourEmail: "تغيير البريد الإلكتروني",
+          AppLocalization.changeEmail: "تغيير البريد الإلكتروني",
+          AppLocalization.pleaseEnterNewEmail:
+              "الرجاء ادخال البريد الإلكتروني الجديد",
+//======================== End account settings messages ==========================
+
+//================================ Start Search messages ============================
+          AppLocalization.posts: "منشورات",
+          AppLocalization.users: "مستخدمين",
+          AppLocalization.writeToSearch: "اكتب للبحث",
+//================================ End Search messages ==============================
+
+//================================ Start Search messages ============================
+          AppLocalization.addAddress: "Add address",
+          AppLocalization.enterAddressDescription:
+              "Enter a description of the address",
+          AppLocalization.enterStreetName: "Enter the street name",
+          AppLocalization.enterCityName: "Enter the city name",
+          AppLocalization.optional: "(optional)",
+//================================ End Search messages ==============================
+
+//================================ Start chat messages ================================//
           AppLocalization.conversationDeletedSuccess: "تم حذف المحادثة بنجاح",
           AppLocalization.conversationDeletedFail: "فشل حذف المحادثة",
           AppLocalization.messageInfo: "معلومات الرسالة",
@@ -629,7 +722,7 @@ class MyTranslation extends Translations {
           "emailOrUsername": "Email or username",
           "loginAnotherAccount": "Login another account",
           "yourEmail": "Your Email",
-          "forgotPwd": "Forgot Password?",
+          AppLocalization.forgetPassword: "Forgot Password?",
           "passwordIsEmpty": "Please enter password",
           "emailPwdIsIncorrect": "Email or password is incorrect",
           "passwordChanged": "Password changed successfully",

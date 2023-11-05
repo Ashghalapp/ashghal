@@ -1,28 +1,32 @@
 import 'package:ashghal_app_frontend/core/middleware/app_middleware.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/address_screen.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/signup_provider_data_screen.dart';
+import 'package:ashghal_app_frontend/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:ashghal_app_frontend/features/onboarding/splash_screen.dart';
 import 'package:ashghal_app_frontend/main_screen.dart';
 import 'package:get/get.dart';
 
-import '../features/auth/presentation/screens/auth/chooseusertype.dart';
-import '../features/auth/presentation/screens/auth/login_screen.dart';
-import '../features/auth/presentation/screens/auth/signup_screen.dart';
-import '../features/auth/presentation/screens/forgetpassword/forgetpassword_screen.dart';
-import '../features/auth/presentation/screens/forgetpassword/resetpassword_screen.dart';
-import '../features/auth/presentation/screens/test_screen.dart';
+import '../features/auth_and_user/presentation/screens/auth/chooseusertype.dart';
+import '../features/auth_and_user/presentation/screens/auth/login_screen.dart';
+import '../features/auth_and_user/presentation/screens/auth/signup_screen.dart';
+import '../features/auth_and_user/presentation/screens/forgetpassword/forgetpassword_screen.dart';
+import '../features/auth_and_user/presentation/screens/forgetpassword/resetpassword_screen.dart';
+import '../features/auth_and_user/presentation/screens/test_screen.dart';
 import 'app_routes.dart';
 
 List<GetPage<dynamic>>? routes = [
-  // GetPage(
-  //   name: '/',
-  //   page: () => const LanguageScreen(),
-  //   middlewares: [
-  //     AppMiddleware(),
-  //   ],
-  // ),
-//  GetPage(
-//     name: '/SignInGoogle',
-//     page: () =>   SignInGoogle(),
+  GetPage(
+    name: AppRoutes.splashScreen,
+    page: () => const SplashScreen(),
+    // middlewares: [
+    //   AppMiddleware(),
+    // ],
+  ),
+ GetPage(
+    name: AppRoutes.onBoarding,
+    page: () =>   const OnBoardingScreen(),
 
-//   ),
+  ),
 
   // GetPage(
   //   name: AppRoutes.mainScreen,
@@ -32,17 +36,17 @@ List<GetPage<dynamic>>? routes = [
   //   name: AppRoutes.homeScreen,
   //   page: () =>  HomeScreen(),
   // ),
-  GetPage(
-    name: AppRoutes.testScreen,
-    page: () => const TestScreen(),
-  ),
+  // GetPage(
+  //   name: AppRoutes.testScreen,
+  //   page: () => const TestScreen(),
+  // ),
   GetPage(
     name: AppRoutes.mainScreen,
     page: () => MainScreen(),
   ),
   // GetPage(
-  //   name: AppRoutes.addLocationScreen,
-  //   page: () => const AddLocationScreen(),
+    // name: AppRoutes.addLocationScreen,
+    // page: () =>  AddressScreen(),
   // ),
   // GetPage(
   //   name: AppRoutes.addDetailsScreen,
@@ -60,10 +64,10 @@ List<GetPage<dynamic>>? routes = [
     name: AppRoutes.chooseUserTypeScreen,
     page: () => const ChooseUserTypeScreen(),
   ),
-  GetPage(
-    name: AppRoutes.singUpJobScreen,
-    page: () => const SingUpScreenJob(),
-  ),
+  // GetPage(
+  //   name: AppRoutes.singUpJobScreen,
+  //   // page: () => const SignUpProviderDataScreen(),
+  // ),
   // GetPage(
   //   name: AppRoutes.singUpScreenLocation,
   //   page: () =>  const SignUpScreenLocation(),
@@ -84,7 +88,7 @@ List<GetPage<dynamic>>? routes = [
   GetPage(
     name: AppRoutes.logIn,
     page: () => const LoginScreen(),
-    middlewares: [AppMiddleware()],
+
   ),
   GetPage(
     name: AppRoutes.signUp,

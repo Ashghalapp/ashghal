@@ -2,21 +2,25 @@ import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/services/app_services.dart';
+import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/account/current_user_account_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/account/Screen/account_screen.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
+import 'package:ashghal_app_frontend/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:get/get.dart';
 
 import 'config/app_icons.dart';
-import 'features/post/presentation/screen/add_post_screen.dart';
+import 'features/post/presentation/screen/add_update_post_screen.dart';
 
 class MainScreenController extends GetxController {
   int currentIndex = 3;
@@ -96,12 +100,12 @@ class MainScreenController extends GetxController {
           //   ),
           ),
       BottomNavigationBarItem(
-          icon: myIcons(svgAssetUrl: AppIcons.chatBorder),
+          icon: myIcons(svgAssetUrl: AppIcons.heartBorder),
           activeIcon: myIcons(
-            svgAssetUrl: AppIcons.chat,
+            svgAssetUrl: AppIcons.heart,
             color: AppColors.appColorPrimary,
           ),
-          label: 'Chat'
+          label: 'Favorite'
           // activeIcon: Icon(
           //     Iconsax.heart5,
           //     // Icons.heart_broken_outlined
@@ -134,75 +138,51 @@ class MainScreenController extends GetxController {
   //===========================================//
 
   List<Widget> listPage = [
+    // index 0 => posts
     PostsScreen(),
     //  HomeScreen(),
-    // Column(
+
+    // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
-    //   children: [
-    //     const Center(child: Text("Home screen")),
-    //     ElevatedButton(onPressed: () async{
-    //       try{
-    //       PostCommentRepository ds= PostCommentRepositoryImpl();
-    //       (await ds.addPost(AddPostRequest(title: "title", content: "Upload more one multimedia", categoryId: 1)));
-    //       } catch (e){
-    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-    //       }
-    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-    //     ElevatedButton(onPressed: () async{
-    //       try{
-    //       PostCommentRepository ds= PostCommentRepositoryImpl();
-    //       (await ds.updatePost(UpdatePostRequest(id: 8, allowComment: true, address: Address.updateRequest(city: 'taiz', street: "ss", lat: 10.2))));
-    //       } catch (e){
-    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-    //       }
-    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-    //     ElevatedButton(onPressed: () async{
-    //       try{
-    //       PostCommentRepository ds= PostCommentRepositoryImpl();
-    //       (await ds.deletePost(90));
-    //       } catch (e){
-    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-    //       }
-    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-    //     ElevatedButton(onPressed: () async{
-    //       try{
-    //       PostCommentRepository ds= PostCommentRepositoryImpl();
-    //       (await ds.deleteSomePostMultimedia(DeleteSomePostMultimediaRequest(postId: 93, multimediaIds: [0])));
-    //       } catch (e){
-    //         print(">>>>>>>>>>>error<<<<<<<<<<<:$e");
-    //       }
-    //     }, child: const Text("Try", style: TextStyle(color: Colors.white))),
-    //   ],
+    //   children: [Center(child: Text("Search screen"))],
     // ),
-    const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [Center(child: Text("Search screen"))],
-    ),
-    AddPostScreen(),
+
+    // index 1 => Search for posts or users
+    AppSearchScreen(),
+
+    // index 2 => Add Post screen
+    AddUpdatePostScreen(),
     // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [Center(child: Text("Add Post"))],
     // ),
-    // Padding(
-    //   padding: const EdgeInsets.all(20),
-    //   child: Column(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: [
-    //       AppTextFormField(hintText: "User Id to start chatting with", obscureText: false, controller: userIdTextEdittingController,);
-    //       ElevatedButton(
+
+    // index 3 => favorit screen
+    const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [Center(child: Text("Favorite Posts"))],
+    ),
+    // Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [
+    //     ElevatedButton(
     //         onPressed: () {
     //           print(SharedPref.getUserToken());
     //           Get.to(() => ChatScreen());
     //         },
-    //         child: Text("Open Chat"),
-    //       )
-    //     ],
-    //   ),
+    //         child: Text("Open Chat"))
+    //   ],
     // ),
-    TestChatScreen(),
-    // TestAudio(),
-    AccountScreen(),
+    // AccountScreen(),
+    if (SharedPref.getCurrentUserData() != null) CurrentUserAccountScreen(),
+    // if (SharedPref.getCurrentUserData() == null)
+    //   FutureBuilder(
+    //     future: AppUtil.buildErrorDialog("hh"),
+    //     builder: (context, snapshot) {
+    //       return const Center(child: Text("data"));
+    //     },
+    //   )
+    // AppUtil.buildErrorDialog("hh"),
     // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [Center(child: Text("Profile Screen"))],
@@ -216,7 +196,18 @@ class MainScreenController extends GetxController {
     Icons.settings
   ];
 
-  changePage(int index) {
+  changePage(int index) async {
+    // if ((index == 2 || index == 3 || index == 4) &&
+    //     SharedPref.getCurrentUserData() == null) {
+    //   await DialogUtil.showSignInDialog();
+    //   return;
+    // }
+
+    if ((index == 2 || index == 3 || index == 4) &&
+        !AppUtil.checkUserLoginAndNotifyUser()) {
+      return;
+    }
+
     currentIndex = index;
     update();
   }

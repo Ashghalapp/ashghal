@@ -1,21 +1,69 @@
 import 'dart:io';
 import 'package:ashghal_app_frontend/config/app_patterns.dart';
+import 'package:ashghal_app_frontend/config/app_routes.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/services/dependency_injection.dart';
+import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
+import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
+import 'package:ashghal_app_frontend/core_api/api_util.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/check_password_uc.dart';
+import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/custom_report_buttomsheet.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class AppUtil {
+  static Future<void> loadCategories() async {
+    (await ApiUtil.getCategoriesFromApi()).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+    }, (resultCategories) {
+      SharedPref.setCategories(resultCategories);
+    });
+  }
+
+  static bool checkUserLoginAndNotifyUser() {
+    if (SharedPref.getCurrentUserData() == null) {
+      DialogUtil.showSignInDialog();
+      return false;
+    }
+    return true;
+  }
+
+  static PopupMenuButtonWidget getPostMenuButtonValuesWidget(Post post) {
+    final values = [AppLocalization.copy, AppLocalization.report];
+
+    return PopupMenuButtonWidget(
+      items: values,
+      onSelected: (value) {
+        return postPopupMenuButtonOnSelected(value, post);
+      },
+    );
+  }
+
+  static void postPopupMenuButtonOnSelected(String value, Post post) async {
+    if (value == AppLocalization.copy) {
+      ClipboardData clipboardData = ClipboardData(text: post.content);
+      await Clipboard.setData(clipboardData);
+      showMessage(AppLocalization.postContentCopied, Colors.grey);
+    } else if (value == AppLocalization.report) {
+      Get.bottomSheet(CustomBottomSheet());
+    }
+  }
+
   static void hideKeyboard(BuildContext context) {
     FocusScope.of(context).requestFocus(FocusNode());
   }
 
-  static Widget addProgressIndicator(double? size) {
+  static Widget addProgressIndicator([double? size, Color? color]) {
     return Center(
         child: SizedBox(
       width: size ?? 40,
@@ -23,26 +71,10 @@ class AppUtil {
       child: CircularProgressIndicator(
         strokeWidth: 2.0,
         backgroundColor: Colors.black12,
-        valueColor: AlwaysStoppedAnimation<Color>(Get.theme.primaryColor),
+        valueColor:
+            AlwaysStoppedAnimation<Color>(color ?? Get.theme.primaryColor),
       ),
     ));
-  }
-
-  static Future buildErrorDialog(String message) {
-    final size = Get.mediaQuery.size;
-    return Get.defaultDialog(
-      title: "Error!",
-      titlePadding: const EdgeInsets.only(top: 20, bottom: 10),
-      content: Container(
-        width: size.width,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Text(message),
-      ),
-      confirm: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: AppGesterDedector(onTap: () => Get.back(), text: "Ok"),
-      ),
-    );
   }
 
   ///دالة لفحص الانترنت
@@ -57,21 +89,26 @@ class AppUtil {
     return url.replaceAll(RegExp(r'localhost'), ApiConstants.baseIp);
   }
 
-  static void showErrorToast(String title, String message) {
-    Get.snackbar(title, message,
-        duration: const Duration(seconds: 4),
-        padding: EdgeInsets.only(
-          right: 10,
-          left: 10,
-          top: title == "" ? 0 : 6,
-          bottom: title == "" ? 20 : 6,
-        ));
+  static void showErrorToast(String message) {
+    Get.snackbar(
+      "",
+      message,
+      duration: const Duration(seconds: 4),
+      padding: const EdgeInsets.only(
+        right: 10,
+        left: 10,
+        // top: title == "" ? 0 : 6,
+        // bottom: title == "" ? 20 : 6,
+        top: 0,
+        bottom: 20,
+      ),
+    );
   }
 
   static void hanldeAndShowFailure(Failure failure, {String prefixText = ""}) {
     if (failure is NotSpecificFailure) {
       // if (!failure.message.contains("DioException")) {
-      buildErrorDialog("$prefixText ${failure.message}");
+      DialogUtil.showErrorDialog("$prefixText ${failure.message}");
       // }
     } else {
       String message = failure.message;
@@ -101,53 +138,11 @@ class AppUtil {
     ));
   }
 
-  static buildDialog(
-    String title,
-    String message,
-    void Function() onSubmitPresed, {
-    bool isShowCancelButton = true,
-    String? cancelButtonText,
-    String? submitButtonText,
-  }) {
-    return Get.defaultDialog(
-      backgroundColor: Get.theme.dialogBackgroundColor,
-      title: title,
-      titleStyle:
-          TextStyle(color: Get.theme.primaryColor, fontWeight: FontWeight.bold),
-      middleText: message,
-      actions: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Get.theme.primaryColor,
-          ),
-          onPressed: onSubmitPresed,
-          child: Text(
-            submitButtonText ?? AppLocalization.submit,
-            style: Get.theme.primaryTextTheme.labelSmall,
-          ),
-        ),
-        if (isShowCancelButton)
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Get.theme.primaryColor,
-            ),
-            onPressed: () {
-              Get.back();
-            },
-            child: Text(
-              cancelButtonText ?? AppLocalization.cancle,
-              style: Get.theme.primaryTextTheme.labelSmall,
-            ),
-          )
-      ],
-    );
-  }
-
   static Future<bool> exitApp(BuildContext context) {
-    buildDialog(
-      AppLocalization.warning,
-      AppLocalization.doyouwanttoexitApp,
-      () {
+    DialogUtil.showDialog(
+      title: AppLocalization.warning,
+      message: AppLocalization.doyouwanttoexitApp,
+      onSubmit: () {
         exit(0);
       },
     );
@@ -344,6 +339,77 @@ class AppUtil {
         ),
       ],
     );
+  }
+
+  static String timeAgoSince(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inSeconds < 60) {
+      return 'now';
+    }
+    // else if (difference.inSeconds < 60) {
+    //   return '${difference.inSeconds} seconds ago';
+    // }
+    else if (difference.inMinutes < 60) {
+      final minutes = difference.inMinutes;
+      return '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
+    } else if (difference.inHours < 24) {
+      final hours = difference.inHours;
+      return '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
+    } else if (difference.inDays == 1) {
+      final s = dateTime.subtract(const Duration(days: 1));
+      return 'Yesterday at ${formatDateTime(s)}';
+    } else if (difference.inDays < 7) {
+      final days = difference.inDays;
+      return '$days ${days == 1 ? 'day' : 'days'} ago';
+    } else if (difference.inDays < 30) {
+      final int days = difference.inDays;
+      int weak = 1;
+      if (days < 14) {
+        weak = 1;
+      } else if (days < 21) {
+        weak = 2;
+      } else if (days < 28) {
+        weak = 3;
+      } else {
+        weak = 4;
+      }
+      return '$weak ${weak == 1 ? 'weak' : 'weaks'} ago';
+    } else {
+      // If it's more than a week ago, return the actual date
+      return '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+    }
+  }
+
+  static String getHourMinuteDateFormat(DateTime dateTime) {
+    final hour =
+        (dateTime.hour == 12 || dateTime.hour == 0 ? 12 : dateTime.hour % 12)
+            .toString()
+            .padLeft(2, '0');
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    print(minute);
+    final period = dateTime.hour < 12 ? 'AM' : 'PM';
+    return '$hour:$minute $period';
+  }
+
+  static String formatDateTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inDays == 0) {
+      // If the date is today, return the time (HH:mm a format).
+      return getHourMinuteDateFormat(dateTime);
+    } else if (difference.inDays == 1) {
+      // If the date is yesterday, return "Yesterday".
+      return AppLocalization.yesterday;
+    } else {
+      // If more than one day has passed, return the date in "dd/MM/yy" format.
+      final day = dateTime.day.toString().padLeft(2, '0');
+      final month = dateTime.month.toString().padLeft(2, '0');
+      final year = dateTime.year.toString().substring(2);
+      return '$day/$month/$year';
+    }
   }
 
   static String getFormatedFileSize(int bytes) {

@@ -4,7 +4,9 @@ class ApiConstants {
   // static const String baseIp = "192.168.122.175";
   static const String baseIp = "192.168.128.122";
   static const String baseUrl = "http://$baseIp:8000/api/";
-  // static const String baseUrl = "http://192.168.128.175:8000/api/";
+  // static const String baseUrl = "http://192.168.30.89:8000/api/";
+  // static const String baseUrl = "http://192.168.197.108:8000/api/";
+  // static const String baseUrl = "http://127.0.0.1:8000/api/";
   static const String channelsAutherizingUrl = "${baseUrl}broadcasting/auth";
   //   static const String channelsAutherizingUrl =
   // "http://192.168.0.192:8000/api/broadcasting/auth";
@@ -16,6 +18,8 @@ class ApiConstants {
     'x_api_key': 'z5Y4eX4SGe1Be1sLhiHc40Ezw8zdVI',
     'x_language': 'en'
   };
+
+  static String GET_CATEGORIES = "category/get";
 
   static String AUTH_ENDPOINT = "auth/";
   static String CHECK_EMAIL = "${AUTH_ENDPOINT}check-email";
@@ -44,6 +48,7 @@ class ApiConstants {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   static String POST_ENDPOINT = "post/";
   static String GET_ALL_POSTS = "${POST_ENDPOINT}get";
+  static String GET_RECENT_POSTS = "${POST_ENDPOINT}get-recent-posts";
   static String GET_ALL_ALIVE_POSTS = "${POST_ENDPOINT}get-alive-posts";
   static String GET_ALL_COMPLETE_POSTS = "${POST_ENDPOINT}get-complete-posts";
   static String GET_CATEGORY_POSTS = "${POST_ENDPOINT}get-category-posts";
@@ -53,7 +58,7 @@ class ApiConstants {
   static String GET_SPECIFIC_POST = "${POST_ENDPOINT}get/";
   static String ADD_POST = "${POST_ENDPOINT}add";
   static String UPDATE_POST = "${POST_ENDPOINT}update";
-  static String SEARCH_FOR_POSTS = "${POST_ENDPOINT}search/";
+  static String SEARCH_FOR_POSTS = "${POST_ENDPOINT}search";
   static String DELETE_POST = "${POST_ENDPOINT}delete/";
   static String DELETE_SOME_POST_MULTIMEDIA =
       "${POST_ENDPOINT}delete-some-multimedia";
@@ -77,12 +82,30 @@ class ApiConstants {
       "${COMMENT_ENDPOINT}delete-image/";
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///============================== User Urls =============================================
+  ///============================== User and FollowerUrls =============================================
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   static String USER_ENDPOINT = "user/";
   static String GET_CURRENT_USER = "${USER_ENDPOINT}current-user";
   static String GET_SPECIFIC_USER = "${USER_ENDPOINT}get/";
   static String UPDATE_USER = "${USER_ENDPOINT}update";
+  static String CONVERT_CLIENT_TO_PROVIDER =
+      "${USER_ENDPOINT}client-to-provider";
+  static String CONVERT_PROVIDER_TO_CLIENT =
+      "${USER_ENDPOINT}provider-to-client";
+  static String CHECK_PASSWORD = "${USER_ENDPOINT}check-password/";
+  static String CHANGE_PASSWORD = "${USER_ENDPOINT}change-password";
+
+  static String GET_USER_FOLLOWERS = "${USER_ENDPOINT}get-followers";
+  static String GET_USER_FOLLOWINGS = "${USER_ENDPOINT}get-following";
+  static String FOLLOW_USER = "${USER_ENDPOINT}follow-user/";
+  static String UNFOLLOW_USER = "${USER_ENDPOINT}unfollow-user/";
+
+  /// cancel user from following you (current user)
+  static String UNFOLLOW_ME = "${USER_ENDPOINT}unfollow-me/";
+  static String SEARCH_FOR_USERS = "${USER_ENDPOINT}search";
+  static String DELETE_USER_IMAGE = "${USER_ENDPOINT}delete-image";
+  static String ADD_ADDRESS_TO_USER = "${USER_ENDPOINT}add-address-to-user";
+  static String DELETE_ACCOUNT = "${USER_ENDPOINT}delete";
 }
 
 class ChannelsEventsNames {
