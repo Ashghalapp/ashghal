@@ -89,8 +89,11 @@ class MyTranslation extends Translations {
           "about": "نبذة عنا",
           "addSomethingAboutPost": "أضف شيئًا حول المنشور",
 
+          "please Grant Required Location Permission": "الرجاء السماح بصلاحيات الوصول للموقع",
           "left": "الباقي",
+          "Personal info": "التفاصيل الشخصية",
           "ended": "انتهى",
+          "skip": "تخطي",
           "ago": "منذ",
           "current": "حالي",
           "completed": "تم",

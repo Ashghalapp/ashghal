@@ -124,7 +124,7 @@ class OnBoardingScreen extends GetView<OnBoardingController> {
                     // width: 6,
                     width: controller.currentIndex.value == index ? 22 : 12,
                     decoration: BoxDecoration(
-                      color: AppColors.appColorPrimary,
+                      color:controller.currentIndex.value == index? AppColors.appColorPrimary:AppColors.iconColor,
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     margin: const EdgeInsets.only(right: 10),

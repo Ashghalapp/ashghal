@@ -12,7 +12,7 @@ class AppTextFormField extends StatelessWidget {
   final String? iconName;
   final String? sufficxIconDataName;
   final bool obscureText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String? Function(String?)? validator;
   final void Function()? onSuffixIconPressed;
   final EdgeInsetsGeometry padding;
@@ -31,7 +31,7 @@ class AppTextFormField extends StatelessWidget {
     this.iconName,
     this.hintText,
     required this.obscureText,
-    required this.controller,
+   this.controller,
     this.validator,
     this.sufficxIconDataName,
     this.onSuffixIconPressed,

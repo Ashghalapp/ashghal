@@ -5,6 +5,8 @@ import 'package:ashghal_app_frontend/config/theme_controller.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/api_util.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/signup_details_screen.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/signup_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/settings_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/change_password_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/account/header_widgets/profile_account_header_widget.dart';
@@ -94,7 +96,8 @@ class MyApp extends StatelessWidget {
       // initialRoute: AppRoutes.mainScreen-
 
       // home: SettingScreen(user: SharedPref.getCurrentUserData()),
-      initialRoute: AppRoutes.splashScreen,
+      // initialRoute: AppRoutes.splashScreen,
+      home: SignupAddressScreen(),
       // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
       // home: Tester(),

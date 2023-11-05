@@ -221,7 +221,7 @@ class PostCardWidget extends StatelessWidget {
         text: TextSpan(
           children: [
             TextSpan(
-                text: "${address.street}, ", style: Get.textTheme.bodyMedium),
+                text: "${address.district}, ", style: Get.textTheme.bodyMedium),
             TextSpan(text: address.city, style: Get.textTheme.bodyMedium),
           ],
         ),

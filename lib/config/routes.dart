@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/core/middleware/app_middleware.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/address_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/signup_provider_data_screen.dart';
 import 'package:ashghal_app_frontend/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:ashghal_app_frontend/features/onboarding/splash_screen.dart';
@@ -44,8 +45,8 @@ List<GetPage<dynamic>>? routes = [
     page: () => const MainScreen(),
   ),
   // GetPage(
-  //   name: AppRoutes.addLocationScreen,
-  //   page: () => const AddLocationScreen(),
+    // name: AppRoutes.addLocationScreen,
+    // page: () =>  AddressScreen(),
   // ),
   // GetPage(
   //   name: AppRoutes.addDetailsScreen,

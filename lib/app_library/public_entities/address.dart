@@ -1,7 +1,9 @@
 class Address {
   final int? id;
   final String? city;
-  final String? street;
+  final String? district;
+  // final String? street;
+  // final String? district;
   final double? lat;
   final double? long;
   final String? desc;
@@ -11,7 +13,7 @@ class Address {
   Address._({
     this.id,
     this.city,
-    this.street,
+    this.district,
     this.lat,
     this.long,
     this.desc,
@@ -21,12 +23,12 @@ class Address {
 
   factory Address.addRequest({
     required String city,
-    required String street,
+    required String district,
     String? desc,
     double? lat,
     double? long,
   }) =>
-      Address._(city: city, street: street, desc: desc, lat: lat, long: long);
+      Address._(city: city, district: district, desc: desc, lat: lat, long: long);
 
   factory Address.updateRequest({
     String? city,
@@ -35,13 +37,13 @@ class Address {
     double? lat,
     double? long,
   }) =>
-      Address._(city: city, street: street, desc: desc, lat: lat, long: long);
+      Address._(city: city, district: street, desc: desc, lat: lat, long: long);
 
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address._(
       id: json['id'],
       city: json['city'],
-      street: json['street'],
+      district: json['street'],
       lat: json['lat'] is double
           ? json['lat']
           : (json['lat'] is int ? (json['lat'] as int).toDouble() : null),
@@ -57,7 +59,7 @@ class Address {
   Map<String, Object?> toJson() {
     return {
       if (city != null) 'city': city,
-      if (street != null) 'street': street,
+      if (district != null) 'street': district,
       if (lat != null) 'lat': lat,
       if (long != null) 'long': long,
       if (desc != null) 'desc': desc,

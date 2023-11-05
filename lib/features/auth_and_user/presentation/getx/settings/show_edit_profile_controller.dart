@@ -62,7 +62,7 @@ class ShowEditProfileController extends GetxController {
     birthDate.value = userData.value.birthDate;
     if (userData.value.address != null) {
       city.value = userData.value.address?.city ?? "";
-      street.value = userData.value.address?.street ?? "";
+      street.value = userData.value.address?.district ?? "";
       addressDesc.value = userData.value.address?.desc ?? "";
     }
   }
@@ -73,7 +73,7 @@ class ShowEditProfileController extends GetxController {
       selectedGender.value != userData.value.gender.name ||
       birthDate.value != userData.value.birthDate ||
       city.value != (userData.value.address?.city ?? "") ||
-      street.value != (userData.value.address?.street ?? "") ||
+      street.value != (userData.value.address?.district ?? "") ||
       addressDesc.value != (userData.value.address?.desc ?? "");
 
   UpdateUserRequest getUpdatedDataRequest() {
@@ -91,11 +91,11 @@ class ShowEditProfileController extends GetxController {
     // وكذلك في حالة تم التعديل على بيانات الموقع
     if (userData.value.address != null) {
       if (city.value != userData.value.address?.city ||
-          street.value != userData.value.address?.street ||
+          street.value != userData.value.address?.district ||
           addressDesc.value != userData.value.address?.desc) {
         Address address = Address.updateRequest(
           city: city.value != userData.value.address?.city ? city.value : null,
-          street: street.value != userData.value.address?.street
+          street: street.value != userData.value.address?.district
               ? street.value
               : null,
           desc: addressDesc.value != userData.value.address?.desc

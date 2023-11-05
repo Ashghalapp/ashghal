@@ -11,7 +11,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
-  void logOut() {
+  void logOut() { 
     SharedPref.logout();
     Get.offAllNamed(AppRoutes.logIn);
   }

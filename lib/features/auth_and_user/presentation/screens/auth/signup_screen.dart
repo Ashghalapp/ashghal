@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/config/app_icons.dart';
+import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/Auth/singup_controller.dart';
 import '../../widgets/social_icons.dart';
+import '../validate_screen.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends GetView<SignUpController> {
@@ -36,9 +38,7 @@ class SignUpScreen extends GetView<SignUpController> {
               AppLocalization.createNewAccount,
               style: Theme.of(context).textTheme.headlineLarge,
             ),
-            const SizedBox(
-              height: 30
-            ),
+            const SizedBox(height: 30),
             Form(
               key: controller.signUpFormKey,
               child: Column(
@@ -149,11 +149,11 @@ class SignUpScreen extends GetView<SignUpController> {
                       ),
                       TextButton(
                         style: TextButton.styleFrom(shadowColor: Colors.white),
-                        onPressed: () => Get.offAllNamed(AppRoutes.logIn,),
-                        child: Text(
-                          AppLocalization.login,
-                          style:Get.textTheme.labelMedium
+                        onPressed: () => Get.offAllNamed(
+                          AppRoutes.logIn,
                         ),
+                        child: Text(AppLocalization.login,
+                            style: Get.textTheme.labelMedium),
                       ),
                     ],
                   ),
@@ -167,207 +167,107 @@ class SignUpScreen extends GetView<SignUpController> {
   }
 }
 
+class SignupAddressScreen extends GetView<SignUpController> {
+  const SignupAddressScreen({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(AppLocalization.addAddress)),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        children: [
+          const SizedBox(height: 20),
+          Form(
+            key: controller.addressFormKey,
+            child: Column(
+              children: [
+                // City DropDownButton
+                AppDropDownButton(
+                  items: controller.cities
+                      .map<Map<String, Object>>((e) => {
+                            'id': e['id'] ?? 1,
+                            'name': Get.locale?.languageCode == 'ar'
+                                ? e['name_ar'] ?? ''
+                                : e['name_en'] ?? ''
+                          })
+                      .toList(),
+                  // initialValue: controller.selectedCity.value,
+                  labelText: 'City',
+                  hintText: 'Select a city',
+                  onChange: (selectedValue) {
+                    controller.selectedCity.value =
+                        int.parse(selectedValue.toString());
+                    controller.updateDistrictDropdown(
+                        int.parse(selectedValue.toString()));
+                  },
+                ),
+                const SizedBox(height: 20),
+                Obx(() => AppDropDownButton(
+                      items: controller
+                              .cityDistricts[controller.selectedCity.value]
+                              ?.map<Map<String, Object>>((e) => {
+                                    'id': e['id'] ?? 1,
+                                    'name': Get.locale?.languageCode == 'ar'
+                                        ? e['name_ar'] ?? ''
+                                        : e['name_en'] ?? ''
+                                  })
+                              .toList() ??
+                          [],
+                      // initialValue: controller.selectedDistrict.value,
+                      labelText: 'District',
+                      hintText: 'Select a district',
+                      onChange: (selectedValue) {
+                        controller.selectedDistrict =
+                            int.parse(selectedValue.toString());
+                      },
+                    )),
+                // description form field
+                AppTextFormField(
+                  obscureText: false,
+                  controller: controller.descController,
+                  labelText:
+                      "${AppLocalization.description} ${AppLocalization.optional}",
+                  minLines: 4,
+                  maxLines: 6,
+                  hintText: AppLocalization.enterAddressDescription,
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                ),
+              ],
+            ),
+          ),
 
-// class SingUpScreenEmail extends GetView<SignUpController> {
-//   const SingUpScreenEmail({super.key});
+          const SizedBox(height: 20),
 
-//   @override
-//   Widget build(BuildContext context) {
-//     Size size = MediaQuery.of(context).size;
-//     return Scaffold(
-//       appBar: MyAppBar().myappbar('18'),
-//       body: Padding(
-//         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
-//         child: SingleChildScrollView(
-//           child: Column(children: [
-//             SizedBox(
-//               height: size.height * 0.03,
-//             ),
-//             Text(
-//               textAlign: TextAlign.center,
-//               ' Email Verfication',
-//               style: Theme.of(context).textTheme.displayMedium,
-//             ),
-//             const SizedBox(
-//               height: 10,
-//             ),
-//             const Text(
-//               'Please Enter your Email To Send The Verfication Code  ',
-//               style: TextStyle(color: AppColors.gray),
-//               textAlign: TextAlign.center,
-//             ),
-//             const SizedBox(height: 30),
-//             const SizedBox(height: 30),
-//             MyTextFormField(
-//               hintText: '12'.tr,
-//               iconData: Icons.email_outlined,
-//               lable: '18'.tr,
-//               obscureText: false,
-//               controller: controller.emailController,
-//               validator: (val) {
-//                 return validInput(val!, 10, 50, 'email');
-//               },
-//             ),
-//             SizedBox(
-//               height: size.height * 0.03,
-//             ),
-//             MyGesterDedector(
-//               text: '17'.tr,
-//               color:Theme.of(context).primaryColor,
-//               onTap: () {
-//                 Get.toNamed(AppRoutes.verficationSignUp);
-//               },
-//             ),
-//             SizedBox(
-//               height: size.height * 0.03,
-//             ),
-//             TextButton(
-//               style: TextButton.styleFrom(shadowColor: Colors.white),
-//               onPressed: () => Get.offNamed(AppRoutes.succesSignUp),
-//               child: Text(
-//                 '58'.tr,
-//                 style: const TextStyle(
-//                   color: AppColors.darkPrimaryColor,
-//                 ),
-//               ),
-//             ),
-//           ]),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class SignUpScreenLocation extends StatefulWidget {
-//   const SignUpScreenLocation({super.key});
-
-//   @override
-//   State<SignUpScreenLocation> createState() => _SignUpScreenLocationState();
-// }
-
-// class _SignUpScreenLocationState extends State<SignUpScreenLocation> {
-//   final TextEditingController _locationController = TextEditingController();
-//   // LatLng? _selectedLocation;
-//   // Location location = new Location();
-
-//   // Future<LocationData?> getLocation() async {
-//   //   bool _serviceEnabled;
-//   //   PermissionStatus _permissionGranted;
-//   //   LocationData? _locationData;
-//   //   try {
-//   //     _serviceEnabled = await location.serviceEnabled();
-//   //     if (!_serviceEnabled) {
-//   //       _serviceEnabled = await location.requestService();
-//   //       if (!_serviceEnabled) {
-//   //         return null;
-//   //       }
-//   //     }
-//   //     _permissionGranted = await location.hasPermission();
-//   //     if (_permissionGranted == PermissionStatus.denied) {
-//   //       _permissionGranted = await location.requestPermission();
-//   //       if (_permissionGranted != PermissionStatus.granted) {
-//   //         ScaffoldMessenger.of(context).showSnackBar(
-//   //             const SnackBar(content: Text('لم يتم السماح بالوصول للموقع')));
-//   //         return null;
-//   //       }
-//   //     }
-//   //     _locationData = await location.getLocation();
-//   //   } catch (e) {
-//   //     ScaffoldMessenger.of(context)
-//   //         .showSnackBar(const SnackBar(content: Text('حدث خطأ أثناء تحديد الموقع')));
-//   //     print('حدث خطأ أثناء تحديد الموقع: $e');
-//   //     return null;
-//   //   }
-//   //   return _locationData;
-//   // }
-
-//   // void _selectLocation() async {
-//   //   LocationData? result = await getLocation();
-//   //   if (result != null) {
-//   //     LatLng location = LatLng(result.latitude!, result.longitude!);
-//   //     _mapController?.animateCamera(
-//   //       CameraUpdate.newCameraPosition(
-//   //         CameraPosition(target: location, zoom: 15),
-//   //       ),
-//   //     );
-//   //     setState(() {
-//   //       _selectedLocation = location;
-//   //       _locationController.text =
-//   //         'Latitude: ${_selectedLocation?.latitude}, Longitude: ${_selectedLocation?.longitude}';
-//   //     });
-//   //   }
-//   // }
-
-//   // void _confirmLocation() {
-//   //   if (_selectedLocation != null) {
-//   //     _locationController.text =
-//   //         'Latitude: ${_selectedLocation?.latitude}, Longitude: ${_selectedLocation?.longitude}';
-//   //     // CircularNotchedRectangle();
-//   //     // Future.delayed(Duration(seconds: 3), () {
-//   //     //   Navigator.pop(context, _selectedLocation.toString());
-//   //     // });
-//   //   }
-//   // }
-//   // void _onMapCreated(GoogleMapController controller) {
-//   //   _mapController = controller;
-//   // }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: MyAppBar().myappbar('59'.tr),
-//       body: Column(
-//         children: [
-//           Padding(
-//             padding: const EdgeInsets.all(5.0),
-//             child: TextField(
-//               controller: _locationController,
-//               decoration: InputDecoration(
-//                 labelText: '61'.tr,
-//               ),
-//             ),
-//           ),
-//           Expanded(
-//             child: GoogleMap(
-//               // onMapCreated: _onMapCreated,
-//               initialCameraPosition: const CameraPosition(
-//                 target: LatLng(37.7749, -122.4194),
-//                 zoom: 12,
-//               ),
-//               markers: _selectedLocation != null
-//                   ? {
-//                       Marker(
-//                         markerId: const MarkerId('selectedLocation'),
-//                         position: _selectedLocation!,
-//                         icon: BitmapDescriptor.defaultMarker,
-//                       ),
-//                     }
-//                   : {},
-//             ),
-//           ),
-//           Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Row(
-//               children: [
-//                 FloatingActionButton(
-//                   onPressed: () {
-//                     // _selectLocation();
-//                   },
-//                   child: const Icon(Icons.add_location),
-//                 ),
-//                 const SizedBox(width: 10),
-//                 FloatingActionButton(
-//                   onPressed: () {
-//                     // _confirmLocation();
-//                   },
-//                   child: const Icon(Icons.check),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+          //
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: AppGesterDedector(
+              text: AppLocalization.next,
+              onTap: () {
+                print(controller.cities.firstWhere((element) => element['id']==controller.selectedCity.value)['name_en']);
+                print((controller.cityDistricts[controller.selectedCity]!.firstWhere((element) => element['id']==controller.selectedDistrict)['name_en']).toString());
+                Get.focusScope?.unfocus();
+                if (controller.addressFormKey.currentState?.validate() ??
+                    false) {
+                  ValidateScreen(
+                    message: AppLocalization.pleaseEnterVerifyEmailCode,
+                    resendCodeFunction: controller.resendSignUpCode,
+                    verifyCodeFunction: controller.verifySignUpCode,
+                  );
+                  // onSubmit(
+                  //   city: controller.cityController.text,
+                  //   street: controller.streetController.text,
+                  //   desc: controller.descController.text,
+                  // );
+                }
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
