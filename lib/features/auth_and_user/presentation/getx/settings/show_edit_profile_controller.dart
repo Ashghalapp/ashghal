@@ -148,13 +148,13 @@ class ShowEditProfileController extends GetxController {
 
   Future<void> addAddressToUser({
     required String city,
-    required String street,
+    required String district,
     String? desc,
   }) async {
     EasyLoading.show(status: AppLocalization.loading);
     AddAddrressToUserUseCase addAddressUC = di.getIt();
     final result = addAddressUC.call(
-      AddAddressToUserRequest(city: city, street: street, desc: desc),
+      AddAddressToUserRequest(city: city, district: district, desc: desc),
     );
 
     (await result).fold((failure) {

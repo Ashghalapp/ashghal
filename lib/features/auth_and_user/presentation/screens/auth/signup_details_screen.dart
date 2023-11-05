@@ -4,6 +4,7 @@ import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/address_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -80,11 +81,14 @@ class SignupDetailsScreen extends GetView<SignUpController> {
                     visible: (controller.selectedGender.value.isNotEmpty &&
                         controller.birthDate.value != null),
                     child: AppGesterDedector(
-                        onTap: () {
-                          Get.to(const SignupAddressScreen());
-                          controller.getUserLocation();
-                        },
-                        text: AppLocalization.next),
+                      onTap: () {
+                        Get.to(() => AddressScreen(
+                          onSubmit: controller.submitAddressData,
+                        ));
+                        controller.getUserLocation();
+                      },
+                      text: AppLocalization.next,
+                    ),
                   ),
 
                   // TextButton(onPressed: ()=>Get.toNamed(AppRoutes.addLocationScreen), child: Text(AppLocalization.skip))

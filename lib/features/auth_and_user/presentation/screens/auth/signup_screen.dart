@@ -1,6 +1,8 @@
 import 'package:ashghal_app_frontend/config/app_icons.dart';
+import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/address_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -167,107 +169,160 @@ class SignUpScreen extends GetView<SignUpController> {
   }
 }
 
-class SignupAddressScreen extends GetView<SignUpController> {
-  const SignupAddressScreen({super.key});
+// final addressController = Get.put(AddressController());
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(AppLocalization.addAddress)),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        children: [
-          const SizedBox(height: 20),
-          Form(
-            key: controller.addressFormKey,
-            child: Column(
-              children: [
-                // City DropDownButton
-                AppDropDownButton(
-                  items: controller.cities
-                      .map<Map<String, Object>>((e) => {
-                            'id': e['id'] ?? 1,
-                            'name': Get.locale?.languageCode == 'ar'
-                                ? e['name_ar'] ?? ''
-                                : e['name_en'] ?? ''
-                          })
-                      .toList(),
-                  // initialValue: controller.selectedCity.value,
-                  labelText: 'City',
-                  hintText: 'Select a city',
-                  onChange: (selectedValue) {
-                    controller.selectedCity.value =
-                        int.parse(selectedValue.toString());
-                    controller.updateDistrictDropdown(
-                        int.parse(selectedValue.toString()));
-                  },
-                ),
-                const SizedBox(height: 20),
-                Obx(() => AppDropDownButton(
-                      items: controller
-                              .cityDistricts[controller.selectedCity.value]
-                              ?.map<Map<String, Object>>((e) => {
-                                    'id': e['id'] ?? 1,
-                                    'name': Get.locale?.languageCode == 'ar'
-                                        ? e['name_ar'] ?? ''
-                                        : e['name_en'] ?? ''
-                                  })
-                              .toList() ??
-                          [],
-                      // initialValue: controller.selectedDistrict.value,
-                      labelText: 'District',
-                      hintText: 'Select a district',
-                      onChange: (selectedValue) {
-                        controller.selectedDistrict =
-                            int.parse(selectedValue.toString());
-                      },
-                    )),
-                // description form field
-                AppTextFormField(
-                  obscureText: false,
-                  controller: controller.descController,
-                  labelText:
-                      "${AppLocalization.description} ${AppLocalization.optional}",
-                  minLines: 4,
-                  maxLines: 6,
-                  hintText: AppLocalization.enterAddressDescription,
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                ),
-              ],
-            ),
-          ),
+// class SignupAddressScreen extends GetView<SignUpController> {
+//   const SignupAddressScreen({super.key});
 
-          const SizedBox(height: 20),
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text(AppLocalization.addAddress)),
+//       body: ListView(
+//         padding: const EdgeInsets.symmetric(horizontal: 10),
+//         children: [
+//           const SizedBox(height: 20),
+//           Form(
+//             key: controller.addressFormKey,
+//             child: Column(
+//               children: [
+//                 // city DropDownButton
+//                 AppDropDownButton(
+//                   items: cities
+//                       .map<Map<String, Object>>((e) => {
+//                             'id': e['id'] ?? 1,
+//                             'name': Get.locale?.languageCode == 'ar'
+//                                 ? e['name_ar'] ?? ''
+//                                 : e['name_en'] ?? ''
+//                           })
+//                       .toList(),
+//                   // initialValue: controller.selectedCity.value,
+//                   labelText: AppLocalization.city,
+//                   hintText: 'Select a city',
+//                   onChange: (selectedValue) {
+//                     addressController.selectedCity.value =
+//                         int.parse(selectedValue?.toString() ?? '1');
+//                     addressController.districts.value =
+//                         cityDistricts[addressController.selectedCity] ?? [];
 
-          //
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: AppGesterDedector(
-              text: AppLocalization.next,
-              onTap: () {
-                print(controller.cities.firstWhere((element) => element['id']==controller.selectedCity.value)['name_en']);
-                print((controller.cityDistricts[controller.selectedCity]!.firstWhere((element) => element['id']==controller.selectedDistrict)['name_en']).toString());
-                Get.focusScope?.unfocus();
-                if (controller.addressFormKey.currentState?.validate() ??
-                    false) {
-                  ValidateScreen(
-                    message: AppLocalization.pleaseEnterVerifyEmailCode,
-                    resendCodeFunction: controller.resendSignUpCode,
-                    verifyCodeFunction: controller.verifySignUpCode,
-                  );
-                  // onSubmit(
-                  //   city: controller.cityController.text,
-                  //   street: controller.streetController.text,
-                  //   desc: controller.descController.text,
-                  // );
-                }
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
+//                     controller.selectedCity.value =
+//                         int.parse(selectedValue.toString());
+//                     // controller.updateDistrictDropdown(
+//                     //     int.parse(selectedValue.toString()));
+//                   },
+//                 ),
+
+//                 // districts dropdown
+//                 Obx(
+//                   () => AppDropDownButton(
+//                     margin: const EdgeInsets.only(top: 20),
+//                     items: addressController.districts
+//                         .map<Map<String, Object>>((e) => {
+//                               'id': e['id'] ?? 1,
+//                               'name': Get.locale?.languageCode == 'ar'
+//                                   ? e['name_ar'] ?? ''
+//                                   : e['name_en'] ?? ''
+//                             })
+//                         .toList(),
+//                     // cityDistricts[controller.selectedCity.value]
+//                     //         ?.map<Map<String, Object>>((e) => {
+//                     //               'id': e['id'] ?? 1,
+//                     //               'name': Get.locale?.languageCode == 'ar'
+//                     //                   ? e['name_ar'] ?? ''
+//                     //                   : e['name_en'] ?? ''
+//                     //             })
+//                     //         .toList() ??
+//                     //     [],
+//                     // initialValue: controller.selectedDistrict.value,
+//                     labelText: 'District',
+//                     hintText: 'Select a district',
+//                     onChange: (selectedValue) {
+//                       addressController.selectedDistrict.value =
+//                           int.parse(selectedValue?.toString() ?? '1');
+//                       // controller.selectedDistrict =
+//                       //     int.parse(selectedValue.toString());
+//                     },
+//                   ),
+//                 ),
+
+//                 // description form field
+//                 AppTextFormField(
+//                   obscureText: false,
+//                   controller: controller.descController,
+//                   labelText:
+//                       "${AppLocalization.description} ${AppLocalization.optional}",
+//                   minLines: 3,
+//                   maxLines: 6,
+//                   hintText: AppLocalization.enterAddressDescription,
+//                   padding: const EdgeInsets.symmetric(horizontal: 15),
+//                   margin: const EdgeInsets.only(top: 20, bottom: 40),
+//                 ),
+//               ],
+//             ),
+//           ),
+
+
+//           // 
+//           AppGesterDedector(
+//             text: AppLocalization.next,
+//             onTap: () {
+//               String cityName = "";
+//               String districtName = "";
+//               final int cityIndex = cities.indexWhere(
+//                   (city) => city['id'] == addressController.selectedCity.value);
+
+//               printInfo(info: "========city index: $cityIndex");
+//               if (cityIndex != -1) {
+//                 cityName = cities[cityIndex]['name_en'].toString();
+//               }
+
+//               final int districtIndex =
+//                   cityDistricts[addressController.selectedCity.value]
+//                           ?.indexWhere((district) =>
+//                               district['id'] ==
+//                               addressController.selectedDistrict.value) ??
+//                       -1;
+//               printInfo(info: "========district index: $districtIndex");
+//               if (districtIndex != -1) {
+//                 districtName = cityDistricts[addressController.selectedCity]
+//                             ?[districtIndex]['name_en']
+//                         .toString() ??
+//                     "";
+//               }
+//               printInfo(info: "<<<<<<<<<city name: $cityName");
+//               printInfo(info: "<<<<<<<<<district name: $districtName");
+
+//               // final int cityIndex = cities.indexWhere(
+//               //     (city) => city['id'] == addressController.selectedCity);
+//               // if (cityIndex != -1) {
+//               //   final String city = cities[cityIndex]['name_en'].toString();
+//               // }
+
+//               // print(cities.firstWhere((element) =>
+//               //     element['id'] == controller.selectedCity.value)['name_en']);
+//               // print((cityDistricts[controller.selectedCity]!.firstWhere(
+//               //         (element) =>
+//               //             element['id'] ==
+//               //             controller.selectedDistrict)['name_en'])
+//               //     .toString());
+//               Get.focusScope?.unfocus();
+//               if (controller.addressFormKey.currentState?.validate() ??
+//                   false) {
+//                 // ValidateScreen(
+//                 //   message: AppLocalization.pleaseEnterVerifyEmailCode,
+//                 //   resendCodeFunction: controller.resendSignUpCode,
+//                 //   verifyCodeFunction: controller.verifySignUpCode,
+//                 // );
+//                 // onSubmit(
+//                 //   city: controller.cityController.text,
+//                 //   street: controller.streetController.text,
+//                 //   desc: controller.descController.text,
+//                 // );
+//               }
+//             },
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }

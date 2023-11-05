@@ -1,18 +1,21 @@
 class AddAddressToUserRequest {
   String city;
-  String street;
+  String district;
+  String? street;
   String? desc;
 
   AddAddressToUserRequest({
     required this.city,
-    required this.street,
+    required this.district,
+    this.street,
     this.desc,
   });
 
   Map<String, Object> toJson() {
     return {
       'city': city,
-      'street': street,
+      'district': district,
+      if (street != null) 'street': desc!,
       if (desc != null) 'desc': desc!,
     };
   }
