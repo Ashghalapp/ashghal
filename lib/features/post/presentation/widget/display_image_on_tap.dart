@@ -47,7 +47,7 @@ class ImagePage extends StatelessWidget {
                 imageUrl: imageUrl,
                 fit: BoxFit.cover,
                 onTap: () => Get.to(() => ImagePage(imageUrl: imageUrl)),
-                errorAssetImagePath: "assets/images/unKnown",
+                errorAssetImagePath: "assets/images/image-loading-failed.png",
               ),
             ),
             Expanded(
