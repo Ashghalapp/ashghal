@@ -10,17 +10,19 @@ class AppFunctions {
   }
 
   static User get fakeUserData => User(
-      id: 0,
-      name: "name",
-      birthDate: DateTime.now(),
-      gender: Gender.male,
-      isBlocked: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      followersUsers: [],
-      followingUsers: [],
-      followersRequestsWait: [],
-      followRequestsSent: []);
+        id: 0,
+        name: "name",
+        birthDate: DateTime.now(),
+        gender: Gender.male,
+        isBlocked: false,
+        postsCount: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        followersUsers: [],
+        followingUsers: [],
+        followersRequestsWait: [],
+        followRequestsSent: [],
+      );
 
   // static User get getCurrentUserDataOffline {
   //   return SharedPref.getCurrentUserData();

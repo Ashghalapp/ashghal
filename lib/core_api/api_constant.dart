@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:get/get.dart';
+
 class ApiConstants {
   // static const String baseUrl = "http://10.0.2.2:8000/api/";
   static const String baseUrl = "http://192.168.122.197:8000/api/";
@@ -11,10 +13,10 @@ class ApiConstants {
   // static const String baseUrl = "http://localhost:8000/api/";
   // static const String baseUrl = "https://jsonplaceholder.typicode.com/";
 
-  static const Map<String, String> headers = {
+  static Map<String, String> headers = {
     'Accept': 'application/json',
     'x_api_key': 'z5Y4eX4SGe1Be1sLhiHc40Ezw8zdVI',
-    'x_language': 'en'
+    'x_language': Get.locale?.languageCode ?? 'ar'
   };
 
   static String GET_CATEGORIES = "category/get";
@@ -60,6 +62,9 @@ class ApiConstants {
   static String DELETE_POST = "${POST_ENDPOINT}delete/";
   static String DELETE_SOME_POST_MULTIMEDIA =
       "${POST_ENDPOINT}delete-some-multimedia";
+  static String MARK_POST = "${POST_ENDPOINT}mark-post";
+  static String UNMARK_POST = "${POST_ENDPOINT}unmark-post";
+  static String GET_MARKED_POSTS = "${POST_ENDPOINT}get-marked-posts";
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///============================== Comment and reply Urls =============================================
@@ -79,7 +84,6 @@ class ApiConstants {
   static String DELETE_COMMENT_OR_REPLY_IMAGE =
       "${COMMENT_ENDPOINT}delete-image/";
 
-  
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///============================== User and FollowerUrls =============================================
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,8 +91,10 @@ class ApiConstants {
   static String GET_CURRENT_USER = "${USER_ENDPOINT}current-user";
   static String GET_SPECIFIC_USER = "${USER_ENDPOINT}get/";
   static String UPDATE_USER = "${USER_ENDPOINT}update";
-  static String CONVERT_CLIENT_TO_PROVIDER = "${USER_ENDPOINT}client-to-provider";
-  static String CONVERT_PROVIDER_TO_CLIENT = "${USER_ENDPOINT}provider-to-client";
+  static String CONVERT_CLIENT_TO_PROVIDER =
+      "${USER_ENDPOINT}client-to-provider";
+  static String CONVERT_PROVIDER_TO_CLIENT =
+      "${USER_ENDPOINT}provider-to-client";
   static String CHECK_PASSWORD = "${USER_ENDPOINT}check-password/";
   static String CHANGE_PASSWORD = "${USER_ENDPOINT}change-password";
 
@@ -96,6 +102,7 @@ class ApiConstants {
   static String GET_USER_FOLLOWINGS = "${USER_ENDPOINT}get-following";
   static String FOLLOW_USER = "${USER_ENDPOINT}follow-user/";
   static String UNFOLLOW_USER = "${USER_ENDPOINT}unfollow-user/";
+
   /// cancel user from following you (current user)
   static String UNFOLLOW_ME = "${USER_ENDPOINT}unfollow-me/";
   static String SEARCH_FOR_USERS = "${USER_ENDPOINT}search";

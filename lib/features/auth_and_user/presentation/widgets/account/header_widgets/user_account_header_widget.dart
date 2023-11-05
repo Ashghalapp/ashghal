@@ -67,7 +67,7 @@ class UserAccountHeaderWidget extends StatelessWidget {
           userId: user.id,
           followers: user.followersUsers.length,
           followings: user.followingUsers.length,
-          likes: 37,
+          posts: user.postsCount,
         ),
 
         // follow and chat buttons

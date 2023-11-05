@@ -53,10 +53,13 @@ import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_cas
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_all_posts_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_category_posts_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_current_user_posts_uc.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_marked_post_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_recent_posts_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_specific_post_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_user_posts_uc.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/mark_post_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/search_for_posts_us.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/unmark_post_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/update_post_us.dart';
 import 'package:ashghal_app_frontend/features/chat/data/repositories/conversation_repository_imp.dart';
 import 'package:ashghal_app_frontend/features/chat/data/repositories/message_repository_imp.dart';
@@ -151,6 +154,9 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => SearchForPostsUseCase(getIt()));
   getIt.registerLazySingleton(() => DeletePostUseCase(getIt()));
   getIt.registerLazySingleton(() => DeleteSomePostMultimediaUseCase(getIt()));
+  getIt.registerLazySingleton(() => MarkPostUseCase(getIt()));
+  getIt.registerLazySingleton(() => UnmarkPostUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetMarkedPostUseCase(getIt()));
 //=============================End Post Dependencey Injection====================================//
 
 ///=============================================================================================//

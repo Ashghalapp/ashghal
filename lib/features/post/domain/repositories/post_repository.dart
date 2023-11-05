@@ -2,6 +2,7 @@
 // ignore_for_file: type=lint
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
 import 'package:ashghal_app_frontend/app_library/public_request/search_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/mark_unmark_post_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:dartz/dartz.dart';
 
@@ -42,5 +43,11 @@ abstract class PostRepository {
 
   /// دالة لحذف اي وسائط او ملفات متعلقة بالبوست
   Future<Either<Failure, Success>> deleteSomePostMultimedia(DeleteSomePostMultimediaRequest request);
+
+  Future<Either<Failure, Success>> markPost(MarkUnmarkPostRequest equest);
+
+  Future<Either<Failure, Success>> unmarkPost(MarkUnmarkPostRequest request);
+
+  Future<Either<Failure, List<Post>>> getMarkedPosts();
 }
 //

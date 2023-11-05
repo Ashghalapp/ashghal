@@ -16,6 +16,7 @@ import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/delete_post_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_current_user_posts_uc.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_marked_post_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_user_posts_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/update_post_us.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/screen/add_update_post_screen.dart';
@@ -28,6 +29,7 @@ import '../../../../../../core/services/dependency_injection.dart' as di;
 class CurrentUserAccountController extends GetxController {
   // final int? userId;
   RxList<Post> postList = <Post>[].obs;
+  RxList<Post> markedPostList = <Post>[].obs;
 
   Rx<User?> userData = Rx(null);
 
@@ -35,6 +37,7 @@ class CurrentUserAccountController extends GetxController {
   int perPage = 4;
 
   RxBool isRequestFinishWithoutData = false.obs;
+  RxBool isMarketRequestFinishWithoutData = false.obs;
 
   // اخر بوست تم من عنده عمل طلب لجلب صفحة index متغير لتخزين
   // جديدة من البوستات وذلك حتى لا يتم تكرار الطلب عدة مرات
@@ -162,6 +165,22 @@ class CurrentUserAccountController extends GetxController {
       print(">>>>>>>>>>>>>>>>>Done get current User Posts>>>>>>>>>>>>>>>");
     });
     EasyLoading.dismiss();
+  }
+
+  Future<void> getMarkedPosts() async {
+    final GetMarkedPostUseCase getMarkedPostsUC = di.getIt();
+    var result = getMarkedPostsUC.call();
+
+    isMarketRequestFinishWithoutData.value = false;
+    (await result).fold((failure) {
+      AppUtil.hanldeAndShowFailure(failure);
+      isMarketRequestFinishWithoutData.value = true;
+      markedPostList.value = [];
+    }, (posts) {
+      isMarketRequestFinishWithoutData.value = posts.isEmpty;
+      markedPostList.value = posts;
+      print(">>>>>>>>>>>>>>>>>Done get marked posts>>>>>>>>>>>>>>>");
+    });
   }
 
   Future<void> markPostAsComplete(int postId) async {

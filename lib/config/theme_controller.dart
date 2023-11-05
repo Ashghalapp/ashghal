@@ -1,5 +1,6 @@
 
 
+import 'package:ashghal_app_frontend/config/app_theme.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

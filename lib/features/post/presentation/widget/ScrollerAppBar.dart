@@ -43,6 +43,7 @@ class ScrollerAppBar extends StatelessWidget {
   }
 
   void _runPageScrollerListener(ScrollController pageScrollController) {
+    
     pageScrollController.addListener(() {
       // printError(info: "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
       if (pageScrollController.offset < 100) {

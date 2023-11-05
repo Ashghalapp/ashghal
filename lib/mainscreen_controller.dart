@@ -6,6 +6,7 @@ import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/account/current_user_account_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
+import 'package:ashghal_app_frontend/features/post/presentation/screen/marked_posts_screen.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
 import 'package:ashghal_app_frontend/search_screen.dart';
 import 'package:flutter/material.dart';
@@ -151,10 +152,11 @@ class MainScreenController extends GetxController {
     // ),
 
     // index 3 => favorit screen
-    const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [Center(child: Text("Favorite Posts"))],
-    ),
+    MarkedPostsScreen(),
+    // const Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [Center(child: Text("Favorite Posts"))],
+    // ),
     // Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [
@@ -166,6 +168,7 @@ class MainScreenController extends GetxController {
     //         child: Text("Open Chat"))
     //   ],
     // ),
+
     // AccountScreen(),
     if (SharedPref.getCurrentUserData() != null) CurrentUserAccountScreen(),
     // if (SharedPref.getCurrentUserData() == null)

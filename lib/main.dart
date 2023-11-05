@@ -34,7 +34,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialServices();
   AppUtil.loadCategories();
-  
+
   // (await SharedPreferences.getInstance()).clear();
   runApp(const MyApp());
   configLoading();
@@ -68,7 +68,6 @@ class MyApp extends StatelessWidget {
     AppLocallcontroller controller = Get.find();
     ThemeController themeController = Get.find();
     return GetMaterialApp(
-
       darkTheme: AppTheme.darkTheme,
       // darkTheme: AppServices.apptheme,
       builder: EasyLoading.init(),
@@ -98,7 +97,7 @@ class MyApp extends StatelessWidget {
       // home: SettingScreen(user: SharedPref.getCurrentUserData()),
       // initialRoute: AppRoutes.splashScreen,
       // home: SignUpScreen(),
-      initialRoute: AppRoutes.mainScreen,
+      initialRoute: AppRoutes.splashScreen,
       // initialRoute: AppRoutes.logIn,
       // home: Tester(),
       // home: TestDownloading(),

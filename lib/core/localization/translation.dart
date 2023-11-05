@@ -328,6 +328,8 @@ class MyTranslation extends Translations {
 //======================= End settings messages =======================
 
 //======================== Start account settings messages ==========================
+          AppLocalization.followings : "متابعات",
+          AppLocalization.followers : "متابعون",
           AppLocalization.providerData: "بيانات مقدم الخدمة",
           AppLocalization.gender: 'الجنس',
           AppLocalization.name: "الاسم",
@@ -389,10 +391,16 @@ class MyTranslation extends Translations {
 //======================== End account settings messages ==========================
 
 //================================ Start Search messages ============================
-          AppLocalization.posts: "منشورات",
+          AppLocalization.posts: "مشاركات",
           AppLocalization.users: "مستخدمين",
           AppLocalization.writeToSearch: "اكتب للبحث",
           AppLocalization.district: "المديرية",
+//================================ End Search messages ==============================
+
+
+//================================ Start Search messages ============================
+  AppLocalization.markedPosts : "المشاراكات المؤشر عليها",
+
 //================================ End Search messages ==============================
 
 
@@ -403,7 +411,6 @@ class MyTranslation extends Translations {
   AppLocalization. enterCityName : "Enter the city name",
   AppLocalization.optional : "(optional)",
 //================================ End Search messages ==============================
-
 
 
 //================================ Start chat messages ================================//

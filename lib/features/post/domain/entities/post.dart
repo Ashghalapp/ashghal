@@ -10,6 +10,7 @@ class Post extends Equatable {
   final DateTime expireDate;
   final bool allowComment;
   final bool isComplete;
+  final bool isMarked;
   /// basic user data it come with the shape: {'id':..., 'name':..., 'image_url':...}
   final Map<String, Object?> basicUserData;
   int commentsCount;
@@ -27,6 +28,7 @@ class Post extends Equatable {
     required this.expireDate,
     required this.allowComment,
     required this.isComplete,
+    required this.isMarked,
     required this.basicUserData,
     required this.commentsCount,
     this.address,

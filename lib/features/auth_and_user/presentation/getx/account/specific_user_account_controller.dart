@@ -92,8 +92,10 @@ class SpecificUserAccountController extends GetxController {
     // perPage = 15;
 
     final GetUserPostsUseCase getSpecificUserUS = di.getIt();
-    var result = getSpecificUserUS.call(GetUserPostsRequest(
-        userId: userId, pageNumber: pageNumber, perPage: perPage));
+    var result = getSpecificUserUS.call(
+      GetUserPostsRequest(
+          currentUserIdi: userId, pageNumber: pageNumber, perPage: perPage),
+    );
 
     (await result).fold((failure) {
       AppUtil.hanldeAndShowFailure(failure);
@@ -113,7 +115,7 @@ class SpecificUserAccountController extends GetxController {
       pageNumber++;
       final GetUserPostsUseCase getSpecificUserUS = di.getIt();
       var result = getSpecificUserUS.call(GetUserPostsRequest(
-          userId: userId, pageNumber: pageNumber, perPage: perPage));
+          currentUserIdi: userId, pageNumber: pageNumber, perPage: perPage));
 
       (await result).fold((failure) {
         AppUtil.hanldeAndShowFailure(failure);

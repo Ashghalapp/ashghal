@@ -282,7 +282,7 @@ class AppLocalization {
   static String newFollower = 'New Follower'.tr;
 
   static String following = 'Following'.tr;
-  static String followers = 'Followers'.tr;
+  static String follower = 'Follower'.tr;
 
   static String justNow = "justNow".tr;
   static String monthsAgo = "months ago".tr;
@@ -389,6 +389,8 @@ class AppLocalization {
 //====================== End settings messages =======================
 
 //====================== Start account settings messages =======================
+  static String followings = "Followings";
+  static String followers = "Followers";
   static String gender = 'Gender';
   static String name = "Name";
   static String birthDate = "Birth date";
@@ -445,6 +447,11 @@ class AppLocalization {
   static var optional = "(optional)";
 //================================ End Search messages ==============================
 
+//================================ Start Search messages ============================
+  static String markedPosts = "Marked Posts";
+
+//================================ End Search messages ==============================
+
 //================================ Start chat messages ================================//
   static String conversationDeletedSuccess =
       "Conversation deleted successfully".tr;
@@ -478,6 +485,8 @@ class AppLocalization {
   static String media = "Media".tr;
   static String goToFirstMessage = "Go To First Message".tr;
   static String clearChat = "Clear Chat".tr;
+
+
 
 //================================ End chat messages ================================//
 }
