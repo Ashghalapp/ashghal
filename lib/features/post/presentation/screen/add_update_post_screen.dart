@@ -1,15 +1,20 @@
 import 'dart:io';
 
+import 'package:ashghal_app_frontend/config/app_routes.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/cashed_image_widget.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/Auth/singup_controller.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/add_update_post_controller.dart';
+import 'package:ashghal_app_frontend/test.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+
+import '../../../../mainscreen_controller.dart';
 
 class AddUpdatePostScreen extends StatelessWidget {
   final bool isUpdatePost;
@@ -17,7 +22,7 @@ class AddUpdatePostScreen extends StatelessWidget {
   AddUpdatePostScreen({super.key, this.isUpdatePost = false, this.post});
   // final PostImageController postImageController =
   //     Get.put(PostImageController());
-
+// MainScreenController controller = Get.find();
   late final addPostController =
       Get.find<AddUpdatePostController>(tag: isUpdatePost ? 'update' : 'add');
   @override
@@ -63,7 +68,7 @@ class AddUpdatePostScreen extends StatelessWidget {
                     hintText: AppLocalization.enterContent,
                     obscureText: false,
                     controller: addPostController.contentController,
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     minLines: 4,
                     maxLines: 6,
@@ -152,6 +157,7 @@ class AddUpdatePostScreen extends StatelessWidget {
                   addPostController.submitAddButton();
                 }
                 print(addPostController.imagesPaths);
+            // controller.changePage(0);
               },
             ),
           ],
@@ -194,7 +200,7 @@ class AddUpdatePostScreen extends StatelessWidget {
                           ? CashedNetworkImageWidget(
                               height: 200,
                               imageUrl: imageUrl,
-                              errorAssetImagePath: "assets/images/unKnown.jpg",
+                              errorAssetImagePath: "assets/images/image-loading-failed.png",
                             )
                           : Image.file(
                               File(imageUrl),
@@ -222,7 +228,7 @@ class AddUpdatePostScreen extends StatelessWidget {
   }
 
   Widget _buildAddMultiMediaButtonAsImage([double? width]) {
-    return InkWell(
+    return GestureDetector(
       onTap: () => addPostController.pickImages(),
       child: Container(
         alignment: AlignmentDirectional.topStart,

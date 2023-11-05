@@ -24,11 +24,12 @@ class ImageDisplayPage extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.all(8.0),
               child: CashedNetworkImageWidget(
+                
                 imageUrl: imageUrls[index],
                 fit: BoxFit.cover,
                 onTap: () =>
                     Get.to(() => ImagePage(imageUrl: imageUrls[index])),
-                errorAssetImagePath: "assets/images/unKnown",
+                errorAssetImagePath: "assets/images/image-loading-failed.png",
               ),
             );
           },

@@ -92,9 +92,9 @@ class AppTheme {
       headlineMedium: getSemiBoldStyle(
           color: AppColors.blackHeadline, fontSize: FontSize.s24),
       titleMedium: getMediumStyle(
-          color: AppColors.appColorPrimary, fontSize: FontSize.s20),
+          color: AppColors.appColorPrimary, fontSize: FontSize.s16),
       titleLarge: getBoldStyle(
-          color: AppColors.appColorPrimary, fontSize: FontSize.s28),
+          color: AppColors.appColorPrimary, fontSize: FontSize.s20),
       labelSmall:
           getRegularStyle(color: AppColors.textgray, fontSize: FontSize.s12),
       labelMedium: getRegularStyle(
@@ -234,9 +234,9 @@ class AppTheme {
       headlineMedium: getSemiBoldStyle(
           color: AppColors.blackHeadline, fontSize: FontSize.s24),
          titleLarge: getBoldStyle(
-          color: AppColors.appColorPrimary, fontSize: FontSize.s28),
-      titleMedium: getMediumStyle(
           color: AppColors.appColorPrimary, fontSize: FontSize.s20),
+      titleMedium: getMediumStyle(
+          color: AppColors.appColorPrimary, fontSize: FontSize.s16),
       labelSmall:
           getRegularStyle(color: AppColors.textgray, fontSize: FontSize.s12),
       labelMedium: getRegularStyle(

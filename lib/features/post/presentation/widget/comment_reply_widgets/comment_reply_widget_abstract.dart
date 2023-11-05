@@ -229,7 +229,7 @@ abstract class CommentReplyWidgetAbstract extends StatelessWidget {
       child: CashedNetworkImageWidget(
         imageUrl: AppFunctions.handleImagesToEmulator(imageUrl!),
         onTap: () => Get.to(() => ImagePage(imageUrl: imageUrl!)),
-        errorAssetImagePath: "assets/images/unKnown.jpg",
+        errorAssetImagePath: "assets/images/image-loading-failed.png",
         fit: BoxFit.fill,
       ),
     );
