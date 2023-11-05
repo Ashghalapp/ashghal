@@ -339,9 +339,10 @@ class AppLocalization {
   static String content = "Content";
   static String enterContent = "Enter content";
   static String allowComments = 'Allow comments';
+  static String mark = "Mark";
+  static String marked = "Marked";
 //============================ End Post Messages ===================================
-  
-  
+
   ///////////////////////Comment and replies Messages/////////////////////////////////////
   static String areYouSureToDeleteYourComment =
       "Are you sure to delete your comment?";

@@ -2,9 +2,9 @@ import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/posts_builder_widget.dart';
-import 'package:ashghal_app_frontend/core/widget/user_card_widget.dart';
 import 'package:ashghal_app_frontend/core/widget/users_builder_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/filled_outline_button.dart';
 import 'package:ashghal_app_frontend/search_controller.dart';
@@ -21,40 +21,102 @@ class AppSearchScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(120),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: AppTextFormField(
-                      obscureText: false,
-                      controller: searchController.textController,
-                      hintText: AppLocalization.writeToSearch,
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      margin: const EdgeInsets.all(10),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      right: Get.locale?.languageCode == 'en' ? 8.0 : 0,
-                      left: Get.locale?.languageCode == 'ar' ? 8.0 : 0,
-                    ),
-                    child: IconButton(
-                      onPressed: () => searchController.search(),
-                      icon: SvgPicture.asset(
-                        AppIcons.searchBorder,
-                        width: 30,
-                        height: 30,
-                        colorFilter: const ColorFilter.mode(
-                            AppColors.iconColor, BlendMode.srcIn),
+          preferredSize: const Size.fromHeight(165),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    // category drop down
+                    Flexible(
+                      child: AppDropDownButton(
+                        margin: EdgeInsets.only(
+                          left: Get.locale?.languageCode == 'ar' ? 8 : 0,
+                          right: Get.locale?.languageCode == 'en' ? 8 : 0,
+                        ),
+                        labelText: AppLocalization.category,
+                        items: searchController.categories
+                            .map((element) => element.toJson())
+                            .toList(),
+                        onChange: (newValue) {
+                          searchController.selectedCategory =
+                              int.parse(newValue?.toString() ?? "1");
+                        },
                       ),
                     ),
-                  )
-                ],
-              ),
-              Obx(() => buildFilterButtons()),
-            ],
+
+                    // city dropdown
+                    Flexible(
+                      child: AppDropDownButton(
+                        labelText: AppLocalization.city,
+                        items: searchController.categories
+                            .map((element) => element.toJson())
+                            .toList(),
+                        margin: EdgeInsets.only(
+                          left: Get.locale?.languageCode == 'ar' ? 8 : 0,
+                          right: Get.locale?.languageCode == 'en' ? 8 : 0,
+                        ),
+                        onChange: (newValue) {
+                          searchController.selectedCategory =
+                              int.parse(newValue?.toString() ?? "1");
+                        },
+                      ),
+                    ),
+
+                    // street dropdown
+                    Flexible(
+                      child: AppDropDownButton(
+                        items: searchController.categories
+                            .map((element) => element.toJson())
+                            .toList(),
+                        onChange: (newValue) {
+                          searchController.selectedCategory =
+                              int.parse(newValue?.toString() ?? "1");
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
+                // search textFormField and search icon button
+                Row(
+                  children: [
+                    // search textFormField
+                    Expanded(
+                      child: AppTextFormField(
+                        obscureText: false,
+                        controller: searchController.textController,
+                        hintText: AppLocalization.writeToSearch,
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                    ),
+
+                    // search icon button
+                    Padding(
+                      padding: EdgeInsets.only(
+                        right: Get.locale?.languageCode == 'en' ? 8.0 : 0,
+                        left: Get.locale?.languageCode == 'ar' ? 8.0 : 0,
+                      ),
+                      child: IconButton(
+                        onPressed: () => searchController.search(),
+                        icon: SvgPicture.asset(
+                          AppIcons.searchBorder,
+                          width: 30,
+                          height: 30,
+                          colorFilter: const ColorFilter.mode(
+                              AppColors.iconColor, BlendMode.srcIn),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+
+                // filtered buttons
+                Obx(() => buildFilterButtons()),
+              ],
+            ),
           ),
         ),
         body: Obx(
@@ -66,22 +128,28 @@ class AppSearchScreen extends StatelessWidget {
                       //     index != searchController.postLastIndexToGetNextPage) {
                       print(
                           "<<<<<<<<length: ${searchController.postsFilterModel.dataList.length}>>>>>>>>");
-                      if (index == searchController.postsFilterModel.dataList.length - 3 &&
-                          index != searchController.postsFilterModel.lastIndexToGetNewPage) {
+                      if (index ==
+                              searchController
+                                      .postsFilterModel.dataList.length -
+                                  3 &&
+                          index !=
+                              searchController
+                                  .postsFilterModel.lastIndexToGetNewPage) {
                         // print(
                         //     "========last index ${searchController.postLastIndexToGetNextPage}");
-                        searchController.postsFilterModel.lastIndexToGetNewPage = index;
+                        searchController
+                            .postsFilterModel.lastIndexToGetNewPage = index;
                         print(
                             "========last index ${searchController.postsFilterModel.lastIndexToGetNewPage}");
                         searchController.loadNextPageOfSearchedPosts();
                         // searchController.postLastIndexToGetNextPage = index;
                       }
                     },
-                    getPopupMenuFunction:
-                        AppUtil.getPostMenuButtonValuesWidget,
+                    getPopupMenuFunction: AppUtil.getPostMenuButtonValuesWidget,
                     isRequestFinishWithoutData:
                         // searchController.isPostsRequestFinishWithoutData,
-                        searchController.postsFilterModel.isRequestFinishWithoutData,
+                        searchController
+                            .postsFilterModel.isRequestFinishWithoutData,
                     faildDownloadWidget: Center(
                       child: Text(AppLocalization.notFound),
                     ),
@@ -91,16 +159,22 @@ class AppSearchScreen extends StatelessWidget {
                     onIndexChange: (index) {
                       print(
                           "<<<<<<<<length: ${searchController.usersFilterModel.dataList.length}>>>>>>>>");
-                      if (index == searchController.usersFilterModel.dataList.length - 3 &&
-                          index != searchController.usersFilterModel.lastIndexToGetNewPage) {
-                        searchController.usersFilterModel.lastIndexToGetNewPage = index;
+                      if (index ==
+                              searchController
+                                      .usersFilterModel.dataList.length -
+                                  3 &&
+                          index !=
+                              searchController
+                                  .usersFilterModel.lastIndexToGetNewPage) {
+                        searchController
+                            .usersFilterModel.lastIndexToGetNewPage = index;
                         print(
                             "========last index ${searchController.usersFilterModel.lastIndexToGetNewPage}");
                         searchController.loadNextPageOfSearchedUsers();
                       }
                     },
-                    isRequestFinishWithoutData:
-                        searchController.usersFilterModel.isRequestFinishWithoutData,
+                    isRequestFinishWithoutData: searchController
+                        .usersFilterModel.isRequestFinishWithoutData,
                     faildDownloadWidget: Center(
                       child: Text(AppLocalization.notFound),
                     ),
@@ -132,10 +206,9 @@ class AppSearchScreen extends StatelessWidget {
   /// A list of filters
   SizedBox buildFilterButtons() {
     return SizedBox(
-      // height: _showAppbar.value? 50 : 0,
-      height: 50,
+      height: 41,
       child: ListView(
-        padding: const EdgeInsets.only(left: 10, top: 7, bottom: 7),
+        padding: const EdgeInsets.only(bottom: 5),
         scrollDirection: Axis.horizontal,
         children: [
           for (SearchFilters filter in SearchFilters.values)

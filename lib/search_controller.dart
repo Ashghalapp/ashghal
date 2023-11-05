@@ -1,6 +1,9 @@
+import 'package:ashghal_app_frontend/app_library/public_entities/app_category.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/app_library/public_request/search_request.dart';
+import 'package:ashghal_app_frontend/core_api/api_util.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/search_for_users_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/search_for_posts_us.dart';
@@ -52,6 +55,11 @@ class AppSearchController extends GetxController {
 
   final PostController postController = Get.find();
 
+  RxList<AppCategory> categories =
+      SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
+
+  int? selectedCategory;
+
   @override
   void onInit() async {
     super.onInit();
@@ -59,6 +67,11 @@ class AppSearchController extends GetxController {
     postsFilterModel.perPage= 4;
     usersFilterModel.perPage= 10;
     usersFilterModel.isRequestFinishWithoutData.value = true;
+
+    if (categories.isEmpty){
+      await ApiUtil.getCategoriesFromApi();
+      categories = SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
+    }
     await getRecentPosts();
   }
 

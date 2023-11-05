@@ -10,6 +10,9 @@ class AppDropDownButton extends StatelessWidget {
   final int? initialValue;
   final String? hintText;
   final String? labelText;
+    final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+
   const AppDropDownButton({
     super.key,
     required this.items,
@@ -17,47 +20,54 @@ class AppDropDownButton extends StatelessWidget {
     required this.onChange,
     this.hintText,
     this.labelText,
+    this.padding,
+    this.margin,
   });
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField(
-      borderRadius: const BorderRadius.all(Radius.zero),
-      style: Get.textTheme.bodyMedium?.copyWith(color: Get.theme.primaryColor),
-      // style: Get.theme.dropdownMenuTheme.textStyle?.copyWith(
-      //   fontSize: Get.textTheme.bodyMedium?.fontSize,
-      //   fontWeight: FontWeight.normal
-      // ),
-      isDense: true,
-      hint: hintText != null
-          ? Text(hintText!.tr, style: Get.textTheme.labelSmall)
-          : null,
-      value: initialValue,
-      items: [
-        ...items.map((e) {
-          return DropdownMenuItem(
-            value: e['id'],
-            child: Text("${e['name']}"),
-          );
-        }).toList()
-      ],
-
-      decoration: InputDecoration(
-        labelText: labelText?.tr,
-        labelStyle: Get.textTheme.labelSmall,
-        enabledBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          borderSide: BorderSide.none,
+    return Container(
+      padding: padding,
+      margin: margin,
+      child: DropdownButtonFormField(
+        borderRadius: const BorderRadius.all(Radius.zero),
+        style: Get.textTheme.bodyMedium?.copyWith(color: Get.theme.primaryColor),
+        // style: Get.theme.dropdownMenuTheme.textStyle?.copyWith(
+        //   fontSize: Get.textTheme.bodyMedium?.fontSize,
+        //   fontWeight: FontWeight.normal
+        // ),
+        isDense: true,
+        isExpanded: true,
+        hint: hintText != null
+            ? Text(hintText!.tr, style: Get.textTheme.labelSmall)
+            : null,
+        value: initialValue,
+        items: [
+          ...items.map((e) {
+            return DropdownMenuItem(
+              value: e['id'],
+              child: Text("${e['name']}"),
+            );
+          }).toList()
+        ],
+    
+        decoration: InputDecoration(
+          labelText: labelText?.tr,
+          labelStyle: Get.textTheme.labelSmall,
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide.none,
+          ),
+          // Set the border to none to remove the side border
+          border: InputBorder.none,
         ),
-        // Set the border to none to remove the side border
-        border: InputBorder.none,
+        validator: (value) =>
+            validInput(value?.toString() ?? "", null, null, 'selectedCategory'),
+        onChanged: (value) {
+          print("<<<<<<<<<<<<<$value>>>>>>>>>>>>>");
+          onChange(value);
+        },
       ),
-      validator: (value) =>
-          validInput(value?.toString() ?? "", null, null, 'selectedCategory'),
-      onChanged: (value) {
-        print("<<<<<<<<<<<<<$value>>>>>>>>>>>>>");
-        onChange(value);
-      },
     );
   }
 }

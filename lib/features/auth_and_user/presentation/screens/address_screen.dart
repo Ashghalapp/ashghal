@@ -69,7 +69,7 @@ class AddressScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // 
+          // submit address button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: AppGesterDedector(

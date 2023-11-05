@@ -24,7 +24,7 @@ class LoginController extends GetxController {
     emailController = TextEditingController();
     passwordController = TextEditingController();
 
-    emailController.text = "m7.alsayani@gmail.com";
+    emailController.text = "hezbr2@gmail.com";
     passwordController.text = "123456";
     super.onInit();
   }

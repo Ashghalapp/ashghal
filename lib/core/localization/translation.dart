@@ -299,6 +299,8 @@ class MyTranslation extends Translations {
           AppLocalization.completedPosts: "منشورات مكتملة",
           AppLocalization.copy: "نسخ",
           AppLocalization.postContentCopied: "تم نسخ محتوى المنشور",
+          AppLocalization.mark: "اشارة", 
+          AppLocalization.marked: "مؤشر", 
           AppLocalization.recentPosts: "", 
 
           ///// add post message

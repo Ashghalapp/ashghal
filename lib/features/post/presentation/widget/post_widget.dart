@@ -12,7 +12,6 @@ import 'package:ashghal_app_frontend/core/widget/circle_cached_networkimage.dart
 import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class PostCardWidget extends StatelessWidget {
   final Post post;
@@ -21,6 +20,8 @@ class PostCardWidget extends StatelessWidget {
 
   final ReportController reportController = Get.put(ReportController());
   // final PostController postsController = Get.find();
+
+  final RxBool isMark = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +116,7 @@ class PostCardWidget extends StatelessWidget {
 
               // address details
               if (post.address != null)
-                ...buildMoreDetailsWidgets(post.address!),
+                ...buildAddressDetailsWidgets(post.address!),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -185,23 +186,30 @@ class PostCardWidget extends StatelessWidget {
           ),
           Container(width: 0.5, height: 20, color: AppColors.iconColor),
 
-          // favorite button
-          CustomTextAndIconButton(
-            text: Text("Favorite", style: Get.textTheme.bodyMedium),
-            onPressed: () {
-              // postsController.isFavorite.value =
-              //     !postsController.isFavorite.value;
-            },
-            icon: const Icon(Icons.favorite_border, color: AppColors.iconColor
-                // postsController.isFavorite.value ? Colors.red : Colors.grey,
-                ),
+          // mark button
+          Obx(
+            () => CustomTextAndIconButton(
+              text: Text(
+                isMark.value ? AppLocalization.marked : AppLocalization.mark,
+                style: Get.textTheme.bodyMedium,
+              ),
+              onPressed: () {
+                isMark.value = !isMark.value;
+                // postsController.isFavorite.value =
+                //     !postsController.isFavorite.value;
+              },
+              icon: Icon(
+                isMark.value ? Icons.bookmark : Icons.bookmark_border_rounded,
+                color: isMark.value? Colors.amber: AppColors.iconColor,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  List<Widget> buildMoreDetailsWidgets(Address address) {
+  List<Widget> buildAddressDetailsWidgets(Address address) {
     return [
       SizedBox(
           width: Get.width / 2,
@@ -218,8 +226,7 @@ class PostCardWidget extends StatelessWidget {
           ],
         ),
       ),
-      if (address.desc != null)
-        SelectableText(address.desc!),
+      if (address.desc != null) SelectableText(address.desc!),
     ];
   }
 }
