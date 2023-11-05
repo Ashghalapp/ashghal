@@ -7,7 +7,7 @@ class MainScreen extends GetView<MainScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(MainScreenController());
+    Get.put(MainScreenController(),permanent: true);
     // print();
     print("--------------------------------------------------------------");
     print("Theme is dark ${Get.isDarkMode}");

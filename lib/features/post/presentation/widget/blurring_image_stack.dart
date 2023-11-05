@@ -18,7 +18,7 @@ class BlurringImageStackWidget extends StatelessWidget {
       children: [
         CashedNetworkImageWidget(
           imageUrl: fourthImageUrl,
-          errorAssetImagePath: "assets/images/unKnown.jpg",
+          errorAssetImagePath: "assets/images/image-loading-failed.png",
           fit: BoxFit.cover,
         ),
         Positioned(

@@ -102,7 +102,7 @@ class ImagesPostDesignAsFacebook extends StatelessWidget {
       child: CashedNetworkImageWidget(
         imageUrl: path,
         onTap: () => Get.to(() => ImagePage(imageUrl: path)),
-        errorAssetImagePath: "assets/images/unKnown.jpg",
+        errorAssetImagePath: "assets/images/image-loading-failed.png",
         fit: BoxFit.cover,
         height: rowHeightConstant,
       ),
