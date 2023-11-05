@@ -23,6 +23,16 @@ class City {
     }
     return null;
   }
+
+  District? getDistrictByNameEn(String nameEn) {
+    final cityIndex =
+        districts.indexWhere((district) => district.nameEn == nameEn);
+    if (cityIndex != -1) {
+      return districts[cityIndex];
+    }
+    return null;
+  }
+
   String? getDistrictsNameById(int id) {
     final districtsIndex =
         districts.indexWhere((districts) => districts.id == id);
@@ -32,8 +42,18 @@ class City {
     return null;
   }
 
+  // List<District> getDist
+
   static City? getCityById(int id) {
     final cityIndex = citiess.indexWhere((city) => city.id == id);
+    if (cityIndex != -1) {
+      return citiess[cityIndex];
+    }
+    return null;
+  }
+
+  static City? getCityByNameEn(String nameEn) {
+    final cityIndex = citiess.indexWhere((city) => city.nameEn == nameEn);
     if (cityIndex != -1) {
       return citiess[cityIndex];
     }

@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
+import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/bottom_sheet_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
@@ -122,7 +123,8 @@ class ShowEditProfileScreen extends StatelessWidget {
           label: AppLocalization.address,
           data: AppLocalization.tapToAdd,
           onTap: () => Get.to(
-            () => AddressScreen(onSubmit: editProfileController.addAddressToUser),
+            () =>
+                AddressScreen(onSubmit: editProfileController.addAddressToUser),
           ),
         )
       ];
@@ -133,32 +135,58 @@ class ShowEditProfileScreen extends StatelessWidget {
         SettingItemWidget(
           icon: Icons.location_city_outlined,
           label: AppLocalization.city,
-          data: editProfileController.city.value,
+          data: City.getCityNameById(
+              editProfileController.selectedCityId.value ??
+                  1), // editProfileController.city.value,
           onTap: () async {
-            await BottomSheetUtil.buildButtomSheetToEditField(
+            await BottomSheetUtil.buildButtomsheetToEditList(
               title: AppLocalization.city,
-              initialValue: editProfileController.city.value,
+              items: citiess.map((city) => city.toJson()).toList(),
+              initialValue: editProfileController.selectedCityId.value ?? 1,
               onSave: (newValue) {
-                editProfileController.city.value = newValue;
+                editProfileController.selectedCityId.value = newValue;
               },
             );
+            // await BottomSheetUtil.buildButtomSheetToEditField(
+            //   title: AppLocalization.city,
+            //   initialValue: editProfileController.city.value,
+            //   onSave: (newValue) {
+            //     editProfileController.city.value = newValue;
+            //   },
+            // );
           },
         ),
 
-      // street
+      // district
       if (editProfileController.userData.value.address?.district != null)
         SettingItemWidget(
           icon: Icons.location_history,
-          label: AppLocalization.street,
-          data: editProfileController.street.value,
+          label: AppLocalization.district,
+          data:
+              City.getCityById(editProfileController.selectedCityId.value ?? 1)
+                  ?.getDistrictsNameById(
+                      editProfileController.selectedDistrictId.value ??
+                          1), //editProfileController.district.value,
           onTap: () async {
-            await BottomSheetUtil.buildButtomSheetToEditField(
-              title: AppLocalization.street,
-              initialValue: editProfileController.street.value,
+            await BottomSheetUtil.buildButtomsheetToEditList(
+              title: AppLocalization.district,
+              items: editProfileController
+                      .getDistricts()
+                      ?.map((e) => e.toJson())
+                      .toList() ??
+                  [],
+              initialValue: editProfileController.selectedCityId.value ?? 1,
               onSave: (newValue) {
-                editProfileController.street.value = newValue;
+                editProfileController.selectedDistrictId.value = newValue;
               },
             );
+            // await BottomSheetUtil.buildButtomSheetToEditField(
+            //   title: AppLocalization.street,
+            //   initialValue: editProfileController.district.value,
+            //   onSave: (newValue) {
+            //     editProfileController.district.value = newValue;
+            //   },
+            // );
           },
         ),
 

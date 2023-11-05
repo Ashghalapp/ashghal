@@ -434,6 +434,7 @@ class AppLocalization {
   static String posts = "Posts";
   static String users = "Users";
   static String writeToSearch = "Write to search";
+  static String district = "District";
 //================================ End Search messages ==============================
 
 //================================ Start Search messages ============================

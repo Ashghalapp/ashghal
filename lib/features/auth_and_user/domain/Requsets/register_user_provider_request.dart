@@ -1,4 +1,4 @@
-
+import 'package:dio/dio.dart';
 
 import '../../../../app_library/app_data_types.dart';
 import '../../../../app_library/public_entities/address.dart';
@@ -9,15 +9,16 @@ class RegisterUserRequest {
   final String password;
   final String? phone;
   final String? email;
-  final String? emailVerificationCode;  //The code used to verify email if the registration by email
-  final String? phoneVerifiedAt;	//should be included if the registration by phone
+  final String?
+      emailVerificationCode; //The code used to verify email if the registration by email
+  final String?
+      phoneVerifiedAt; //should be included if the registration by phone
   final DateTime birthDate;
   final Gender gender;
-  final String? image;
+  final String? imagePath;
   final Address? address;
   final Provider? provider;
   final DateTime? updatedAt;
-
 
   RegisterUserRequest._({
     required this.name,
@@ -28,7 +29,7 @@ class RegisterUserRequest {
     this.phoneVerifiedAt,
     required this.birthDate,
     required this.gender,
-    this.image,
+    this.imagePath,
     this.address,
     this.provider,
     this.updatedAt,
@@ -41,7 +42,7 @@ class RegisterUserRequest {
     required String emailVerificationCode,
     required DateTime birthDate,
     required Gender gender,
-    String? image,
+    String? imagePath,
     Address? address,
     Provider? provider,
     DateTime? updatedAt,
@@ -53,7 +54,7 @@ class RegisterUserRequest {
         emailVerificationCode: emailVerificationCode,
         birthDate: birthDate,
         gender: gender,
-        image: image,
+        imagePath: imagePath,
         address: address,
         provider: provider,
         updatedAt: updatedAt,
@@ -66,10 +67,10 @@ class RegisterUserRequest {
     required String phoneVerifiedAt,
     required DateTime birthDate,
     required Gender gender,
-    String? image,
+    String? imagePath,
     Address? address,
     Provider? provider,
-        DateTime? updatedAt,
+    DateTime? updatedAt,
   }) =>
       RegisterUserRequest._(
         name: name,
@@ -78,20 +79,26 @@ class RegisterUserRequest {
         phoneVerifiedAt: phoneVerifiedAt,
         birthDate: birthDate,
         gender: gender,
-        image: image,
+        imagePath: imagePath,
         address: address,
         provider: provider,
         updatedAt: updatedAt,
       );
 
-  Map<String, Object?> toJson() {
+  toJson() async {
+    MultipartFile? image;
+    if (imagePath != null) {
+      image = await MultipartFile.fromFile(imagePath!);
+    }
+
     print(">>>>>>>>>>>>>>>>${gender.name.toString()}");
-    return {
+    return FormData.fromMap({
       'name': name,
       'password': password,
       if (email != null) 'email': email,
       if (phone != null) 'phone': phone,
-      if (emailVerificationCode != null) 'email_verification_code': emailVerificationCode,
+      if (emailVerificationCode != null)
+        'email_verification_code': emailVerificationCode,
       if (phoneVerifiedAt != null) 'phone_verified_at': phoneVerifiedAt,
       'birth_date': birthDate.toString(),
       'gender': gender.name,
@@ -99,7 +106,7 @@ class RegisterUserRequest {
       if (address != null) 'address': address?.toJson(),
       if (provider != null) 'provider': provider?.toJson(),
       if (updatedAt != null) 'updated_at': updatedAt,
-    };
+    }, ListFormat.multiCompatible);
   }
 }
 

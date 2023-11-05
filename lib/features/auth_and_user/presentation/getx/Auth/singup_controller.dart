@@ -231,7 +231,7 @@ class SignUpController extends GetxController {
         name: nameController.text,
         password: passwordController.text,
         email: emailController.text,
-        image: imagePath.value,
+        imagePath: imagePath.value,
         birthDate: birthDate.value ?? DateTime(2000),
         provider: isProviderSignUp
             ? Provider.addRequest(
@@ -281,13 +281,15 @@ class SignUpController extends GetxController {
     EasyLoading.show(status: AppLocalization.loading);
     Get.focusScope!.unfocus(); // اخفاء الكيبورد
     // Get.toNamed(AppRoutes.verficationSignUp);
-    Get.to(
-      () => ValidateScreen(
-        message: AppLocalization.pleaseEnterVerifyEmailCode,
-        resendCodeFunction: resendSignUpCode,
-        verifyCodeFunction: verifySignUpCode,
-      ),
-    );
+    Get.to(() => const SignupDetailsScreen());
+    // Get.to(
+    //   () => ValidateScreen(
+    //     message: AppLocalization.pleaseEnterVerifyEmailCode,
+    //     resendCodeFunction: resendSignUpCode,
+    //     verifyCodeFunction: verifySignUpCode,
+    //   ),
+    // );
+    
     EasyLoading.dismiss();
   }
 

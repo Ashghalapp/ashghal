@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/app_library/public_entities/app_category.dart';
+import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
@@ -58,21 +59,74 @@ class AppSearchController extends GetxController {
   RxList<AppCategory> categories =
       SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
 
-  int? selectedCategory;
+  Rx<int?> selectedCategory = Rx(null);
+
+  RxList<City> cities = citiess.obs;
+  RxList<District> districts = <District>[].obs;
+
+  District allDistrict = District(id: 0, nameAr: "الكل", nameEn: "All");
+
+  Rx<int?> selectedCityId = Rx(null);
+  Rx<int?> selectedDistrictId = Rx(null);
 
   @override
   void onInit() async {
     super.onInit();
     textController = TextEditingController();
-    postsFilterModel.perPage= 4;
-    usersFilterModel.perPage= 10;
+    postsFilterModel.perPage = 3;
+    usersFilterModel.perPage = 10;
     usersFilterModel.isRequestFinishWithoutData.value = true;
 
-    if (categories.isEmpty){
+    cities.insert(
+      0,
+      City(
+        id: 0,
+        nameAr: "الكل",
+        nameEn: "All",
+        districts: [allDistrict],
+      ),
+    );
+
+    loadLocationData();
+    loadCategoriesData();
+
+    await getRecentPosts();
+  }
+
+  /// functions to get categories data from api if not found in laster
+  Future<void> loadCategoriesData() async {
+    if (categories.isEmpty) {
       await ApiUtil.getCategoriesFromApi();
       categories = SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
     }
-    await getRecentPosts();
+    categories.insert(0, AppCategory(id: 0, name: AppLocalization.all.tr));
+    selectedCategory.value = 0;
+  }
+
+  /// functions to initial address filtters with user address
+  void loadLocationData() {
+    final User? currentUser = SharedPref.getCurrentUserData();
+    if (currentUser != null && currentUser.address != null) {
+      City? city = City.getCityByNameEn(currentUser.address?.city ?? "");
+      printError(info: "<<<<<<<<<<<<<<City data: ${city?.toJson()}");
+      if (city != null) {
+        selectedCityId.value = city.id;
+        districts.value = city.districts;
+
+        District? district =
+            city.getDistrictByNameEn(currentUser.address?.district ?? "");
+        printError(info: "<<<<<<<<<<<<<<District data: ${district?.toJson()}");
+        if (district != null) {
+          selectedDistrictId.value = district.id;
+        }
+      }
+    }
+  }
+
+  @override
+  void onClose() {
+    textController.dispose();
+    super.onClose();
   }
 
   Future<void> getRecentPosts() async {
@@ -81,10 +135,20 @@ class AppSearchController extends GetxController {
     postsFilterModel.dataList.value = recentPostsList;
   }
 
-  @override
-  void onClose() {
-    textController.dispose();
-    super.onClose();
+  void onCityChange(selectedValue) {
+    if (selectedValue != null) {
+      selectedCityId.value = int.parse(selectedValue.toString());
+      if (selectedValue == 0) {
+        districts.value = [allDistrict];
+        selectedDistrictId.value = 0;
+      } else {
+        selectedDistrictId.value = null;
+        districts.value = citiess
+            .firstWhere((city) => city.id == selectedCityId.value)
+            .districts;
+        selectedDistrictId.value = 1;
+      }
+    }
   }
 
   void applyFilter(SearchFilters filter) {
@@ -106,14 +170,14 @@ class AppSearchController extends GetxController {
     postsFilterModel.pageNumber = 1;
     Get.focusScope?.unfocus();
     EasyLoading.show(status: AppLocalization.loading);
-    if (textController.text.isEmpty) {
-      if (recentPostsList.isEmpty){
-        await getRecentPosts();
-      }
-      postsFilterModel.dataList.value = recentPostsList;
-    } else {
-      await _sendRequestToSearchPosts();
-    }
+    // if (textController.text.isEmpty) {
+    // if (recentPostsList.isEmpty) {
+    // await getRecentPosts();
+    // }
+    // postsFilterModel.dataList.value = recentPostsList;
+    // } else {
+    await _sendRequestToSearchPosts();
+    // }
     update();
     EasyLoading.dismiss();
   }
@@ -125,15 +189,50 @@ class AppSearchController extends GetxController {
     }
   }
 
+  SearchRequest getSearchRequest(int pageNumber, int perPage) {
+    City? city = selectedCityId.value != null
+        ? City.getCityById(selectedCityId.value!)
+        : null;
+    District? district;
+    if (city != null && selectedDistrictId.value != null) {
+      district = city.getDistrictById(selectedDistrictId.value!);
+    }
+
+    return SearchRequest(
+      pageNumber: pageNumber,
+      perPage: perPage,
+      dataForSearch: textController.text,
+      city: city?.id != 0 ? city?.nameEn : null,
+      district: district?.id != 0 ? district?.nameEn : null,
+    );
+  }
+
   Future<void> _sendRequestToSearchPosts({bool isNextPage = false}) async {
     final SearchForPostsUseCase searchPostsUC = di.getIt();
     postsFilterModel.isRequestFinishWithoutData.value = false;
-    final result = searchPostsUC.call(
-      SearchRequest(
-          dataForSearch: textController.text,
-          pageNumber: postsFilterModel.pageNumber,
-          perPage: postsFilterModel.perPage),
-    );
+
+    // City? city = selectedCityId.value != null
+    //     ? City.getCityById(selectedCityId.value!)
+    //     : null;
+    // District? district;
+    // if (city != null && selectedDistrictId.value != null) {
+    //   district = city.getDistrictById(selectedDistrictId.value!);
+    // }
+
+    // final result = searchPostsUC.call(
+    //   SearchRequest(
+    //     pageNumber: postsFilterModel.pageNumber,
+    //     perPage: postsFilterModel.perPage,
+    //     dataForSearch: textController.text,
+    //     city: city?.id != 0 ? city?.nameEn : null,
+    //     district: district?.id != 0 ? district?.nameEn : null,
+    //   ),
+    // );
+    final result = searchPostsUC.call(getSearchRequest(
+      postsFilterModel.pageNumber,
+      postsFilterModel.perPage,
+    ));
+
     (await result).fold((failure) {
       AppUtil.hanldeAndShowFailure(failure);
       postsFilterModel.isRequestFinishWithoutData.value = true;
@@ -154,9 +253,8 @@ class AppSearchController extends GetxController {
     usersFilterModel.pageNumber = 1;
     Get.focusScope?.unfocus();
     EasyLoading.show(status: AppLocalization.loading);
-    if (textController.text.isNotEmpty) {
-      await _sendRequestToSearchUsers();
-    }
+    await _sendRequestToSearchUsers();
+
     update();
     EasyLoading.dismiss();
   }
@@ -171,12 +269,18 @@ class AppSearchController extends GetxController {
   Future<void> _sendRequestToSearchUsers({bool isNextPage = false}) async {
     final SearchForUsersUseCase searchUsersUC = di.getIt();
     usersFilterModel.isRequestFinishWithoutData.value = false;
-    final result = searchUsersUC.call(
-      SearchRequest(
-          dataForSearch: textController.text,
-          pageNumber: usersFilterModel.pageNumber,
-          perPage: usersFilterModel.perPage),
-    );
+    // final result = searchUsersUC.call(
+    //   SearchRequest(
+    //       dataForSearch: textController.text,
+    //       pageNumber: usersFilterModel.pageNumber,
+    //       perPage: usersFilterModel.perPage),
+    // );
+
+    final result = searchUsersUC.call(getSearchRequest(
+      usersFilterModel.pageNumber,
+      usersFilterModel.perPage,
+    ));
+
     (await result).fold((failure) {
       AppUtil.hanldeAndShowFailure(failure);
       usersFilterModel.isRequestFinishWithoutData.value = true;
