@@ -330,6 +330,147 @@ class MyTranslation extends Translations {
           AppLocalization.chatMedia: "وسائط",
           AppLocalization.links: "روابط",
           AppLocalization.docs: "مستندات",
+          AppLocalization.conversationDeletedSuccess: "تم حذف المحادثة بنجاح",
+          AppLocalization.conversationDeletedFail: "فشل حذف المحادثة",
+          AppLocalization.noRecentsMessages: "لا توجد رسائل حديثة",
+          AppLocalization.noActiveUsers: "لا يوجد مستخدمين متصلين",
+          AppLocalization.noFavoriteChats: "لا توجد محادثات مفضلة",
+          AppLocalization.noConversationsYet: "لا توجد محادثات",
+          AppLocalization.noArchivedChats: "لا توجد محادثات مؤرشفة",
+          AppLocalization.conversations: "المحادثات",
+          AppLocalization.noConversationsMatchedSearch:
+              "لا توجد محادثات تطابق نص البحث",
+          AppLocalization.messages: "الرسائل",
+          AppLocalization.noMessagesMatchedSearch:
+              "لا توجد رسائل تطابق نص البحث",
+          AppLocalization.all: "الكل",
+          AppLocalization.recentMessages: "الرسائل الحديثة",
+          AppLocalization.active: "المتصلين",
+          AppLocalization.favorite: "المفضلات",
+          AppLocalization.blockedChats: "المحادثات المحضورة",
+          AppLocalization.online: "متصل الآن",
+          AppLocalization.offline: "غير متصل",
+          AppLocalization.typingNow: "يكتب اآن",
+          AppLocalization.delete: "حذف",
+          AppLocalization.cofirmDeleteConversationMessage:
+              "هل أنت متأكد من حذف هذه المحادثة؟",
+          AppLocalization.cofirmArchiveConversationMessage:
+              "هل أنت متأكد من أرشفة هذه المحادثة؟",
+          AppLocalization.media: "الوسائط",
+          AppLocalization.goToFirstMessage: "الإنتقال إلى أول رسالة",
+          AppLocalization.clearChat: "تنضيف المحادثة",
+          AppLocalization.failToUnfavoriteConversation:
+              "فشل إلغاء المحادثة من المفضلات.",
+          AppLocalization.failToFavoriteConversation:
+              "فشل إضافة المحادثة إلى المفضلات",
+          AppLocalization.successToUnfavoriteConversation:
+              "تم إلغاء المحادثة من المفضلات",
+          AppLocalization.successToFavoriteConversation:
+              "تم إضافة المحادثة إلى المفضلات",
+          AppLocalization.failToUnarchiveConversation:
+              "فشل إلغاء أرشفة المحادثة",
+          AppLocalization.failToArchiveConversation: "فشل أرشفة المحادثة",
+          AppLocalization.successToUnarchiveConversation:
+              "تم إلغاء أرشفة المحادثة",
+          AppLocalization.successToArchiveConversation: "تم أرشفة المحادثة",
+          AppLocalization.failToBlockConversation: "فشل حضر المحادثة المحادثة",
+          AppLocalization.failToUnblockConversation:
+              "فشل رفع الحضر عن المحادثة",
+          AppLocalization.conversationBlockedsuccess: "تم حضر المحادثة بنجاح",
+          AppLocalization.conversationUnblockedsuccess:
+              "تم رفع الحضر عن المحادثة بنجاح",
+          AppLocalization.autoReply: "الرد التلقائي",
+          AppLocalization.starredMessages: "الرسائل المميزة بنجمة",
+          AppLocalization.viewProfile: "عرض الملف الشخصي",
+          AppLocalization.markMessagesAsRead: "تعليم الرسائل كمقروئة",
+          AppLocalization.selectAll: "تحديد الكل",
+          AppLocalization.archived: "المؤرشفة",
+          AppLocalization.startChatingFailer: "فشل فتح محادثة مع هذا المستخدم",
+          AppLocalization.failToUnstarMessage: "فشل إلغاء تمييز الرسالة بنجمة",
+          AppLocalization.failToStarMessage: "فشل تمييز الرسالة بنجمة",
+          AppLocalization.successToUnstarMessage:
+              "تم إلغاء تمييز الرسالة بنجمة",
+          AppLocalization.successToStarMessage: "تم تمييز الرسالة بنجمة",
+          AppLocalization.unselectAll: "إلغاء تحديد الكل",
+          AppLocalization.failureStartChatingUser:
+              "فشل بدأ محادثة مع هذا المستخدم",
+          AppLocalization.canNotStartChatWithBlockedUser:
+              "لا يمكنك بدء محادثة مع مستخدم أنت قمت بحضره",
+          AppLocalization.failureShwoingStarredMessages:
+              "فشل عرض الرسائل المميزة بنجمة، حاول مرة أخرى",
+          AppLocalization.mine: "الخاصة بي",
+          AppLocalization.others: "الخاصة بالآخرين",
+          AppLocalization.noStarredMessagesMatchedSearch:
+              "لا توجد رسائل مميزة تطابق نص البحث",
+          AppLocalization.noStarredMessages: "لا توجد رسائل مميزة بنجمة",
+          AppLocalization.noStarredMessagesBelongsToYou:
+              "لا توجد رسائل مميزة بنجمة خاصة بك",
+          AppLocalization.noStarredMessagesBelongsToOthers:
+              "لا توجد رسائل مميزة بنجمة خاصة بالأخرين",
+          AppLocalization.blockChat: "حضر المحادثة",
+          AppLocalization.confirmUnblockChat:
+              "هل تريد رفع الحضر عن هذه المحادثة؟",
+          AppLocalization.unblockAll: "إلغاء حضر الكل",
+          AppLocalization.confirmUnblockAllChat: "هل تريد رفع الحضر عن الكل؟",
+          AppLocalization.image: "صورة",
+          AppLocalization.video: "فيديو",
+          AppLocalization.audio: "صوت",
+          AppLocalization.archive: "أرشفة",
+          AppLocalization.file: "ملف",
+          AppLocalization.imageMessage: "رسالة صورة",
+          AppLocalization.voiceMessage: "رسالة صوت",
+          AppLocalization.videoMessage: "رسالة فيديوا",
+          AppLocalization.fileMessage: "رسالة ملف",
+          AppLocalization.archiveMessage: "رسالة ملف",
+          AppLocalization.camera: "الكيمرة",
+          AppLocalization.gallery: "المعرض",
+          AppLocalization.messageInfo: "معلومات الرسالة",
+          AppLocalization.chatSent: "تم إرسالها",
+          AppLocalization.notSentYet: "لم يتم ارسالها بعد",
+          AppLocalization.received: "تم إستلامها",
+          AppLocalization.notReceivedYet: "لم يتم إستلامها بعد",
+          AppLocalization.read: "تم قرائتها",
+          AppLocalization.notReadYet: "لم يتم قرائتها بعد",
+          AppLocalization.noMediaFound: "لم يتم العثور على وسائط",
+          AppLocalization.noLinksFound: "لم يتم العثور على روابط",
+          AppLocalization.noDocsFound: "لم يتم العثور على مستندات",
+          AppLocalization.chatMedia: "الوسائط",
+          AppLocalization.links: "الروابط",
+          AppLocalization.docs: "المستندات",
+          AppLocalization.mediaDocsLinks: "الوسائط، والروابط، والمستندات",
+          AppLocalization.noBlockedChatsFound:
+              "لم يتم العثور على محادثات محضورة",
+          AppLocalization.holdForVideoTapForPhoto:
+              "اضغط باستمرار لتسجيل فيديو. انقر لإلتقاط صورة",
+          AppLocalization.noMessagesYet: "لا توجد رسائل في هذه المحادثة",
+          AppLocalization.today: "اليوم",
+          AppLocalization.chatYesterday: "أمس",
+          AppLocalization.noProfilePhoto: "لا توجد صورة شخصية",
+          AppLocalization.recordingFailureCouldNotGrantPermision:
+              "فشل التسجيل، تعذر منح الإذن للوصول إلى الميكروفون",
+          AppLocalization.couldNotSendTheSound: "حدث خطأ ما، تعذر إرسال الصوت",
+          AppLocalization.couldNotPlayRecord: "حدث خطأ ما، تعذر تشغيل الصوت",
+          AppLocalization.fileNotExists: "الملف غير موجود",
+          AppLocalization.unableToOpenThisFile: "غير قادر على فتح الملف",
+          AppLocalization.ashghal: "أشغال",
+          AppLocalization.conversationsSelected: "محادثات محددة",
+          AppLocalization.forwardTo: "إعادة توجيه إلى...",
+          AppLocalization.chatSelected: "محادثة محددة",
+          AppLocalization.noMessageSelected: "لا توجد رسالة محددة",
+          AppLocalization.messageSelected: "رسالة محددة",
+          AppLocalization.typeMessage: "أكتب رسالة...",
+          AppLocalization.noRecents: "لا يوجد حديثا",
+          AppLocalization.couldNotLuanchUrl: "تعذر تشغيل الرابط",
+          AppLocalization.open: "فتح",
+          AppLocalization.copy: "نسخ",
+          AppLocalization.imageDeletedFromYourLocalDevice:
+              "الصورة محذوفة من جهازك",
+          AppLocalization.fileIsDeletedFromYourLocalDevice:
+              "الملف محذوف من جهازك",
+          AppLocalization.videoIsDeletedFromYouLocalDevice:
+              "الفيديوا محذوف من جهازك",
+          AppLocalization.addCaption: "إضافة تعليق...",
+
           //================================ End chat messages ================================//
         },
 

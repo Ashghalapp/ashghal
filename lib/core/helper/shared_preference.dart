@@ -103,8 +103,8 @@ class SharedPref {
     _appServices.prefs.setString('language', lang);
   }
 
-  static String getLanguage() {
-    return _appServices.prefs.get('language') as String? ?? 'en';
+  static String? getLanguage() {
+    return _appServices.prefs.getString('language');
   }
 
   static Future<bool> setString(String key, String value) {
@@ -138,10 +138,12 @@ class SharedPref {
     );
   }
 
-  static setUserFirstOpenAfterLogin(bool value){
- _appServices.prefs.setBool("is_user_first_open", value);
+  static setUserFirstOpenAfterLogin(bool value) {
+    _appServices.prefs.setBool("is_user_first_open", value);
   }
-  static bool? get isUserFirstOpen=>_appServices.prefs.getBool("is_user_first_open" );
+
+  static bool? get isUserFirstOpen =>
+      _appServices.prefs.getBool("is_user_first_open");
 
   static User getCurrentUserData() {
     String? data = SharedPref.getString("current_user_data");

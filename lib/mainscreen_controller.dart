@@ -1,5 +1,3 @@
-import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
-import 'package:ashghal_app_frontend/app_live_cycle_controller.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
@@ -8,25 +6,12 @@ import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/streames_manager.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_main_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/home_screen.dart';
 import 'package:ashghal_app_frontend/features/account/Screen/account_screen.dart';
-import 'package:ashghal_app_frontend/features/post/data/data_sources/post_remote_data_source.dart';
-import 'package:ashghal_app_frontend/features/post/data/repositories/post_repository_impl.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/delete_some_post_multimedia_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/repositories/post_repository.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/screen/post_screen.dart';
-import 'package:ashghal_app_frontend/test_doanloading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:http/http.dart' as http;
 
 import 'package:get/get.dart';
 
@@ -37,6 +22,7 @@ class MainScreenController extends GetxController {
   int currentIndex = 3;
   final search = TextEditingController();
   final UsersStateController stateController = Get.put(UsersStateController());
+  // ignore: unused_field
   final ChatController _chatController = Get.put(ChatController());
 
   AppServices appServices = Get.find();
@@ -236,6 +222,7 @@ class MainScreenController extends GetxController {
   }
 }
 
+// ignore: must_be_immutable
 class TestChatScreen extends StatelessWidget {
   ChatController chatController = Get.find();
   TestChatScreen({
@@ -285,9 +272,6 @@ class TestChatScreen extends StatelessWidget {
             AppPrint.printError("Error in the inserted id: ${e.toString()}");
           }
         }
-        // Get.delete<ChatController>();
-        // Get.put(ChatController());
-
         Get.to(() => ChatScreen(user: participant));
       },
       child: const Text("Open Chat"),

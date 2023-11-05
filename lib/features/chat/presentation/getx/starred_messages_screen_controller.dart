@@ -30,6 +30,7 @@ class StarredMessagesScreenController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isSearching = false.obs;
   RxBool isSearchTextEmpty = true.obs;
+  // ignore: prefer_final_fields
   RxList<ConversationAndMessageModel> _starredMessages =
       <ConversationAndMessageModel>[].obs;
 
@@ -70,6 +71,7 @@ class StarredMessagesScreenController extends GetxController {
                 (c) => c.message.message.senderId != SharedPref.currentUserId)
             .toList();
       default:
+        // ignore: invalid_use_of_protected_member
         return _starredMessages.value;
     }
   }
@@ -98,7 +100,6 @@ class StarredMessagesScreenController extends GetxController {
       _starredMessages[index].conversation,
       _starredMessages[index].message.message,
     );
-    // Get.delete<();
   }
 
   void toggleSearchMode() {
@@ -117,7 +118,6 @@ class StarredMessagesScreenController extends GetxController {
     } else {
       isSearchTextEmpty.value = false;
     }
-    // filteredMessages.refresh();
     _starredMessages.refresh();
   }
 

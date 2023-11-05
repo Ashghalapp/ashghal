@@ -6,8 +6,8 @@ import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_media_links_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/multimedia_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/file_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/file_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

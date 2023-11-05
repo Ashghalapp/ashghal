@@ -373,38 +373,37 @@ class AppLocalization {
 
 //================================ Start chat messages ================================//
   static String conversationDeletedSuccess =
-      "Conversation deleted successfully".tr;
-  static String conversationDeletedFail = "Failed to delete conversation".tr;
-  static String noRecentsMessages = "No recents messages in your chats".tr;
-  static String noActiveUsers = "No active users in your chats".tr;
-  static String noFavoriteChats = "No favorite chats".tr;
-  static String noConversationsYet = "No Conversations Yet".tr;
-  static String noArchivedChats = "No Archived Chats".tr;
+      "Conversation deleted successfully";
+  static String conversationDeletedFail = "Failed to delete conversation";
+  static String noRecentsMessages = "No recents messages in your chats";
+  static String noActiveUsers = "No active users in your chats";
+  static String noFavoriteChats = "No favorite chats";
+  static String noConversationsYet = "No Conversations Yet";
+  static String noArchivedChats = "No Archived Chats";
 
-  static String conversations = "Conversations".tr;
+  static String conversations = "Conversations";
   static String noConversationsMatchedSearch =
-      "No conversations matched the search text".tr;
-  static String messages = "Messages".tr;
-  static String noMessagesMatchedSearch =
-      "No messages matched the search text".tr;
-  static String all = "All".tr;
-  static String recentMessages = "Recent Messages".tr;
-  static String active = "Active".tr;
-  static String favorite = "Favorite".tr;
-  static String blockedChats = "Blocked Chats".tr;
-  static String online = "Online".tr;
-  static String offline = "Offline".tr;
-  static String typingNow = "Typing Now".tr;
+      "No conversations matched the search text";
+  static String messages = "Messages";
+  static String noMessagesMatchedSearch = "No messages matched the search text";
+  static String all = "All";
+  static String recentMessages = "Recent Messages";
+  static String active = "Active";
+  static String favorite = "Favorite";
+  static String blockedChats = "Blocked Chats";
+  static String online = "Online";
+  static String offline = "Offline";
+  static String typingNow = "Typing Now";
 
-  static String delete = "Delete".tr;
+  static String delete = "Delete";
   static String cofirmDeleteConversationMessage =
-      "Are you sure you want to delete this chat?".tr;
+      "Are you sure you want to delete this chat?";
   static String cofirmArchiveConversationMessage =
-      "Are you sure you want to archive this chat?".tr;
+      "Are you sure you want to archive this chat?";
 
-  static String media = "Media".tr;
-  static String goToFirstMessage = "Go To First Message".tr;
-  static String clearChat = "Clear Chat".tr;
+  static String media = "Media";
+  static String goToFirstMessage = "Go To First Message";
+  static String clearChat = "Clear Chat";
 
   static String failToUnfavoriteConversation =
       "Failed to remove this conversation from favorites";
@@ -548,6 +547,64 @@ class AppLocalization {
   static String docs = "Docs";
 
   static String mediaDocsLinks = "Media, Docs, And Links";
+
+  static String noBlockedChatsFound = "No blocked chats found";
+
+  static String holdForVideoTapForPhoto = 'Hold for video, tap for photo';
+
+  static String noMessagesYet = "No Messages Yet";
+
+  static String today = "Today";
+
+  static String chatYesterday = "Yesterday";
+
+  static String noProfilePhoto = "No Profile Photo";
+
+  static String recordingFailureCouldNotGrantPermision =
+      "Recording failure,couldn't grant permission to access microphone";
+
+  static String couldNotSendTheSound =
+      "Something went wrong, couldn't send the record";
+
+  static String couldNotPlayRecord =
+      "Something went wrong, Couldn't play the record";
+
+  static String fileNotExists = "File doesn't exists";
+
+  static String unableToOpenThisFile = "Unable to open this file";
+
+  static String ashghal = "Ashghal";
+
+  static String conversationsSelected = "conversations selected";
+
+  static String forwardTo = "Forward to...";
+
+  static String chatSelected = "Selected";
+
+  static String noMessageSelected = "No message selected";
+
+  static String messageSelected = "Message selected";
+
+  static String typeMessage = 'Type message...';
+
+  static String noRecents = "No Recents";
+
+  static String couldNotLuanchUrl = "Could not launch url";
+
+  static String open = 'Open';
+
+  static String copy = 'Copy';
+
+  static String imageDeletedFromYourLocalDevice =
+      "Image deleted from your local device";
+
+  static String fileIsDeletedFromYourLocalDevice =
+      "File is deleted from local device";
+
+  static String videoIsDeletedFromYouLocalDevice =
+      "Video deleted from your local device";
+
+  static String addCaption = 'Add caption...';
 
 //================================ End chat messages ================================//
 }

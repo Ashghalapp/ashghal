@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/audio_controller.dart';
@@ -38,7 +39,8 @@ class AudioMessageController extends GetxController {
             await _checkPlayerAndPlayIt();
           } else {
             AppUtil.buildErrorDialog(
-                "Something went wrong, Couldn't play the record");
+              AppLocalization.couldNotPlayRecord.tr,
+            );
           }
         },
       );

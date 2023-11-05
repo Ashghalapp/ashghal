@@ -3,12 +3,9 @@
 import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
-import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/entities/message_and_multimedia.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -51,7 +48,6 @@ class MessageInfoPage extends StatelessWidget {
                         )
                       : AppLocalization.notSentYet.tr,
                   FontAwesomeIcons.check,
-                  // Colors.grey,
                 ),
               cardWedgit(
                 AppLocalization.received.tr,

@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/components.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -44,8 +45,9 @@ class ImageMessageWidget extends StatelessWidget {
                   ? const ImageVideoPlaceHolderWidget(
                       loadingPlaceHolder: true,
                     )
-                  : const ImageVideoDeletedPlaceHolderWidget(
-                      message: "Image deleted from your local device",
+                  : ImageVideoDeletedPlaceHolderWidget(
+                      message:
+                          AppLocalization.imageDeletedFromYourLocalDevice.tr,
                     ),
             if (multimedia.path != null && _controller.fileExists.value)
               InkWell(
@@ -111,8 +113,8 @@ class ReadyImageMessageWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           multimedia.path == null
-              ? const ImageVideoDeletedPlaceHolderWidget(
-                  message: "Image deleted from your local device",
+              ? ImageVideoDeletedPlaceHolderWidget(
+                  message: AppLocalization.imageDeletedFromYourLocalDevice,
                 )
               : FutureBuilder<bool>(
                   future: File(multimedia.path!).exists(),
@@ -134,8 +136,9 @@ class ReadyImageMessageWidget extends StatelessWidget {
                           ),
                         );
                       } else {
-                        return const ImageVideoDeletedPlaceHolderWidget(
-                          message: "Image deleted from your local device",
+                        return ImageVideoDeletedPlaceHolderWidget(
+                          message:
+                              AppLocalization.imageDeletedFromYourLocalDevice,
                         );
                       }
                     }

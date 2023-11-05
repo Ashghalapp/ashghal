@@ -75,7 +75,7 @@ Future<void> showAttachmentBottomSheet(
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    attachmentOptionsInfo[index].option.value,
+                    attachmentOptionsInfo[index].option.value.tr,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.black87,

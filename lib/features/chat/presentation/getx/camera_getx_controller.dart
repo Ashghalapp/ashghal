@@ -51,18 +51,17 @@ class CameraGetxController extends GetxController {
     isCameraFront.value = !isCameraFront.value;
 
     int cameraPos = isCameraFront.value ? 0 : 1;
-    cameraController =
-        CameraController(AppServices.cameras[cameraPos], ResolutionPreset.high);
+    cameraController = CameraController(
+      AppServices.cameras[cameraPos],
+      ResolutionPreset.high,
+    );
     cameraValue = cameraController.initialize();
   }
 
   void takePhoto() async {
     XFile file = await cameraController.takePicture();
     if (isFlashOn.value) toggleFlash();
-    // List<String>? paths =
-    // await
     Get.off<List<String>>(() => SendingImageViewPage(paths: [file.path]));
-    // Get.back<List<String>>(result: paths);
   }
 
   Future<void> startVideoRecording() async {
@@ -73,11 +72,7 @@ class CameraGetxController extends GetxController {
   Future<void> stopVideoRecording() async {
     XFile videoPath = await cameraController.stopVideoRecording();
     isRecording.value = false;
-
-    // String? paths =
-    // await
     Get.off<String>(() => SendingVideoViewPage(path: videoPath.path));
-    // Get.back<String>(result: paths);
   }
 
   @override

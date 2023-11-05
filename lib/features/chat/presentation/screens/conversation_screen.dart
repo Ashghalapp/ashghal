@@ -1,34 +1,30 @@
 import 'package:ashghal_app_frontend/config/chat_theme.dart';
-import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/audio_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/multimedia_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/appbar/conversation_screen_appbar.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/footer/conversations_screen_footer.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/message_widget.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/reply_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/appbars/conversation_screen_appbar.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation%20footer/conversations_screen_footer.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/reply_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+// ignore: must_be_immutable
 class ConversationScreen extends StatelessWidget {
   final LocalConversation conversation;
   // final LocalMessage? matchedMessage;
   ConversationScreen({
     super.key,
     required this.conversation,
-    // required this.screenController,
-    // this.matchedMessage,
   });
-  // : _screenController =
-  //           Get.put(ConversationScreenController(conversation: conversation));
 
   final ConversationScreenController screenController = Get.find();
   final ConversationController _conversationController = Get.find();
@@ -44,29 +40,6 @@ class ConversationScreen extends StatelessWidget {
   final AudioController audioController = Get.put(AudioController());
 
   final int currentUserId = SharedPref.currentUserId!;
-  MessageAndMultimediaModel replyMessage = MessageAndMultimediaModel(
-    message: LocalMessage(
-      localId: 1,
-      senderId: 1,
-      conversationId: 1,
-      receivedLocally: false,
-      readLocally: false,
-      isStarred: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      body: "Reply Message",
-    ),
-    multimedia: LocalMultimedia(
-      localId: 1,
-      type: "image",
-      size: 15,
-      fileName: "image",
-      messageId: 1,
-      isCanceled: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-  );
 
   DateTime getDateMDY(DateTime dt) {
     return DateTime(dt.year, dt.month, dt.day);
@@ -90,7 +63,7 @@ class ConversationScreen extends StatelessWidget {
                       return AppUtil.addProgressIndicator(50);
                     }
                     return _conversationController.messages.isEmpty
-                        ? const Center(child: Text("No Messages Yet"))
+                        ? Center(child: Text(AppLocalization.noMessagesYet.tr))
                         : Stack(
                             children: [
                               buildMessagesList(),
@@ -109,7 +82,6 @@ class ConversationScreen extends StatelessWidget {
                                                 ? Colors.white
                                                 : Colors.black,
                                             size: 33,
-                                            // size: 20,
                                           ),
                                         ),
                                       )
@@ -129,7 +101,6 @@ class ConversationScreen extends StatelessWidget {
                   children: [
                     Obx(
                       () {
-                        // final replyMessage = screenController.replyMessage;
                         if (screenController.replyMessage.value != null) {
                           return Padding(
                             padding: const EdgeInsets.all(5.0),
@@ -146,30 +117,10 @@ class ConversationScreen extends StatelessWidget {
                         }
                       },
                     ),
-
-                    // Obx(
-                    //   () =>
-                    //       //  screenController.isReplyMessagePresent.value &&
-                    //       screenController.replyMessage != null
-                    //           ? Padding(
-                    //               padding: const EdgeInsets.all(5.0),
-                    //               child: ReplyMessageWidget(
-                    //                 message:
-                    //                     screenController.replyMessage!.value,
-                    //                 onCancelReply:
-                    //                     screenController.cancelReplyMessage,
-                    //                 userName: screenController
-                    //                     .currentConversation.userName,
-                    //               ),
-                    //             )
-                    //           : const SizedBox.shrink(),
-                    // ),
                     ConversationScreenFooter(),
                   ],
                 ),
               ),
-
-              // _buildFooter(context)
             ],
           ),
         ),
@@ -187,8 +138,6 @@ class ConversationScreen extends StatelessWidget {
       itemBuilder: (_, index) {
         final currentMessage =
             screenController.conversationController.messages[index];
-
-        // bool isSameDate = false;
         String? dateString = getGroupDateOnNewGroup(
           index,
           currentMessage.message,
@@ -217,11 +166,6 @@ class ConversationScreen extends StatelessWidget {
                     message:
                         screenController.conversationController.messages[index],
                     onSwipe: () {
-                      // AppPrint.printInfo(screenController.conversationController
-                      //     .messages[index].message.remoteId!
-                      //     .toString());
-                      // AppPrint.printInfo(index.toString());
-                      // AppPrint.printInfo(messageRemoteId.toString());
                       screenController.setReplyMessage(screenController
                           .conversationController
                           .messages[index]
@@ -234,41 +178,9 @@ class ConversationScreen extends StatelessWidget {
             ),
           ],
         );
-        // return buildMessageWidget(
-        //     _conversationController.messages[index], index, dateString ?? "");
       },
     );
   }
-
-  // Widget buildMessageWidget(
-  //   MessageAndMultimediaModel currentMessage,
-  //   int index,
-  //   String dateString,
-  // ) {
-  //   return Column(
-  //     children: [
-  //       if (dateString.isNotEmpty) _builGroupTextDate(dateString),
-  //       InkWell(
-  //         onTap: () {
-  //           screenController.selectMessage(currentMessage.message.localId);
-  //         },
-  //         onLongPress: () {
-  //           screenController.selectionEnabled.value = true;
-  //           screenController.selectMessage(currentMessage.message.localId);
-  //         },
-  //         child: Container(
-  //           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-  //           color: screenController.selectedMessagesIds
-  //                       .contains(currentMessage.message.localId) ||
-  //                   index == screenController.searchSelectedMessage.value
-  //               ? Colors.green.withOpacity(0.4)
-  //               : null,
-  //           child: MessageRowWidget(message: currentMessage),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Container _builGroupTextDate(String dateString) {
     return Container(
@@ -312,73 +224,13 @@ class ConversationScreen extends StatelessWidget {
     final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
     if (messageDate == today) {
-      difference = "Today";
+      difference = AppLocalization.today.tr;
     } else if (messageDate == yesterday) {
-      difference = "Yesterday";
+      difference = AppLocalization.chatYesterday.tr;
     } else {
       difference = DateTimeFormatter.formatDateTimeyMMMd(dateTime);
     }
 
     return difference;
   }
-
-  // Widget _buildFooter(BuildContext context) {
-  //   return Card(
-  //     color: Get.isPlatformDarkMode
-  //         ? ChatColors.appBarDark
-  //         : ChatColors.appBarLight,
-  //     margin: const EdgeInsets.only(top: 0),
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.only(
-  //         topLeft: Radius.circular(15),
-  //         topRight: Radius.circular(15),
-  //       ),
-  //     ),
-  //     // color: Colors.grey,
-  //     // alignment: Alignment.bottomCenter,
-
-  //     // decoration: BoxDecoration(
-  //     //   // color: Color.fromRGBO(25, 39, 52, 1),
-
-  //     //   borderRadius: const BorderRadius.only(
-  //     //     topLeft: Radius.circular(15),
-  //     //     topRight: Radius.circular(15),
-  //     //   ),
-  //     // ),
-  //     child: Padding(
-  //       padding: const EdgeInsets.only(top: 8.0),
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.end,
-  //         children: [
-  //           Row(
-  //             children: [
-  //               // Expanded(
-  //               //   flex: 5,
-  //               //   child: ChatTextFormFieldWidget(),
-  //               // ),
-  //               Expanded(
-  //                 child: SendButtonWidget(
-  //                   insertingMessageController: insertingMessageController,
-  //                 ),
-  //               )
-  //             ],
-  //           ),
-  //           //this widget shows or unshows its child based on the offstage value
-  //           GetX<InsertingMessageController>(
-  //             builder: (controller) => Offstage(
-  //               offstage: !controller.emojiPickerShowing.value,
-  //               child: SizedBox(
-  //                 height: 250,
-  //                 child: EmojiPickerWidget(
-  //                   textEditingController: insertingMessageController
-  //                       .messageTextEdittingController,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 }

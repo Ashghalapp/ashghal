@@ -14,9 +14,7 @@ class HighlightableTextWidget extends StatelessWidget {
     required this.text,
     required this.searchText,
     this.fontSize = 16,
-    // this.textColor,
-    this.highlightColor =
-        Colors.blue, // You can change the default highlight color
+    this.highlightColor = Colors.blue,
   });
 
   @override

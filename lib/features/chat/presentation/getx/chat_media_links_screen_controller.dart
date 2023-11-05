@@ -18,10 +18,6 @@ class ChatMediaLinksScreenController extends GetxController {
           DateTimeFormatter.getRecentOrYesterdayOrLastMonthOrMonthOrYear(
               media.message.createdAt);
 
-      // DateTime(
-      //         media.createdAt.year, media.createdAt.month, media.createdAt.day)
-      //     .toString();
-
       if (!mediaByDate.containsKey(date)) {
         mediaByDate[date] = [];
       }

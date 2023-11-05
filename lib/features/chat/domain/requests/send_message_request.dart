@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';

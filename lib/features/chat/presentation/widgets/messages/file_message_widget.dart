@@ -1,10 +1,11 @@
 import 'package:ashghal_app_frontend/config/app_images.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/chat_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
@@ -31,8 +32,6 @@ class FileMessageWidget extends StatelessWidget {
         }
       },
       child: Row(
-        // mainAxisSize: MainAxisSize.min,
-        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Stack(
             alignment: Alignment.center,
@@ -81,10 +80,6 @@ class FileMessageWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: Column(
-                // mainAxisSize: MainAxisSize.max,
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Row(
                     children: [
@@ -92,7 +87,6 @@ class FileMessageWidget extends StatelessWidget {
                         child: Text(
                           multimedia.fileName,
                           softWrap: true,
-                          // textAlign: TextAlign.right,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -141,10 +135,12 @@ class ReadyFileMessageWidget extends StatelessWidget {
         OpenFile.open(multimedia.path);
       } catch (e) {
         AppUtil.hanldeAndShowFailure(NotSpecificFailure(
-            message: "Unable to open this file ${e.toString()}"));
+            message:
+                "${AppLocalization.unableToOpenThisFile.tr} ${e.toString()}"));
       }
     } else {
-      AppUtil.buildErrorDialog("File is deleted from local device");
+      AppUtil.buildErrorDialog(
+          AppLocalization.fileIsDeletedFromYourLocalDevice.tr);
     }
   }
 

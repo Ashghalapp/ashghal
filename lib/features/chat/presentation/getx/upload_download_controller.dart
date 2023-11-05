@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/directory_path.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
@@ -19,11 +20,6 @@ class UploadDownloadController extends GetxController {
 
   RxDouble progress = 0.0.obs;
   final MultimediaController _controller = Get.find();
-  // final String fileName;
-
-  // RxString filePath = "".obs;
-
-  // RxString fileUrl = "".obs;
 
   late CancelToken cancelToken;
 
@@ -71,7 +67,6 @@ class UploadDownloadController extends GetxController {
       print(downloaded.toString());
 
       dowloading.value = false;
-      // checkFileExit();
       fileExists.value = downloaded;
       print(multimedia);
     } catch (e) {
@@ -87,7 +82,7 @@ class UploadDownloadController extends GetxController {
       AppPrint.printInfo(multimedia.path!);
       AppPrint.printInfo(multimedia.type);
       AppPrint.printInfo(multimedia.url ?? "no Url");
-      bool uploaded = await _controller.uploadFile(
+      await _controller.uploadFile(
         filePath: multimedia.path!,
         fileType: multimedia.type,
         messageLocalId: multimedia.messageId,
@@ -119,16 +114,13 @@ class UploadDownloadController extends GetxController {
   }
 
   checkFileExit() async {
-    print("checkFileExit ${multimedia.path}");
     if (multimedia.path != null) {
       bool fileExistCheck = await File(multimedia.path!).exists();
-      // print(fileExistCheck.toString());
       fileExists.value = fileExistCheck;
     } else {
       fileExists.value = false;
     }
     isCheckingFileExistance.value = false;
-    print(fileExists.value);
   }
 
   openfile() {
@@ -137,13 +129,9 @@ class UploadDownloadController extends GetxController {
         OpenFile.open(multimedia.path);
       } catch (e) {
         AppUtil.hanldeAndShowFailure(
-            const NotSpecificFailure(message: "Unable to open this file"));
+          NotSpecificFailure(message: AppLocalization.unableToOpenThisFile.tr),
+        );
       }
     }
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

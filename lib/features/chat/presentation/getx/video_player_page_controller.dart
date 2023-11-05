@@ -167,35 +167,19 @@
 // }
 
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:ashghal_app_frontend/core/services/directory_path.dart';
 import 'package:ashghal_app_frontend/core/services/video_controller_service.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/requests/download_request.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/requests/upload_request.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/multimedia_controller.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 class VideoPlayerPageController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isInitialized = false.obs;
   RxBool fileExists = false.obs;
-
-  // final String fileName;
-
-  // RxString filePath = "".obs;
-
-  // RxString fileUrl = "".obs;
-
-  // late CancelToken cancelToken;
 
   late VideoPlayerController videoPlayerController;
 
@@ -240,17 +224,13 @@ class VideoPlayerPageController extends GetxController {
       print('Error: ${videoPlayerController.value.errorDescription}');
       print('Error: ${error.toString()}');
     });
-    // await videoPlayerController.initialize();
     isLoading.value = false;
     isInitialized.value = true;
-    // videoPlayerController.pause();
   }
 
   Future<void> checkFileExit() async {
-    print("checkFileExit ${multimedia.path}");
     if (multimedia.path != null) {
       bool fileExistCheck = await File(multimedia.path!).exists();
-      // print(fileExistCheck.toString());
       fileExists.value = fileExistCheck;
     } else {
       fileExists.value = false;

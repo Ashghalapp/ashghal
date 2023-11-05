@@ -1,7 +1,6 @@
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:get/get.dart';
 
@@ -21,7 +20,7 @@ class BlockedConversationsScreenController extends GetxController {
   }
 
   void unblockConversation(int index) {
-    AppUtil.showConfirmationDialog(AppLocalization.confirmUnblockChat).then(
+    AppUtil.showConfirmationDialog(AppLocalization.confirmUnblockChat.tr).then(
       (value) async {
         if (value != null &&
             value &&
@@ -37,7 +36,8 @@ class BlockedConversationsScreenController extends GetxController {
   }
 
   void unblockAllConversations(bool value) {
-    AppUtil.showConfirmationDialog(AppLocalization.confirmUnblockAllChat).then(
+    AppUtil.showConfirmationDialog(AppLocalization.confirmUnblockAllChat.tr)
+        .then(
       (value) async {
         if (value != null && value) {
           while (blockedConversations.isNotEmpty) {

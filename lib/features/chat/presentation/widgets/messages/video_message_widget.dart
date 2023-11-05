@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/upload_download_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/video_message_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/components.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,8 +43,9 @@ class VideoMessageWidget extends StatelessWidget {
                   ? const ImageVideoPlaceHolderWidget(
                       loadingPlaceHolder: true,
                     )
-                  : const ImageVideoDeletedPlaceHolderWidget(
-                      message: "Video deleted from your local device",
+                  : ImageVideoDeletedPlaceHolderWidget(
+                      message:
+                          AppLocalization.videoIsDeletedFromYouLocalDevice.tr,
                     ),
 
             if ((multimedia.path != null &&
@@ -156,8 +158,8 @@ class ReadyVideoMessageWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           multimedia.path == null
-              ? const ImageVideoDeletedPlaceHolderWidget(
-                  message: "Video deleted from your local device",
+              ? ImageVideoDeletedPlaceHolderWidget(
+                  message: AppLocalization.videoIsDeletedFromYouLocalDevice.tr,
                 )
               : FutureBuilder<bool>(
                   future: File(multimedia.path!).exists(),
@@ -173,15 +175,15 @@ class ReadyVideoMessageWidget extends StatelessWidget {
                           snapShot.data!) {
                         return buildVideoContianer();
                       } else {
-                        return const ImageVideoDeletedPlaceHolderWidget(
-                          message: "Video deleted from your local device",
+                        return ImageVideoDeletedPlaceHolderWidget(
+                          message: AppLocalization
+                              .videoIsDeletedFromYouLocalDevice.tr,
                         );
                       }
                     }
                   },
                 ),
           //if the file is mine, and the file exists value is false, and the path exists
-
           PlayVideoIconWidget(onPlayVideo: _videoMessageController.playVideo),
         ],
 

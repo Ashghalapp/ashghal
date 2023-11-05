@@ -7,10 +7,10 @@ import 'package:ashghal_app_frontend/features/chat/domain/entities/conversation_
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/audio_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/starred_messages_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/avatar.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/message_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/filled_outline_button.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/search_textformfield.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/chat_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -241,20 +241,6 @@ class StarredMessagesScreen extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              // const Icon(Icons.arrow_right),
-                              // Expanded(
-                              //   child: Text(
-                              //     " isMine ? currentStarred.conversation.userName: AppLocalization.you.tr",
-                              //     overflow: TextOverflow.ellipsis,
-                              //     maxLines: 1,
-                              //     style: TextStyle(
-                              //       fontSize: 17,
-                              //       color: Get.isPlatformDarkMode
-                              //           ? null
-                              //           : Colors.black,
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),
@@ -263,7 +249,8 @@ class StarredMessagesScreen extends StatelessWidget {
                           children: [
                             Text(
                               DateTimeFormatter.formatDateTime(
-                                  currentStarred.message.message.createdAt),
+                                currentStarred.message.message.createdAt,
+                              ),
                             ),
                             _buildForwardIcon(index),
                           ],

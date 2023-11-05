@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
@@ -16,16 +17,14 @@ class EmojiPickerWidget extends StatelessWidget {
       onEmojiSelected: (Category? category, Emoji emoji) {
         textEditingController.text += emoji.emoji;
       },
-      onBackspacePressed: () {
-        // Handle backspace button press here (optional).
-      },
+      onBackspacePressed: () {},
       textEditingController: textEditingController,
       config: Config(
         columns: 7,
         emojiSizeMax: 32 *
             (foundation.defaultTargetPlatform == TargetPlatform.iOS
                 ? 1.30
-                : 1.0), // Issue: https://github.com/flutter/flutter/issues/28894
+                : 1.0),
         verticalSpacing: 0,
         horizontalSpacing: 0,
         gridPadding: EdgeInsets.zero,
@@ -40,9 +39,9 @@ class EmojiPickerWidget extends StatelessWidget {
         enableSkinTones: true,
         recentTabBehavior: RecentTabBehavior.RECENT,
         recentsLimit: 28,
-        noRecents: const Text(
-          'No Recents',
-          style: TextStyle(fontSize: 20, color: Colors.black26),
+        noRecents: Text(
+          AppLocalization.noRecents,
+          style: const TextStyle(fontSize: 20, color: Colors.black26),
           textAlign: TextAlign.center,
         ), // Needs to be const Widget
         loadingIndicator: const SizedBox.shrink(), // Needs to be const Widget

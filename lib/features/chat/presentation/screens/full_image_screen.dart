@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ashghal_app_frontend/config/chat_theme.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +34,7 @@ class FullImageScreen extends StatelessWidget {
         child: Hero(
           tag: userId,
           child: imagePath == null
-              ? Text("No Profile Photo")
+              ? Text(AppLocalization.noProfilePhoto.tr)
               : Image.file(
                   File(imagePath!),
                   fit: BoxFit.contain, // Adjust the fit as needed

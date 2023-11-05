@@ -1,18 +1,9 @@
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/camera_getx_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/multimedia_controller.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-// class CameraScreen extends StatefulWidget {
-
-//   const CameraScreen({
-//     super.key,
-//   });
-
-//   @override
-//   State<CameraScreen> createState() => _CameraScreenState();
-// }
 
 class CameraScreen extends StatelessWidget {
   CameraScreen({super.key});
@@ -64,8 +55,9 @@ class CameraScreen extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            if (!_controller.isRecording.value)
+                            if (!_controller.isRecording.value) {
                               _controller.takePhoto();
+                            }
                           },
                           onLongPress: () async {
                             await _controller.startVideoRecording();
@@ -93,11 +85,11 @@ class CameraScreen extends StatelessWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 8),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 8),
             child: Text(
-              'Hold for video, tap for photo',
-              style: TextStyle(fontSize: 16),
+              AppLocalization.holdForVideoTapForPhoto.tr,
+              style: const TextStyle(fontSize: 16),
             ),
           ),
         ],

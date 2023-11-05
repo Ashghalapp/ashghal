@@ -3,7 +3,6 @@ import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/blocked_conversations_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/avatar.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,8 +34,8 @@ class BlockedChatsScreen extends StatelessWidget {
           body: GetX<BlockedConversationsScreenController>(
             builder: (controller) {
               if (controller.blockedConversations.isEmpty) {
-                return const Center(
-                  child: Text("No blocked chats"),
+                return Center(
+                  child: Text(AppLocalization.noBlockedChatsFound.tr),
                 );
               }
               return ListView.builder(
@@ -44,18 +43,11 @@ class BlockedChatsScreen extends StatelessWidget {
                 itemBuilder: (_, index) {
                   LocalConversation current =
                       controller.blockedConversations[index];
-                  // return ConversationWidget(
-                  //   conversation: controller.blockedConversations[index],
-                  // );
                   return _buildBlockedConversation(current, index);
                 },
               );
             },
-          )
-          // Center(
-          //   child: Text("No Blocked Chats"),
-          // ),
-          ),
+          )),
     );
   }
 
@@ -70,7 +62,6 @@ class BlockedChatsScreen extends StatelessWidget {
             raduis: 26,
             boderThickness: 1,
             borderColor: Get.theme.primaryColor,
-            // borderColor: Theme.of(context).primaryColor,
             imageUrl: current.userImageUrl,
           ),
           Expanded(

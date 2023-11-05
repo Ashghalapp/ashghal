@@ -37,23 +37,7 @@ extension AttachmentOptionExtension on AttachmentOption {
   }
 }
 
-// // import '../../core/services/multimedia_services.dart';
-// class CustomFile {
-//   File file;
-//   String name;
-//   String path;
-//   String type; // extension
-
-//   CustomFile({
-//     required this.file,
-//     required this.name,
-//     required this.path,
-//     required this.type,
-//   });
-// }
-
 class MultimediaController extends GetxController {
-  // ConversationScreenController _screenController = Get.find();
   final ConversationController _conversationController = Get.find();
 
   DirectoryPath directoryPath = DirectoryPath();
@@ -111,14 +95,13 @@ class MultimediaController extends GetxController {
             result.files.map((file) => file.path ?? "").toList();
         for (String path in pickedFilesPaths) {
           if (path != "") {
-            print("file path: $path");
             Get.find<ConversationScreenController>()
                 .sendMultimediaMessage(path);
           }
         }
       }
     } catch (e) {
-      return null;
+      return;
     }
   }
 
@@ -150,7 +133,6 @@ class MultimediaController extends GetxController {
   }
 
   Future<bool> uploadFile({
-    // required String fileUrl,
     required String filePath,
     required String fileType,
     required int messageLocalId,
@@ -158,23 +140,16 @@ class MultimediaController extends GetxController {
     void Function(int, int)? onSendProgress,
   }) async {
     try {
-      // String storePath = await directoryPath.getPath("${fileType}s");
-      // String filePath = '$storePath/$fileName';
-      // filePath = await getUniqueFileName(filePath);
       if (!await File(filePath).exists()) {
-        AppUtil.buildErrorDialog("File doesn't exists");
+        AppUtil.buildErrorDialog(AppLocalization.fileNotExists.tr);
         return false;
       }
       UploadRequest request = UploadRequest(
-        // url: fileUrl,
-        // savePath: filePath,
         messageLocalId: messageLocalId,
         onSendProgress: onSendProgress,
         cancelToken: cancelToken,
       );
-      // bool downloaded =
       return await _conversationController.upload(request);
-      // return await _conversationController.download(request);
     } catch (e) {
       return false;
     }
@@ -184,7 +159,7 @@ class MultimediaController extends GetxController {
     final originalFile = File(filePath);
 
     if (!await originalFile.exists()) {
-      return filePath; // The file with the original name doesn't exist.
+      return filePath;
     }
 
     final directory = originalFile.parent;
@@ -211,120 +186,4 @@ class MultimediaController extends GetxController {
       ),
     );
   }
-
-  // Future<void> pickCameraImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedImage = await picker.pickImage(source: ImageSource.camera);
-  //   if (pickedImage != null) {
-  //     // _image.value = File(pickedImage.path);
-  //     // String message = messageText.text;
-  //     // _screenController.conversationController
-  //     //     .sendMultimediaMessage(messageTextEdittingController.text);
-  //     // SendMessageRequest request = SendMessageRequest.withBodyAndMultimedia(
-  //     //   conversationId: _conversationScreenController.conversationId,
-  //     //   body: messageTextEdittingController.text,
-  //     //   filePath: pickedImage.path,
-  //     // );
-  //     // _conversationScreenController.conversationController.sendMessage(request);
-  //     // messageTextEdittingController.clear();
-  //     // {
-  //     //    // Clear the text field after sending the message
-  //     //   update(); // Notify GetBuilder to rebuild the UI
-  //     // }
-  //   }
-  // }
-//   var multimediaList = <MultimediaModel>[].obs;
-
-//   Future<void> getMultimediaList(String baseUrl) async {
-//     try {
-//       final result = await MultimediaService.getMultimediaList(baseUrl);
-//       multimediaList.assignAll(result);
-//     } catch (e) {
-//       print(e);
-//       throw Exception('Failed to load multimedia list');
-//     }
-//   }
-
-//   Future<void> getMultimediaById(String baseUrl, int multimediaId) async {
-//     try {
-//       final result =
-//           await MultimediaService.getMultimediaById(baseUrl, multimediaId);
-//       multimediaList.add(result);
-//     } catch (e) {
-//       print(e);
-//       throw Exception('Failed to load multimedia by id: $multimediaId');
-//     }
-//   }
-
-//   Future<void> createMultimedia(
-//       String baseUrl, MultimediaModel multimedia) async {
-//     try {
-//       await MultimediaService.createMultimedia(baseUrl, multimedia);
-//       multimediaList.add(multimedia);
-//     } catch (e) {
-//       print(e);
-//       throw Exception('Failed to create multimedia');
-//     }
-//   }
-
-//   Future<void> updateMultimedia(
-//       String baseUrl, MultimediaModel multimedia) async {
-//     try {
-//       await MultimediaService.updateMultimedia(baseUrl, multimedia);
-//       final index = multimediaList.indexWhere((m) => m.id == multimedia.id);
-//       if (index >= 0) {
-//         multimediaList[index] = multimedia;
-//       }
-//     } catch (e) {
-//       print(e);
-//       throw Exception('Failed to update multimedia: ${multimedia.id}');
-//     }
-//   }
-
-//   Future<void> deleteMultimedia(String baseUrl, int multimediaId) async {
-//     try {
-//       await MultimediaService.deleteMultimedia(baseUrl, multimediaId);
-//       multimediaList.removeWhere((m) => m.id == multimediaId);
-//     } catch (e) {
-//       print(e);
-//       throw Exception('Failed to delete multimedia: $multimediaId');
-//     }
-//   }
-
-  // Future<void> uploadImage(
-  //     File imageFile, String imageName, String imagePath) async {
-  //   var stream = http.ByteStream(http.ByteStream(imageFile.openRead()));
-  //   var length = await imageFile.length();
-
-  //   var uri = Uri.parse(
-  //       'http://192.168.5.196/ApiFileUploadTest/public/api/uploading-file-api');
-
-  //   var request = http.MultipartRequest('POST', uri);
-
-  //   // Add the file with a custom field name 'file'
-  //   var multipartFile = http.MultipartFile('file', stream, length,
-  //       filename: path.basename(imageFile.path));
-
-  //   // Add additional fields (name, path, type) to the request
-  //   request.fields['name'] = imageName;
-  //   request.fields['path'] = imagePath;
-  //   request.fields['type'] = 'image/jpeg'; // Replace with the actual file type
-
-  //   // Add the file to the request
-  //   request.files.add(multipartFile);
-
-  //   try {
-  //     var response = await request.send();
-  //     if (response.statusCode == 200) {
-  //       print('Image uploaded successfully');
-  //       response.stream.transform(utf8.decoder).listen((value) {
-  //         print(value);
-  //       });
-  //     } else {
-  //       print('Image upload failed with status ${response.statusCode}');
-  //     }
-  //   } catch (error) {
-  //     print('Error uploading image: $error');
-  //   }
-  // }
 }

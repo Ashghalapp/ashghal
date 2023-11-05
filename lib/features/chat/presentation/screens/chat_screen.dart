@@ -3,8 +3,8 @@ import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/appbar/chat_screen_appbar.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/footer/chat_screen_forward_footer.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/appbars/chat_screen_appbar.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation%20footer/chat_screen_forward_footer.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation_search_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/filled_outline_button.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
@@ -60,7 +60,7 @@ class ChatScreen extends StatelessWidget {
                           !_screenController.isSearchTextEmpty.value) {
                         return chatController.searchMatchedConversations.isEmpty
                             ? _buildNoMatchSearchText(
-                                AppLocalization.noConversationsMatchedSearch,
+                                AppLocalization.noConversationsMatchedSearch.tr,
                               )
                             : _builConversationsListView(
                                 chatController.searchMatchedConversations,
@@ -274,14 +274,14 @@ class ChatScreen extends StatelessWidget {
       return Center(
         child: Text(
           appliedFilter == ChatFilters.recentMessages
-              ? AppLocalization.noRecentsMessages
+              ? AppLocalization.noRecentsMessages.tr
               : appliedFilter == ChatFilters.active
-                  ? AppLocalization.noActiveUsers
+                  ? AppLocalization.noActiveUsers.tr
                   : appliedFilter == ChatFilters.favorite
-                      ? AppLocalization.noFavoriteChats
+                      ? AppLocalization.noFavoriteChats.tr
                       : appliedFilter == ChatFilters.archived
-                          ? AppLocalization.noArchivedChats
-                          : AppLocalization.noConversationsYet,
+                          ? AppLocalization.noArchivedChats.tr
+                          : AppLocalization.noConversationsYet.tr,
         ),
       );
     });
@@ -293,12 +293,12 @@ class ChatScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildSearchResultResourceText(AppLocalization.conversations),
+          _buildSearchResultResourceText(AppLocalization.conversations.tr),
           GetX<ChatController>(
             builder: (controller) {
               if (controller.searchMatchedConversations.isEmpty) {
                 return _buildNoMatchSearchText(
-                  AppLocalization.noConversationsMatchedSearch,
+                  AppLocalization.noConversationsMatchedSearch.tr,
                 );
               }
               return ListView.builder(
@@ -314,12 +314,12 @@ class ChatScreen extends StatelessWidget {
             },
           ),
           const SizedBox(height: 8),
-          _buildSearchResultResourceText(AppLocalization.messages),
+          _buildSearchResultResourceText(AppLocalization.messages.tr),
           GetX<ChatController>(
             builder: (controller) {
               if (controller.searchMatchedConversationMessages.isEmpty) {
                 return _buildNoMatchSearchText(
-                  AppLocalization.noMessagesMatchedSearch,
+                  AppLocalization.noMessagesMatchedSearch.tr,
                 );
               }
               return ListView.builder(

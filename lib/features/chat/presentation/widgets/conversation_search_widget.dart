@@ -1,4 +1,3 @@
-import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
@@ -27,12 +26,7 @@ class ConversationSearchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () =>
-          //  _controller.forwardSelectionEnabled.value
-          //     ? _controller
-          //         .selectConversation(matchedConversation.conversation.localId)
-          //     :
-          _controller.goToConversationScreen(
+      onTap: () => _controller.goToConversationScreen(
         matchedConversation.conversation,
         matchedConversation.message,
       ),

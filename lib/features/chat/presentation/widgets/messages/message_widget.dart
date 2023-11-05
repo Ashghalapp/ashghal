@@ -1,26 +1,22 @@
-import 'package:any_link_preview/any_link_preview.dart';
+import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
-import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/avatar.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/audio_message_widget.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/file_message_widget.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/image_message_widget.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/links_preview_widget.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/reply_message_widget.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/video_message_widget.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/style2.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' show PreviewData;
-import 'package:flutter_link_previewer/flutter_link_previewer.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/audio_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/file_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/image_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/links_preview_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/reply_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/video_message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/chat_style.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:swipe_to/swipe_to.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MessageRowWidget extends StatelessWidget {
   bool get isMine => message.message.senderId == SharedPref.currentUserId;
@@ -65,7 +61,7 @@ class MessageRowWidget extends StatelessWidget {
               AvatarWithImageOrLetter(
                 raduis: 16,
                 boderThickness: 1,
-                borderColor: ChatStyle.ownMessageColor!,
+                borderColor: ChatStyle.ownMessageColor,
                 userName: _screenController.currentConversation.userName,
                 imageUrl: _screenController.currentConversation.userImageUrl,
                 userId: _screenController.currentConversation.userId,
@@ -193,14 +189,7 @@ class MessageWidget extends StatelessWidget {
         message.message.replyTo != null && getReplyMessage != null
             ? getReplyMessage!(message.message.replyTo!)
             : null;
-    // AppPrint.printData(
-    //     replyMessage == null ? 'No Reply' : replyMessage.message.toString());
-    return
-        // message.multimedia != null &&
-        //         message.message.body != null &&
-        //         message.message.body?.trim() != ""
-        //     ?
-        Column(
+    return Column(
       crossAxisAlignment:
           isMine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
@@ -247,27 +236,29 @@ class MessageWidget extends StatelessWidget {
   }
 
   Widget getMessage() {
-    if (message.multimedia != null && message.multimedia!.type == "image") {
+    if (message.multimedia != null &&
+        message.multimedia!.type == MultimediaTypes.image.value.toLowerCase()) {
       return ImageMessageWidget(
         multimedia: message.multimedia!,
         isMine: isMine,
       );
       // ImageMessage
     } else if (message.multimedia != null &&
-        message.multimedia!.type == "video") {
+        message.multimedia!.type == MultimediaTypes.video.value.toLowerCase()) {
       return VideoMessageWidget(
         multimedia: message.multimedia!,
         isMine: isMine,
       );
     } else if (message.multimedia != null &&
-        message.multimedia!.type == "audio") {
+        message.multimedia!.type == MultimediaTypes.audio.value.toLowerCase()) {
       return AudioMessageWidget(
         multimedia: message.multimedia!,
         isMine: isMine,
       );
     } else if (message.multimedia != null &&
-        (message.multimedia!.type == "file" ||
-            message.multimedia!.type == "archive")) {
+        (message.multimedia!.type == MultimediaTypes.file.value.toLowerCase() ||
+            message.multimedia!.type ==
+                MultimediaTypes.archive.value.toLowerCase())) {
       return FileMessageWidget(
         multimedia: message.multimedia!,
         isMine: isMine,
@@ -287,27 +278,29 @@ class MessageWidget extends StatelessWidget {
   }
 
   Widget getReadyMessage() {
-    if (message.multimedia != null && message.multimedia!.type == "image") {
+    if (message.multimedia != null &&
+        message.multimedia!.type == MultimediaTypes.image.value.toLowerCase()) {
       return ReadyImageMessageWidget(
         multimedia: message.multimedia!,
         isMine: isMine,
       );
       // ImageMessage
     } else if (message.multimedia != null &&
-        message.multimedia!.type == "video") {
+        message.multimedia!.type == MultimediaTypes.video.value.toLowerCase()) {
       return ReadyVideoMessageWidget(
         multimedia: message.multimedia!,
         isMine: isMine,
       );
     } else if (message.multimedia != null &&
-        message.multimedia!.type == "audio") {
+        message.multimedia!.type == MultimediaTypes.audio.value.toLowerCase()) {
       return ReadyAudioMessageWidget(
         multimedia: message.multimedia!,
         isMine: isMine,
       );
     } else if (message.multimedia != null &&
-        (message.multimedia!.type == "file" ||
-            message.multimedia!.type == "archive")) {
+        (message.multimedia!.type == MultimediaTypes.file.value.toLowerCase() ||
+            message.multimedia!.type ==
+                MultimediaTypes.archive.value.toLowerCase())) {
       return ReadyFileMessageWidget(
         multimedia: message.multimedia!,
         isMine: isMine,

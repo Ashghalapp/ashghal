@@ -1,13 +1,13 @@
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/search_textformfield.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/user_status_text_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../avatar.dart';
+import '../avatar.dart';
 
 class ConversationScreenAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -39,8 +39,8 @@ class ConversationScreenAppBar extends StatelessWidget
       ),
       title: Text(
         _screenController.selectedMessagesIds.isNotEmpty
-            ? "${_screenController.selectedMessagesIds.length} item selected"
-            : "No item selected",
+            ? "${_screenController.selectedMessagesIds.length} ${AppLocalization.messageSelected.tr}"
+            : AppLocalization.noMessageSelected.tr,
         style: const TextStyle(fontSize: 15),
       ),
       actions: [
@@ -120,7 +120,6 @@ class ConversationScreenAppBar extends StatelessWidget
         child: const Icon(
           Icons.arrow_back,
           size: 22,
-          // color: Colors.white,
         ),
       ),
       title: Padding(
@@ -130,7 +129,6 @@ class ConversationScreenAppBar extends StatelessWidget
           onTextChanged: (value) =>
               _screenController.onSearchTextFieldChanged(value),
           focusNode: _screenController.searchFeildFocusNode,
-          // onSearchPressed: _screenController.searchInMessages,
         ),
       ),
       actions: [
@@ -139,7 +137,6 @@ class ConversationScreenAppBar extends StatelessWidget
           onTap: _screenController.incrementIndex,
           child: const Icon(
             Icons.arrow_drop_up,
-            // color: Colors.white,
             size: 30,
           ),
         ),
@@ -148,65 +145,12 @@ class ConversationScreenAppBar extends StatelessWidget
           onTap: _screenController.decrementIndex,
           child: const Icon(
             Icons.arrow_drop_down,
-            // color: Colors.white,
             size: 30,
           ),
         ),
         const SizedBox(width: 10),
       ],
     );
-
-    // PreferredSize(
-    //   preferredSize: Size(Get.width, 300),
-    //   child: Card(
-    //     color: Get.isDarkMode ? ChatColors.appBarDark : ChatColors.appBarLight,
-    //     // color: ChatStyle.ownMessageColor,
-    //     // color: Color.fromRGBO(25, 39, 52, 1),
-    //     margin: const EdgeInsets.only(top: 53, bottom: 10),
-    //     child: Row(
-    //       children: [
-    //         const SizedBox(width: 7),
-    //         InkWell(
-    //           onTap: _screenController.toggleSearchingMode,
-    //           child: const Icon(
-    //             Icons.arrow_back,
-    //             size: 22,
-    //             // color: Colors.white,
-    //           ),
-    //         ),
-    //         const SizedBox(width: 5),
-    //         Padding(
-    //           padding: const EdgeInsets.all(8.0),
-    //           child: Expanded(
-    //             child: SearchTextField(
-    //               controller: _screenController.searchFeildController,
-    //               // onSearchPressed: _screenController.searchInMessages,
-    //             ),
-    //           ),
-    //         ),
-    //         const SizedBox(width: 5),
-    //         InkWell(
-    //           onTap: _screenController.incrementIndex,
-    //           child: const Icon(
-    //             Icons.arrow_drop_up,
-    //             // color: Colors.white,
-    //             size: 27,
-    //           ),
-    //         ),
-    //         const SizedBox(width: 7),
-    //         InkWell(
-    //           onTap: _screenController.decrementIndex,
-    //           child: const Icon(
-    //             Icons.arrow_drop_down,
-    //             // color: Colors.white,
-    //             size: 27,
-    //           ),
-    //         ),
-    //         const SizedBox(width: 7),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 
   AppBar buildNormalAppBar(LocalConversation conversation) {
@@ -240,12 +184,12 @@ class ConversationScreenAppBar extends StatelessWidget
         ],
       ),
       titleTextStyle: const TextStyle(
-                // fontWeight: FontWeight.w500,
-                fontSize: 15,
-                // color: Colors.white,
-              ),
+        // fontWeight: FontWeight.w500,
+        fontSize: 15,
+        // color: Colors.white,
+      ),
       title: InkWell(
-        onTap: _screenController.goToChatProfileScreen,
+        onTap: _screenController.goToUserProfileScreen,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,9 +197,7 @@ class ConversationScreenAppBar extends StatelessWidget
             Text(
               conversation.userName,
               style: const TextStyle(
-                // fontWeight: FontWeight.w500,
                 fontSize: 16,
-                // color: Colors.white,
               ),
             ),
             const SizedBox(height: 5),

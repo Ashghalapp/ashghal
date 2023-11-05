@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/send_message_request.dart';
@@ -117,7 +114,6 @@ class ConversationScreenController extends GetxController {
 
     scrollListener.itemPositions.addListener(
       () {
-        // print("Listener started");
         List<int> indexes = scrollListener.itemPositions.value
             // .where((element) {
             //   //itemLeadingEdge: determinates the distance between the top of the list view
@@ -130,10 +126,8 @@ class ConversationScreenController extends GetxController {
             // })
             .map((e) => e.index)
             .toList();
-        // print(indexes);
         if (indexes.isNotEmpty && indexes[0] > 2) {
           showScrollDownIcon.value = true;
-          // print("Ok");
         } else {
           showScrollDownIcon.value = false;
         }
@@ -145,26 +139,6 @@ class ConversationScreenController extends GetxController {
         () async {
           scrollToMessageWithLocalIdAndHighLightItForAWhile(
               targetMessage!.localId, 4);
-          // int index = conversationController.messages.indexWhere(
-          //     (element) => element.message.localId == targetMessage!.localId);
-          // if (index != -1) {
-          //   searchSelectedMessage.value = index;
-          //   scrollToPosition(index, 0.5);
-          //   // after 4 seconds disable selecting the message
-          //   Future.delayed(
-          //     const Duration(seconds: 4),
-          //     () {
-          //       searchSelectedMessage.value = -1;
-          //     },
-          //   );
-          // }
-          // for (int i = 0; i < conversationController.messages.length; i++) {
-          //   if (conversationController.messages[i].message.localId ==
-          //       message!.localId) {
-          //     // matchedMsgIndixes.add(i);
-
-          //   }
-          // }
         },
       );
     }
@@ -177,16 +151,6 @@ class ConversationScreenController extends GetxController {
     super.onClose();
   }
 
-  // final RxList<LocalMessage> filteredMessages = <LocalMessage>[].obs;
-
-  // void updateFilteredMessages(List<LocalMessage> newFilteredMessages) {
-  //   conversationController.messages.assignAll(newFilteredMessages);
-  // }
-
-  // Future<void> clearChat(int conversationId) async {
-  //   conversationController.clearChat(conversationId);
-  // }
-
   popupMenuButtonOnSelected(ConversationPopupMenuItemsValues value) {
     if (value == ConversationPopupMenuItemsValues.search) {
       toggleSearchingMode();
@@ -195,9 +159,7 @@ class ConversationScreenController extends GetxController {
     } else if (value == ConversationPopupMenuItemsValues.goToFirstMessage) {
       scrollToFirstOrBottom(false);
     } else if (value == ConversationPopupMenuItemsValues.clearChat) {
-      // conversationController.clearChat();
       clearChat();
-      //  _chatScreenController
     } else if (value == ConversationPopupMenuItemsValues.block) {
       conversationController.blockConversation();
     } else if (value == ConversationPopupMenuItemsValues.unblock) {
@@ -205,7 +167,7 @@ class ConversationScreenController extends GetxController {
     }
   }
 
-  void goToChatProfileScreen() {
+  void goToUserProfileScreen() {
     Get.to(
       () => ProfileChatScreen(
         conversation: currentConversation,
@@ -247,7 +209,6 @@ class ConversationScreenController extends GetxController {
   Future<void> clearChat() async {
     await conversationController.clearChat();
     ChatController chatController = Get.find();
-    // AppPrint.printInfo("Clear chat started");
     chatController.deleteConversationsLastMessageAndCount(conversationId);
   }
 
@@ -273,8 +234,6 @@ class ConversationScreenController extends GetxController {
 
   void setReplyMessage(int messageRemoteId) {
     AppPrint.printInfo("Message $messageRemoteId Swiped");
-    // AppPrint.printInfo("Message ${message.message.toString()} Swiped");
-    // AppPrint.printInfo("Message ${message.multimedia.toString()} Swiped");
     replyMessage.value = getMessageWithRemoteId(messageRemoteId);
     AppPrint.printInfo(
         "Message ${replyMessage.value!.message.toString()} Swiped");
@@ -288,24 +247,14 @@ class ConversationScreenController extends GetxController {
 
   void scrollToMessageReplyWithId(int messagelocalId) {
     scrollToMessageWithLocalIdAndHighLightItForAWhile(messagelocalId, 2);
-    // int index = conversationController.messages
-    //     .indexWhere((element) => element.message.localId == messagelocalId);
-    // AppPrint.printInfo("scroll to index $index");
-    // if (index != -1) {
-    //   scrollToPosition(index, 0.5);
-    // }
   }
 
   MessageAndMultimediaModel? getMessageWithRemoteId(int messageRemoteId) {
-    // MessageAndMultimediaModel? message =
     return conversationController.messages.firstWhereOrNull(
         (element) => element.message.remoteId == messageRemoteId);
-    // AppPrint.printData("$messageRemoteId reply Message ${message.toString()}");
-    // return message;
   }
 
   Future<void> sendTextMessage(String body, [int? otherConversationId]) async {
-    // AppPrint.printData("Reply Message ${replyMessage!.message}");
     SendMessageRequest request = SendMessageRequest.withBody(
       conversationId: otherConversationId ?? conversationId,
       replyTo: replyMessage.value == null
@@ -313,7 +262,6 @@ class ConversationScreenController extends GetxController {
           : replyMessage.value!.message.remoteId,
       body: body,
     );
-    // AppPrint.printData(request.toString());
     cancelReplyMessage();
     await conversationController.sendMessage(request);
   }
@@ -444,7 +392,6 @@ class ConversationScreenController extends GetxController {
   }
 
   void deleteSelectedMessages() {
-    //deleteMessageOrMessages(messagesIds, conversationId);
     conversationController.deleteMessages(selectedMessagesIds.toList());
     resetToNormalMode();
   }
@@ -472,7 +419,6 @@ class ConversationScreenController extends GetxController {
 
   //============================ Start Searching functions ============================//
   void toggleSearchingMode() {
-    print("toggleSearchingMode");
     print(isSearching.value);
     isSearching.value = !isSearching.value;
     if (isSearching.value) {
@@ -513,30 +459,7 @@ class ConversationScreenController extends GetxController {
   //============================ End Searching functions ============================//
 
   //============================ Start Scrolling functions ============================//
-  // void scrollToBottom() {
-  //   messagesScrollController.animateTo(
-  //     messagesScrollController.position.maxScrollExtent,
-  //     duration: const Duration(milliseconds: 500),
-  //     curve: Curves.easeInOut,
-  //   );
-  //   // messagesScrollController.
-  // }
-
-  // void scrollToUp() {
-  //   messagesScrollController.animateTo(
-  //     // messagesScrollController.position.minScrollExtent,
-  //     0,
-  //     duration: const Duration(milliseconds: 500),
-  //     curve: Curves.easeInOut,
-  //   );
-  // }
-
   void scrollToPosition(int targetIndex, [double alignment = 0]) {
-    // messagesScrollController.animateTo(
-    //   messagesScrollController.position.maxScrollExtent,
-    //   duration: const Duration(milliseconds: 500),
-    //   curve: Curves.easeInOut,
-    // );
     messagesScrollController.scrollTo(
       index: targetIndex,
       alignment: alignment,
@@ -548,7 +471,6 @@ class ConversationScreenController extends GetxController {
   void incrementIndex() {
     if (mathedCurrentIndex < matchedMsgIndixes.length - 1) {
       // Increment the current index if not at the end
-
       scrollToPosition(matchedMsgIndixes[++mathedCurrentIndex.value]);
       searchSelectedMessage.value = matchedMsgIndixes[mathedCurrentIndex.value];
 
@@ -572,11 +494,6 @@ class ConversationScreenController extends GetxController {
     try {
       scrollToPosition(
           toBottom ? 0 : conversationController.messages.length - 1);
-      // messagesScrollController.scrollTo(
-      //   index:,
-      //   duration: const Duration(milliseconds: 300),
-      //   curve: Curves.easeOut,
-      // );
     } catch (e) {
       print(e.toString());
     }

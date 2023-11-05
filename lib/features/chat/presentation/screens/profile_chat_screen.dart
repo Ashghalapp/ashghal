@@ -1,5 +1,4 @@
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
 import 'package:flutter/material.dart';
 
 class ProfileChatScreen extends StatelessWidget {
@@ -186,9 +185,4 @@ class ProfileChatScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-String lastSeenMessage(String lastSeen) {
-  // Implement your logic to calculate the last seen message here
-  return "2 hours";
 }

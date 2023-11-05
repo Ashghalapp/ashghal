@@ -7,7 +7,7 @@ import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/avatar.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/components.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/highlightable_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,25 +36,6 @@ class ConversationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _buildDismissibleWidget(
-      // child: InkWell(
-      // onLongPress: () {
-      //   if (!_screenController.isSearching.value) {
-      //     if (!_screenController.selectionEnabled.value) {
-      //       _screenController.toggleSelectionMode();
-      //     }
-      //     _screenController
-      //         .selectConversation(conversation.conversation.localId);
-      //   }
-      // },
-      // onTap: () {
-      //   if (_screenController.selectionEnabled.value ||
-      //       _screenController.forwardSelectionEnabled.value) {
-      //     _screenController
-      //         .selectConversation(conversation.conversation.localId);
-      //   } else {
-      //     _screenController.goToConversationScreen(conversation.conversation);
-      //   }
-      // },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         child: Row(
@@ -65,7 +46,6 @@ class ConversationWidget extends StatelessWidget {
               raduis: 26,
               boderThickness: 1,
               borderColor: Get.theme.primaryColor,
-              // borderColor: Theme.of(context).primaryColor,
               imageUrl: conversation.conversation.userImageUrl,
             ),
             Expanded(
@@ -84,7 +64,6 @@ class ConversationWidget extends StatelessWidget {
                                 searchText: _screenController
                                     .searchFeildController.text,
                                 fontSize: 15,
-                                // textColor: Colors.black,
                               )
                             : Text(
                                 conversation.conversation.userName,
@@ -103,7 +82,7 @@ class ConversationWidget extends StatelessWidget {
                         return _chatController.typingUsers
                                 .contains(conversation.conversation.userId)
                             ? Text(
-                                "${AppLocalization.typingNow}...",
+                                "${AppLocalization.typingNow.tr}...",
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontSize: 16,
@@ -181,7 +160,7 @@ class ConversationWidget extends StatelessWidget {
             return _stateController.onlineUsersIds
                     .contains(conversation.conversation.userId)
                 ? Text(
-                    AppLocalization.online,
+                    AppLocalization.online.tr,
                     style: TextStyle(
                       color: Get.theme.primaryColor,
                       fontSize: 16,
@@ -227,7 +206,7 @@ class ConversationWidget extends StatelessWidget {
           //to prevent the widget from beeing deleted from the tree until it is updated
           //I will fire the updating action here and return false so the dissmisssble widget will not delete the wiget
           return await AppUtil.showConfirmationDialog(
-            AppLocalization.cofirmArchiveConversationMessage,
+            AppLocalization.cofirmArchiveConversationMessage.tr,
           );
           //   .then((value) {
           // if (value != null && value) {
@@ -239,7 +218,7 @@ class ConversationWidget extends StatelessWidget {
         } else if (direction == DismissDirection.startToEnd) {
           // Widget dismissed from left to right
           return await AppUtil.showConfirmationDialog(
-            AppLocalization.cofirmDeleteConversationMessage,
+            AppLocalization.cofirmDeleteConversationMessage.tr,
           );
         }
         return Future.value(false);
@@ -268,7 +247,7 @@ class ConversationWidget extends StatelessWidget {
               const Icon(Icons.delete, color: Colors.white),
               const SizedBox(width: 10),
               Text(
-                AppLocalization.delete,
+                AppLocalization.delete.tr,
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
             ],
@@ -285,7 +264,7 @@ class ConversationWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                AppLocalization.archived,
+                AppLocalization.archived.tr,
                 style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
               const SizedBox(width: 10),

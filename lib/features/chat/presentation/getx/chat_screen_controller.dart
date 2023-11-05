@@ -1,17 +1,12 @@
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/use_cases/conversation_messages_read.dart';
 
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/auto_reply_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/blocked_chats_screen.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_settings_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/conversation_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/full_image_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/profile_chat_screen.dart';
@@ -20,10 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum ChatPopupMenuItemsValues {
-  autoReply, //الرد التلقائي
   starredMessages, //الرسائل المميزة بنجمة
   blockedChats,
-  settings,
   search,
   viewProfile, //فتح الملف الشخصي
   markMessagesAsRead, //تمييز كمقروءة
@@ -35,14 +28,10 @@ enum ChatPopupMenuItemsValues {
 extension ChatPopupMenuItemsValuesExtension on ChatPopupMenuItemsValues {
   String get value {
     switch (this) {
-      case ChatPopupMenuItemsValues.autoReply:
-        return AppLocalization.autoReply;
       case ChatPopupMenuItemsValues.starredMessages:
         return AppLocalization.starredMessages;
       case ChatPopupMenuItemsValues.blockedChats:
         return AppLocalization.blockedChats;
-      case ChatPopupMenuItemsValues.settings:
-        return AppLocalization.settings;
       case ChatPopupMenuItemsValues.search:
         return AppLocalization.search;
       case ChatPopupMenuItemsValues.viewProfile:
@@ -82,21 +71,13 @@ class ChatScreenController extends GetxController {
     if (conversation != null) {
       goToConversationScreen(conversation);
     }
-    //  else {
-    //   AppUtil.buildErrorDialog(AppLocalization.failureStartChatingUser);
-    // }
-    // isLoading.value = false;
   }
 
   popupMenuButtonOnSelected(ChatPopupMenuItemsValues value) {
-    if (value == ChatPopupMenuItemsValues.autoReply) {
-      goToAutoReplyScreen();
-    } else if (value == ChatPopupMenuItemsValues.starredMessages) {
+    if (value == ChatPopupMenuItemsValues.starredMessages) {
       goToStarredMessagesScreen();
     } else if (value == ChatPopupMenuItemsValues.blockedChats) {
       goToBlockedChatsScreen();
-    } else if (value == ChatPopupMenuItemsValues.settings) {
-      goToSettingsScreen();
     } else if (value == ChatPopupMenuItemsValues.search) {
       toggleSearchMode();
     } else if (value == ChatPopupMenuItemsValues.viewProfile) {
@@ -138,29 +119,11 @@ class ChatScreenController extends GetxController {
     await chatController.toggleArchiveConversation(conversationId);
   }
 
-  void goToSettingsScreen() {
-    Get.to(() => const ChatSettingsScreen());
-  }
-
   void goToBlockedChatsScreen() {
     Get.to(() => BlockedChatsScreen());
   }
 
-  void goToAutoReplyScreen() {
-    Get.to(() => const AutoReplyScreen());
-  }
-
   void goToStarredMessagesScreen() {
-    // i injected the ConversationScreenController so i can use the messages widgets
-    //in the starred messages screen, becuase most of conversations widgets depends on that
-    // if (chatController.conversations.isNotEmpty) {
-    //   Get.put(
-    //     ConversationScreenController(
-    //       conversation: chatController.conversations[0].conversation,
-    //     ),
-    //   );
-    // }
-
     Get.to(() => StarredMessagesScreen());
   }
 
@@ -191,14 +154,6 @@ class ChatScreenController extends GetxController {
 
   void goToConversationScreen(LocalConversation conversation,
       [LocalMessage? matchedMessage]) {
-    // Get.delete<ConversationScreenController>();
-    // ConversationScreenController controller =
-    // Get.put(
-    //   ConversationController(
-    //     currentConversation: conversation,
-    //   ),
-    // );
-    // ConversationScreenController controller =
     Get.put(
       ConversationScreenController(
         currentConversation: conversation,
@@ -236,8 +191,6 @@ class ChatScreenController extends GetxController {
   RxBool isSearching = false.obs;
 
   Future<void> onSearchTextFieldChanges(String text) async {
-    print("onSearchTextFieldChanges");
-    // if (text.trim().length > 2 || searchStarted) {
     if (text.trim().isEmpty) {
       isSearchTextEmpty.value = true;
     } else {
@@ -290,7 +243,6 @@ class ChatScreenController extends GetxController {
   }
 
   void selectConversation(int conversationId) {
-    AppPrint.printInfo("conversation $conversationId selected ");
     if (selectionEnabled.value || forwardSelectionEnabled.value) {
       if (selectedConversationsIds.contains(conversationId)) {
         selectedConversationsIds.remove(conversationId);
@@ -342,7 +294,6 @@ class ChatScreenController extends GetxController {
 
   Future<void> toggleArchiveSelectedConversation() async {
     if (selectedConversationsIds.isNotEmpty) {
-      // toggleSelectionMode();
       selectionEnabled.value = false;
 
       await chatController
@@ -353,13 +304,6 @@ class ChatScreenController extends GetxController {
 
   Future<void> openSelectedCoversationProfile() async {
     if (selectedConversationsIds.isNotEmpty) {
-      // ParticipantModel participant = ParticipantModel(
-      //   id: firstSelectedConversation!.userId,
-      //   name: firstSelectedConversation!.userName,
-      //   email: firstSelectedConversation!.userEmail,
-      //   phone: firstSelectedConversation!.userPhone,
-      //   imageUrl: firstSelectedConversation!.userImageUrl,
-      // );
       goToChatProfileScreen(firstSelectedConversation!);
       selectionEnabled.value = false;
       selectedConversationsIds.clear();
@@ -387,8 +331,6 @@ class ChatScreenController extends GetxController {
       Future<void> Function(List<int> selectedConversationsIds)
           onForwardedMessageSend) {
     forwardSelectionEnabled.value = true;
-    // selectionEnabled.value = true;
-    AppPrint.printInfo("Forwarding started");
     _onForwardedMessageSend = onForwardedMessageSend;
   }
 
@@ -402,7 +344,6 @@ class ChatScreenController extends GetxController {
   }
 
   void cnacelForwardMode() {
-    AppPrint.printInfo("Forward Mode Canceled");
     resetToNormalMode();
     Get.back();
   }

@@ -1,14 +1,7 @@
-import 'package:ashghal_app_frontend/config/chat_theme.dart';
-import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
-import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/components.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/search_textformfield.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/user_status_text_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,7 +31,6 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
             }
             if (!_screenController.isSearching.value &&
                 !_screenController.forwardSelectionEnabled.value) {
-              // AppPrint.printInfo("buildPopMenuButtonAccordingToMode");
               return buildPopMenuButtonAccordingToMode();
             } else if (_screenController.forwardSelectionEnabled.value &&
                 !_screenController.isSearching.value) {
@@ -72,17 +64,19 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
             : _screenController.forwardSelectionEnabled.value
                 ? _screenController.selectedConversationsIds.isNotEmpty
                     ? Text(
-                        "${_screenController.selectedConversationsIds.length} selected")
-                    : const Text("Forward to...")
+                        "${_screenController.selectedConversationsIds.length} ${AppLocalization.chatSelected.tr}")
+                    : Text(AppLocalization.forwardTo.tr)
                 : _screenController.selectionEnabled.value
                     ? Text(
                         // _screenController.selectedConversationsIds.isNotEmpty
                         //     ?
-                        "${_screenController.selectedConversationsIds.length} conversations selected",
+                        "${_screenController.selectedConversationsIds.length}" +
+                            " " +
+                            AppLocalization.conversationsSelected.tr,
                         // : "No item selected",
                         style: const TextStyle(fontSize: 15),
                       )
-                    : const Text("Ashghal Chat");
+                    : Text(AppLocalization.ashghal.tr);
       },
     );
   }
@@ -105,15 +99,7 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
                 },
                 child: const Icon(Icons.arrow_back),
               )
-            :
-            // InkWell(
-            //     onTap: _screenController.toggleSearchMode,
-            //     child: const Icon(
-            //       Icons.search,
-            //       size: 24,
-            //     ),
-            //   );
-            PressableIconBackground(
+            : PressableIconBackground(
                 icon: Icons.search,
                 onTap: _screenController.toggleSearchMode,
                 borderRadius: 0,
@@ -192,7 +178,6 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
         onTap: () {},
         child: buildPopupMenuButton(normalModePopupmenuButtons),
       );
-      // buildPopupMenuButton(normalModePopupmenuButtons);
     }
   }
 
@@ -236,12 +221,6 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
   List<PopupMenuItem<ChatPopupMenuItemsValues>>
       get normalModePopupmenuButtons => [
             PopupMenuItem(
-              value: ChatPopupMenuItemsValues.autoReply,
-              child: Text(
-                ChatPopupMenuItemsValues.autoReply.value.tr,
-              ),
-            ),
-            PopupMenuItem(
               value: ChatPopupMenuItemsValues.search,
               child: Text(
                 ChatPopupMenuItemsValues.search.value.tr,
@@ -257,12 +236,6 @@ class ChatScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
               value: ChatPopupMenuItemsValues.blockedChats,
               child: Text(
                 ChatPopupMenuItemsValues.blockedChats.value.tr,
-              ),
-            ),
-            PopupMenuItem(
-              value: ChatPopupMenuItemsValues.settings,
-              child: Text(
-                ChatPopupMenuItemsValues.settings.value.tr,
               ),
             ),
           ];

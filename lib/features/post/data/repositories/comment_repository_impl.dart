@@ -5,9 +5,7 @@ import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 import 'package:ashghal_app_frontend/core_api/success/success.dart';
 import 'package:ashghal_app_frontend/features/post/data/data_sources/comment_remote_data_source.dart';
 import 'package:ashghal_app_frontend/features/post/data/data_sources/post_local_data_source.dart';
-import 'package:ashghal_app_frontend/features/post/data/data_sources/post_remote_data_source.dart';
 import 'package:ashghal_app_frontend/features/post/data/models/comment_model.dart';
-import 'package:ashghal_app_frontend/features/post/data/models/post_model.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/add_comment_or_reply_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/get_comment_replies_request%20copy.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/get_post_comments_request.dart';
@@ -15,20 +13,15 @@ import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_reque
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/get_user_comments_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/get_user_replies_on_comment_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/comment_request/update_comment_or_reply_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/delete_some_post_multimedia_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/get_category_posts_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/pagination_request.dart';
-import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/get_user_posts_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/comment.dart';
-import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/reply.dart';
 import 'package:ashghal_app_frontend/features/post/domain/repositories/comment_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class CommentRepositoryImpl extends CommentRepository {
   CommentRemoteDataSource commentRemoteDS = CommentRemoteDataSourceImpl();
-  PostCommentLocalDataSource postCommentLocalDS = PostCommentLocalDataSourceImpl();
+  PostCommentLocalDataSource postCommentLocalDS =
+      PostCommentLocalDataSourceImpl();
   NetworkInfo networkInfo = NetworkInfoImpl();
 
   // @override
@@ -58,15 +51,16 @@ class CommentRepositoryImpl extends CommentRepository {
   }
 
   @override
-  Future<Either<Failure, Reply>> addReply(AddReplyRequest request) async{
-     var result = await _handleErrors(() async {
+  Future<Either<Failure, Reply>> addReply(AddReplyRequest request) async {
+    var result = await _handleErrors(() async {
       return await commentRemoteDS.addReply(request);
     });
     return result is Reply ? Right(result) : Left(result);
   }
-  
-    @override
-  Future<Either<Failure, Comment>> updateComment(UpdateCommentOrReplyRequest request) async {
+
+  @override
+  Future<Either<Failure, Comment>> updateComment(
+      UpdateCommentOrReplyRequest request) async {
     var result = await _handleErrors(() async {
       return await commentRemoteDS.updateComment(request);
     });
@@ -74,18 +68,21 @@ class CommentRepositoryImpl extends CommentRepository {
   }
 
   @override
-  Future<Either<Failure, Reply>> updateReply(UpdateCommentOrReplyRequest request) async{
-   var result = await _handleErrors(() async {
+  Future<Either<Failure, Reply>> updateReply(
+      UpdateCommentOrReplyRequest request) async {
+    var result = await _handleErrors(() async {
       return await commentRemoteDS.updateReply(request);
     });
     return result is Reply ? Right(result) : Left(result);
   }
 
   @override
-  Future<Either<Failure, List<Comment>>> getPostComments(GetPostCommentsRequest request) async{
+  Future<Either<Failure, List<Comment>>> getPostComments(
+      GetPostCommentsRequest request) async {
     try {
       if (await networkInfo.isConnected) {
-        List<CommentModel> comments = await commentRemoteDS.getPostComments(request);
+        List<CommentModel> comments =
+            await commentRemoteDS.getPostComments(request);
         postCommentLocalDS.cashePostComments(comments);
         return Right(comments);
       } else {
@@ -100,15 +97,17 @@ class CommentRepositoryImpl extends CommentRepository {
   }
 
   @override
-  Future<Either<Failure, List<Comment>>> getUserComments(GetUserCommentsRequest request) async{
+  Future<Either<Failure, List<Comment>>> getUserComments(
+      GetUserCommentsRequest request) async {
     var result = await _handleErrors(() async {
       return await commentRemoteDS.getUserComments(request);
     });
     return result is List<Comment> ? Right(result) : Left(result);
-  } 
+  }
 
   @override
-  Future<Either<Failure, List<Comment>>> getUserCommentsOnPost(GetUserCommentsOnPostRequest request) async{
+  Future<Either<Failure, List<Comment>>> getUserCommentsOnPost(
+      GetUserCommentsOnPostRequest request) async {
     var result = await _handleErrors(() async {
       return await commentRemoteDS.getUserCommentsOnPost(request);
     });
@@ -116,7 +115,8 @@ class CommentRepositoryImpl extends CommentRepository {
   }
 
   @override
-  Future<Either<Failure, List<Reply>>> getCommentReplies(GetCommentRepliesRequest request) async{
+  Future<Either<Failure, List<Reply>>> getCommentReplies(
+      GetCommentRepliesRequest request) async {
     var result = await _handleErrors(() async {
       return await commentRemoteDS.getCommentReplies(request);
     });
@@ -124,7 +124,8 @@ class CommentRepositoryImpl extends CommentRepository {
   }
 
   @override
-  Future<Either<Failure, List<Reply>>> getUserRepliesOnComment(GetUserRepliesOnCommentRequest request) async{
+  Future<Either<Failure, List<Reply>>> getUserRepliesOnComment(
+      GetUserRepliesOnCommentRequest request) async {
     var result = await _handleErrors(() async {
       return await commentRemoteDS.getUserRepliesOnComment(request);
     });
@@ -132,7 +133,7 @@ class CommentRepositoryImpl extends CommentRepository {
   }
 
   @override
-  Future<Either<Failure, Success>> deleteCommentOrReply(int id) async{
+  Future<Either<Failure, Success>> deleteCommentOrReply(int id) async {
     var result = await _handleErrors(() async {
       return await commentRemoteDS.deleteCommentOrReply(id);
     });
@@ -160,10 +161,4 @@ class CommentRepositoryImpl extends CommentRepository {
       return NotSpecificFailure(message: e.toString());
     }
   }
-  
-  
-
-  
-  
-
 }

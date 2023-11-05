@@ -1,14 +1,11 @@
 import 'package:ashghal_app_frontend/app_live_cycle_controller.dart';
-import 'package:ashghal_app_frontend/config/app_theme.dart';
 import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
 
 import 'package:ashghal_app_frontend/core_api/pusher_service.dart';
-import 'package:ashghal_app_frontend/core_api/services/image_checker_cacher.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/streames_manager.dart';
 import 'package:camera/camera.dart';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dependency_injection.dart';
@@ -31,7 +28,7 @@ class AppServices extends GetxService {
 
     // Get.lazyPut(() => OnBoardingControllerImp());
     Get.lazyPut(() => AppLocallcontroller());
-     Get.lazyPut(()=>AppLifeCycleController());
+    Get.lazyPut(() => AppLifeCycleController());
     cameras = await availableCameras();
 
     pusher = PusherService();

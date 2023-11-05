@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:ashghal_app_frontend/core/services/app_services.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';

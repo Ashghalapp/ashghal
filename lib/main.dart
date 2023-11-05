@@ -53,14 +53,14 @@ class MyApp extends StatelessWidget {
         title: 'Ashghal App',
         theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
-        locale: controller.language,
+        locale: controller.initialLang,
         translations: MyTranslation(),
         initialBinding: BindingAllControllers(),
         // theme: ThemeData(
         //   primaryColor: Colors.blue,
         //   useMaterial3: true,
         // ),
-    
+
         // initialRoute: AppRoutes.singUpScreenJob,
         // initialRoute: AppRoutes.languageScreen,
         // initialRoute: HomeScreen(),

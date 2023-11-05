@@ -106,8 +106,6 @@ class ChatController extends GetxController {
   void onInit() {
     super.onInit();
 
-    // WatchAllConversations watchAllConversations = di.getIt();
-    // conversations.bindStream(watchAllConversations.call());
     getAllConversationsWithLastMessageAndCount().then(
       (_) {
         _syncronizeConversations();
@@ -167,14 +165,6 @@ class ChatController extends GetxController {
       (localConversations) {
         sortMessage(localConversations);
         conversations.addAll(localConversations);
-        // getConversationsWithNewMessagesCount
-        // for (var c in localConversations) {
-        //   newMessagesCount.value += c.newMessagesCount;
-        //   conversationsWithNewMessages.value += c.newMessagesCount > 0 ? 1 : 0;
-        // }
-        // for (var localConversation in localConversations) {
-        // _insertOrReplaceLocalConversation(localConversation);
-        // }
       },
     );
     isLoaing.value = false;
@@ -202,16 +192,12 @@ class ChatController extends GetxController {
   }
 
   Future<void> _syncronizeConversations() async {
-    // isSubscribed = true;
     if (await AppServices.networkInfo.isConnected) {
       SynchronizeConversations synchronizeConversations = di.getIt();
       synchronizeConversations.call().then(
         (value) async {
           AppPrint.printInfo("Subscribtion state $isSubscribed");
-          // if (!isSubscribed) {
           _subscribeToChatEventsChannels().then((value) => isSubscribed = true);
-
-          // }
         },
       );
     }
@@ -234,30 +220,14 @@ class ChatController extends GetxController {
 
   void _listenToConversations() async {
     WatchAllConversations watchAllConversations = di.getIt();
-    // var oldSubscription = subscription;
-    // if (oldSubscription != null) {
-    //   await oldSubscription.cancel();
-    //   AppPrint.printInfo("Old subscribtion canceled");
-    // }
     streamsManager.listenToConversationsStream(watchAllConversations.call(),
         (localConversations) {
       AppPrint.printInfo(
           "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to conversations got updates :${localConversations.length}");
       for (var localConversation in localConversations) {
-        // AppPrint.printData(localConversation.toString());
         _insertOrReplaceLocalConversation(localConversation);
       }
     });
-
-    // subscription = watchAllConversations.call().listen((localConversations) {
-    //   AppPrint.printInfo(
-    //       "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to conversations got updates :${localConversations.length}");
-    //   for (var localConversation in localConversations) {
-    //     AppPrint.printData(localConversation.toString());
-    //     _insertOrReplaceLocalConversation(localConversation);
-    //   }
-    //   isLoaing.value = false;
-    // });
   }
 
   void _insertOrReplaceLocalConversation(LocalConversation conversation) {
@@ -282,8 +252,6 @@ class ChatController extends GetxController {
   }
 
   void _listenToConversationsLastMessageAndCount() {
-    // AppPrint.printInfo(
-    //     "_listenToConversationsLastMessageAndCount on chat controller started");
     WatchConversationsLastMessageAndCountUseCase useCase = di.getIt();
     streamsManager.listenToConversationsLastMessageAndCountStream(
         useCase.call(), (lastMessagesAndCounts) {
@@ -295,17 +263,6 @@ class ChatController extends GetxController {
         );
       }
     });
-    // useCase.call().listen(
-    //   (lastMessagesAndCounts) {
-    //     AppPrint.printInfo(
-    //         "~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~|~ Listen to conversations last message and count got updates :${lastMessagesAndCounts.length}");
-    //     for (var lastMessageAndCount in lastMessagesAndCounts) {
-    //       _insertOrReplaceConversationLastMessageAndCount(
-    //         lastMessageAndCount as ConversationLastMessageAndCountModel,
-    //       );
-    //     }
-    //   },
-    // );
   }
 
   void deleteConversationsLastMessageAndCount(int conversationLocalId) {
@@ -480,18 +437,10 @@ class ChatController extends GetxController {
   }
 
   Future<bool> unblockConversation(int conversationRemoteId) async {
-    // int index = conversations.indexWhere(
-    //   (element) => element.conversation.localId == conversationLocalId,
-    // );
-    // if (conversations[index].conversation.remoteId != null) {
     return await toggleBlockConversation(
       conversationRemoteId,
       false,
     );
-    // } else {
-    //   AppUtil.showMessage(
-    //       AppLocalization.failToBlockConversation.tr, Colors.red);
-    // }
   }
 
   Future<bool> toggleBlockConversation(
@@ -547,7 +496,6 @@ class ChatController extends GetxController {
     isSubscribed = false;
     UnsubscribeFromRemoteChannelsUseCase useCase = di.getIt();
     await useCase.call();
-    print("Unsubscribed from chat channels");
   }
 
   @override
@@ -662,7 +610,6 @@ class ChatController extends GetxController {
   }
 
   Future<void> searchInConversations(String searchText) async {
-    print("Search starrted");
     print(searchText);
     this.searchText.value = searchText;
     searchMatchedConversations.refresh();
@@ -684,9 +631,6 @@ class ChatController extends GetxController {
           );
         },
         (matchedData) {
-          AppPrint.printInfo(
-              "Search Finished with Success ${matchedData.length}");
-
           searchMatchedMessages.clear();
 
           searchMatchedMessages.addAll(matchedData);
@@ -707,7 +651,6 @@ class ChatController extends GetxController {
         return [];
       },
       (starredMessages) {
-        AppPrint.printInfo("Got ${starredMessages.length} starred messages");
         List<ConversationAndMessageModel> messages = [];
         for (var starredMessage in starredMessages) {
           LocalConversation? conversation = conversations

@@ -60,10 +60,7 @@ class ChatScreenForwardModeFooter extends StatelessWidget {
   Widget _buildSelectedConversationChip(int conversationId) {
     return Chip(
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
-      // onPressed: () {
-      //   AppPrint.printInfo("Chip select$conversationId");
-      //   _screenController.selectConversation(conversationId);
-      // },
+
       onDeleted: () {
         AppPrint.printInfo("Chip select$conversationId");
         _screenController.selectConversation(conversationId);
