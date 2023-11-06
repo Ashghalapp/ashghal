@@ -3,9 +3,9 @@ import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/choice_chip_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/setting_group_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/setting_item_widget.dart';
-import 'package:ashghal_app_frontend/mainscreen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:restart_app/restart_app.dart';
 
 class LangChoicesData {
   final String label;
@@ -73,7 +73,11 @@ class LanguageSettingsGroupWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       onSelected: (bool value) {
-                        _locallcontroller.changeLanguage(chioce.code);
+                        if (value) {
+                          _locallcontroller.changeLanguage(chioce.code);
+                          Restart.restartApp();
+                          // Phoenix.rebirth(context);
+                        }
                         // MainScreenController controller = Get.find();
                         // controller.updateUp();
                       },
