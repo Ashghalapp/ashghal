@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 abstract class NetworkInfo {
@@ -39,8 +40,8 @@ class NetworkInfoImpl implements NetworkInfo {
   }
 
   @override
-  // Future<bool> get isConnected => _connectionChecker.hasConnection;
-  Future<bool> get isConnected => Future.value(true);
+  Future<bool> get isConnected => _connectionChecker.hasConnection;
+  // Future<bool> get isConnected => Future.value(true);
 
   /// A StreamController to manage the stream of network status changes.
   final StreamController<bool> _statusController =

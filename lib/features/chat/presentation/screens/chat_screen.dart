@@ -1,22 +1,24 @@
 import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/services/app_services.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/appbars/chat_screen_appbar.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation%20footer/chat_screen_forward_footer.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation_search_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/filled_outline_button.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/components.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation_widget.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/search_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class ChatScreen extends StatelessWidget {
-  final int? conversationId;
-  ChatScreen({super.key, this.conversationId});
-  final ChatScreenController _screenController =
-      Get.put(ChatScreenController());
+  final ParticipantModel? user;
+  ChatScreen({super.key, this.user})
+      : _screenController = Get.put(ChatScreenController(user: user));
+  final ChatScreenController _screenController;
 
   final ChatController _chatController = Get.find();
 
@@ -24,253 +26,140 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: Get.isPlatformDarkMode ? ChatTheme.dark : ChatTheme.light,
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        body: Column(
-          children: [
-            Obx(
-              () => _screenController.isSearching.value ||
-                      _screenController.forwardSelectionEnabled.value
-                  ? const SizedBox.shrink()
-                  : buildFilterButtons(),
-            ),
-            Expanded(
-              child: Obx(
-                () {
-                  if (_chatController.isLoaing.value) {
-                    return AppUtil.addProgressIndicator(50);
-                  } else if (_chatController.filteredConversations.isEmpty &&
-                      !_screenController.isSearching.value) {
-                    return _buildNoConversationsyet();
-                  } else if (_screenController.isSearching.value) {
-                    return _screenController.isSearchTextEmpty.value
-                        ? const SizedBox.shrink()
-                        : _buildSearchResultList();
-                  }
-                  return _builConversationsListView();
-                },
-              ),
-            ),
-            if (_screenController.forwardSelectionEnabled.value &&
-                _screenController.selectedConversationsIds.isNotEmpty)
-              Card(
-                color: Get.isPlatformDarkMode
-                    ? ChatColors.appBarDark
-                    : ChatColors.appBarLight,
-                margin: const EdgeInsets.all(0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount:
-                            _screenController.selectedConversationsIds.length,
-                        itemBuilder: (_, index) {
-                          return Chip(
-                            label: Text(
-                                "conversation${_screenController.selectedConversationsIds[index]}"),
-                          );
-                        },
-                      ),
-                    ),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.send))
-                  ],
+      child: SafeArea(
+        child: Scaffold(
+          appBar: ChatScreenAppBar(),
+          body: WillPopScope(
+            onWillPop: _screenController.onBackButtonPressed,
+            child: Column(
+              children: [
+                //If the screen in selection or search or forward modes show filter buttons
+                Obx(
+                  () => _screenController.isSearching.value ||
+                          _screenController.forwardSelectionEnabled.value ||
+                          _screenController.selectionEnabled.value
+                      ? const SizedBox.shrink()
+                      : buildFilterButtons(),
                 ),
-              ),
-          ],
+                Expanded(
+                  child: GetX<ChatController>(
+                    builder: (chatController) {
+                      if (chatController.isLoaing.value ||
+                          _screenController.isLoading.value) {
+                        return AppUtil.addProgressIndicator(50);
+                      } else if (chatController.filteredConversations.isEmpty &&
+                          !_screenController.isSearching.value) {
+                        return _buildNoConversationsyet();
+                      } else if (_screenController.isSearching.value &&
+                          !_screenController.forwardSelectionEnabled.value) {
+                        return _screenController.isSearchTextEmpty.value
+                            ? const SizedBox.shrink()
+                            : _buildSearchResultList();
+                      } else if (_screenController.isSearching.value &&
+                          _screenController.forwardSelectionEnabled.value &&
+                          !_screenController.isSearchTextEmpty.value) {
+                        return chatController.searchMatchedConversations.isEmpty
+                            ? _buildNoMatchSearchText(
+                                AppLocalization.noConversationsMatchedSearch.tr,
+                              )
+                            : _builConversationsListView(
+                                chatController.searchMatchedConversations,
+                              );
+                      }
+                      return _builConversationsListView(
+                        chatController.filteredConversations,
+                      );
+                    },
+                  ),
+                ),
+                Obx(
+                  () => _screenController.forwardSelectionEnabled.value &&
+                          _screenController.selectedConversationsIds.isNotEmpty
+                      ? ChatScreenForwardModeFooter()
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  ListView _builConversationsListView() {
+  ListView _builConversationsListView(
+      List<ConversationWithCountAndLastMessage> conversations) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: _chatController.filteredConversations.length,
+      itemCount: conversations.length,
       itemBuilder: (BuildContext context, int index) {
-        return Row(
-          children: [
-            // Container(
-            //   margin: EdgeInsets.only(left: 12),
-            //   // padding:,
-            //   height: 22,
-            //   width: 22,
-            //   decoration: BoxDecoration(
-            //       border: Border.all(
-            //     color: Get.isPlatformDarkMode ? Colors.white70 : Colors.black87,
-            //   ),),
-            // ),
-            Expanded(
-              child: ConversationWidget(
-                conversation: _chatController.filteredConversations[index],
+        return Obx(
+          () => Container(
+            color: _screenController.selectedConversationsIds
+                    .contains(conversations[index].conversation.localId)
+                ? Colors.green.withOpacity(0.2)
+                : null,
+            child: InkWell(
+              onLongPress: () {
+                if (!_screenController.isSearching.value) {
+                  if (!_screenController.selectionEnabled.value) {
+                    _screenController.toggleSelectionMode();
+                  }
+                  _screenController.selectConversation(
+                      conversations[index].conversation.localId);
+                }
+              },
+              onTap: () {
+                if (_screenController.selectionEnabled.value ||
+                    _screenController.forwardSelectionEnabled.value) {
+                  _screenController.selectConversation(
+                      conversations[index].conversation.localId);
+                } else {
+                  _screenController.goToConversationScreen(
+                      conversations[index].conversation);
+                }
+              },
+              child: Row(
+                children: [
+                  if (_screenController.selectionEnabled.value ||
+                      _screenController.forwardSelectionEnabled.value)
+                    Container(
+                      margin: const EdgeInsets.only(left: 12),
+                      padding: const EdgeInsets.all(2),
+                      height: 20,
+                      width: 20,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Get.isPlatformDarkMode
+                              ? Colors.white70
+                              : Colors.black87,
+                        ),
+                      ),
+                      child: _screenController.selectedConversationsIds
+                              .contains(
+                                  conversations[index].conversation.localId)
+                          ? Icon(
+                              Icons.check,
+                              color: Get.isPlatformDarkMode
+                                  ? Colors.white70
+                                  : Colors.black87,
+                              size: 14,
+                            )
+                          : null,
+                    ),
+                  Expanded(
+                    child: ConversationWidget(
+                      conversation: conversations[index],
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         );
       },
     );
   }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      elevation: 1,
-      leadingWidth: 45,
-      // centerTitle: ,
-      leading: Obx(
-        () {
-          return _screenController.forwardSelectionEnabled.value
-              ? InkWell(
-                  onTap: _screenController.cnacelForwardMode,
-                  child: const Icon(Icons.arrow_back),
-                )
-              : _screenController.isSearching.value
-                  ? InkWell(
-                      onTap: _screenController.toggleSearchMode,
-                      child: const Icon(Icons.arrow_back),
-                    )
-                  : PressableIconBackground(
-                      icon: Icons.search,
-                      onTap: _screenController.toggleSearchMode,
-                      borderRadius: 0,
-                    );
-        },
-      ),
-      title: Obx(
-        () {
-          return _screenController.isSearching.value
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: SearchTextField(
-                    focusNode: _screenController.searchFeildFocusNode,
-                    controller: _screenController.searchFeildController,
-                    onTextChanged: (value) async =>
-                        await _screenController.onSearchTextFieldChanges(value),
-                  ),
-                )
-              : _screenController.forwardSelectionEnabled.value
-                  ? _screenController.selectedConversationsIds.isNotEmpty
-                      ? Text(
-                          "${_screenController.selectedConversationsIds.length} selected")
-                      : const Text("Forward to...")
-                  : const Text("Ashghal Chat");
-        },
-      ),
-      actions: [
-        Obx(
-          () {
-            if (!_screenController.isSearching.value &&
-                !_screenController.forwardSelectionEnabled.value) {
-              return PressableIconBackground(
-                padding: 1,
-                borderRadius: 0,
-                onTap: () {},
-                child: PopupMenuButton<ChatPopupMenuItemsValues>(
-                  // color: Colors.white,
-                  onSelected: _screenController.popupMenuButtonOnSelected,
-                  itemBuilder: (BuildContext ctx) {
-                    return [
-                      PopupMenuItem(
-                        value: ChatPopupMenuItemsValues.settings,
-                        child: Text(ChatPopupMenuItemsValues.settings.value),
-                      ),
-                      PopupMenuItem(
-                        value: ChatPopupMenuItemsValues.blockedUsers,
-                        child: Text(
-                          ChatPopupMenuItemsValues.blockedUsers.value,
-                        ),
-                      ),
-                      // const PopupMenuItem(
-                      //   value: ChatPopupMenuItemsValues.createConversation,
-                      //   child: Text("Create Conversation"),
-                      // ),
-                    ];
-                  },
-                ),
-              );
-            } else if (_screenController.forwardSelectionEnabled.value &&
-                !_screenController.isSearching.value) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: InkWell(
-                  onTap: _screenController.toggleSearchMode,
-                  child: const Icon(Icons.search),
-                ),
-              );
-            } else if (_screenController.isSearching.value &&
-                _screenController.isSearchTextEmpty.value &&
-                !_screenController.forwardSelectionEnabled.value) {
-              return const SizedBox.shrink();
-            } else {
-              return Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: InkWell(
-                  child: const Icon(Icons.cancel),
-                  onTap: () {
-                    if (_screenController.isSearchTextEmpty.value &&
-                        _screenController.forwardSelectionEnabled.value) {
-                      _screenController.toggleSearchMode();
-                    } else {
-                      _screenController.clearSearchField();
-                    }
-                  },
-                ),
-              );
-            }
-
-            // _screenController.forwardSelectionEnabled.value && !_screenController.isSearching.value? Padding(
-            //             padding: const EdgeInsets.only(right: 10.0),
-            //             child: InkWell(
-            //               child: const Icon(Icons.search),
-            //               onTap:_screenController.toggleSearchMode,
-            //             ),
-            //           )
-            // return !_screenController.isSearching.value
-            //     ? PressableIconBackground(
-            //         padding: 1,
-            //         borderRadius: 0,
-            //         onTap: () {},
-            //         child: PopupMenuButton<ChatPopupMenuItemsValues>(
-            //           // color: Colors.white,
-            //           onSelected: _screenController.popupMenuButtonOnSelected,
-            //           itemBuilder: (BuildContext ctx) {
-            //             return [
-            //               PopupMenuItem(
-            //                 value: ChatPopupMenuItemsValues.settings,
-            //                 child:
-            //                     Text(ChatPopupMenuItemsValues.settings.value),
-            //               ),
-            //               PopupMenuItem(
-            //                 value: ChatPopupMenuItemsValues.blockedUsers,
-            //                 child: Text(
-            //                   ChatPopupMenuItemsValues.blockedUsers.value,
-            //                 ),
-            //               ),
-            //               // const PopupMenuItem(
-            //               //   value: ChatPopupMenuItemsValues.createConversation,
-            //               //   child: Text("Create Conversation"),
-            //               // ),
-            //             ];
-            //           },
-            //         ),
-            //       )
-            //     : _screenController.isSearchTextEmpty.value
-            //         ? const SizedBox.shrink()
-            //         : Padding(
-            //             padding: const EdgeInsets.only(right: 10.0),
-            //             child: InkWell(
-            //               child: const Icon(Icons.cancel),
-            //               onTap:_screenController.clearSearchField,
-            //             ),
-            //           );
-          },
-        ),
-      ],
-    );
-  }
-
-  // buildForwardAppBar(){
-
-  // }
 
   /// A list of filters
   SizedBox buildFilterButtons() {
@@ -286,17 +175,34 @@ class ChatScreen extends StatelessWidget {
         margin: const EdgeInsets.all(0),
         elevation: 2,
         child: ListView(
-          padding: const EdgeInsets.only(left: 12),
+          padding: const EdgeInsets.only(left: 15),
           scrollDirection: Axis.horizontal,
           children: [
             Obx(
               () => Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildFilterButton(ChatFilters.all),
-                  _buildFilterButton(ChatFilters.recentMessages),
+                  Obx(
+                    () =>
+                        _chatController.getConversationsWithNewMessagesCount > 0
+                            ? _buildWidgetWithCountAvatar(
+                                _buildFilterButton(ChatFilters.all),
+                                _chatController
+                                    .getConversationsWithNewMessagesCount,
+                              )
+                            : _buildFilterButton(ChatFilters.all),
+                  ),
+                  Obx(
+                    () => _chatController.getNewMessagesCount > 0
+                        ? _buildWidgetWithCountAvatar(
+                            _buildFilterButton(ChatFilters.recentMessages),
+                            _chatController.getNewMessagesCount,
+                          )
+                        : _buildFilterButton(ChatFilters.recentMessages),
+                  ),
                   _buildFilterButton(ChatFilters.active),
                   _buildFilterButton(ChatFilters.favorite),
+                  _buildFilterButton(ChatFilters.archived),
                 ],
               ),
             ),
@@ -306,10 +212,51 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
+  Stack _buildWidgetWithCountAvatar(Widget widget, int count) {
+    return Stack(
+      children: [
+        widget,
+        Positioned(
+          right: 4,
+          bottom: 2,
+          child: Opacity(
+            opacity: 1,
+            child: Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4,
+                  horizontal: 8,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    50,
+                  ),
+                  color: Get.theme.primaryColor,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      count > 999 ? "999" : count.toString(),
+                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                    if (count > 999)
+                      const Icon(
+                        FontAwesomeIcons.plus,
+                        size: 13,
+                        color: Colors.white,
+                      ),
+                  ],
+                )),
+          ),
+        ),
+      ],
+    );
+  }
+
   /// Filter outlined button
   Padding _buildFilterButton(ChatFilters filter) {
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(right: 13),
       child: CustomOutlineButton(
         isFilled:
             _screenController.chatController.appliedFilter.value == filter,
@@ -324,14 +271,18 @@ class ChatScreen extends StatelessWidget {
     return Obx(() {
       ChatFilters appliedFilter =
           _screenController.chatController.appliedFilter.value;
-      return Text(
-        appliedFilter == ChatFilters.recentMessages
-            ? AppLocalization.noRecentsMessages
-            : appliedFilter == ChatFilters.active
-                ? AppLocalization.noActiveUsers
-                : appliedFilter == ChatFilters.favorite
-                    ? AppLocalization.noFavoriteChats
-                    : AppLocalization.noConversationsYet,
+      return Center(
+        child: Text(
+          appliedFilter == ChatFilters.recentMessages
+              ? AppLocalization.noRecentsMessages.tr
+              : appliedFilter == ChatFilters.active
+                  ? AppLocalization.noActiveUsers.tr
+                  : appliedFilter == ChatFilters.favorite
+                      ? AppLocalization.noFavoriteChats.tr
+                      : appliedFilter == ChatFilters.archived
+                          ? AppLocalization.noArchivedChats.tr
+                          : AppLocalization.noConversationsYet.tr,
+        ),
       );
     });
   }
@@ -342,43 +293,43 @@ class ChatScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildSearchResultText(AppLocalization.conversations),
+          _buildSearchResultResourceText(AppLocalization.conversations.tr),
           GetX<ChatController>(
             builder: (controller) {
-              if (_chatController.searchMatchedConversations.isEmpty) {
-                return Text(
-                  AppLocalization.noConversationsMatchedSearch,
+              if (controller.searchMatchedConversations.isEmpty) {
+                return _buildNoMatchSearchText(
+                  AppLocalization.noConversationsMatchedSearch.tr,
                 );
               }
               return ListView.builder(
                 shrinkWrap: true,
-                itemCount: _chatController.searchMatchedConversations.length,
+                itemCount: controller.searchMatchedConversations.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return ConversationWidget(
-                    conversation:
-                        _chatController.searchMatchedConversations[index],
+                    conversation: controller.searchMatchedConversations[index],
                   );
                 },
               );
             },
           ),
           const SizedBox(height: 8),
-          _buildSearchResultText(AppLocalization.messages),
+          _buildSearchResultResourceText(AppLocalization.messages.tr),
           GetX<ChatController>(
             builder: (controller) {
-              if (_chatController.searchMatchedConversationMessages.isEmpty) {
-                return Text(AppLocalization.noMessagesMatchedSearch);
+              if (controller.searchMatchedConversationMessages.isEmpty) {
+                return _buildNoMatchSearchText(
+                  AppLocalization.noMessagesMatchedSearch.tr,
+                );
               }
               return ListView.builder(
                 shrinkWrap: true,
-                itemCount:
-                    _chatController.searchMatchedConversationMessages.length,
+                itemCount: controller.searchMatchedConversationMessages.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return ConversationSearchWidget(
-                    matchedConversation: _chatController
-                        .searchMatchedConversationMessages[index],
+                    matchedConversation:
+                        controller.searchMatchedConversationMessages[index],
                     searchText: _screenController.searchFeildController.text,
                   );
                 },
@@ -390,9 +341,15 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
+  Text _buildNoMatchSearchText(String text) {
+    return Text(
+      text,
+    );
+  }
+
   /// A text showed above search result to indicate if the
   /// search result from a conversations or from messages
-  Padding _buildSearchResultText(String text) {
+  Padding _buildSearchResultResourceText(String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(

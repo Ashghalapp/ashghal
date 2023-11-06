@@ -1,26 +1,25 @@
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/sending_video_view_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/video_player_page_controller.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:video_player/video_player.dart';
 
+// ignore: constant_identifier_names
 const ASPECT_RATIO = 3 / 2;
 
 class VideoPlayerPage extends StatelessWidget {
   final LocalMultimedia multimedia;
-  final bool isMine;
+
   final VideoPlayerPageController _controller;
   VideoPlayerPage({
     super.key,
     required this.multimedia,
-    required this.isMine,
-  }) : _controller = Get.put(VideoPlayerPageController(
-          multimedia: multimedia,
-          isMine: isMine,
-        ));
+  }) : _controller = Get.put(
+          VideoPlayerPageController(
+            multimedia: multimedia,
+          ),
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +55,13 @@ class VideoPlayerPage extends StatelessWidget {
                                       _controller.videoPlayerController,
                                   aspectRatio: ASPECT_RATIO,
                                   autoInitialize: false,
-                                  autoPlay: false,
+                                  autoPlay: true,
                                   deviceOrientationsAfterFullScreen: [
                                     DeviceOrientation.portraitUp
                                   ],
                                   materialProgressColors: ChewieProgressColors(
-                                    playedColor: Colors.purple,
-                                    handleColor: Colors.purple,
+                                    playedColor: Colors.blue,
+                                    handleColor: Colors.blue,
                                     backgroundColor: Colors.grey,
                                     bufferedColor: Colors.purple.shade100,
                                   ),
@@ -76,41 +75,10 @@ class VideoPlayerPage extends StatelessWidget {
                         ),
                       ),
                     ),
-              // playPauseButton(),
-              // const VideoViewTopRowWidget(),
-              // Positioned(
-              //   bottom: 5,
-              //   right: 0,
-              //   left: 0,
-              //   child: SendingImageVideoButtonAndCaptionField(
-              //     captionController: TextEditingController(),
-              //     // imageCount: 5,
-              //     onSendButtonTaped: _controller.sendButtonPressed,
-              //   ),
-              // ),
             ],
           ),
         ),
       ),
     );
   }
-
-  // Align playPauseButton() {
-  //   return Align(
-  //     alignment: Alignment.center,
-  //     child: InkWell(
-  //       onTap: _controller.playPauseVideo,
-  //       child: CircleAvatar(
-  //         radius: 30,
-  //         backgroundColor: Colors.black38,
-  //         child: Icon(
-  //           _controller.videoPlayerController.value.isPlaying
-  //               ? Icons.pause
-  //               : Icons.play_arrow,
-  //           color: Colors.white,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 }

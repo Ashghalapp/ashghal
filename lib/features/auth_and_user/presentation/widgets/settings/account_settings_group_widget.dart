@@ -20,12 +20,12 @@ class AccountSettingsGroupWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingGroupWidget(
-      groupTitle: AppLocalization.account,
+      groupTitle: AppLocalization.account.tr,
       items: [
         // personal item settings
         SettingItemWidget(
           icon: Icons.manage_accounts,
-          label: "Profile",
+          label: AppLocalization.profile.tr,
           onTap: () => Get.to(() => ShowEditProfileScreen())?.then((value) {
             print(
                 "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<baack>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -35,14 +35,14 @@ class AccountSettingsGroupWidget extends StatelessWidget {
         // provider item settings
         SettingItemWidget(
           icon: Icons.privacy_tip_outlined,
-          label: AppLocalization.provider,
+          label: AppLocalization.provider.tr,
           onTap: () => Get.to(() => ShowEditProviderScreen()),
         ),
 
         // password item settings
         SettingItemWidget(
           icon: Icons.password,
-          label: AppLocalization.changePassword,
+          label: AppLocalization.changePassword.tr,
           data: "******",
           onTap: () {
             DialogUtil.showDialogForWidget(
@@ -87,7 +87,7 @@ class AccountSettingsGroupWidget extends StatelessWidget {
         if (user.phone != null)
           SettingItemWidget(
             icon: Icons.account_box_outlined,
-            label: AppLocalization.phoneNumber,
+            label: AppLocalization.phoneNumber.tr,
             data: user.phone,
             onTap: () {},
           ),

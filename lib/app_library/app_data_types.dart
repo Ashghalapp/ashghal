@@ -1,3 +1,5 @@
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+
 enum Gender { male, female }
 
 /// enum to present the status of comment to control the comment widgets easily
@@ -35,4 +37,21 @@ String getFileType(String fileName) {
   return type;
 }
 
+enum MultimediaTypes { image, video, audio, file, archive }
 
+extension MultimediaTypesExtension on MultimediaTypes {
+  String get value {
+    switch (this) {
+      case MultimediaTypes.image:
+        return AppLocalization.image;
+      case MultimediaTypes.video:
+        return AppLocalization.video;
+      case MultimediaTypes.audio:
+        return AppLocalization.audio;
+      case MultimediaTypes.file:
+        return AppLocalization.file;
+      case MultimediaTypes.archive:
+        return AppLocalization.archive;
+    }
+  }
+}

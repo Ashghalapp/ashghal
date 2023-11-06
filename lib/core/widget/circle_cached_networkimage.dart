@@ -13,7 +13,7 @@ class CircleCachedNetworkImageWidget extends StatelessWidget {
     required this.imageUrl,
     this.onErrorImagePath,
     this.radius = 55,
-    this.fit = BoxFit.fill,
+    this.fit = BoxFit.cover,
     this.onTap,
   });
 

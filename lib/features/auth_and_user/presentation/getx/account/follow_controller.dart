@@ -52,7 +52,7 @@ class FollowController extends GetxController {
     printError(info: "<<<<<<<<$userId");
     final result = getUserFollowers.call(
       GetUserFollowersFollowingsRequest(
-          userId: userId,
+          currentUserIdi: userId,
           pageNumber: followersModel.pageNumber,
           perPage: followersModel.perPage),
     );
@@ -92,7 +92,7 @@ class FollowController extends GetxController {
     printError(info: "<<<<<<<<$userId");
     final result = getUserFollowings.call(
       GetUserFollowersFollowingsRequest(
-          userId: userId,
+          currentUserIdi: userId,
           pageNumber: followingsModel.pageNumber,
           perPage: followingsModel.perPage),
     );

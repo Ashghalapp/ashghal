@@ -1,11 +1,11 @@
 import 'package:ashghal_app_frontend/app_library/public_request/pagination_request.dart';
 
 class GetUserFollowersFollowingsRequest extends PaginationRequest{
-  int userId;
+  int currentUserIdi;
 
 
   GetUserFollowersFollowingsRequest({
-    required this.userId,
+    required this.currentUserIdi,
     required super.pageNumber,
     super.perPage,
   });
@@ -13,7 +13,7 @@ class GetUserFollowersFollowingsRequest extends PaginationRequest{
   @override
   Map<String, Object> toJson() {
     return {
-      'user_id': userId,
+      'user_id': currentUserIdi,
       ...super.toJson(),
     };
   }

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SendingImageViewPage extends StatelessWidget {
-  // final Function(List<String> paths,List<String> captions) sendButtonPressed;
   final SendingImageViewController _controller;
 
   SendingImageViewPage({super.key, required List<String> paths})
@@ -35,9 +34,7 @@ class SendingImageViewPage extends StatelessWidget {
                 );
               },
             ),
-            ImageViewTopRowIcons(onCropButtonTaped: () async {
-              // TODO Implement Crop Images btn
-            }),
+            ImageViewTopRowIcons(onCropButtonTaped: () async {}),
             Positioned(
               bottom: 5,
               right: 0,

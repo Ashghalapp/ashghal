@@ -16,8 +16,8 @@ class StatisticsWidget extends StatelessWidget {
   final void Function()? onFollowersTap;
   final int followings;
   final void Function()? onFollowingsTap;
-  final int likes;
-  final void Function()? onLikesTap;
+  final int posts;
+  final void Function()? onPostsTap;
   StatisticsWidget({
     super.key,
     required this.userId,
@@ -25,8 +25,8 @@ class StatisticsWidget extends StatelessWidget {
     this.onFollowersTap,
     required this.followings,
     this.onFollowingsTap,
-    required this.likes,
-    this.onLikesTap,
+    required this.posts,
+    this.onPostsTap,
   });
 
   /// استنادا لرقم التاج حتى يتم تعريف لكل مستخدم متحكم منفصل عن  controller تعريف
@@ -38,8 +38,9 @@ class StatisticsWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        // followers
         _buildStatisticColumn(
-          text: "followers",
+          text: AppLocalization.followers,
           count: followers,
           onTap: () {
             followController.getFollowers(userId);
@@ -58,8 +59,9 @@ class StatisticsWidget extends StatelessWidget {
             );
           },
         ),
+        // followings
         _buildStatisticColumn(
-          text: "following",
+          text: AppLocalization.followings,
           count: followings,
           onTap: () {
             followController.getFollowings(userId);
@@ -79,7 +81,7 @@ class StatisticsWidget extends StatelessWidget {
             );
           },
         ),
-        _buildStatisticColumn(text: "likes", count: likes),
+        _buildStatisticColumn(text: AppLocalization.posts, count: posts),
         // _buildUserCard(),
       ],
     );

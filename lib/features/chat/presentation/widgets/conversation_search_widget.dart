@@ -1,4 +1,4 @@
-import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/matched_conversation_and_messages.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/highlightable_text_widget.dart';
@@ -18,19 +18,18 @@ class ConversationSearchWidget extends StatelessWidget {
   final ChatScreenController _controller = Get.find();
 
   String getLastMessageStringDate() {
-    return AppUtil.formatDateTime(matchedConversation.message.createdAt);
+    return DateTimeFormatter.formatDateTime(
+      matchedConversation.message.createdAt,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => _controller.forwardSelectionEnabled.value
-          ? _controller
-              .selectConversation(matchedConversation.conversation.localId)
-          : _controller.goToConversationScreen(
-              matchedConversation.conversation,
-              matchedConversation.message,
-            ),
+      onTap: () => _controller.goToConversationScreen(
+        matchedConversation.conversation,
+        matchedConversation.message,
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         child: Column(
@@ -44,7 +43,7 @@ class ConversationSearchWidget extends StatelessWidget {
                     child: Text(
                       matchedConversation.conversation.userName,
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
                       maxLines: 1,

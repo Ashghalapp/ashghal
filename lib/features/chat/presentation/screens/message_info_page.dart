@@ -1,14 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/config/chat_theme.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/util/date_time_formatter.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
-import 'package:ashghal_app_frontend/features/chat/domain/entities/message_and_multimedia.dart';
-import 'package:ashghal_app_frontend/features/chat/presentation/widgets/conversation/message/message_widget.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/widgets/messages/message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class MessageInfoPage extends StatelessWidget {
+  bool get isMine => message.message.senderId == SharedPref.currentUserId;
   MessageAndMultimediaModel message;
   MessageInfoPage({
     Key? key,
@@ -17,75 +21,86 @@ class MessageInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Message Info'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            const Text('Message Body:'),
-            DecoratedBox(
-              decoration: const BoxDecoration(
-                color: Color(0xFFF5F5F5), // Replace with your desired color
-              ),
-              child: SizedBox(
-                width: 700,
-                child: MessageWidget(
+    return Theme(
+      data: Get.isPlatformDarkMode ? ChatTheme.dark : ChatTheme.light,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalization.messageInfo.tr),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              Opacity(
+                opacity: 1,
+                child: MessageRowWidget(
                   message: message,
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            cardWedgit(
-              'Received At:',
-              message.message.recievedAt != null
-                  ? "${message.message.recievedAt!.hour}:${message.message.recievedAt!.minute}:${message.message.recievedAt!.second}"
-                  : 'Message has not been received yet',
-              Colors.grey,
-            ),
-            cardWedgit(
-              'Read At:',
-              message.message.readAt != null
-                  ? "${message.message.readAt!.hour}:${message.message.readAt!.minute}:${message.message.readAt!.second}"
-                  : 'Message has not been read yet',
-              Colors.blue,
-            ),
-          ],
+              const SizedBox(height: 25),
+              if (isMine)
+                cardWedgit(
+                  AppLocalization.chatSent.tr,
+                  message.message.sentAt != null
+                      ? DateTimeFormatter.formatDateTimeyMMMdHHSS(
+                          message.message.sentAt!,
+                        )
+                      : AppLocalization.notSentYet.tr,
+                  FontAwesomeIcons.check,
+                ),
+              cardWedgit(
+                AppLocalization.received.tr,
+                message.message.recievedAt != null
+                    ? DateTimeFormatter.formatDateTimeyMMMdHHSS(
+                        message.message.recievedAt!,
+                      )
+                    : AppLocalization.notReceivedYet.tr,
+                FontAwesomeIcons.checkDouble,
+              ),
+              cardWedgit(
+                AppLocalization.read.tr,
+                message.message.readAt != null
+                    ? DateTimeFormatter.formatDateTimeyMMMdHHSS(
+                        message.message.readAt!,
+                      )
+                    : AppLocalization.notReadYet.tr,
+                FontAwesomeIcons.checkDouble,
+                Colors.blue,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Card cardWedgit(String title, String subtitle, Color? color) {
+  Card cardWedgit(String title, String date, IconData icon, [Color? color]) {
     return Card(
         child: ListTile(
       title: Text(
         "$title  ",
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-        ),
-
-        // textAlign: TextAlign.center,
-      ),
-      subtitle: Text(
-        "$subtitle  ",
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Get.isPlatformDarkMode ? Colors.white : Colors.black,
         ),
       ),
-      leading: Container(
-        child: color != null
-            ? Icon(
-                FontAwesomeIcons.checkDouble,
-                color: color,
-                size: 15,
-              )
-            : Text(""),
+      subtitle: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Text(
+          date,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Get.isPlatformDarkMode ? Colors.white70 : Colors.black87,
+          ),
+        ),
+      ),
+      leading: Icon(
+        icon,
+        color: color,
+        size: 16,
       ),
     ));
   }

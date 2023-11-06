@@ -16,6 +16,7 @@ class Conversations extends Table {
   TextColumn get userImageUrl => text().nullable()();
   BoolColumn get isBlocked => boolean().withDefault(const Constant(false))();
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
+  BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
   BoolColumn get isDeletedLocally =>
       boolean().withDefault(const Constant(false))();
   // BoolColumn get isUserProvider =>
@@ -39,6 +40,7 @@ class Messages extends Table {
   IntColumn get senderId => integer()();
   IntColumn get conversationId => integer().customConstraint(
       'NOT NULL REFERENCES conversations(local_id) ON DELETE CASCADE')();
+  IntColumn get replyTo => integer().nullable()();
   DateTimeColumn get sentAt => dateTime().nullable()();
   DateTimeColumn get recievedAt => dateTime().nullable()();
   BoolColumn get receivedLocally =>
@@ -48,6 +50,7 @@ class Messages extends Table {
 
   DateTimeColumn get readAt => dateTime().nullable()();
   BoolColumn get readLocally => boolean().withDefault(const Constant(false))();
+  BoolColumn get isStarred => boolean().withDefault(const Constant(false))();
   // BoolColumn get confirmGotRead =>
   //     boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
@@ -72,6 +75,7 @@ class Multimedia extends Table {
   TextColumn get fileName => text().customConstraint('NOT NULL')();
   IntColumn get messageId => integer().customConstraint(
       'NOT NULL REFERENCES messages(local_id) ON DELETE CASCADE')();
+  BoolColumn get isCanceled => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 

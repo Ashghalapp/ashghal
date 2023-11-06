@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
+import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core_api/network_info/network_info.dart';
@@ -145,6 +146,8 @@ class PostController extends GetxController {
     }
   }
 
+  int? get getCurrentUserId => SharedPref.getCurrentUserData()?.id;
+
   RxList<Post> get filteredPosts {
     switch (appliedFilter.value) {
       case PostFilters.all:
@@ -216,6 +219,7 @@ class PostController extends GetxController {
       PaginationRequest(
         pageNumber: allPostsModel.pageNumber,
         perPage: allPostsModel.perPage,
+        currentUserIdi: getCurrentUserId,
       ),
     );
   }
@@ -229,6 +233,7 @@ class PostController extends GetxController {
       PaginationRequest(
         pageNumber: allPostsModel.pageNumber,
         perPage: allPostsModel.perPage,
+        currentUserIdi: getCurrentUserId,
       ),
       isNextPage: true,
     );
@@ -240,6 +245,7 @@ class PostController extends GetxController {
     final GetAllPostsUseCase getAllPostsUS = di.getIt();
 
     allPostsModel.isRequestFinishWithoutData.value = false;
+
     (await getAllPostsUS.call(request)).fold((failure) {
       AppUtil.hanldeAndShowFailure(failure);
       allPostsModel.isRequestFinishWithoutData.value = true;
@@ -324,6 +330,7 @@ class PostController extends GetxController {
       PaginationRequest(
         pageNumber: recentPostsModel.pageNumber,
         perPage: recentPostsModel.perPage,
+        currentUserIdi: getCurrentUserId,
       ),
     );
   }
@@ -337,6 +344,7 @@ class PostController extends GetxController {
       PaginationRequest(
         pageNumber: recentPostsModel.pageNumber,
         perPage: recentPostsModel.perPage,
+        currentUserIdi: getCurrentUserId,
       ),
       isNextPage: true,
     );
@@ -347,6 +355,7 @@ class PostController extends GetxController {
       {bool isNextPage = false}) async {
     final GetRecentPostsUseCase getAllPostsUS = di.getIt();
     recentPostsModel.isRequestFinishWithoutData.value = false;
+
     (await getAllPostsUS.call(request)).fold((failure) {
       AppUtil.hanldeAndShowFailure(failure);
       recentPostsModel.isRequestFinishWithoutData.value = true;
@@ -376,6 +385,7 @@ class PostController extends GetxController {
       PaginationRequest(
         pageNumber: completePostsModel.pageNumber,
         perPage: completePostsModel.perPage,
+        currentUserIdi: getCurrentUserId,
       ),
     );
   }
@@ -388,6 +398,7 @@ class PostController extends GetxController {
       PaginationRequest(
         pageNumber: recentPostsModel.pageNumber,
         perPage: recentPostsModel.perPage,
+        currentUserIdi: getCurrentUserId,
       ),
       isNextPage: true,
     );
@@ -503,52 +514,52 @@ class PostController extends GetxController {
   //   }
   // }
 
-  Future<bool> filterValidImages(String url) async {
-    try {
-      final response = await http.head(Uri.parse(url));
-      if (response.statusCode == 200) {
-        printError(info: ":::::valid image::::::::");
-        return true;
-      }
-      printError(info: "::::in valid image:::::");
-      return false;
-    } catch (e) {
-      printError(info: "::::::in valid image in catch::::::");
-      return false;
-    }
-  }
+  // Future<bool> filterValidImages(String url) async {
+  //   try {
+  //     final response = await http.head(Uri.parse(url));
+  //     if (response.statusCode == 200) {
+  //       printError(info: ":::::valid image::::::::");
+  //       return true;
+  //     }
+  //     printError(info: "::::in valid image:::::");
+  //     return false;
+  //   } catch (e) {
+  //     printError(info: "::::::in valid image in catch::::::");
+  //     return false;
+  //   }
+  // }
 
-  Future<String?> loadImage(String imageUrl) async {
-    try {
-      if (!(await filterValidImages(imageUrl))) return null;
-      DefaultCacheManager cacheManager = DefaultCacheManager();
-      FileInfo? fileInfo = await cacheManager.getFileFromCache(imageUrl);
-      if (fileInfo == null) {
-        // Image is not cached, download and store it locally.
-        await cacheManager.downloadFile(imageUrl, force: true);
-        fileInfo = await cacheManager.getFileFromCache(imageUrl);
-      }
-      return fileInfo?.file.path;
-    } catch (e) {
-      print("::::::::: Error: $e");
-      // AppUtil.showMessage(AppLocalization.thereIsSomethingError, Colors.green);
-    }
-    return null;
-  }
+  // Future<String?> loadImage(String imageUrl) async {
+  //   try {
+  //     if (!(await filterValidImages(imageUrl))) return null;
+  //     DefaultCacheManager cacheManager = DefaultCacheManager();
+  //     FileInfo? fileInfo = await cacheManager.getFileFromCache(imageUrl);
+  //     if (fileInfo == null) {
+  //       // Image is not cached, download and store it locally.
+  //       await cacheManager.downloadFile(imageUrl, force: true);
+  //       fileInfo = await cacheManager.getFileFromCache(imageUrl);
+  //     }
+  //     return fileInfo?.file.path;
+  //   } catch (e) {
+  //     print("::::::::: Error: $e");
+  //     // AppUtil.showMessage(AppLocalization.thereIsSomethingError, Colors.green);
+  //   }
+  //   return null;
+  // }
 
-  Future<bool> isImage(String url) async {
-    try {
-      final response = await http.head(Uri.parse(url));
-      if (response.statusCode == 200) {
-        // Check if the content type is an image type.
-        return response.headers['content-type']?.startsWith('image/') ?? false;
-      }
-      return false;
-    } catch (e) {
-      // Handle errors (e.g., invalid URL, network error).
-      return false;
-    }
-  }
+  // Future<bool> isImage(String url) async {
+  //   try {
+  //     final response = await http.head(Uri.parse(url));
+  //     if (response.statusCode == 200) {
+  //       // Check if the content type is an image type.
+  //       return response.headers['content-type']?.startsWith('image/') ?? false;
+  //     }
+  //     return false;
+  //   } catch (e) {
+  //     // Handle errors (e.g., invalid URL, network error).
+  //     return false;
+  //   }
+  // }
 
   // Future<Widget> getImage(String imageUrl) async {
   //   try {
@@ -604,6 +615,7 @@ class PostController extends GetxController {
       createdAt: DateTime.now(),
       expireDate: DateTime.now(),
       isComplete: false,
+      isMarked: true,
       updatedAt: DateTime.now(),
     ),
     Post(
@@ -624,6 +636,7 @@ class PostController extends GetxController {
       createdAt: DateTime.now(),
       expireDate: DateTime.now(),
       isComplete: false,
+      isMarked: true,
       updatedAt: DateTime.now(),
     ),
     Post(
@@ -644,6 +657,7 @@ class PostController extends GetxController {
       createdAt: DateTime.now(),
       expireDate: DateTime.now(),
       isComplete: false,
+      isMarked: false,
       updatedAt: DateTime.now(),
     ),
   ];

@@ -30,6 +30,16 @@ import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/use
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/update_user_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/validate_email_code_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/verify_reset_password_code_uc.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/confirm_message_read.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/delete_messages.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_blocked_conversations.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_all_conversations_with_last_message_and_count.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_conversation_messages_with_multimedia.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/get_starred_messages.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/search_in_messages.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_archive_conversation.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_favorite_conversation.dart';
+import 'package:ashghal_app_frontend/features/chat/domain/use_cases/toggle_star_message.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/comment_repository_impl.dart';
 import 'package:ashghal_app_frontend/features/post/data/repositories/post_repository_impl.dart';
 import 'package:ashghal_app_frontend/features/post/domain/repositories/comment_repository.dart';
@@ -53,10 +63,13 @@ import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_cas
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_all_posts_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_category_posts_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_current_user_posts_uc.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_marked_post_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_recent_posts_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_specific_post_us.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/get_user_posts_uc.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/mark_post_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/search_for_posts_us.dart';
+import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/unmark_post_uc.dart';
 import 'package:ashghal_app_frontend/features/post/domain/use_cases/post_use_case/update_post_us.dart';
 import 'package:ashghal_app_frontend/features/chat/data/repositories/conversation_repository_imp.dart';
 import 'package:ashghal_app_frontend/features/chat/data/repositories/message_repository_imp.dart';
@@ -129,10 +142,10 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => DeleteUserImageUseCase(getIt()));
   getIt.registerLazySingleton(() => DeleteAccountUseCase(getIt()));
 //=============================End Auth and User Dependencey Injection==================================//
-///=============================================================================================//
-///
-///
-///=============================================================================================//
+  ///=============================================================================================//
+  ///
+  ///
+  ///=============================================================================================//
 //=============================Start Post Dependencey Injection==================================//
   //// repository injection
   getIt.registerLazySingleton<PostRepository>(() => PostRepositoryImpl());
@@ -151,9 +164,12 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => SearchForPostsUseCase(getIt()));
   getIt.registerLazySingleton(() => DeletePostUseCase(getIt()));
   getIt.registerLazySingleton(() => DeleteSomePostMultimediaUseCase(getIt()));
+  getIt.registerLazySingleton(() => MarkPostUseCase(getIt()));
+  getIt.registerLazySingleton(() => UnmarkPostUseCase(getIt()));
+  getIt.registerLazySingleton(() => GetMarkedPostUseCase(getIt()));
 //=============================End Post Dependencey Injection====================================//
 
-///=============================================================================================//
+  ///=============================================================================================//
 //=============================Start Comment Dependencey Injection==================================//
   //// repository injection
   getIt.registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl());
@@ -180,7 +196,7 @@ void setupDependencies() {
   getIt.registerLazySingleton(
       () => WatchConversationMessages(repository: getIt()));
   getIt.registerLazySingleton(
-      () => WatchConversationsLastMessageAndCount(repository: getIt()));
+      () => WatchConversationsLastMessageAndCountUseCase(repository: getIt()));
 
   getIt.registerLazySingleton(() => SendMessageUseCase(repository: getIt()));
   getIt.registerLazySingleton(
@@ -215,6 +231,25 @@ void setupDependencies() {
 
   getIt.registerLazySingleton(
       () => SearchInConversationsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => ToggleFavoriteConversationUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => ToggleArchiveConversationUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => SearchInMessagesUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => ToggleStarMessageUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() =>
+      GetAllConversationsWithLastMessageAndCountUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetConversationMessagesWithMultimediaUsecase(repository: getIt()));
+  getIt.registerLazySingleton(() => DeleteMessagesUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetStarredMessagesUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetAllBlockedConversationsCountUseCase(repository: getIt()));
+  getIt.registerLazySingleton(
+      () => ConfirmMessageReadUseCase(repository: getIt()));
   // repository injection
   getIt.registerLazySingleton<ConversationRepository>(
       () => ConversationRepositoryImp());

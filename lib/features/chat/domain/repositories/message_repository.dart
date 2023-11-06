@@ -1,5 +1,6 @@
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/message_and_multimedia.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/receive_read_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_message_model.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/requests/delete_messages_request.dart';
@@ -57,7 +58,7 @@ abstract class MessageRepository {
   /// ```
   ///
   /// - [conversationId]: The ID of the conversation for which to watch multimedia messages.
-  Stream<List<LocalMultimedia>> watchConversationMessagesMultimedia(
+  Stream<List<MessageAndMultimediaModel>> watchConversationMessagesMultimedia(
       int conversationId);
 
   Future<Either<Failure, LocalMessage>> sendMessage(SendMessageRequest request);
@@ -69,6 +70,17 @@ abstract class MessageRepository {
   Future<Either<Failure, bool>> deleteMessages(DeleteMessagesRequest request);
 
   Future<Either<Failure, bool>> clearChat(ClearChatRequest request);
+
+  Future<void> confirmMessageRead(LocalMessage message);
+
+  Future<Either<Failure, List<LocalMessage>>> searchInMessages(
+      String searchText);
+  Future<Either<Failure, List<MessageAndMultimediaModel>>> getStarredMessages();
+  Future<Either<Failure, List<MessageAndMultimediaModel>>>
+      getConversationMessagesWithMultimedia(int conversationLocalId);
+
+  Future<Either<Failure, bool>> toggleStarMessage(
+      int messageLocalId, bool starMessage, int conversationLocalId);
 
   Future<void> conversationMessagesRead(int conversationId);
 

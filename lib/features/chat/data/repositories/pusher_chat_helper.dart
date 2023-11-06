@@ -193,46 +193,22 @@ class PusherChatHelper {
     }
   }
 
-// // ReceivedReadMessageModel
-//   Future<void> subscribeOnlineChannel(
-//       // {
-//       // required int conversationRemoteId,
-//       // required Function(RemoteMessageModel message) onNewMessage,
-//       // required Function(ReceivedReadMessageModel receivedReadMessage)
-//       // onMessageReceived,
-//       // required Function(ReceivedReadMessageModel receivedReadMessage)
-//       // onMessageRead,
-//       // }
-//       ) async {
-//     String chanelName = 'presence-user.state.updated';
-
-//     //message sent event
-//     Channelhandler handler = Channelhandler(
-//       channel: AppChannel(
-//         channelName: chanelName,
-//         eventName: 'user.state.updated.event',
-//       ),
-//       onEvent: (PusherEvent event) async {
-//         print("Pusher user state updated event received: $event");
-//         // dynamic data = json.decode(event.data);
-//       },
-//     );
-//     AppServices.pusher.addNewChannelHandler(handler);
-
-//     await AppServices.pusher.subscribeToChannel(chanelName);
-//     if (!subscribedChannels.contains(chanelName)) {
-//       subscribedChannels.add(chanelName);
-//     }
-//     // await AppServices.pusher.triggerEvent(PusherEvent(
-//     //     channelName: chanelName,
-//     //     eventName: "user.state.updated.event",
-//     //     data: {"user_id": 15}));
-//   }
-
   Future<void> unsubscribeFromChannels() async {
     for (var channelName in subscribedChannels) {
-      await AppServices.pusher.unsubscribeFromChannel(channelName);
+      AppServices.pusher.unsubscribeFromChannel(channelName);
+      // print("unsubscribed from channel $channelName");
     }
     subscribedChannels.clear();
+  }
+
+  Future<void> unsubscribeFromConversationChannel(
+      int conversationRemoteId) async {
+    String chatChannelName =
+        '${ChannelsEventsNames.chatChannelName}$conversationRemoteId';
+    if (subscribedChannels.contains(chatChannelName)) {
+      await AppServices.pusher.unsubscribeFromChannel(chatChannelName);
+      subscribedChannels.remove(chatChannelName);
+      print("Unsubscribe from chat $conversationRemoteId channel finished");
+    }
   }
 }

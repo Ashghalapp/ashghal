@@ -10,13 +10,15 @@ class ImageCheckerAndCacher {
 
   Future<String?> loadImage(String imageUrl) async {
     try {
-      if (!(await filterValidImages(imageUrl))) return null;
       DefaultCacheManager cacheManager = DefaultCacheManager();
       FileInfo? fileInfo = await cacheManager.getFileFromCache(imageUrl);
       if (fileInfo == null) {
+        //check image validation
+        if (!(await filterValidImages(imageUrl))) return null;
         // Image is not cached, download and store it locally.
         await cacheManager.downloadFile(imageUrl, force: true);
         fileInfo = await cacheManager.getFileFromCache(imageUrl);
+        // Image.network(src)
       }
       return fileInfo?.file.path;
     } catch (e) {

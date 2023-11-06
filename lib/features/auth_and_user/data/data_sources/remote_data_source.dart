@@ -171,6 +171,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       var userModel = UserModel.fromJson(response.data as Map<String, dynamic>);
 
       SharedPref.setCurrentUserData(userModel);
+      SharedPref.setUserFirstOpenAfterLogin(true);
       // SharedPref.setCurrentUserData({
       //   'id': userModel.id,
       //   'name': userModel.name,

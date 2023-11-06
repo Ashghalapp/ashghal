@@ -42,7 +42,7 @@ List<GetPage<dynamic>>? routes = [
   // ),
   GetPage(
     name: AppRoutes.mainScreen,
-    page: () => const MainScreen(),
+    page: () => MainScreen(),
   ),
   // GetPage(
     // name: AppRoutes.addLocationScreen,

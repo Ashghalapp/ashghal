@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/remote_multimedia_model.dart';
 import 'package:ashghal_app_frontend/features/chat/domain/entities/remote_message.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
@@ -9,6 +10,7 @@ class RemoteMessageModel extends RemoteMessage {
     super.body,
     required super.senderId,
     required super.conversationId,
+    super.replyTo,
     super.multimedia,
     required super.sentAt,
     super.receivedAt,
@@ -25,14 +27,10 @@ class RemoteMessageModel extends RemoteMessage {
       body: json['body'],
       senderId: json['sender_id'],
       conversationId: json['conversation_id'],
+      replyTo: json['reply_to'],
       multimedia: json['multimedia'] == null
           ? null
           : RemoteMultimediaModel.fromJson(json['multimedia']),
-
-      // (json['multimedia'] as List).isEmpty
-      //     ? []
-      //     : RemoteMultimediaModel.fromJsonList(
-      //         (json['multimedia'] as List).cast<Map<String, dynamic>>()),
       sentAt: DateTime.parse(json['sent_at']),
       receivedAt: json['received_at'] != null
           ? DateTime.parse(json['received_at'])
@@ -87,6 +85,7 @@ class RemoteMessageModel extends RemoteMessage {
       body: Value(body),
       senderId: Value(senderId),
       conversationId: Value(conversatioLocalId),
+      replyTo: Value(replyTo),
       sentAt: Value(sentAt),
       recievedAt: Value(DateTime.now()),
       receivedLocally: const Value(true),
@@ -100,6 +99,7 @@ class RemoteMessageModel extends RemoteMessage {
     return MessagesCompanion(
       // localId: Value(localId),
       remoteId: Value(id),
+      replyTo: Value(replyTo),
       // body: Value.ofNullable(body),
       // senderId: Value(senderId),
       // conversationId: Value(conversationLocalId),
@@ -122,6 +122,7 @@ class RemoteMessageModel extends RemoteMessage {
     String? body,
     int? senderId,
     int? conversationId,
+    int? replyTo,
     RemoteMultimediaModel? multimedia,
     DateTime? sentAt,
     DateTime? receivedAt,
@@ -133,6 +134,7 @@ class RemoteMessageModel extends RemoteMessage {
       body: body ?? this.body,
       senderId: senderId ?? this.senderId,
       conversationId: conversationId ?? this.conversationId,
+      replyTo: replyTo ?? this.replyTo,
       multimedia: multimedia ?? this.multimedia,
       sentAt: sentAt ?? this.sentAt,
       receivedAt: receivedAt ?? this.receivedAt,

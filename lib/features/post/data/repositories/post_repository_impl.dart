@@ -12,6 +12,7 @@ import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/
 import 'package:ashghal_app_frontend/app_library/public_request/pagination_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/get_user_posts_request.dart';
 import 'package:ashghal_app_frontend/app_library/public_request/search_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/mark_unmark_post_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/domain/repositories/post_repository.dart';
 import 'package:dartz/dartz.dart';
@@ -203,6 +204,30 @@ class PostRepositoryImpl extends PostRepository {
       return await postRemoteDS.updatePost(request);
     });
     return result is Post ? Right(result) : Left(result);
+  }
+
+  @override
+  Future<Either<Failure, Success>> markPost(MarkUnmarkPostRequest request) async{
+    var result = await _handleErrors(() async {
+      return await postRemoteDS.markPost(request);
+    });
+    return result is Success ? Right(result) : Left(result);
+  }
+
+  @override
+  Future<Either<Failure, Success>> unmarkPost(MarkUnmarkPostRequest request) async{
+    var result = await _handleErrors(() async {
+      return await postRemoteDS.unmarkPost(request);
+    });
+    return result is Success ? Right(result) : Left(result);
+  }
+
+  @override
+  Future<Either<Failure, List<PostModel>>> getMarkedPosts() async{
+    var result = await _handleErrors(() async {
+      return await postRemoteDS.getMarkedPosts();
+    });
+    return result is List<PostModel> ? Right(result) : Left(result);
   }
 
   Future _handleErrors(Function function) async {

@@ -1,8 +1,11 @@
+import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
 import 'package:ashghal_app_frontend/app_library/public_entities/app_category.dart';
+import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/add_update_post_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/delete_some_post_multimedia_request.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/multimedia.dart';
@@ -24,15 +27,10 @@ class AddUpdatePostController extends GetxController {
   Rx<DateTime> expireDate = Rx(DateTime.now().add(const Duration(days: 30)));
 
   int? selectedCategory;
+  RxList<District> cityDistricts = <District>[].obs;
 
-  // الفئات التي سينتمي لها البوست
-  // List<Map<String, Object>> categories = [
-  //   {'id': 1, 'name': 'برمجة'},
-  //   {'id': 2, 'name': 'طب'},
-  //   {'id': 3, 'name': 'هندسة'},
-  //   {'id': 4, 'name': 'حرفة يدوية'},
-  //   {'id': 5, 'name': 'تصميم'},
-  // ];
+  Rx<int?> selectedCityId = Rx(null);
+  Rx<int?> selectedDistrictId = Rx(null);
 
   // XFile حفظ جميع الصور التي سيتم رفعها بالبوست ويتم حفظها بشكل
   // RxList<XFile> imagesXFiles = <XFile>[].obs;
@@ -64,6 +62,8 @@ class AddUpdatePostController extends GetxController {
       await AppUtil.loadCategories();
       categories = SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
     }
+
+    loadLocationData();
   }
 
   @override
@@ -71,18 +71,55 @@ class AddUpdatePostController extends GetxController {
     titleController.dispose();
     contentController.dispose();
     expireDateController.dispose();
-    
+
     super.onClose();
   }
 
-  // Future<void> loadCategories() async {
-  //   (await ApiUtil.getCategoriesFromApi()).fold((failure) {
-  //     AppUtil.hanldeAndShowFailure(failure);
-  //   }, (resultCategories) {
-  //     SharedPref.setCategories(resultCategories);
-  //     categories.value = resultCategories;
-  //   });
-  // }
+  /// functions to initial address filtters with user address
+  void loadLocationData() {
+    final User? currentUser = SharedPref.getCurrentUserData();
+    if (currentUser != null && currentUser.address != null) {
+      City? city = City.getCityByNameEn(currentUser.address?.city ?? "");
+      printError(info: "<<<<<<<<<<<<<<City data: ${city?.toJson()}");
+      if (city != null) {
+        selectedCityId.value = city.id;
+        cityDistricts.addAll(city.districts);
+
+        District? district =
+            city.getDistrictByNameEn(currentUser.address?.district ?? "");
+        printError(info: "<<<<<<<<<<<<<<District data: ${district?.toJson()}");
+        if (district != null) {
+          selectedDistrictId.value = district.id;
+        }
+      }
+    }
+  }
+
+  var cities = citiess;
+
+  void onCityChangeFunction(selectedValue) {
+    if (selectedValue != null) {
+      selectedCityId.value = int.parse(selectedValue.toString());
+      printInfo(info: selectedCityId.value.toString());
+      print("<<<<<<<<${cities.firstWhere((element) => element.id == 1).districts[0].name}>>>>>>>>");
+      cityDistricts.clear();
+      cityDistricts.addAll(citiess
+          .firstWhere((city) => city.id == selectedCityId.value)
+          .districts);
+      selectedDistrictId.value = 1;
+
+
+      // citiess.map((e) {
+      //   print("-----------${e.id.toString()}");
+      // });
+      // printInfo(info: "city: ${selectedCityId.value}");
+      // printInfo(
+      //     info: citiess
+      //         .firstWhere((city) => city.id == selectedCityId.value)
+      //         .districts
+      //         .toString());
+    }
+  }
 
   void loadPostDataToUpdate(Post post) {
     titleController.text = post.title;
@@ -98,28 +135,38 @@ class AddUpdatePostController extends GetxController {
   }
 
   Future<void> submitAddButton() async {
-    if (!isValidateForm || selectedCategory == null) return;
-    EasyLoading.show(status: AppLocalization.loading);
+    try {
+      if (!isValidateForm || selectedCategory == null) return;
+      EasyLoading.show(status: AppLocalization.loading);
 
-    AddPostUseCase addPostUS = di.getIt();
-    var result = addPostUS.call(
-      AddPostRequest(
-        title: titleController.text,
-        content: contentController.text,
-        categoryId: selectedCategory,
-        multimediaPaths: imagesPaths,
-        expireDate: expireDate.value,
-        allowComment: allowComment.value,
-      ),
-    );
+      AddPostUseCase addPostUS = di.getIt();
+      City city = City.getCityById(selectedCityId.value!)!;
+      District district = city.getDistrictById(selectedDistrictId.value!)!;
 
-    (await result).fold((failure) {
-      AppUtil.hanldeAndShowFailure(failure);
-    }, (post) {
-      AppUtil.showMessage(AppLocalization.successAddPost, Colors.green);
-      Get.back();
-    });
-    EasyLoading.dismiss();
+      var result = addPostUS.call(
+        AddPostRequest(
+          title: titleController.text,
+          content: contentController.text,
+          categoryId: selectedCategory,
+          multimediaPaths: imagesPaths,
+          expireDate: expireDate.value,
+          allowComment: allowComment.value,
+          address:
+              Address.addRequest(city: city.nameEn, district: district.nameEn),
+        ),
+      );
+
+      (await result).fold((failure) {
+        AppUtil.hanldeAndShowFailure(failure);
+      }, (post) {
+        AppUtil.showMessage(AppLocalization.successAddPost, Colors.green);
+        Get.back();
+      });
+      EasyLoading.dismiss();
+    } catch (e) {
+      AppUtil.showMessage(
+          AppLocalization.thereIsSomethingError, Get.theme.colorScheme.error);
+    }
   }
 
   Future<void> updatePost(int postId) async {
@@ -210,9 +257,9 @@ class AddUpdatePostController extends GetxController {
   // حذف صورة وحذف مسارها واضافتها الى قائمة الصور التي سيتم حذفها في حالةكانت العملية تعديل بوست
   void removeImage(int index) {
     DialogUtil.showDialog(
-     title: AppLocalization.warning,
-     message: AppLocalization.areYouSureToDelete,
-     onSubmit: () {
+      title: AppLocalization.warning,
+      message: AppLocalization.areYouSureToDelete,
+      onSubmit: () {
         Get.back();
         int multimediaIndex = multiMediaToEdit
             .indexWhere((element) => element.url == imagesPaths[index]);

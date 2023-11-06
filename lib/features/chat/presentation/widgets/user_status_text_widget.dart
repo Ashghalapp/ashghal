@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +25,10 @@ class UserStatusTextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => Text(
           _chatController.typingUsers.contains(userId)
-              ? "Typing Now..."
+              ? "${AppLocalization.typingNow.tr}..."
               : _stateController.onlineUsersIds.contains(userId)
-                  ? "Online"
-                  : "Offline",
+                  ? AppLocalization.online.tr
+                  : AppLocalization.offline.tr,
           style: TextStyle(
             color: _stateController.onlineUsersIds.contains(userId)
                 ? onlineColor

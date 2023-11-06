@@ -12,6 +12,7 @@ class User {
   DateTime birthDate;
   Gender gender;
   bool isBlocked;
+  int postsCount;
   DateTime createdAt;
   DateTime updatedAt;
   Address? address;
@@ -32,6 +33,7 @@ class User {
     required this.isBlocked,
     this.address,
     this.provider,
+    required this.postsCount,
     required this.createdAt,
     required this.updatedAt,    
     required this.followersUsers,

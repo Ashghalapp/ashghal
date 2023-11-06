@@ -1,4 +1,4 @@
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +8,7 @@ class SendingImageViewController extends GetxController {
   RxList<String> paths;
   SendingImageViewController({required List<String> paths}) : paths = paths.obs;
 
-  final ConversationController _conversationController = Get.find();
+  final ConversationScreenController _conversationScreenController = Get.find();
 
   @override
   void onInit() {
@@ -22,14 +22,12 @@ class SendingImageViewController extends GetxController {
   }
 
   Future<void> sendButtonPressed() async {
-    // Get.back<List<String>>(result: paths);
-    print("dasdsa");
     for (int i = 0; i < paths.length; i++) {
       if (captionControllers[i].text.trim().isNotEmpty) {
-        _conversationController.sendTextAndMultimediaMessage(
+        _conversationScreenController.sendTextAndMultimediaMessage(
             captionControllers[i].text.trim(), paths[i]);
       } else {
-        _conversationController.sendMultimediaMessage(paths[i]);
+        _conversationScreenController.sendMultimediaMessage(paths[i]);
       }
     }
     Get.back();

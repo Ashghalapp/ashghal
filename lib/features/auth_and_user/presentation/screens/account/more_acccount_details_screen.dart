@@ -48,7 +48,7 @@ class MoreAccountDetailsScreen extends StatelessWidget {
               userId: user.id,
               followers: user.followersUsers.length,
               followings: user.followingUsers.length,
-              likes: 37,
+              posts: user.postsCount,
             ),
             const SizedBox(height: 10),
           

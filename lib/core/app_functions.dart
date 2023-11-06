@@ -1,5 +1,4 @@
 import 'package:ashghal_app_frontend/app_library/app_data_types.dart';
-import 'package:ashghal_app_frontend/config/app_routes.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
 import 'package:get/get.dart';
@@ -10,17 +9,19 @@ class AppFunctions {
   }
 
   static User get fakeUserData => User(
-      id: 0,
-      name: "name",
-      birthDate: DateTime.now(),
-      gender: Gender.male,
-      isBlocked: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      followersUsers: [],
-      followingUsers: [],
-      followersRequestsWait: [],
-      followRequestsSent: []);
+        id: 0,
+        name: "name",
+        birthDate: DateTime.now(),
+        gender: Gender.male,
+        isBlocked: false,
+        postsCount: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        followersUsers: [],
+        followingUsers: [],
+        followersRequestsWait: [],
+        followRequestsSent: [],
+      );
 
   // static User get getCurrentUserDataOffline {
   //   return SharedPref.getCurrentUserData();

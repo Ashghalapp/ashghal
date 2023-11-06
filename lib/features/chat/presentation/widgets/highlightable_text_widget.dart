@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,15 +14,14 @@ class HighlightableTextWidget extends StatelessWidget {
     required this.text,
     required this.searchText,
     this.fontSize = 16,
-    // this.textColor,
-    this.highlightColor =
-        Colors.blue, // You can change the default highlight color
+    this.highlightColor = Colors.blue,
   });
 
   @override
   Widget build(BuildContext context) {
-    final textParts = text.toLowerCase().split(searchText.toLowerCase());
-
+    final pattern = RegExp(searchText, caseSensitive: false);
+    final textParts = text.split(pattern);
+    AppPrint.printInfo('$textParts');
     return RichText(
       text: TextSpan(
         style: TextStyle(

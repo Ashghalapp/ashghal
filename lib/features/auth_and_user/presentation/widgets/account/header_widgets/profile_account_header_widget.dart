@@ -74,7 +74,7 @@ class _ProfileAccountHeaderWidgetState extends State<ProfileAccountHeaderWidget>
           userId: widget.user.id,
           followers: widget.user.followersUsers.length,
           followings: widget.user.followingUsers.length,
-          likes: 37,
+          posts: widget.user.postsCount,
         ),
 
         // follow and chat buttons

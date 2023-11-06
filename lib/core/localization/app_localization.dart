@@ -60,8 +60,8 @@ class AppLocalization {
 
   static String termsOfUse = 'terms of use'.tr;
 
-  static String no = 'no'.tr;
-  static String yes = 'yes'.tr;
+  static String no = 'No'.tr;
+  static String yes = 'Yes'.tr;
   static String next = 'next'.tr;
 
   static String pleaseGrantRequiredPermission =
@@ -202,7 +202,7 @@ class AppLocalization {
 
   static String category = 'Category';
 
-  static String search = 'Search'.tr;
+  static String search = 'Search';
 
   static String logout = 'Log Out'.tr;
 
@@ -266,7 +266,7 @@ class AppLocalization {
   static String userBlockedSuccessfully = 'User is blocked successfully'.tr;
 
   static String report = 'Report'.tr;
-  static String block = 'Block'.tr;
+  static String block = 'Block';
   static String unblock = 'Unblock'.tr;
 
   static String blockUser = 'Block User'.tr;
@@ -282,7 +282,7 @@ class AppLocalization {
   static String newFollower = 'New Follower'.tr;
 
   static String following = 'Following'.tr;
-  static String followers = 'Followers'.tr;
+  static String follower = 'Follower'.tr;
 
   static String justNow = "justNow".tr;
   static String monthsAgo = "months ago".tr;
@@ -389,6 +389,8 @@ class AppLocalization {
 //====================== End settings messages =======================
 
 //====================== Start account settings messages =======================
+  static String followings = "Followings";
+  static String followers = "Followers";
   static String gender = 'Gender';
   static String name = "Name";
   static String birthDate = "Birth date";
@@ -445,49 +447,272 @@ class AppLocalization {
   static var optional = "(optional)";
 //================================ End Search messages ==============================
 
+//================================ Start Search messages ============================
+  static String markedPosts = "Marked Posts";
+
+//================================ End Search messages ==============================
+
 //================================ Start chat messages ================================//
   static String conversationDeletedSuccess =
-      "Conversation deleted successfully".tr;
-  static String conversationDeletedFail = "Failed to delete conversation".tr;
-  static String noRecentsMessages = "No recents messages in your chats".tr;
-  static String noActiveUsers = "No active users in your chats".tr;
-  static String noFavoriteChats = "No favorite chats".tr;
-  static String noConversationsYet = "No Conversations Yet".tr;
+      "Conversation deleted successfully";
+  static String conversationDeletedFail = "Failed to delete conversation";
+  static String noRecentsMessages = "No recents messages in your chats";
+  static String noActiveUsers = "No active users in your chats";
+  static String noFavoriteChats = "No favorite chats";
+  static String noConversationsYet = "No Conversations Yet";
+  static String noArchivedChats = "No Archived Chats";
 
-  static String conversations = "Conversations".tr;
+  static String conversations = "Conversations";
   static String noConversationsMatchedSearch =
-      "No conversations matched the search text".tr;
-  static String messages = "Messages".tr;
-  static String noMessagesMatchedSearch =
-      "No messages matched the search text".tr;
-  static String all = "All".tr;
-  static String recentMessages = "Recent Messages".tr;
-  static String active = "Active".tr;
-  static String favorite = "Favorite".tr;
-  static String blockedUsers = "Blocked Users".tr;
-  static String online = "Online".tr;
-  static String offline = "Offline".tr;
-  static String typingNow = "Typing Now".tr;
-  static String archive = "Archive".tr;
-  static String delete = "Delete".tr;
+      "No conversations matched the search text";
+  static String messages = "Messages";
+  static String noMessagesMatchedSearch = "No messages matched the search text";
+  static String all = "All";
+  static String recentMessages = "Recent Messages";
+  static String active = "Active";
+  static String favorite = "Favorite";
+  static String blockedChats = "Blocked Chats";
+  static String online = "Online";
+  static String offline = "Offline";
+  static String typingNow = "Typing Now";
+
+  static String delete = "Delete";
   static String cofirmDeleteConversationMessage =
-      "Are you sure you want to delete this chat?".tr;
+      "Are you sure you want to delete this chat?";
   static String cofirmArchiveConversationMessage =
-      "Are you sure you want to archive this chat?".tr;
+      "Are you sure you want to archive this chat?";
 
-  static String media = "Media".tr;
-  static String goToFirstMessage = "Go To First Message".tr;
-  static String clearChat = "Clear Chat".tr;
+  static String media = "Media";
+  static String goToFirstMessage = "Go To First Message";
+  static String clearChat = "Clear Chat";
 
+  static String failToUnfavoriteConversation =
+      "Failed to remove this conversation from favorites";
+
+  static String failToFavoriteConversation =
+      "Failed to add this conversation to favorites";
+
+  static String successToUnfavoriteConversation =
+      "Conversation removed from favorites successfully";
+
+  static String successToFavoriteConversation =
+      "Conversation added to favorites successfully";
+
+  static String failToUnarchiveConversation =
+      "Failed to remove this conversation from archives";
+
+  static String failToArchiveConversation =
+      "Failed to archive this conversation";
+
+  static String successToUnarchiveConversation =
+      "Conversation removed from archives successfully";
+
+  static String successToArchiveConversation =
+      "Conversation archived successfully";
+
+  static String failToBlockConversation = "Failed to block this conversation";
+
+  static String failToUnblockConversation =
+      "Failed to unblock this conversation";
+
+  static String conversationBlockedsuccess =
+      "Conversation blocked successfully";
+
+  static String conversationUnblockedsuccess =
+      "Conversation unblocked successfully";
+
+  static String autoReply = "Auto reply"; // الرد التقائي
+
+  static String starredMessages = "Starred messages"; // الرسائل المميزة بنجمة
+
+  static String viewProfile = "View profile";
+
+  static String markMessagesAsRead = "Mark messages as read";
+
+  static String selectAll = "Select all";
+
+  static String archived = "Archived";
+
+  static String startChatingFailer = "Fail to start a chat with this user";
+
+  static String failToUnstarMessage = "Fail to unstar this message";
+
+  static String failToStarMessage = "Fail to star this message";
+
+  static String successToUnstarMessage = "Message unstarred successfully";
+
+  static String successToStarMessage = "Message starred successfully";
+
+  static String unselectAll = "Unselect All";
+
+  static String failureStartChatingUser =
+      "Failure start chatting with this user";
+  static String canNotStartChatWithBlockedUser =
+      "You can not chat with a user you blocked";
+
+  static String failureShwoingStarredMessages =
+      "Failure showing your starred messages, please try later";
+
+  static String mine = "Mine";
+
+  static String others = "Others";
+
+  static String noStarredMessagesMatchedSearch =
+      "No starred messages matched search text";
+
+  static String noStarredMessages = "No starred messages";
+
+  static String noStarredMessagesBelongsToYou =
+      "No starred messages belongs to you";
+
+  static String noStarredMessagesBelongsToOthers =
+      "No starred messages belongs to others";
+
+  static String blockChat = "Block Chat";
+
+  static String confirmUnblockChat = "Do you realy want to unblock this chat?";
+
+  static String unblockAll = "Unblock All";
+
+  static String confirmUnblockAllChat =
+      "Do you realy want to unblock all chats?"; //حضر المحادثة
+
+  static String image = "Image";
+
+  static String video = "Video";
+
+  static String audio = "Audio";
+
+  static String archive = "Archive";
+
+  static String file = "File";
+
+  static String imageMessage = "Image message";
+
+  static String voiceMessage = "Voice message";
+
+  static String videoMessage = "Video message";
+
+  static String fileMessage = "File message";
+
+  static String archiveMessage = "Archived message";
+
+  static String camera = "Camera";
+
+  static String gallery = "Gallery";
+
+  static String messageInfo = 'Message Info';
+
+  static String chatSent = 'Sent';
+
+  static String notSentYet = 'Not sent yet';
+
+  static String received = 'Received';
+
+  static String notReceivedYet = 'Not received yet';
+
+  static String read = 'Read';
+
+  static String notReadYet = 'Not read yet';
+
+  static String noMediaFound = "No media found";
+
+  static String noLinksFound = "No links found";
+
+  static String noDocsFound = "No links found";
+
+  static String chatMedia = "Media";
+
+  static String links = "Links";
+
+  static String docs = "Docs";
+
+  static String mediaDocsLinks = "Media, Docs, And Links";
+
+  static String noBlockedChatsFound = "No blocked chats found";
+
+  static String holdForVideoTapForPhoto = 'Hold for video, tap for photo';
+
+  static String noMessagesYet = "No Messages Yet";
+
+  static String today = "Today";
+
+  static String chatYesterday = "Yesterday";
+
+  static String noProfilePhoto = "No Profile Photo";
+
+  static String recordingFailureCouldNotGrantPermision =
+      "Recording failure,couldn't grant permission to access microphone";
+
+  static String couldNotSendTheSound =
+      "Something went wrong, couldn't send the record";
+
+  static String couldNotPlayRecord =
+      "Something went wrong, Couldn't play the record";
+
+  static String fileNotExists = "File doesn't exists";
+
+  static String unableToOpenThisFile = "Unable to open this file";
+
+  static String ashghal = "Ashghal";
+
+  static String conversationsSelected = "conversations selected";
+
+  static String forwardTo = "Forward to...";
+
+  static String chatSelected = "Selected";
+
+  static String noMessageSelected = "No message selected";
+
+  static String messageSelected = "Message selected";
+
+  static String typeMessage = 'Type message...';
+
+  static String noRecents = "No Recents";
+
+  static String couldNotLuanchUrl = "Could not launch url";
+
+  static String open = 'Open';
+
+  static String imageDeletedFromYourLocalDevice =
+      "Image deleted from your local device";
+
+  static String fileIsDeletedFromYourLocalDevice =
+      "File is deleted from local device";
+
+  static String videoIsDeletedFromYouLocalDevice =
+      "Video deleted from your local device";
+
+  static String addCaption = 'Add caption...';
 //================================ End chat messages ================================//
 
+  static String appLanguage = "App Langauge";
 
+  static String english = "English";
 
-//////////////ONBOARDING STRINGS//////////////
-  static String onboadingTitle1 = "Welcome to Ashghal App";
-  static String onboadingTitle2 = "Your Gateway to Professional Networking";
-  static String onboadingTitle3 = "Unlocking the Power of Ashghal";
-  static String onboadingSubTitle1 = "Explore the innovative solution connecting professionals and businesses in Yemen. Find and connect with service providers effortlessly.";
-  static String onboadingSubTitle2 = "Join Ashghal and discover a unique platform for connecting with experts and businesses. Start networking and accessing a world of opportunities.";
-  static String onboadingSubTitle3 = "Embrace the cutting-edge features of Ashghal app, connecting professionals and service providers. Elevate your business and career prospects today.";
+  static String arabic = "Arabic";
+
+  static String systemLanguage = "System Language";
+
+  static String system = "System";
+
+  static String light = "Light";
+
+  static String dark = "Dark";
+
+  static String themeMode = "Theme Mode";
+
+  static String confirmation = 'Confirmation';
+
+  static String now = "Now";
+
+  static String minute = "Minute";
+
+  static String hour = "Hour";
+
+  static String day = "Day";
+
+  static String week = "Week";
+
+  static String weeks = "Weeks";
 }

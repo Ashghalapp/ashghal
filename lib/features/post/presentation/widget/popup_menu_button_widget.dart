@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +12,7 @@ class PopupMenuButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
+      icon: const Icon(Icons.more_vert, color: AppColors.iconColor),
       padding: EdgeInsets.zero,
       position: PopupMenuPosition.under,
       onSelected: onSelected,

@@ -1,14 +1,14 @@
 import 'dart:io';
 
-import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 class SendingVideoViewController extends GetxController {
   late VideoPlayerController videoPlayerController;
   String path;
-  SendingVideoViewController({required String path}) : this.path = path;
-  final ConversationController _conversationController = Get.find();
+  SendingVideoViewController({required this.path});
+  final ConversationScreenController _conversationScreenController = Get.find();
   RxBool isInitialized = false.obs;
   RxBool isPlaying = false.obs;
 
@@ -35,9 +35,7 @@ class SendingVideoViewController extends GetxController {
   }
 
   Future<void> sendButtonPressed() async {
-    // Get.back<List<String>>(result: paths);
-
-    _conversationController.sendMultimediaMessage(path);
+    _conversationScreenController.sendMultimediaMessage(path);
     Get.back();
   }
 

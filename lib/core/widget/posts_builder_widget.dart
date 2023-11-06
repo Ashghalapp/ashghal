@@ -13,10 +13,12 @@ class PostsBuilderWidget extends StatelessWidget {
   final RxBool isRequestFinishWithoutData;
   final ScrollController? scrollController;
   final Widget faildDownloadWidget;
+  final ScrollPhysics? scrollPhysics;
   const PostsBuilderWidget({
     super.key,
     required this.posts,
     this.scrollController,
+    this.scrollPhysics,
     // required this.lastIndexToGetNextPage,
     required this.onIndexChange,
     required this.getPopupMenuFunction,
@@ -29,6 +31,7 @@ class PostsBuilderWidget extends StatelessWidget {
     return Obx(
       () => posts.isNotEmpty
           ? ListView.builder(
+              physics: scrollPhysics,
               controller: scrollController,
               shrinkWrap: true,
               itemBuilder: (context, index) {
@@ -46,8 +49,7 @@ class PostsBuilderWidget extends StatelessWidget {
                 if (index < posts.length) {
                   return PostCardWidget(
                       post: posts[index],
-                      postMenuButton: getPopupMenuFunction(posts[index])
-                      );
+                      postMenuButton: getPopupMenuFunction(posts[index]));
                 }
                 return null;
               },

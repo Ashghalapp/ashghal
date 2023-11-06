@@ -6,6 +6,7 @@ import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/core_api/success/success.dart';
 import 'package:ashghal_app_frontend/features/post/data/models/post_model.dart';
 import 'package:ashghal_app_frontend/app_library/public_request/search_request.dart';
+import 'package:ashghal_app_frontend/features/post/domain/Requsets/post_request/mark_unmark_post_request.dart';
 
 import '../../domain/Requsets/post_request/add_update_post_request.dart';
 import '../../domain/Requsets/post_request/delete_some_post_multimedia_request.dart';
@@ -45,6 +46,14 @@ abstract class PostRemoteDataSource {
   /// دالة لحذف اي وسائط او ملفات متعلقة بالبوست
   Future<Success> deleteSomePostMultimedia(
       DeleteSomePostMultimediaRequest request);
+
+  Future<Success> markPost(MarkUnmarkPostRequest request);
+
+  Future<Success> unmarkPost(MarkUnmarkPostRequest request);
+  
+  Future<List<PostModel>> getMarkedPosts();
+
+
 }
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
@@ -63,7 +72,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         ServerFailure(message: response.message, errors: response.errors));
   }
 
-   @override
+  @override
   Future<List<PostModel>> getRecentPosts(PaginationRequest request) async {
     ApiResponseModel response =
         await dio.get(ApiConstants.GET_RECENT_POSTS, request.toJson());
@@ -100,8 +109,6 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     throw AppException(
         ServerFailure(message: response.message, errors: response.errors));
   }
-
- 
 
   @override
   Future<List<PostModel>> getCategoryPosts(
@@ -211,6 +218,42 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     if (response.status) {
       print("::: S End updatePost func in post_comment_remote_datasource");
       return PostModel.fromJson(response.data);
+    }
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
+  }
+  
+  @override
+  Future<Success> markPost(MarkUnmarkPostRequest request) async {
+    ApiResponseModel response =
+        await dio.post(ApiConstants.MARK_POST, request.toJson());
+    if (response.status) {
+      print("::: S End updatePost func in post_comment_remote_datasource");
+      return ServerSuccess(response.message);
+    }
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
+  }
+  
+  @override
+  Future<Success> unmarkPost(MarkUnmarkPostRequest request) async {
+    ApiResponseModel response =
+        await dio.post(ApiConstants.UNMARK_POST, request.toJson());
+    if (response.status) {
+      print("::: S End updatePost func in post_comment_remote_datasource");
+      return ServerSuccess(response.message);
+    }
+    throw AppException(
+        ServerFailure(message: response.message, errors: response.errors));
+  }
+
+  @override
+  Future<List<PostModel>> getMarkedPosts() async {
+    ApiResponseModel response =
+        await dio.get(ApiConstants.GET_MARKED_POSTS);
+    if (response.status) {
+      print("::: S End updatePost func in post_comment_remote_datasource");
+      return PostModel.fromJsonList(response.data);
     }
     throw AppException(
         ServerFailure(message: response.message, errors: response.errors));
