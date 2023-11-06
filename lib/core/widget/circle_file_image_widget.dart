@@ -15,7 +15,7 @@ class CircleFileImageWidget extends StatelessWidget {
     required this.imagePath,
     this.onErrorImagePath,
     this.radius = 55,
-    this.fit = BoxFit.fill,
+    this.fit = BoxFit.cover,
     this.onTap,
   });
 

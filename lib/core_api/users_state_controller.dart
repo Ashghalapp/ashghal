@@ -20,6 +20,7 @@ class UsersStateController extends GetxController {
 
   @override
   void onInit() {
+    subscribeToOnlineUsersChannel();
     onlineUsersIds.listen((onlineIds) {
       _onlineUsersController.add(onlineIds);
     });

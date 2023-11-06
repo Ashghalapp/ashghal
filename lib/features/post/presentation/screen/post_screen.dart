@@ -76,6 +76,7 @@ class PostsScreen extends StatelessWidget {
               Expanded(
                 child: Obx(
                   () => PostsBuilderWidget(
+                    scrollPhysics: const AlwaysScrollableScrollPhysics(),
                     scrollController: scrollController,
                     posts: postController.filteredPosts,
                     onIndexChange: (index) {
