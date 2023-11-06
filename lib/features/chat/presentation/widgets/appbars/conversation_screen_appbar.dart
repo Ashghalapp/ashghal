@@ -168,10 +168,7 @@ class ConversationScreenAppBar extends StatelessWidget
             child: Obx(
               () => Icon(
                 Get.find<AppLocallcontroller>().language.value == "en" ||
-                        (Get.find<AppLocallcontroller>().language.value ==
-                                "sys" &&
-                            Get.locale != null &&
-                            Get.locale!.countryCode == "en")
+                        Get.find<AppLocallcontroller>().language.value == "sys"
                     ? Icons.arrow_back_ios_new
                     : Icons.arrow_forward_ios,
               ),
