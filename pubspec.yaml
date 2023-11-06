@@ -55,6 +55,7 @@ dependencies:
   flutter_link_previewer: ^3.2.2
   any_link_preview: ^3.0.1
   url_launcher: ^6.1.14
+  restart_app: ^1.2.1
 
 dev_dependencies:
   build_runner: ^2.4.6

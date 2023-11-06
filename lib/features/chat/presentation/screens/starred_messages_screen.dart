@@ -117,7 +117,7 @@ class StarredMessagesScreen extends StatelessWidget {
       padding: const EdgeInsets.only(right: 10),
       child: CustomOutlineButton(
         isFilled: controller.appliedFilter.value == filter,
-        text: filter.value,
+        text: filter.value.tr,
         onPress: () => controller.applyFilter(filter),
       ),
     );

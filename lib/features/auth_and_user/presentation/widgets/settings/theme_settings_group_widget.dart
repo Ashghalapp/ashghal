@@ -7,6 +7,7 @@ import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/setting_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:restart_app/restart_app.dart';
 
 class ThemeSettingsGroupWidget extends StatelessWidget {
   ThemeSettingsGroupWidget({super.key});
@@ -58,6 +59,7 @@ class ThemeSettingsGroupWidget extends StatelessWidget {
                               ThemeMode.values.byName(chioce.toLowerCase());
                           themeController
                               .changeTheme(themeController.themeMode.value);
+                          Restart.restartApp();
                         }
                       },
                     ),

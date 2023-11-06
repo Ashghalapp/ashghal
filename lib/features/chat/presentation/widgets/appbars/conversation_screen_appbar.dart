@@ -172,8 +172,8 @@ class ConversationScreenAppBar extends StatelessWidget
                                 "sys" &&
                             Get.locale != null &&
                             Get.locale!.countryCode == "en")
-                    ? Icons.arrow_forward_ios
-                    : Icons.arrow_back_ios_new,
+                    ? Icons.arrow_back_ios_new
+                    : Icons.arrow_forward_ios,
               ),
             ),
           ),

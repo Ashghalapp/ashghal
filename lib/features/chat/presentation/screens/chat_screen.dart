@@ -260,7 +260,7 @@ class ChatScreen extends StatelessWidget {
       child: CustomOutlineButton(
         isFilled:
             _screenController.chatController.appliedFilter.value == filter,
-        text: filter.value,
+        text: filter.value.tr,
         onPress: () => _screenController.chatController.applyFilter(filter),
       ),
     );
