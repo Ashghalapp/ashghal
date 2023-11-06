@@ -48,9 +48,12 @@ class OnBoardingScreen extends GetView<OnBoardingController> {
                 ),
                 Text(
                   slider.title,
-                  style: Get.textTheme.titleLarge,
+                  style: Get.textTheme.titleLarge!.copyWith(fontSize: 26),
+                ),  SizedBox(
+                  height: Get.mediaQuery.size.height * .03,
                 ),
                 Text(
+                  textAlign:TextAlign.center ,
                   slider.subtitle,
                   style: Get.textTheme.bodyLarge,
                 ),
@@ -124,7 +127,7 @@ class OnBoardingScreen extends GetView<OnBoardingController> {
                     // width: 6,
                     width: controller.currentIndex.value == index ? 22 : 12,
                     decoration: BoxDecoration(
-                      color:controller.currentIndex.value == index? AppColors.appColorPrimary:AppColors.iconColor,
+                      color:controller.currentIndex.value == index? AppColors.appColorPrimary:AppColors.bodyDark1,
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     margin: const EdgeInsets.only(right: 10),

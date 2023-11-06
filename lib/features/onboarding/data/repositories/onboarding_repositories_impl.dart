@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/config/app_images.dart';
+import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../../core_api/errors/failures.dart';
@@ -11,18 +12,18 @@ class OnBoardingRepositoryImpl extends OnBoardingRepository {
   //TODO Replace this with our datasources
   static final List<Map<String, dynamic>> onBoardingDataJson = [
     {
-      'title': 'Onboarding Title 1',
-      'subtitle': 'Onboarding Subtitle 1',
+      'title': AppLocalization.onboadingTitle1,
+      'subtitle':  AppLocalization.onboadingSubTitle1,
       'imagePath': AppImages.onBoardingImageOne,
     },
     {
-      'title': 'Onboarding Title 2',
-      'subtitle': 'Onboarding Subtitle 2',
+      'title': AppLocalization.onboadingTitle2,
+      'subtitle':  AppLocalization.onboadingSubTitle2,
       'imagePath': AppImages.onBoardingImageTwo,
     },
     {
-      'title': 'Onboarding Title 3',
-      'subtitle': 'Onboarding Subtitle 3',
+      'title': AppLocalization.onboadingTitle3,
+      'subtitle':  AppLocalization.onboadingSubTitle3,
       'imagePath': AppImages.onBoardingImageThree,
     },
   ];

@@ -7,8 +7,18 @@ class MyTranslation extends Translations {
         "ar": {
           AppLocalization.signUpForAccount: "قم بالتسجيل للحصول على حساب",
           "chooseLanguage": "اختر اللغة",
+         
+         AppLocalization.onboadingTitle1:"مرحبًا بك في تطبيق أشغال",
+       AppLocalization.onboadingTitle2:" بوابتك للتواصل المهني",
+       AppLocalization.onboadingTitle3:"اكتشاف قوة تطبيق أشغال",
+         
+         AppLocalization.onboadingSubTitle1:"استكشف الحل الابتكاري للتواصل بين المحترفين\n والأعمال في اليمن. ابحث وتواصل مع مقدمي الخدمات بكل بسهولة.",
+         AppLocalization.onboadingSubTitle2:" انضم إلى أشغال واكتشف منصة فريدة \nللتواصل مع الخبراء والأعمال. ابدأ في بناء شبكتك الاحترافية والوصول إلى عالم من الفرص.",
+         AppLocalization.onboadingSubTitle3:"اعتنق ميزات تطبيق أشغال الرائدة، \nالذي يربط المحترفين ومقدمي الخدمات. قم برفع مستوى فرص أعمالك ومسارك المهني اليوم.",
+        
+          "":"",
           "2": " اختر المهنةالمناسبة لك",
-          "3": "  قم بالتواصل مع العميل\n والاتفاق على العمل",
+          "3": " قم بالتواصل مع العميل\n والاتفاق على العمل",
           "4": "سهل وامن للتواصل",
           "5": "ومن خلال تطبيقنا تستطيع الوصول لاكثر من 100 الف مقدم خدمة",
           "6": "اختيار الأقرب اليك",
@@ -339,6 +349,9 @@ class MyTranslation extends Translations {
           AppLocalization.description: "الوصف",
           AppLocalization.settings: "الاعدادات",
           AppLocalization.provider: "مزود خدمة",
+          AppLocalization.logintoyouraccount: "تسجيل الدخول",
+          AppLocalization.dontHaveAccount: "ليس لديك حساب؟",
+
           AppLocalization.theme: "ثيم التطبيق",
           AppLocalization.save: "حفظ",
           AppLocalization.male: "ذكر",
@@ -553,7 +566,7 @@ class MyTranslation extends Translations {
           "profile": "Profile",
           "editProfile": "Edit profile",
           "profileUpdated": "Profile updated",
-          "dontHaveAccount": "Don’t have an Account?",
+          // "dontHaveAccount": "Don’t have an Account?",
           "Already have an Account?": "Already have an Account?",
           "signUp": "Sign up",
           "signUpMessage": "Create a new account",
@@ -565,9 +578,9 @@ class MyTranslation extends Translations {
           "changeUserName": "Change user name",
           "email": "Email",
           "emailOrUsername": "Email or username",
-          "loginAnotherAccount": "Login another account",
+          // "loginAnotherAccount": "Login another account",
           "yourEmail": "Your Email",
-          AppLocalization.forgetPassword: "Forgot Password?",
+         
           "passwordIsEmpty": "Please enter password",
           "emailPwdIsIncorrect": "Email or password is incorrect",
           "passwordChanged": "Password changed successfully",

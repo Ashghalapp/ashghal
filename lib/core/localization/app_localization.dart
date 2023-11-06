@@ -41,14 +41,14 @@ class AppLocalization {
 
 //////////////
 
-  static String provider = 'Provider';
+  static String provider = 'Provider'.tr;
   static String providerDesc = 'I want to find employees'.tr;
   static String client = 'Client'.tr;
   static String clientDesc = 'I want to find a job for me'.tr;
 
 /////////////////
   ///
-  static String logintoyouraccount = 'Login to Your Account'.tr;
+  static String logintoyouraccount = 'Login to Your Account';
 
   static String top = 'top'.tr;
   static String trending = 'trending'.tr;
@@ -83,7 +83,7 @@ class AppLocalization {
   static String editProfile = 'editProfile'.tr;
   static String profileUpdated = 'profileUpdated'.tr;
 
-  static String dontHaveAccount = 'Don\'t have accont?'.tr;
+  static String dontHaveAccount = 'Don\'t have accont?';
   static String alreadyHaveAcc = 'Already have an Account?'.tr;
   static String signUp = 'signUp'.tr;
   static String createNewAccount = 'Create New Account'.tr;
@@ -102,9 +102,9 @@ class AppLocalization {
       'Choose whether you are looking for a work or you are an organization/company that needs employees'
           .tr;
 
-  static String loginAnotherAccount = 'loginAnotherAccount'.tr;
+  static String loginAnotherAccount = 'loginAnotherAccount';
   static String yourEmail = 'yourEmail'.tr;
-  static String forgetPassword = 'Forgot Password?'.tr;
+  static String forgetPassword = 'Forgot Password?';
   static String passwordIsEmpty = 'passwordIsEmpty'.tr;
   static String emailPwdIsIncorrect = 'emailPwdIsIncorrect'.tr;
   static String passwordChanged = 'passwordChanged'.tr;
@@ -480,4 +480,14 @@ class AppLocalization {
   static String clearChat = "Clear Chat".tr;
 
 //================================ End chat messages ================================//
+
+
+
+//////////////ONBOARDING STRINGS//////////////
+  static String onboadingTitle1 = "Welcome to Ashghal App";
+  static String onboadingTitle2 = "Your Gateway to Professional Networking";
+  static String onboadingTitle3 = "Unlocking the Power of Ashghal";
+  static String onboadingSubTitle1 = "Explore the innovative solution connecting professionals and businesses in Yemen. Find and connect with service providers effortlessly.";
+  static String onboadingSubTitle2 = "Join Ashghal and discover a unique platform for connecting with experts and businesses. Start networking and accessing a world of opportunities.";
+  static String onboadingSubTitle3 = "Embrace the cutting-edge features of Ashghal app, connecting professionals and service providers. Elevate your business and career prospects today.";
 }

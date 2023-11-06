@@ -43,7 +43,7 @@ class ChooseUserTypeScreen extends GetView<ChooseUserTypeController> {
                 Obx(() {
                   return customCard(
                     context: context,
-                    userType: AppLocalization.provider,
+                    userType: AppLocalization.provider.tr,
                     desc: AppLocalization.clientDesc,
                     avatarUrl: AppIcons.workBorder,
                     isSelected: controller.isProviderSelected.value,

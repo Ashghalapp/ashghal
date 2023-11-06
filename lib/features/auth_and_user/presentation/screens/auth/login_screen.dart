@@ -33,7 +33,7 @@ class LoginScreen extends GetView<LoginController> {
             ),
             Text(
               textAlign: TextAlign.center,
-              AppLocalization.logintoyouraccount,
+              AppLocalization.logintoyouraccount.tr,
               style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(
@@ -98,7 +98,7 @@ class LoginScreen extends GetView<LoginController> {
                             onPressed: () =>
                                 Get.toNamed(AppRoutes.forgetPassword),
                             child: Text(
-                              AppLocalization.forgetPassword,
+                              AppLocalization.forgetPassword.tr,
                               textAlign: TextAlign.end,
                               style: Theme.of(context).textTheme.labelMedium,
                             ))
@@ -140,7 +140,7 @@ class LoginScreen extends GetView<LoginController> {
                       children: [
                         Text(
                           style: Theme.of(context).textTheme.labelSmall,
-                          AppLocalization.dontHaveAccount,
+                          AppLocalization.dontHaveAccount.tr,
                         ),
                         TextButton(
                           onPressed: () => Get.toNamed(

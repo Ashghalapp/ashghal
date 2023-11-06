@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
       // theme: AppServices.apptheme,
       // themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      locale: controller.language,
+      locale:Locale('ar'),
       translations: MyTranslation(),
       initialBinding: BindingAllControllers(),
       // theme: ThemeData(
@@ -96,9 +96,9 @@ class MyApp extends StatelessWidget {
       // initialRoute: AppRoutes.mainScreen-
 
       // home: SettingScreen(user: SharedPref.getCurrentUserData()),
-      // initialRoute: AppRoutes.splashScreen,
+      initialRoute: AppRoutes.splashScreen,
       // home: SignUpScreen(),
-      initialRoute: AppRoutes.mainScreen,
+      // initialRoute: AppRoutes.mainScreen,
       // initialRoute: AppRoutes.logIn,
       // home: Tester(),
       // home: TestDownloading(),
