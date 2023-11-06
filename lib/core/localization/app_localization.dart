@@ -715,4 +715,13 @@ class AppLocalization {
   static String week = "Week";
 
   static String weeks = "Weeks";
+
+  //////////////////////onborarding strings///////////////
+  static String onboadingTitle1 = "Welcome to Ashghal App";
+  static String onboadingTitle2 = "Your Gateway to Professional Networking";
+  static String onboadingTitle3 = "Unlocking the Power of Ashghal";
+  static String onboadingSubTitle1 = "Explore the innovative solution connecting professionals and businesses in Yemen. Find and connect with service providers effortlessly.";
+  static String onboadingSubTitle2 = "Join Ashghal and discover a unique platform for connecting with experts and businesses. Start networking and accessing a world of opportunities.";
+  static String onboadingSubTitle3 = "Embrace the cutting-edge features of Ashghal app, connecting professionals and service providers. Elevate your business and career prospects today.";
+
 }
