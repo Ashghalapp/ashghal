@@ -585,6 +585,15 @@ class MyTranslation extends Translations {
           AppLocalization.dark: "غامق",
           AppLocalization.system: "مظهر النظام",
           AppLocalization.themeMode: "المظهر",
+          AppLocalization.confirmation: "تأكيد",
+          AppLocalization.now: "الآن",
+          AppLocalization.minute: "دقيقة",
+          AppLocalization.hour: "ساعة",
+          AppLocalization.day: "يوم",
+          AppLocalization.week: "اسبوع",
+          AppLocalization.weeks: "اسابيع",
+          AppLocalization.search: "بحث",
+          AppLocalization.block: "حضر",
         },
 
         ///========================English=====================///

@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/data/local_db/db/chat_local_db.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/search_textformfield.dart';
@@ -164,8 +165,16 @@ class ConversationScreenAppBar extends StatelessWidget
           const SizedBox(width: 9),
           InkWell(
             onTap: _screenController.closeThisConversationScreen,
-            child: const Icon(
-              Icons.arrow_back_ios_new,
+            child: Obx(
+              () => Icon(
+                Get.find<AppLocallcontroller>().language.value == "en" ||
+                        (Get.find<AppLocallcontroller>().language.value ==
+                                "sys" &&
+                            Get.locale != null &&
+                            Get.locale!.countryCode == "en")
+                    ? Icons.arrow_forward_ios
+                    : Icons.arrow_back_ios_new,
+              ),
             ),
           ),
           const SizedBox(width: 8),

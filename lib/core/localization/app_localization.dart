@@ -60,8 +60,8 @@ class AppLocalization {
 
   static String termsOfUse = 'terms of use'.tr;
 
-  static String no = 'no'.tr;
-  static String yes = 'yes'.tr;
+  static String no = 'No'.tr;
+  static String yes = 'Yes'.tr;
   static String next = 'next'.tr;
 
   static String pleaseGrantRequiredPermission =
@@ -202,7 +202,7 @@ class AppLocalization {
 
   static String category = 'Category';
 
-  static String search = 'Search'.tr;
+  static String search = 'Search';
 
   static String logout = 'Log Out'.tr;
 
@@ -266,7 +266,7 @@ class AppLocalization {
   static String userBlockedSuccessfully = 'User is blocked successfully'.tr;
 
   static String report = 'Report'.tr;
-  static String block = 'Block'.tr;
+  static String block = 'Block';
   static String unblock = 'Unblock'.tr;
 
   static String blockUser = 'Block User'.tr;
@@ -701,4 +701,18 @@ class AppLocalization {
   static String dark = "Dark";
 
   static String themeMode = "Theme Mode";
+
+  static String confirmation = 'Confirmation';
+
+  static String now = "Now";
+
+  static String minute = "Minute";
+
+  static String hour = "Hour";
+
+  static String day = "Day";
+
+  static String week = "Week";
+
+  static String weeks = "Weeks";
 }

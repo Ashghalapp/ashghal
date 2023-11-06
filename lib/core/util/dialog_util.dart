@@ -14,9 +14,8 @@ class DialogUtil {
     );
   }
 
-  static showDialog(
-    {
-     String? title,
+  static showDialog({
+    String? title,
     String? message,
     void Function()? onSubmit,
     Widget? content,
@@ -26,16 +25,18 @@ class DialogUtil {
   }) {
     return Get.defaultDialog(
       backgroundColor: Get.theme.dialogBackgroundColor,
-      title: title?? "",
+      title: title ?? "",
       titlePadding: title == null ? EdgeInsets.zero : null,
       titleStyle:
           TextStyle(color: Get.theme.primaryColor, fontWeight: FontWeight.bold),
-      middleText: message?? "",
+      middleText: message ?? "",
       content: content,
       actions: [
         Container(
-          width: !isShowCancelButton? Get.width : null,
-          padding: !isShowCancelButton? const EdgeInsets.symmetric(horizontal: 20): null,
+          width: !isShowCancelButton ? Get.width : null,
+          padding: !isShowCancelButton
+              ? const EdgeInsets.symmetric(horizontal: 20)
+              : null,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Get.theme.primaryColor,
@@ -103,9 +104,9 @@ class DialogUtil {
   }
 
   static Future<bool?> showConfirmationDialog(String confirmText,
-      [String confirmLabel = "yes", String abortLabel = "No"]) async {
+      [String confirmLabel = "Yes", String abortLabel = "No"]) async {
     return Get.defaultDialog<bool>(
-      title: 'Confirmation'.tr,
+      title: AppLocalization.confirmation.tr,
       middleText: confirmText,
       actions: [
         ElevatedButton(
@@ -113,14 +114,14 @@ class DialogUtil {
             // Close the dialog and return true as the result
             Get.back(result: true);
           },
-          child: Text(confirmLabel),
+          child: Text(confirmLabel.tr),
         ),
         ElevatedButton(
           onPressed: () {
             // Close the dialog and return false as the result
             Get.back(result: false);
           },
-          child: Text(abortLabel),
+          child: Text(abortLabel.tr),
         ),
       ],
     );
@@ -130,7 +131,7 @@ class DialogUtil {
     final size = Get.mediaQuery.size;
     return showDialog(
       title: AppLocalization.error,
-      onSubmit:  () => Get.back(),
+      onSubmit: () => Get.back(),
       submitText: AppLocalization.ok,
       isShowCancelButton: false,
       content: Container(

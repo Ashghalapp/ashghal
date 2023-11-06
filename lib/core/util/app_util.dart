@@ -362,23 +362,24 @@ class AppUtil {
     final difference = now.difference(dateTime);
 
     if (difference.inSeconds < 60) {
-      return 'now';
+      return AppLocalization.now.tr;
     }
     // else if (difference.inSeconds < 60) {
     //   return '${difference.inSeconds} seconds ago';
     // }
     else if (difference.inMinutes < 60) {
       final minutes = difference.inMinutes;
-      return '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
+
+      return '$minutes ${minutes == 1 ? AppLocalization.minute.tr : AppLocalization.minutes.tr} ${AppLocalization.ago.tr}';
     } else if (difference.inHours < 24) {
       final hours = difference.inHours;
-      return '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
+      return '$hours ${hours == 1 ? AppLocalization.hour.tr : AppLocalization.hours.tr} ${AppLocalization.ago.tr}';
     } else if (difference.inDays == 1) {
       final s = dateTime.subtract(const Duration(days: 1));
-      return 'Yesterday at ${formatDateTime(s)}';
+      return '${AppLocalization.yesterday.tr} ${getHourMinuteDateFormat(s)}';
     } else if (difference.inDays < 7) {
       final days = difference.inDays;
-      return '$days ${days == 1 ? 'day' : 'days'} ago';
+      return '$days ${days == 1 ? AppLocalization.day.tr : AppLocalization.days.tr} ${AppLocalization.ago.tr}';
     } else if (difference.inDays < 30) {
       final int days = difference.inDays;
       int weak = 1;
@@ -391,7 +392,7 @@ class AppUtil {
       } else {
         weak = 4;
       }
-      return '$weak ${weak == 1 ? 'weak' : 'weaks'} ago';
+      return '$weak ${weak == 1 ? AppLocalization.week.tr : AppLocalization.weeks.tr} ${AppLocalization.ago.tr}';
     } else {
       // If it's more than a week ago, return the actual date
       return '${dateTime.year}-${dateTime.month}-${dateTime.day}';

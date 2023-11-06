@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
+import 'package:ashghal_app_frontend/core/localization/local_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/audio_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/conversation_screen_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/inserting_message_controller.dart';
@@ -102,30 +103,45 @@ class ConversationScreenFooter extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 14,
-            bottom: 3,
-          ),
-          child: Obx(
-            () => SendButtonWidget(
-              icon: insertingMessageController.sendButtonEnabled.value
-                  ? Icons.send
-                  : Icons.mic,
-              onPressed: () {
-                if (insertingMessageController.sendButtonEnabled.value) {
-                  insertingMessageController.sendMessage();
-                } else {
-                  audioController.startRecord(
-                      screenController.currentConversation.userName);
-                }
-              },
-              onLongPressed: () {
-                if (!insertingMessageController.sendButtonEnabled.value) {
-                  audioController.startRecord(
-                      screenController.currentConversation.userName);
-                }
-              },
+        Obx(
+          () => Padding(
+            padding: EdgeInsets.only(
+              left: Get.find<AppLocallcontroller>().language.value == "en" ||
+                      (Get.find<AppLocallcontroller>().language.value ==
+                              "sys" &&
+                          Get.locale != null &&
+                          Get.locale!.countryCode == "en")
+                  ? 14
+                  : 0,
+              right: Get.find<AppLocallcontroller>().language.value == "en" ||
+                      (Get.find<AppLocallcontroller>().language.value ==
+                              "sys" &&
+                          Get.locale != null &&
+                          Get.locale!.countryCode == "en")
+                  ? 0
+                  : 14,
+              bottom: 3,
+            ),
+            child: Obx(
+              () => SendButtonWidget(
+                icon: insertingMessageController.sendButtonEnabled.value
+                    ? Icons.send
+                    : Icons.mic,
+                onPressed: () {
+                  if (insertingMessageController.sendButtonEnabled.value) {
+                    insertingMessageController.sendMessage();
+                  } else {
+                    audioController.startRecord(
+                        screenController.currentConversation.userName);
+                  }
+                },
+                onLongPressed: () {
+                  if (!insertingMessageController.sendButtonEnabled.value) {
+                    audioController.startRecord(
+                        screenController.currentConversation.userName);
+                  }
+                },
+              ),
             ),
           ),
         ),
@@ -184,21 +200,37 @@ class ConversationScreenFooter extends StatelessWidget {
                     )
               : const SizedBox.shrink(),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 14,
-            bottom: 3,
-          ),
-          child: Obx(
-            () => SendButtonWidget(
-              icon: audioController.isRecording.value ? Icons.stop : Icons.send,
-              onPressed: () {
-                if (audioController.isRecording.value) {
-                  audioController.stopRecord();
-                } else if (audioController.isRecordingCompleted.value) {
-                  audioController.uploadAudio();
-                }
-              },
+        Obx(
+          () => Padding(
+            padding: EdgeInsets.only(
+              left: Get.find<AppLocallcontroller>().language.value == "en" ||
+                      (Get.find<AppLocallcontroller>().language.value ==
+                              "sys" &&
+                          Get.locale != null &&
+                          Get.locale!.countryCode == "en")
+                  ? 14
+                  : 0,
+              right: Get.find<AppLocallcontroller>().language.value == "en" ||
+                      (Get.find<AppLocallcontroller>().language.value ==
+                              "sys" &&
+                          Get.locale != null &&
+                          Get.locale!.countryCode == "en")
+                  ? 0
+                  : 14,
+              bottom: 3,
+            ),
+            child: Obx(
+              () => SendButtonWidget(
+                icon:
+                    audioController.isRecording.value ? Icons.stop : Icons.send,
+                onPressed: () {
+                  if (audioController.isRecording.value) {
+                    audioController.stopRecord();
+                  } else if (audioController.isRecordingCompleted.value) {
+                    audioController.uploadAudio();
+                  }
+                },
+              ),
             ),
           ),
         ),
