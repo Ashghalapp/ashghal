@@ -1,6 +1,5 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/config/app_icons.dart';
-import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
@@ -22,9 +21,9 @@ class AppSearchScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(165),
+          preferredSize: const Size.fromHeight(175),
           child: Padding(
-            padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
+            padding: const EdgeInsets.only(top: 15, right: 8, left: 8),
             child: Column(
               children: [
                 GetX<AppSearchController>(builder: (_) {
@@ -77,7 +76,7 @@ class AppSearchScreen extends StatelessWidget {
                               .map((district) => district.toJson())
                               .toList(),
                           onChange: (newValue) {
-                            searchController.selectedCategory.value =
+                            searchController.selectedDistrictId.value =
                                 int.parse(newValue?.toString() ?? "1");
                           },
                         ),

@@ -93,6 +93,12 @@ class AppSearchController extends GetxController {
     await getRecentPosts();
   }
 
+  @override
+  void onClose() {
+    textController.dispose();
+    super.onClose();
+  }
+
   /// functions to get categories data from api if not found in laster
   Future<void> loadCategoriesData() async {
     if (categories.isEmpty) {
@@ -111,7 +117,8 @@ class AppSearchController extends GetxController {
       printError(info: "<<<<<<<<<<<<<<City data: ${city?.toJson()}");
       if (city != null) {
         selectedCityId.value = city.id;
-        districts.value = city.districts;
+        districts.addAll(city.districts);
+        districts.insert(0, allDistrict);
 
         District? district =
             city.getDistrictByNameEn(currentUser.address?.district ?? "");
@@ -123,12 +130,6 @@ class AppSearchController extends GetxController {
     }
   }
 
-  @override
-  void onClose() {
-    textController.dispose();
-    super.onClose();
-  }
-
   Future<void> getRecentPosts() async {
     await postController.getRecentPosts();
     recentPostsList.value = postController.recentPostsModel.posts;
@@ -138,16 +139,19 @@ class AppSearchController extends GetxController {
   void onCityChange(selectedValue) {
     if (selectedValue != null) {
       selectedCityId.value = int.parse(selectedValue.toString());
+      districts.clear();
       if (selectedValue == 0) {
-        districts.value = [allDistrict];
+        districts.add(allDistrict); // = [allDistrict];
         selectedDistrictId.value = 0;
       } else {
         selectedDistrictId.value = null;
-        districts.value = citiess
+        districts.addAll(citiess
             .firstWhere((city) => city.id == selectedCityId.value)
-            .districts;
-        selectedDistrictId.value = 1;
+            .districts);
+        districts.insert(0, allDistrict);
+        selectedDistrictId.value = 0;
       }
+      districts.refresh();
     }
   }
 
@@ -199,12 +203,13 @@ class AppSearchController extends GetxController {
     }
 
     return SearchRequest(
-      pageNumber: pageNumber,
-      perPage: perPage,
-      dataForSearch: textController.text,
-      city: city?.id != 0 ? city?.nameEn : null,
-      district: district?.id != 0 ? district?.nameEn : null,
-    );
+        pageNumber: pageNumber,
+        perPage: perPage,
+        dataForSearch: textController.text,
+        city: city?.id != 0 ? city?.nameEn : null,
+        district: district?.id != 0 ? district?.nameEn : null,
+        category_id:
+            selectedCategory.value != 0 ? selectedCategory.value : null);
   }
 
   Future<void> _sendRequestToSearchPosts({bool isNextPage = false}) async {

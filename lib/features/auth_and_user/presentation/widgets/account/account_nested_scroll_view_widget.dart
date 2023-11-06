@@ -11,14 +11,14 @@ class AccountNestedScrollViewWidget extends StatelessWidget {
   final ScrollController? scrollController;
   final Widget header;
   final Widget pageView1;
-  final Widget pageView2;
+  final Widget? pageView2;
   const AccountNestedScrollViewWidget({
     super.key,
     required this.onRefresh,
     this.scrollController,
     required this.header,
     required this.pageView1,
-    required this.pageView2,
+    this.pageView2,
   });
 
   @override

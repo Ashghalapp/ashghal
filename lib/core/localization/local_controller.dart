@@ -32,7 +32,7 @@ class AppLocallcontroller extends GetxController {
 
   Rx<String> language =
       (SharedPref.getLanguage() != null || SharedPref.getLanguage() != "sys")
-          ? SharedPref.getLanguage()!.obs
+          ? SharedPref.getLanguage()?.obs ?? 'sys'.obs
           : "sys".obs;
 
   // ((SharedPref.getLanguage() == null || SharedPref.getLanguage() == "sys")

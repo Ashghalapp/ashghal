@@ -257,7 +257,7 @@ class CurrentUserAccountController extends GetxController {
     if (value == "Edit") {
       // final indexPost = postList.indexWhere((element) => element.id == post);
       if (post.isComplete) {
-        AppUtil.showErrorToast(AppLocalization.youCanOnlyEditIncompletePost);
+        AppUtil.showMessage(AppLocalization.youCanOnlyEditIncompletePost, Colors.grey);
       } else {
         Get.to(
           () => AddUpdatePostScreen(

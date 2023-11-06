@@ -115,10 +115,10 @@ class UserAccountHeaderWidget extends StatelessWidget {
                 if (userController.userData.value != null) {
                   ParticipantModel participant = ParticipantModel(
                     id: userController.userId,
-                    name: userController.userData.value!.name,
-                    email: userController.userData.value!.email,
-                    phone: userController.userData.value!.phone,
-                    imageUrl: userController.userData.value!.imageUrl,
+                    name: userController.userData.value?.name?? "unKnown",
+                    // email: userController.userData.value!.email,
+                    // phone: userController.userData.value!.phone,
+                    // imageUrl: userController.userData.value!.imageUrl,
                   );
                   Get.to(() => ChatScreen(user: participant));
                 }

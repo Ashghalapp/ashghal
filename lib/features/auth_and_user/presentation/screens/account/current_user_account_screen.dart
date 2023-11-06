@@ -60,22 +60,22 @@ class CurrentUserAccountScreen extends StatelessWidget {
             faildDownloadWidget: buildFaildDownloadPostsWidget(),
           ),
           // pageView2: const PostPageView(),
-          pageView2: PostsBuilderWidget(
-            posts: userController.markedPostList,
-            onIndexChange: (index) {
-              if (index == userController.postList.length - 3 &&
-                  index != userController.lastIndexToGetNextPage) {
-                userController.lastIndexToGetNextPage = index;
-                print(
-                    "=========last index ${userController.lastIndexToGetNextPage}");
-                userController.loadNextPageOfCurrentUserPosts();
-              }
-            },
-            getPopupMenuFunction: userController.getPostMenuButtonValuesWidget,
-            isRequestFinishWithoutData:
-                userController.isMarketRequestFinishWithoutData,
-            faildDownloadWidget: buildFaildDownloadPostsWidget(),
-          ),
+          // pageView2: PostsBuilderWidget(
+          //   posts: userController.markedPostList,
+          //   onIndexChange: (index) {
+          //     if (index == userController.postList.length - 3 &&
+          //         index != userController.lastIndexToGetNextPage) {
+          //       userController.lastIndexToGetNextPage = index;
+          //       print(
+          //           "=========last index ${userController.lastIndexToGetNextPage}");
+          //       userController.loadNextPageOfCurrentUserPosts();
+          //     }
+          //   },
+          //   getPopupMenuFunction: userController.getPostMenuButtonValuesWidget,
+          //   isRequestFinishWithoutData:
+          //       userController.isMarketRequestFinishWithoutData,
+          //   faildDownloadWidget: buildFaildDownloadPostsWidget(),
+          // ),
         ),
         floatingActionButton: Obx(
           () => AnimatedContainer(

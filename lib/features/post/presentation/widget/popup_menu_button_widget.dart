@@ -12,7 +12,7 @@ class PopupMenuButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      color: AppColors.iconColor,
+      icon: const Icon(Icons.more_vert, color: AppColors.iconColor),
       padding: EdgeInsets.zero,
       position: PopupMenuPosition.under,
       onSelected: onSelected,

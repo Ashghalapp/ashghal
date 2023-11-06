@@ -23,7 +23,7 @@ import 'config/app_icons.dart';
 import 'features/post/presentation/screen/add_update_post_screen.dart';
 
 class MainScreenController extends GetxController {
-  int currentIndex = 3;
+  int currentIndex = 0;
   final search = TextEditingController();
   final UsersStateController stateController = Get.put(UsersStateController());
   // ignore: unused_field
@@ -33,9 +33,7 @@ class MainScreenController extends GetxController {
   var location = ''.obs;
   var jobTitle = ''.obs;
 
-  void updateUp() {
-    update();
-  }
+
 
   void searchFilter() {
     debugPrint(
@@ -155,7 +153,8 @@ class MainScreenController extends GetxController {
     AppSearchScreen(),
 
     // index 2 => Add Post screen
-    AddUpdatePostScreen(),
+    // AddUpdatePostScreen(),
+    const SizedBox(),
     // const Column(
     //   mainAxisAlignment: MainAxisAlignment.center,
     //   children: [Center(child: Text("Add Post"))],
@@ -209,8 +208,14 @@ class MainScreenController extends GetxController {
     //   return;
     // }
 
+
     if ((index == 2 || index == 3 || index == 4) &&
         !AppUtil.checkUserLoginAndNotifyUser()) {
+      return;
+    }
+
+    if (index == 2){
+      Get.to(() => AddUpdatePostScreen());
       return;
     }
 

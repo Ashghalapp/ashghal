@@ -12,6 +12,8 @@ import 'package:ashghal_app_frontend/core_api/api_util.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
 import 'package:ashghal_app_frontend/core_api/errors/failures.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/check_password_uc.dart';
+import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/custom_report_buttomsheet.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/popup_menu_button_widget.dart';
@@ -38,25 +40,38 @@ class AppUtil {
     return true;
   }
 
-  static PopupMenuButtonWidget getPostMenuButtonValuesWidget(Post post) {
-    final values = [AppLocalization.copy, AppLocalization.report];
+  static PopupMenuButtonWidget getPostMenuButtonValuesWidget(Post post,
+      [Map<String, Object>? user]) {
+    final values = [
+      AppLocalization.copy,
+      AppLocalization.report,
+      // AppLocalization.chat
+    ];
 
     return PopupMenuButtonWidget(
-      
       items: values,
       onSelected: (value) {
-        return postPopupMenuButtonOnSelected(value, post);
+        return postPopupMenuButtonOnSelected(value, post, user);
       },
     );
   }
 
-  static void postPopupMenuButtonOnSelected(String value, Post post) async {
+  static void postPopupMenuButtonOnSelected(String value, Post post,
+      [Map<String, Object>? user]) async {
     if (value == AppLocalization.copy) {
       ClipboardData clipboardData = ClipboardData(text: post.content);
       await Clipboard.setData(clipboardData);
       showMessage(AppLocalization.postContentCopied, Colors.grey);
     } else if (value == AppLocalization.report) {
       Get.bottomSheet(CustomBottomSheet());
+    } else if (value == AppLocalization.chat) {
+      if (user != null && user['id'] != null && user['name'] != null) {
+        ParticipantModel participant = ParticipantModel(
+          id: int.parse(user['id'].toString()),
+          name: user['name'].toString(),
+        );
+        Get.to(() => ChatScreen(user: participant));
+      }
     }
   }
 

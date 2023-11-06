@@ -75,6 +75,7 @@ class PostCardWidget extends StatelessWidget {
                               int.parse(post.basicUserData['id'].toString()),
                         ),
                       ),
+                      fit: BoxFit.cover,
                     ),
                     if (post.basicUserData['id'] != null)
                       Positioned(
