@@ -21,7 +21,7 @@ class ThemeSettingsGroupWidget extends StatelessWidget {
       AppLocalization.dark,
     ];
     return SettingGroupWidget(
-      groupTitle: AppLocalization.appLanguage.tr,
+      groupTitle: AppLocalization.themeMode.tr,
       showEndDivider: true,
       items: [
         SettingItemWidget(
@@ -29,7 +29,7 @@ class ThemeSettingsGroupWidget extends StatelessWidget {
           label: AppLocalization.themeMode.tr,
           onTap: () => Get.to(
             () => ChoiceChipRow(
-              title: AppLocalization.appLanguage.tr,
+              title: AppLocalization.themeMode.tr,
               choices: choices.map(
                 (chioce) {
                   return Obx(

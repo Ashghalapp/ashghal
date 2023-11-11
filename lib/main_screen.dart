@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 import 'mainscreen_controller.dart';
 
 class MainScreen extends GetView<MainScreenController> {
-  MainScreen({super.key});
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(MainScreenController(),permanent: true);
+    Get.put(MainScreenController(),permanent: false);
     // print();
     // print("--------------------------------------------------------------");
     // print("Theme is dark ${Get.isDarkMode}");

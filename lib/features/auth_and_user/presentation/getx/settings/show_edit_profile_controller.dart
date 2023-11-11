@@ -84,11 +84,14 @@ class ShowEditProfileController extends GetxController {
               ?.getDistrictByNameEn(userData.value.address!.district!)
               ?.id;
     }
-    printInfo(info:  City.getCityByNameEn(userData.value.address!.city!)?.id.toString()?? "nuuull");
-    printInfo(info: City.getCityByNameEn(userData.value.address!.city!)
-              ?.getDistrictByNameEn(userData.value.address!.district!)
-              ?.id.toString()?? "nulll");
-    printInfo(info: selectedDistrictId.value?.toString()??"");
+    printInfo(
+        info:
+            "City Id: ${City.getCityByNameEn(userData.value.address!.city!)?.id}");
+    printInfo(info: "User District is : ${userData.value.address?.district}");
+    printInfo(
+        info:
+            "District Id: ${City.getCityByNameEn(userData.value.address!.city!)?.getDistrictByNameEn(userData.value.address!.district!)?.id}");
+    printInfo(info: selectedDistrictId.value?.toString() ?? "");
   }
 
   bool areThereChanges() =>
@@ -100,9 +103,9 @@ class ShowEditProfileController extends GetxController {
       City.getCityById(selectedCityId.value ?? -1)?.nameEn !=
           userData.value.address?.city ||
       City.getCityById(selectedCityId.value ?? -1)
-              ?.getDistrictsNameById(selectedDistrictId.value ?? -1) !=
+              ?.getDistrictById(selectedDistrictId.value ?? -1)?.nameEn !=
           userData.value.address?.district ||
-      district.value != (userData.value.address?.district ?? "") ||
+      // district.value != (userData.value.address?.district ?? "") ||
       addressDesc.value != (userData.value.address?.desc ?? "");
 
   UpdateUserRequest getUpdatedDataRequest() {
@@ -124,18 +127,14 @@ class ShowEditProfileController extends GetxController {
           addressDesc.value != userData.value.address?.desc ||
           City.getCityById(selectedCityId.value ?? -1)?.nameEn !=
               userData.value.address?.city ||
-              City.getCityById(selectedCityId.value ?? 1)
-                  ?.getDistrictsNameById(
-                      selectedDistrictId.value ??
-                          1) != userData.value.address?.district
-              ) {
+          City.getCityById(selectedCityId.value ?? 1)
+                  ?.getDistrictsNameById(selectedDistrictId.value ?? 1) !=
+              userData.value.address?.district) {
         Address address = Address.updateRequest(
           // city: city.value != userData.value.address?.city ? city.value : null,
           city: City.getCityById(selectedCityId.value ?? -1)?.nameEn,
           district: City.getCityById(selectedCityId.value ?? 1)
-                  ?.getDistrictsNameById(
-                      selectedDistrictId.value ??
-                          1),
+              ?.getDistrictsNameById(selectedDistrictId.value ?? 1),
           // district.value != userData.value.address?.district
           //     ? district.value
           //     : null,
@@ -146,7 +145,7 @@ class ShowEditProfileController extends GetxController {
         request.address = address;
       }
 
-    printInfo(info: "<<<<<<<<Address: ${request.address?.toJson()}>>>>>>>>");
+      printInfo(info: "<<<<<<<<Address: ${request.address?.toJson()}>>>>>>>>");
     }
 
     print("<<<<<<<<<<${request.address?.toJson()}>>>>>>>>>>");
@@ -157,10 +156,10 @@ class ShowEditProfileController extends GetxController {
     printInfo(
         info: City.getCityById(selectedCityId.value ?? -1)?.nameEn ?? "nuuul");
     printInfo(info: selectedDistrictId.value.toString());
-    printInfo(info: City.getCityById(selectedCityId.value ?? 1)
-                  ?.getDistrictsNameById(
-                      selectedDistrictId.value ??
-                          1)?? "");
+    printInfo(
+        info: City.getCityById(selectedCityId.value ?? 1)
+                ?.getDistrictsNameById(selectedDistrictId.value ?? 1) ??
+            "");
     printInfo(info: userData.value.address?.district?.toString() ?? "nulll");
     // return;
     EasyLoading.show(status: AppLocalization.loading);

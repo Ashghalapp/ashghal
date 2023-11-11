@@ -155,7 +155,7 @@ class AppLocalization {
   static String pleaseEnterCity = 'pleaseEnterCity'.tr;
 
   static String country = 'country'.tr;
-  static String city = 'city'.tr;
+  static String city = 'City';
 
   static String ringing = 'ringing'.tr;
 
@@ -303,7 +303,7 @@ class AppLocalization {
   static String minutes = 'minutes'.tr;
   static String days = 'days'.tr;
 
-  //======================Sign up strings============================//
+//======================Sign up strings============================//
   static String emailAlreadyExist = "Email Already Exist".tr;
   static String successRegister = "Successfully registered";
 
@@ -317,12 +317,13 @@ class AppLocalization {
   static String warning = 'Warning'.tr;
   static String orContinueWith = 'or contiue with'.tr;
   static String cancel = 'Cancel'.tr;
-  static String jobname = 'Job Name'.tr;
-  static String jobdesc = 'Job Description'.tr;
+  static String jobname = 'Job name';
+  static String jobDesc = 'Job Description';
   static String doyouwanttoexitApp = 'Do you want exit the app?'.tr;
   static String choosejobcategory = 'Choose Your Job Category'.tr;
   static String selectCategory = 'Select category';
   // static String NotFoundDataInOfflineMode = 'Not found data in offline mode'.tr;
+  static String markedPosts = "Marked Posts";
 
 //============================ Start Post Messages ===================================
   static String successAddPost = "The post has been added successfully";
@@ -389,6 +390,7 @@ class AppLocalization {
 //====================== End settings messages =======================
 
 //====================== Start account settings messages =======================
+  static String uploadChanges = "Upload changes";
   static String followings = "Followings";
   static String followers = "Followers";
   static String gender = 'Gender';
@@ -430,6 +432,10 @@ class AppLocalization {
   static String changeYourEmail = "Change your email";
   static String changeEmail = "Change email";
   static String pleaseEnterNewEmail = "Please enter the new email.";
+
+  // provider messages
+  static String yourAccountNotProviderAccount = "Your Account is not a provider account";
+  static String upgradeYourAccountToProviderAccount = "Upgrade your account to provider account";
 //================================ End account settings messages ============================
 
 //================================ Start Search messages ============================
@@ -439,16 +445,15 @@ class AppLocalization {
   static String district = "District";
 //================================ End Search messages ==============================
 
-//================================ Start Search messages ============================
+//================================ Start address messages ============================
   static String addAddress = "Add address";
   static String enterAddressDescription = "Enter a description of the address";
   static String enterStreetName = "Enter the street name";
   static String enterCityName = "Enter the city name";
   static var optional = "(optional)";
-//================================ End Search messages ==============================
+//================================ End address messages ==============================
 
 //================================ Start Search messages ============================
-  static String markedPosts = "Marked Posts";
 
 //================================ End Search messages ==============================
 
@@ -715,4 +720,15 @@ class AppLocalization {
   static String week = "Week";
 
   static String weeks = "Weeks";
+
+//////////////ONBOARDING STRINGS//////////////
+  static String onboadingTitle1 = "Welcome to Ashghal App";
+  static String onboadingTitle2 = "Your Gateway to Professional Networking";
+  static String onboadingTitle3 = "Unlocking the Power of Ashghal";
+  static String onboadingSubTitle1 =
+      "Explore the innovative solution connecting professionals and businesses in Yemen. Find and connect with service providers effortlessly.";
+  static String onboadingSubTitle2 =
+      "Join Ashghal and discover a unique platform for connecting with experts and businesses. Start networking and accessing a world of opportunities.";
+  static String onboadingSubTitle3 =
+      "Embrace the cutting-edge features of Ashghal app, connecting professionals and service providers. Elevate your business and career prospects today.";
 }

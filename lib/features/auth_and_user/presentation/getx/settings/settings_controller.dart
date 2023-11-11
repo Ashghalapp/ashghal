@@ -6,6 +6,7 @@ import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/delete_account_uc.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/account/current_user_account_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ import 'package:get/get.dart';
 class SettingsController extends GetxController {
   void logOut() { 
     SharedPref.logout();
+    Get.delete<CurrentUserAccountController>();
     Get.offAllNamed(AppRoutes.logIn);
   }
 

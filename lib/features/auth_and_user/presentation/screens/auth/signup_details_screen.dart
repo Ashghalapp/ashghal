@@ -65,6 +65,7 @@ class SignupDetailsScreen extends GetView<SignUpController> {
                         initialValue: controller.selectedGender.value,
                         onSave: (newValue) {
                           controller.selectedGender.value = newValue;
+                          print("<<<<<<<<${controller.selectedGender.value}>>>>>>>>");
                         },
                       );
                     },
@@ -73,7 +74,7 @@ class SignupDetailsScreen extends GetView<SignUpController> {
                     sufficxIconDataName: AppIcons.arrowDown,
                     // labelText: AppLocalization.gender,
                     hintText: controller.selectedGender.value.isNotEmpty
-                        ? controller.selectedGender.value
+                        ? controller.selectedGender.value.tr
                         : AppLocalization.gender,
                   ),
 

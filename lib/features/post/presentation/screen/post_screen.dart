@@ -288,7 +288,7 @@ class PostsScreen extends StatelessWidget {
       padding: const EdgeInsets.only(right: 10),
       child: CustomOutlineButton(
         isFilled: postController.appliedFilter.value == filter,
-        text: filter.value,
+        text: filter.value.tr,
         onPress: () => postController.applyFilter(filter),
       ),
     );

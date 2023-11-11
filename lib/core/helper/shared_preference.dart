@@ -108,12 +108,20 @@ class SharedPref {
   }
 
   static void logout() {
-    setUserLoggedIn(false);
-    setUserLoggedInAsGuest(false);
-    _appServices.prefs.remove('authKey');
+    // final introductionScreenSeen = getintroductionScreenSeen();
+    final themeMode = getThemeMode();
+    final language = getLanguage();
 
-    _appServices.prefs.remove('current_user_data');
-    _appServices.prefs.remove('current_user_basic_data');
+    _appServices.prefs.clear();
+    setintroductionScreenSeen();
+    setThemeMode(themeMode);
+    setLanguage(language?? 'sys');
+    // setUserLoggedIn(false);
+    // setUserLoggedInAsGuest(false);
+    // _appServices.prefs.remove('authKey');
+
+    // _appServices.prefs.remove('current_user_data');
+    // _appServices.prefs.remove('current_user_basic_data');
   }
 
   static void setLanguage(String lang) {

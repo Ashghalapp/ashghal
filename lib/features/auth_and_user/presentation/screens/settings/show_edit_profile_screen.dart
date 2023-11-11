@@ -27,7 +27,7 @@ class ShowEditProfileScreen extends StatelessWidget {
             itemBuilder: (context) {
               return [
                 PopupMenuItem(
-                  child: Text(AppLocalization.deleteProfileImage),
+                  child: Text(AppLocalization.deleteProfileImage.tr),
                   onTap: () => editProfileController.deleteProfileImage(),
                 )
               ];
@@ -50,7 +50,7 @@ class ShowEditProfileScreen extends StatelessWidget {
             // name
             SettingItemWidget(
               icon: Icons.text_fields_rounded,
-              label: AppLocalization.name,
+              label: AppLocalization.name.tr,
               data: editProfileController.name.value,
               onTap: () async {
                 await BottomSheetUtil.buildButtomSheetToEditField(
@@ -67,9 +67,9 @@ class ShowEditProfileScreen extends StatelessWidget {
             // gender
             SettingItemWidget(
               icon: Icons.man_3_outlined,
-              label: AppLocalization.gender,
+              label: AppLocalization.gender.tr,
               data: editProfileController.selectedGender
-                  .value, // editProfileController.userData.value.gender.name,
+                  .value.tr, // editProfileController.userData.value.gender.name,
               onTap: () async {
                 await BottomSheetUtil.buildButtomsheetToEditRadio(
                   title: AppLocalization.gender,
@@ -85,7 +85,7 @@ class ShowEditProfileScreen extends StatelessWidget {
             // birth date
             SettingItemWidget(
               icon: Icons.date_range_rounded,
-              label: AppLocalization.birthDate,
+              label: AppLocalization.birthDate.tr,
               data: DateFormat('yyyy-MM-dd')
                   .format(editProfileController.birthDate.value),
               onTap: () async {
@@ -120,7 +120,7 @@ class ShowEditProfileScreen extends StatelessWidget {
       return [
         SettingItemWidget(
           icon: Icons.location_on,
-          label: AppLocalization.address,
+          label: AppLocalization.address.tr,
           data: AppLocalization.tapToAdd,
           onTap: () => Get.to(
             () =>
@@ -134,7 +134,7 @@ class ShowEditProfileScreen extends StatelessWidget {
       if (editProfileController.userData.value.address?.city != null)
         SettingItemWidget(
           icon: Icons.location_city_outlined,
-          label: AppLocalization.city,
+          label: AppLocalization.city.tr,
           data: City.getCityNameById(
               editProfileController.selectedCityId.value ??
                   1), // editProfileController.city.value,
@@ -161,7 +161,7 @@ class ShowEditProfileScreen extends StatelessWidget {
       if (editProfileController.userData.value.address?.district != null)
         SettingItemWidget(
           icon: Icons.location_history,
-          label: AppLocalization.district,
+          label: AppLocalization.district.tr,
           data:
               City.getCityById(editProfileController.selectedCityId.value ?? 1)
                   ?.getDistrictsNameById(

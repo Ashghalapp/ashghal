@@ -99,9 +99,9 @@ class SignUpController extends GetxController {
       jobDescController = TextEditingController();
       jobCategoryController = TextEditingController();
 
-      emailController.text = "mohammed${Random().nextInt(1000)}@gmail.com";
-      passwordController.text = "123456";
-      nameController.text = "mohammed";
+      // emailController.text = "mohammed${Random().nextInt(1000)}@gmail.com";
+      // passwordController.text = "123456";
+      // nameController.text = "mohammed";
       if (categories.isEmpty) {
         await AppUtil.loadCategories();
         categories = SharedPref.getCategories()?.obs ?? <AppCategory>[].obs;
@@ -226,27 +226,30 @@ class SignUpController extends GetxController {
   /// function used to send register data to api
   Future<Either<Failure, User>> sendSignUpUserRequest(String verficationCode,
       {bool isProviderSignUp = false}) async {
+        print("[[[[[[[[[[${selectedGender.value}[[[[${Gender.values.byName(selectedGender.value)}]]]]]]]]]]]]]]");
+        // return Left(ServerFailure(message: ""));;
     RegisterUserWithEmailUseCase registerUserWithEmail = di.getIt();
     RegisterUserRequest request = RegisterUserRequest.withEmail(
-        name: nameController.text,
-        password: passwordController.text,
-        email: emailController.text,
-        imagePath: imagePath.value,
-        birthDate: birthDate.value ?? DateTime(2000),
-        provider: isProviderSignUp
-            ? Provider.addRequest(
-                jobName: jobNameController.text,
-                jobDesc: jobDescController.text,
-                categoryId: int.parse(jobCategoryController.text),
-              )
-            : null,
-        emailVerificationCode: verficationCode,
-        gender: Gender.values.byName(selectedGender.value),
-        address: Address.addRequest(
-          city: cityController.text,
-          district: districtController.text,
-          desc: descController.text.isNotEmpty ? descController.text : null,
-        ));
+      name: nameController.text,
+      password: passwordController.text,
+      email: emailController.text,
+      imagePath: imagePath.value.isNotEmpty ? imagePath.value : null,
+      birthDate: birthDate.value ?? DateTime(2000),
+      provider: isProviderSignUp
+          ? Provider.addRequest(
+              jobName: jobNameController.text,
+              jobDesc: jobDescController.text,
+              categoryId: int.parse(jobCategoryController.text),
+            )
+          : null,
+      emailVerificationCode: verficationCode,
+      gender: Gender.values.byName(selectedGender.value),
+      address: Address.addRequest(
+        city: cityController.text,
+        district: districtController.text,
+        desc: descController.text.isNotEmpty ? descController.text : null,
+      ),
+    );
     // city: cities
     //     .firstWhere(
     //         (element) => element['id'] == selectedCity)['name_en']
@@ -289,7 +292,7 @@ class SignUpController extends GetxController {
     //     verifyCodeFunction: verifySignUpCode,
     //   ),
     // );
-    
+
     EasyLoading.dismiss();
   }
 

@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../core/localization/app_localization.dart';
 import '../../data/models/onboarding_model.dart';
 
 class OnBoardingController extends GetxController {
   //   final RxList<OnBoarding> sliders = RxList<OnBoarding>(); //remote source
-  final List<OnBoardingModel> sliders = [
+  
+final List<OnBoardingModel> sliders = [
     OnBoardingModel(
-      title: 'Onboarding Title 1',
-      subtitle: 'Onboarding Subtitle 1',
+      // title: 'Onboarding Title 1',
+      // subtitle: 'Onboarding Subtitle 1',
+      title: AppLocalization.onboadingTitle1.tr,
+      subtitle: AppLocalization.onboadingSubTitle1.tr,
       imagePath: 'assets/onboarding/onboarding_Image_1.svg',
     ),
     OnBoardingModel(
-      title: 'Onboarding Title 2',
-      subtitle: 'Onboarding Subtitle 2',
+      // title: 'Onboarding Title 2',
+      // subtitle: 'Onboarding Subtitle 2',
+      title: AppLocalization.onboadingTitle2.tr,
+      subtitle: AppLocalization.onboadingSubTitle2.tr,
       imagePath: 'assets/onboarding/onboarding_Image_1.svg',
     ),
     OnBoardingModel(
-      title: 'Onboarding Title 3',
-      subtitle: 'Onboarding Subtitle 3',
+      // title: 'Onboarding Title 3',
+      // subtitle: 'Onboarding Subtitle 3',
+      title: AppLocalization.onboadingTitle3.tr,
+      subtitle: AppLocalization.onboadingSubTitle3.tr,
       imagePath: 'assets/onboarding/onboarding_Image_1.svg',
     ),
   ];
+
+
+
+
+
+
 
   final RxInt currentIndex = 0.obs;
   final PageController pageController = PageController();

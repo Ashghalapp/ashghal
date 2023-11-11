@@ -1,5 +1,4 @@
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/bottom_sheet_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/settings/show_edit_provider_controller.dart';
@@ -43,7 +42,7 @@ class ShowEditProviderScreen extends StatelessWidget {
                           onTap: () async {
                             await providerController.updateProviderData();
                           },
-                          text: "Upload changes",
+                          text: AppLocalization.uploadChanges.tr,
                         ),
                       )
                     : const SizedBox(),
@@ -59,7 +58,7 @@ class ShowEditProviderScreen extends StatelessWidget {
     return [
       Container(
         alignment: AlignmentDirectional.center,
-        child: Text("Your Account is not a provider account"),
+        child: Text(AppLocalization.yourAccountNotProviderAccount),
       ),
       Padding(
         padding: const EdgeInsets.all(8),
@@ -89,7 +88,7 @@ class ShowEditProviderScreen extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Text(
-          "Provider data",
+          AppLocalization.providerData.tr,
           style: Get.textTheme.bodyMedium,
         ),
       ),
@@ -113,9 +112,9 @@ class ShowEditProviderScreen extends StatelessWidget {
       // job description
       SettingItemWidget(
         icon: Icons.description_outlined,
-        label: AppLocalization.jobdesc,
+        label: AppLocalization.jobDesc,
         data: providerController.jobDesc.value.isEmpty 
-              ? AppLocalization.tapToAdd
+              ? AppLocalization.tapToAdd.tr
               : providerController.jobDesc.value,
         onTap: () async {
           await BottomSheetUtil.buildButtomSheetToEditField(

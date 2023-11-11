@@ -33,12 +33,16 @@ class MainScreenController extends GetxController {
   var location = ''.obs;
   var jobTitle = ''.obs;
 
-
-
   void searchFilter() {
     debugPrint(
         'Performing search with location: ${location.value} and job title: ${jobTitle.value}');
     Get.back();
+  }
+
+  @override
+  InternalFinalCallback<void> get onDelete {
+    currentIndex = 0;
+    return super.onDelete;
   }
 
   Widget myIcons(
@@ -208,13 +212,12 @@ class MainScreenController extends GetxController {
     //   return;
     // }
 
-
     if ((index == 2 || index == 3 || index == 4) &&
         !AppUtil.checkUserLoginAndNotifyUser()) {
       return;
     }
 
-    if (index == 2){
+    if (index == 2) {
       Get.to(() => AddUpdatePostScreen());
       return;
     }

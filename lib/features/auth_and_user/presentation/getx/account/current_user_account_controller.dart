@@ -257,7 +257,8 @@ class CurrentUserAccountController extends GetxController {
     if (value == "Edit") {
       // final indexPost = postList.indexWhere((element) => element.id == post);
       if (post.isComplete) {
-        AppUtil.showMessage(AppLocalization.youCanOnlyEditIncompletePost, Colors.grey);
+        AppUtil.showMessage(
+            AppLocalization.youCanOnlyEditIncompletePost, Colors.grey);
       } else {
         Get.to(
           () => AddUpdatePostScreen(
@@ -266,7 +267,8 @@ class CurrentUserAccountController extends GetxController {
           ),
         )?.then((value) {
           if (value != null) {
-            return postList = value;
+            return postList[postList
+                .indexWhere((element) => element.id == post.id)] = value;
           }
         });
       }

@@ -101,13 +101,13 @@ class AddUpdatePostController extends GetxController {
     if (selectedValue != null) {
       selectedCityId.value = int.parse(selectedValue.toString());
       printInfo(info: selectedCityId.value.toString());
-      print("<<<<<<<<${cities.firstWhere((element) => element.id == 1).districts[0].name}>>>>>>>>");
+      print(
+          "<<<<<<<<${cities.firstWhere((element) => element.id == 1).districts[0].name}>>>>>>>>");
       cityDistricts.clear();
       cityDistricts.addAll(citiess
           .firstWhere((city) => city.id == selectedCityId.value)
           .districts);
       selectedDistrictId.value = 1;
-
 
       // citiess.map((e) {
       //   print("-----------${e.id.toString()}");
@@ -130,6 +130,16 @@ class AddUpdatePostController extends GetxController {
     expireDate.value = post.expireDate;
     expireDateController.text = expireDate.value.toString().split(' ')[0];
     allowComment.value = post.allowComment;
+    if (post.address != null) {
+      selectedCityId.value = City.getCityByNameEn(post.address?.city ?? "")?.id;
+      onCityChangeFunction(selectedCityId);
+      selectedDistrictId.value = City.getCityById(selectedCityId.value)
+          ?.getDistrictByNameEn(post.address?.district)
+          ?.id;
+      // printError(info: "district id: ${City.getCityById(selectedCityId.value)
+      //     ?.getDistrictByNameEn(post.address?.district)
+      //     ?.id}");
+    }
 
     imagesIdToDelete.clear();
   }
@@ -180,12 +190,17 @@ class AddUpdatePostController extends GetxController {
     }
 
     UpdatePostUseCase updatePostUS = di.getIt();
+    City city = City.getCityById(selectedCityId.value!)!;
+    District district = city.getDistrictById(selectedDistrictId.value!)!;
+
     var result = updatePostUS.call(
       UpdatePostRequest(
         postId: postId,
         title: titleController.text,
         content: contentController.text,
         categoryId: selectedCategory,
+        address:
+            Address.updateRequest(city: city.nameEn, district: district.nameEn),
         multimediaPaths: imagesPaths
             .where((imagePath) => !imagePath.startsWith('http'))
             .toList(),

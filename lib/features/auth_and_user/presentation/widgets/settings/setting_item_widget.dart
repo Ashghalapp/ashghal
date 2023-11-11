@@ -27,7 +27,7 @@ class SettingItemWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            label,
+            label.tr,
             maxLines: 1,
             style: labelStyle ?? Get.textTheme.bodyMedium,
           ),

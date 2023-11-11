@@ -26,7 +26,8 @@ class AccountNestedScrollViewWidget extends StatelessWidget {
     return RefreshIndicator(
       notificationPredicate: (notification) {
         // print("<<<<<<<<<<<<<<<<<${notification.depth}>>>>>>>>>>>>>>>>>>");
-        return notification.depth == 0 || notification.depth == 2;
+        // return notification.depth == 0 || notification.depth == 2;
+        return notification.depth >= 0 || notification.depth <= 2;
       },
       onRefresh: onRefresh,
       child: NestedScrollView(

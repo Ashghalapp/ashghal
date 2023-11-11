@@ -82,7 +82,7 @@ class SignUpProviderDataScreen extends StatelessWidget {
                     // labelText: AppLocalization.jobdesc,
                     // iconName: Icons.work_outline_rounded,
                     // iconName: AppIcons.work,
-                    hintText: AppLocalization.jobdesc,
+                    hintText: AppLocalization.jobDesc,
                     obscureText: false,
                     controller: jobDescController,
                     validator: (val) {

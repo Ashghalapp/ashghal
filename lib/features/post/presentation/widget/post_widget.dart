@@ -1,5 +1,6 @@
 import 'package:ashghal_app_frontend/app_library/public_entities/address.dart';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
+import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/dependency_injection.dart'
@@ -99,10 +100,12 @@ class PostCardWidget extends StatelessWidget {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // category name
                     SelectableText(
                       post.categoryData['name']?.toString() ?? "",
                       style: Get.textTheme.bodySmall,
                     ),
+                    // post date
                     Container(
                       padding: const EdgeInsets.only(top: 2),
                       child: Text(
@@ -203,7 +206,7 @@ class PostCardWidget extends StatelessWidget {
           // comment button
           CustomTextAndIconAndCircleCounterButton(
             text: Text(
-              AppLocalization.comment,
+              AppLocalization.comment.tr,
               style: Get.textTheme.bodyMedium?.copyWith(
                 color: !post.allowComment ? Get.theme.disabledColor : null,
               ),
@@ -226,8 +229,8 @@ class PostCardWidget extends StatelessWidget {
           CustomTextAndIconButton(
             text: Text(
               post.isComplete
-                  ? AppLocalization.completed
-                  : AppLocalization.incomplete,
+                  ? AppLocalization.completed.tr
+                  : AppLocalization.incomplete.tr,
               style: Get.textTheme.bodyMedium
                   ?.copyWith(color: Get.theme.disabledColor),
             ),
@@ -240,7 +243,7 @@ class PostCardWidget extends StatelessWidget {
           Obx(
             () => CustomTextAndIconButton(
               text: Text(
-                isMark.value ? AppLocalization.marked : AppLocalization.mark,
+                isMark.value ? AppLocalization.marked.tr : AppLocalization.mark.tr,
                 style: Get.textTheme.bodyMedium,
               ),
               onPressed: () {
@@ -267,17 +270,20 @@ class PostCardWidget extends StatelessWidget {
   List<Widget> buildAddressDetailsWidgets(Address address) {
     return [
       SizedBox(
-          width: Get.width / 2,
-          height: 6,
-          child: Divider(
-            color: Get.theme.dividerColor,
-          )),
+        width: Get.width / 2,
+        height: 6,
+        child: Divider(color: Get.theme.dividerColor),
+      ),
       RichText(
         text: TextSpan(
           children: [
+            // district name by app language
             TextSpan(
-                text: "${address.district}, ", style: Get.textTheme.bodyMedium),
-            TextSpan(text: address.city, style: Get.textTheme.bodyMedium),
+              text:
+                  "${City.getCityByNameEn(address.city ?? "")?.getDistrictByNameEn(address.district ?? "")?.name ?? address.district}, ",
+              style: Get.textTheme.bodyMedium,
+            ),
+            TextSpan(text: City.getCityByNameEn(address.city ?? "")?.name?? address.city, style: Get.textTheme.bodyMedium),
           ],
         ),
       ),

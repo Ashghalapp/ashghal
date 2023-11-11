@@ -74,9 +74,9 @@ class MyTranslation extends Translations {
           "61": "التالي",
           "jobnamehint": "ادخل هنا اسم مهنتك",
           "activity": "النشاطات",
-          "Job Name": "اسم المهنة",
+          AppLocalization.jobname: "اسم المهنة",
           "verfication": "تحقق",
-          "Job Description": "وصف المهنة",
+          AppLocalization.jobDesc: "وصف المهنة",
           "jobdescriptionhint": "ادخل وصف مهنتك",
           "Choose Your Job Category": "اختر مجال عملك",
           "Select Category": "اختر فئة",
@@ -88,7 +88,16 @@ class MyTranslation extends Translations {
           "back": "العودة",
           "about": "نبذة عنا",
           "addSomethingAboutPost": "أضف شيئًا حول المنشور",
+          AppLocalization.onboadingTitle1: "مرحبًا بك في تطبيق أشغال",
+          AppLocalization.onboadingTitle2: " بوابتك للتواصل المهني",
+          AppLocalization.onboadingTitle3: "اكتشاف قوة تطبيق أشغال",
 
+          AppLocalization.onboadingSubTitle1:
+              "استكشف الحل الابتكاري للتواصل بين المحترفين\n والأعمال في اليمن. ابحث وتواصل مع مقدمي الخدمات بكل بسهولة.",
+          AppLocalization.onboadingSubTitle2:
+              " انضم إلى أشغال واكتشف منصة فريدة \nللتواصل مع الخبراء والأعمال. ابدأ في بناء شبكتك الاحترافية والوصول إلى عالم من الفرص.",
+          AppLocalization.onboadingSubTitle3:
+              "اعتنق ميزات تطبيق أشغال الرائدة، \nالذي يربط المحترفين ومقدمي الخدمات. قم برفع مستوى فرص أعمالك ومسارك المهني اليوم.",
           "please Grant Required Location Permission":
               "الرجاء السماح بصلاحيات الوصول للموقع",
           "left": "الباقي",
@@ -202,7 +211,7 @@ class MyTranslation extends Translations {
           "pleaseEnterCountry": "الرجاء إدخال البلد",
           "pleaseEnterCity": "الرجاء إدخال المدينة",
           "country": "البلد",
-          "city": "المدينة",
+          AppLocalization.city: "المدينة",
           "ringing": "جاري الاتصال",
           "wallpaper": "خلفية الشاشة",
           "wallpapers": "خلفيات",
@@ -305,7 +314,7 @@ class MyTranslation extends Translations {
           AppLocalization.postContentCopied: "تم نسخ محتوى المنشور",
           AppLocalization.mark: "اشارة",
           AppLocalization.marked: "مؤشر",
-          AppLocalization.recentPosts: "",
+          // AppLocalization.recentPosts: "",
 
           ///// add post message
           AppLocalization.title: "العنوان",
@@ -313,8 +322,8 @@ class MyTranslation extends Translations {
           AppLocalization.content: "المحتوى",
           AppLocalization.enterContent: "ادخل محتوى",
           AppLocalization.allowComments: "السماح بالتعليقات",
-          AppLocalization.recentPosts: "",
-          AppLocalization.recentPosts: "",
+          // AppLocalization.recentPosts: "",
+          // AppLocalization.recentPosts: "",
 //================================== End Posts Messages ==============================
 
 //====================== Start settings messages =======================
@@ -332,8 +341,9 @@ class MyTranslation extends Translations {
 //======================= End settings messages =======================
 
 //======================== Start account settings messages ==========================
-          AppLocalization.followings : "متابعات",
-          AppLocalization.followers : "متابعون",
+          AppLocalization.uploadChanges: "رفع التغييرات",
+          AppLocalization.followings: "متابعات",
+          AppLocalization.followers: "متابعون",
           AppLocalization.providerData: "بيانات مقدم الخدمة",
           AppLocalization.gender: 'الجنس',
           AppLocalization.name: "الاسم",
@@ -387,11 +397,16 @@ class MyTranslation extends Translations {
               "الرجاء ادخال كلمة السر القديمة، ثم كلمة السر الجديدة، ثم تأكيدها.",
           AppLocalization.successChangePassword: "تم تغيير كلمة السر بنجاح",
           AppLocalization.check: "فحص",
+          
           // change email messages
           AppLocalization.changeYourEmail: "تغيير البريد الإلكتروني",
           AppLocalization.changeEmail: "تغيير البريد الإلكتروني",
           AppLocalization.pleaseEnterNewEmail:
               "الرجاء ادخال البريد الإلكتروني الجديد",
+
+          // provider messages
+          AppLocalization.yourAccountNotProviderAccount: "حسابك ليس حساب مزود خدمة",
+          AppLocalization.upgradeYourAccountToProviderAccount: "ترقية حسابك إلى حساب مزود خدمة",
 //======================== End account settings messages ==========================
 
 //================================ Start Search messages ============================
@@ -401,22 +416,19 @@ class MyTranslation extends Translations {
           AppLocalization.district: "المديرية",
 //================================ End Search messages ==============================
 
-
 //================================ Start Search messages ============================
-  AppLocalization.markedPosts : "المشاراكات المؤشر عليها",
+          AppLocalization.markedPosts: "المشاراكات المعلمة ",
 
 //================================ End Search messages ==============================
 
-//================================ Start Search messages ============================
+//================================ Start Address messages ============================
           AppLocalization.addAddress: "Add address",
           AppLocalization.enterAddressDescription:
               "Enter a description of the address",
           AppLocalization.enterStreetName: "Enter the street name",
           AppLocalization.enterCityName: "Enter the city name",
           AppLocalization.optional: "(optional)",
-//================================ End Search messages ==============================
-
-
+//================================ End Address messages ==============================
 
 //================================ Start chat messages ================================//
           AppLocalization.conversationDeletedSuccess: "تم حذف المحادثة بنجاح",

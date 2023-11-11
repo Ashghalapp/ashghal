@@ -1,7 +1,4 @@
-import 'package:ashghal_app_frontend/config/app_routes.dart';
-import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/settings/settings_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/settings/show_edit_profile_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';

@@ -4,7 +4,7 @@ import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BottomSheetUtil{
+class BottomSheetUtil {
   static Future buildBottomsheet({
     double height = 210,
     required Widget child,
@@ -105,12 +105,12 @@ class BottomSheetUtil{
             for (int i = 0; i < values.length; i++)
               Obx(
                 () => RadioListTile(
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                  title: Text(values[i]),
-                  value: values[i].tr,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                  title: Text(values[i].tr),
+                  value: values[i],
                   groupValue: selectedValue.value,
                   onChanged: (Object? value) {
+                    print("<<<<<<<<<<<<<<<<<<<<<<Value: ${value.toString()}");
                     selectedValue.value = value.toString();
                   },
                 ),
@@ -170,7 +170,7 @@ class BottomSheetUtil{
         left: Get.locale?.languageCode == 'en' ? 10 : 0,
       ),
       child: Text(
-        title,
+        title.tr,
         style: Get.textTheme.titleMedium,
       ),
     );

@@ -31,7 +31,7 @@ class PostsBuilderWidget extends StatelessWidget {
     return Obx(
       () => posts.isNotEmpty
           ? ListView.builder(
-              physics: scrollPhysics,
+              physics: scrollPhysics?? const AlwaysScrollableScrollPhysics(),
               controller: scrollController,
               shrinkWrap: true,
               itemBuilder: (context, index) {

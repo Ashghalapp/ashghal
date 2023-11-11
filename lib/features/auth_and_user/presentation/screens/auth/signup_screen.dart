@@ -83,7 +83,7 @@ class SignUpScreen extends GetView<SignUpController> {
                     obscureText: false,
                     controller: controller.emailController,
                     validator: (val) {
-                      return validInput(val!, 10, 50, 'email');
+                      return validInput(val?.trim(), 10, 50, 'email');
                     },
                   ),
                   const SizedBox(height: 20),
