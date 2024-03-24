@@ -31,7 +31,7 @@ class PostCardWidget extends StatelessWidget {
   // final PostController postsController = Get.find();
 
   final RxBool isMark = false.obs;
-
+  static GlobalKey pageKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     isMark.value = post.isMarked;
@@ -212,9 +212,9 @@ class PostCardWidget extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              // if (post.allowComment) {
-              Get.to(() => PostCommentsScreen(post: post));
-              // }
+              if (post.allowComment) {
+              Get.to(() => PostCommentsScreen(key: pageKey, post: post), );
+              }
             },
             icon: Icon(
                 post.allowComment
@@ -234,7 +234,7 @@ class PostCardWidget extends StatelessWidget {
               style: Get.textTheme.bodyMedium
                   ?.copyWith(color: Get.theme.disabledColor),
             ),
-            onPressed: () {},
+            onPressed: null,
             icon: const Icon(null, size: 0),
           ),
           Container(width: 0.5, height: 20, color: AppColors.iconColor),

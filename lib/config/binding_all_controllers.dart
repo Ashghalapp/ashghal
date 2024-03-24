@@ -1,3 +1,4 @@
+import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/settings/change_email_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/account/current_user_account_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/settings/settings_controller.dart';
@@ -8,6 +9,7 @@ import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/Au
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/forgetpwd/resetpassword_controller.dart';
 
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/validate_controller.dart';
+import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/add_update_post_controller.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/post_controller.dart';
 import 'package:ashghal_app_frontend/search_controller.dart';
@@ -47,5 +49,8 @@ class BindingAllControllers extends Bindings {
 
     Get.lazyPut(() => AppSearchController(), fenix: true);
     Get.lazyPut(() => SettingsController(), fenix: true);
+
+    Get.lazyPut(() => UsersStateController(), fenix: true);
+    Get.lazyPut(() => ChatController(), fenix: true);
   }
 }

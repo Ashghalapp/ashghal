@@ -19,13 +19,14 @@ class SettingScreen extends GetView<ShowEditProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    // final bool next;
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalization.settings.tr)),
       body: ListView(
         children: [
           AccountSettingsGroupWidget(user: user),
+
           ThemeSettingsGroupWidget(),
+
           LanguageSettingsGroupWidget(),
 
           // delete account
@@ -41,7 +42,7 @@ class SettingScreen extends GetView<ShowEditProfileController> {
           SettingItemWidget(
             icon: Icons.logout,
             label: AppLocalization.logout,
-            onTap: () => settingsController.logOut(),
+            onTap: () => settingsController.submitLogOutButton(),
           ),
         ],
       ),

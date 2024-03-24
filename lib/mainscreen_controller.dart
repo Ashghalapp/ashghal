@@ -24,10 +24,10 @@ import 'features/post/presentation/screen/add_update_post_screen.dart';
 
 class MainScreenController extends GetxController {
   int currentIndex = 0;
-  final search = TextEditingController();
-  final UsersStateController stateController = Get.put(UsersStateController());
+  // final search = TextEditingController();
+  // late final UsersStateController stateController = Get.put(UsersStateController());
   // ignore: unused_field
-  final ChatController _chatController = Get.put(ChatController());
+  // late final ChatController _chatController = Get.put(ChatController());
 
   AppServices appServices = Get.find();
   var location = ''.obs;
@@ -57,6 +57,8 @@ class MainScreenController extends GetxController {
           ColorFilter.mode(color ?? AppColors.iconColor, BlendMode.srcIn),
     );
   }
+
+  
 
   List<BottomNavigationBarItem> getItems() {
     return [
@@ -205,13 +207,7 @@ class MainScreenController extends GetxController {
     Icons.settings
   ];
 
-  changePage(int index) async {
-    // if ((index == 2 || index == 3 || index == 4) &&
-    //     SharedPref.getCurrentUserData() == null) {
-    //   await DialogUtil.showSignInDialog();
-    //   return;
-    // }
-
+  Future<void> changePage(int index) async {
     if ((index == 2 || index == 3 || index == 4) &&
         !AppUtil.checkUserLoginAndNotifyUser()) {
       return;

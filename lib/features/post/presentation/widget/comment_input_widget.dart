@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
+import 'package:ashghal_app_frontend/core/widget/scale_down_transition.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/comment_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,7 +38,7 @@ class CommentInputWidget extends StatelessWidget {
   final CommentController commentController = Get.find();
   RxBool enabledSendButton = false.obs;
 
-  var formKey = GlobalKey<FormState>();
+  static GlobalKey formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var fieldBorder = OutlineInputBorder(
@@ -70,73 +71,82 @@ class CommentInputWidget extends StatelessWidget {
             ),
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
-            child: TextFormField(
-              autofocus: autoFocuse,
-              onTapOutside: (event) {
-                onTapOutside();
-              },
-              focusNode: node,
-              controller: textController,
-              minLines: 1,
-              maxLines: 3,
-              decoration: InputDecoration(
-                enabledBorder: fieldBorder,
-                focusedBorder: fieldBorder,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-                hintText: hintText,
-                // prefix: basicUserData != null
-                //     ? Container(
-                //         decoration: BoxDecoration(
-                //             color: Get.theme.highlightColor,
-                //             borderRadius: BorderRadius.circular(15)),
-                //         child: CustomTextAndIconButton(
-                //           icon: const Icon(null, size: 0),
-                //           text: Text(
-                //             basicUserData!['name'].toString(),
-                //             style: Get.textTheme.bodyMedium
-                //                 ?.copyWith(color: Get.theme.primaryColor),
-                //           ),
-                //           onPressed: () {
-                //             // go to profile screen by use user id in basicUserData['id]
-                //           },
-                //         ),
-                //       )
-                //     : null,
-                prefixIcon: IconButton(
-                  icon: const Icon(Icons.image_outlined),
-                  onPressed: onPrefixIconPressed,
-                ),
-                suffixIcon: Container(
-                  margin: const EdgeInsets.only(right: 4.0),
-                  width: 70.0,
-                  child: IconButton(
-                    onPressed: () {
-                      if (enabledSendButton.value) {
-                        if (SharedPref.getCurrentUserBasicData() != null) {
-                          onSend(
-                            // postId,
-                            textController.text,
-                          );
-                        } else {
-                          Get.focusScope?.unfocus();
-                          DialogUtil.showSignInDialog();
-                        }
-                      }
-                    },
-                    icon: Obx(
-                      () => enabledSendButton.value
-                          ? const Icon(Icons.send, size: 25.0)
-                          : const Icon(Icons.send,
-                              size: 25.0, color: Colors.grey),
+            child: Form(
+              key: formKey,
+              child: TextFormField(
+                autofocus: autoFocuse,
+                onTapOutside: (event) {
+                  onTapOutside();
+                },
+                focusNode: node,
+                controller: textController,
+                minLines: 1,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  enabledBorder: fieldBorder,
+                  focusedBorder: fieldBorder,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+                  hintText: hintText,
+                  // prefix: basicUserData != null
+                  //     ? Container(
+                  //         decoration: BoxDecoration(
+                  //             color: Get.theme.highlightColor,
+                  //             borderRadius: BorderRadius.circular(15)),
+                  //         child: CustomTextAndIconButton(
+                  //           icon: const Icon(null, size: 0),
+                  //           text: Text(
+                  //             basicUserData!['name'].toString(),
+                  //             style: Get.textTheme.bodyMedium
+                  //                 ?.copyWith(color: Get.theme.primaryColor),
+                  //           ),
+                  //           onPressed: () {
+                  //             // go to profile screen by use user id in basicUserData['id]
+                  //           },
+                  //         ),
+                  //       )
+                  //     : null,
+                  prefixIcon: ScaleDownTransitionWidget(
+                    child: IconButton(
+                      // highlightColor: Colors.transparent,
+                      icon: const Icon(Icons.image_outlined),
+                      onPressed: onPrefixIconPressed,
+                    ),
+                  ),
+                  suffixIcon: Container(
+                    margin: const EdgeInsets.only(right: 4.0),
+                    width: 70.0,
+                    child: ScaleDownTransitionWidget(
+                      child: IconButton(
+                        // highlightColor: Colors.transparent,
+                        onPressed: () {
+                          if (enabledSendButton.value) {
+                            if (SharedPref.getCurrentUserBasicData() != null) {
+                              onSend(
+                                // postId,
+                                textController.text,
+                              );
+                            } else {
+                              Get.focusScope?.unfocus();
+                              DialogUtil.showSignInDialog();
+                            }
+                          }
+                        },
+                        icon: Obx(
+                          () => enabledSendButton.value
+                              ? const Icon(Icons.send, size: 25.0)
+                              : const Icon(Icons.send,
+                                  size: 25.0, color: Colors.grey),
+                        ),
+                      ),
                     ),
                   ),
                 ),
+            
+                // onChanged: (value) {
+                //   printError();
+                //   enabled.value = value.trim().isNotEmpty;
+                // },
               ),
-
-              // onChanged: (value) {
-              //   printError();
-              //   enabled.value = value.trim().isNotEmpty;
-              // },
             ),
           ),
         ],

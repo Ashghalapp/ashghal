@@ -271,7 +271,7 @@ class AddUpdatePostController extends GetxController {
 
   // حذف صورة وحذف مسارها واضافتها الى قائمة الصور التي سيتم حذفها في حالةكانت العملية تعديل بوست
   void removeImage(int index) {
-    DialogUtil.showDialog(
+    DialogUtil.showConfirmDialog(
       title: AppLocalization.warning,
       message: AppLocalization.areYouSureToDelete,
       onSubmit: () {

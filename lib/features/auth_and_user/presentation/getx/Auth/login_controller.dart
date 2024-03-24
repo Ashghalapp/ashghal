@@ -1,6 +1,5 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
-import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -24,8 +23,8 @@ class LoginController extends GetxController {
     emailController = TextEditingController();
     passwordController = TextEditingController();
 
-    emailController.text = "hezbr2@gmail.com";
-    passwordController.text = "123456";
+    // emailController.text = "eng.hezbr@gmail.com";
+    // passwordController.text = "123456";
     super.onInit();
   }
 

@@ -387,8 +387,11 @@ class AppLocalization {
       "Note: Deleting the account will delete all your posts in the application!.\nAre you sure to continue deleting the account?";
   static String sure = "Sure";
   static String confirm = "Confirm";
+    static String areYouSure = "Are you sure?";
+  
 //====================== End settings messages =======================
-
+//
+//
 //====================== Start account settings messages =======================
   static String uploadChanges = "Upload changes";
   static String followings = "Followings";
@@ -437,14 +440,16 @@ class AppLocalization {
   static String yourAccountNotProviderAccount = "Your Account is not a provider account";
   static String upgradeYourAccountToProviderAccount = "Upgrade your account to provider account";
 //================================ End account settings messages ============================
-
+//
+//
 //================================ Start Search messages ============================
   static String posts = "Posts";
   static String users = "Users";
   static String writeToSearch = "Write to search";
   static String district = "District";
 //================================ End Search messages ==============================
-
+//
+//
 //================================ Start address messages ============================
   static String addAddress = "Add address";
   static String enterAddressDescription = "Enter a description of the address";
@@ -453,9 +458,6 @@ class AppLocalization {
   static var optional = "(optional)";
 //================================ End address messages ==============================
 
-//================================ Start Search messages ============================
-
-//================================ End Search messages ==============================
 
 //================================ Start chat messages ================================//
   static String conversationDeletedSuccess =
@@ -731,4 +733,6 @@ class AppLocalization {
       "Join Ashghal and discover a unique platform for connecting with experts and businesses. Start networking and accessing a world of opportunities.";
   static String onboadingSubTitle3 =
       "Embrace the cutting-edge features of Ashghal app, connecting professionals and service providers. Elevate your business and career prospects today.";
+
+
 }

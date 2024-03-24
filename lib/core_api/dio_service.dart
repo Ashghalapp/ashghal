@@ -10,7 +10,7 @@ import 'api_response_model.dart';
 import 'public_interceptor.dart';
 
 class DioService {
-  final int connectTimeout = 30;
+  final int connectTimeout = 90;
   late Dio _dio;
   late Dio _dioWithNoLogs;
   DioService() {

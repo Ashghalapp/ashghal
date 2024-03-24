@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
+import 'package:ashghal_app_frontend/core/widget/app_dropdownbutton.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
+import 'package:ashghal_app_frontend/core/widget/vertical_slide_transition_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,35 +12,37 @@ class BottomSheetUtil {
     void Function()? onClose,
   }) {
     return Get.bottomSheet(
-      Container(
-        // width: double.infinity,
-        height: height,
-        decoration: BoxDecoration(
-          color: Get.theme.cardColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+      VerticalSlideTransitionWidget(
+        child: Container(
+          // width: double.infinity,
+          height: height,
+          decoration: BoxDecoration(
+            color: Get.theme.cardColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          children: [
-            Positioned(
-              right: Get.locale?.languageCode == 'en' ? 10 : null,
-              left: Get.locale?.languageCode == 'ar' ? 10 : null,
-              child: IconButton(
-                icon: const Icon(Icons.close_rounded),
-                onPressed: () {
-                  Get.back();
-                  onClose ?? ();
-                },
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
+            children: [
+              Positioned(
+                right: Get.locale?.languageCode == 'en' ? 10 : null,
+                left: Get.locale?.languageCode == 'ar' ? 10 : null,
+                child: IconButton(
+                  icon: const Icon(Icons.close_rounded),
+                  onPressed: () {
+                    Get.back();
+                    onClose ?? ();
+                  },
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30),
-              child: child,
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: child,
+              ),
+            ],
+          ),
         ),
       ),
     );

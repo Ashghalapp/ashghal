@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+import 'package:ashghal_app_frontend/core/widget/scale_down_transition.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/account/more_acccount_details_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/account/header_widgets/provider_data_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/account/header_widgets/statistics_widget.dart';
@@ -13,10 +14,12 @@ class ProfileAccountHeaderWidget extends StatefulWidget {
   ProfileAccountHeaderWidget({super.key, required this.user});
 
   @override
-  State<ProfileAccountHeaderWidget> createState() => _ProfileAccountHeaderWidgetState();
+  State<ProfileAccountHeaderWidget> createState() =>
+      _ProfileAccountHeaderWidgetState();
 }
 
-class _ProfileAccountHeaderWidgetState extends State<ProfileAccountHeaderWidget> {
+class _ProfileAccountHeaderWidgetState
+    extends State<ProfileAccountHeaderWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -29,10 +32,12 @@ class _ProfileAccountHeaderWidgetState extends State<ProfileAccountHeaderWidget>
             Container(
               alignment: AlignmentDirectional.topStart,
               padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () =>
-                    Get.to(() => MoreAccountDetailsScreen(user: widget.user)),
-                icon: const Icon(Icons.info),
+              child: ScaleDownTransitionWidget(
+                child: IconButton(
+                  onPressed: () =>
+                      Get.to(() => MoreAccountDetailsScreen(user: widget.user)),
+                  icon: const Icon(Icons.info),
+                ),
               ),
             ),
 
@@ -40,21 +45,22 @@ class _ProfileAccountHeaderWidgetState extends State<ProfileAccountHeaderWidget>
             Container(
               alignment: AlignmentDirectional.topEnd,
               padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () {
-                  // SharedPref.setUserLoggedIn(false);
-                  // Get.offAllNamed(AppRoutes.logIn);
-                  Get.to(() => SettingScreen(user: widget.user))?.then((value) {
-                    print("<<<<<<<<<<<<<<<Back to profile screen>>>>>>>>>>>>>>>");
-                    setState(() {
-                      final currentUserData= SharedPref.getCurrentUserData();
-                      if (currentUserData != null) {
-                        widget.user = SharedPref.getCurrentUserData()!;
-                      }
+              child: ScaleDownTransitionWidget(
+                child: IconButton(
+                  onPressed: () {
+                    Get.to(() => SettingScreen(user: widget.user))?.then((value) {
+                      print(
+                          "<<<<<<<<<<<<<<<Back to profile screen>>>>>>>>>>>>>>>");
+                      setState(() {
+                        final currentUserData = SharedPref.getCurrentUserData();
+                        if (currentUserData != null) {
+                          widget.user = SharedPref.getCurrentUserData()!;
+                        }
+                      });
                     });
-                  });
-                },
-                icon: const Icon(Icons.settings),
+                  },
+                  icon: const Icon(Icons.settings),
+                ),
               ),
             ),
           ],
@@ -82,7 +88,8 @@ class _ProfileAccountHeaderWidgetState extends State<ProfileAccountHeaderWidget>
         // _buildFollowingAndChatButtonsWidget(isSending: false, isFollowed: true),
 
         // provider data of user widget
-        if (widget.user.provider != null) ProviderDataWidget(provider: widget.user.provider!),
+        if (widget.user.provider != null)
+          ProviderDataWidget(provider: widget.user.provider!),
       ],
     );
   }

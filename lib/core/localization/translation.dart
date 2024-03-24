@@ -336,7 +336,7 @@ class MyTranslation extends Translations {
               "ملاحظة: حذف الحساب سيؤدي إلى حذف كل مشاركتك في التطبيق!.\nهل أنت متأكد من الاستمرار في حذف الحساب؟",
           AppLocalization.sure: "متأكد",
           AppLocalization.confirm: "تأكيد",
-          AppLocalization.confirm: "",
+          AppLocalization.areYouSure: "هل أنت متأكد؟",
           AppLocalization.confirm: "",
 //======================= End settings messages =======================
 

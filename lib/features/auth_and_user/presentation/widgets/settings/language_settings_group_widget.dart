@@ -20,7 +20,7 @@ class LangChoicesData {
 class LanguageSettingsGroupWidget extends StatelessWidget {
   LanguageSettingsGroupWidget({super.key});
   final AppLocallcontroller _locallcontroller = Get.find();
-  List<LangChoicesData> choices = [
+  final List<LangChoicesData> choices = [
     LangChoicesData(
       label: AppLocalization.systemLanguage,
       code: 'sys',

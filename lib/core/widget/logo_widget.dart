@@ -3,8 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../../../../config/app_colors.dart';
-import '../../../../config/app_images.dart';
+import '../../config/app_colors.dart';
+import '../../config/app_images.dart';
 
 // class LogoWidget extends StatelessWidget {
 //   const LogoWidget({

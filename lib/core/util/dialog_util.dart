@@ -1,20 +1,21 @@
 import 'package:ashghal_app_frontend/config/app_routes.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
+import 'package:ashghal_app_frontend/core/widget/scale_down_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DialogUtil {
   static Future showDialogForWidget({required Widget child}) {
-    return Get.defaultDialog(
-      title: "",
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
-      content: child,
-    );
+    return Get.dialog(child);
+    // return Get.defaultDialog(
+    //   title: "",
+    //   titlePadding: EdgeInsets.zero,
+    //   contentPadding: EdgeInsets.zero,
+    //   content: child,
+    // );
   }
 
-  static showDialog({
+  static showConfirmDialog({
     String? title,
     String? message,
     void Function()? onSubmit,
@@ -37,28 +38,30 @@ class DialogUtil {
           padding: !isShowCancelButton
               ? const EdgeInsets.symmetric(horizontal: 20)
               : null,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Get.theme.primaryColor,
-            ),
-            onPressed: onSubmit,
-            child: Text(
-              submitText ?? AppLocalization.submit,
-              style: Get.theme.primaryTextTheme.labelSmall,
+          child: ScaleDownTransitionWidget(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Get.theme.primaryColor,
+              ),
+              onPressed: onSubmit,
+              child: Text(
+                submitText ?? AppLocalization.submit,
+                style: Get.theme.primaryTextTheme.labelSmall,
+              ),
             ),
           ),
         ),
         if (isShowCancelButton)
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Get.theme.primaryColor,
-            ),
-            onPressed: () {
-              Get.back();
-            },
-            child: Text(
-              cancelButtonText ?? AppLocalization.cancel,
-              style: Get.theme.primaryTextTheme.labelSmall,
+          ScaleDownTransitionWidget(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Get.theme.primaryColor,
+              ),
+              onPressed: () => Get.back(),
+              child: Text(
+                cancelButtonText ?? AppLocalization.cancel,
+                style: Get.theme.primaryTextTheme.labelSmall,
+              ),
             ),
           )
       ],
@@ -67,38 +70,46 @@ class DialogUtil {
 
   static showSignInDialog() {
     return showDialogForWidget(
-      child: Container(
-        width: Get.width,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15, top: 5),
-              child: Text(
-                AppLocalization.signUpForAccount,
-                style: Get.textTheme.bodyLarge,
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: Get.width,
+            // height: 300,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            color: Get.theme.scaffoldBackgroundColor,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15, top: 5),
+                  child: Text(
+                    AppLocalization.signUpForAccount,
+                    style: Get.textTheme.bodyLarge,
+                  ),
+                ),
+                SizedBox(
+                  width: Get.width,
+                  height: 35,
+                  child: TextButton(
+                    onPressed: () => Get.toNamed(AppRoutes.logIn),
+                    child: Text(AppLocalization.signUp),
+                  ),
+                ),
+                const Divider(),
+                SizedBox(
+                  width: Get.width,
+                  height: 35,
+                  child: TextButton(
+                    onPressed: () => Get.back(),
+                    child: Text(AppLocalization.cancel,
+                        style: Get.textTheme.bodyMedium),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(
-              width: Get.width,
-              height: 35,
-              child: TextButton(
-                onPressed: () => Get.toNamed(AppRoutes.logIn),
-                child: Text(AppLocalization.signUp),
-              ),
-            ),
-            const Divider(),
-            SizedBox(
-              width: Get.width,
-              height: 35,
-              child: TextButton(
-                onPressed: () => Get.back(),
-                child: Text(AppLocalization.cancel,
-                    style: Get.textTheme.bodyMedium),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -129,7 +140,7 @@ class DialogUtil {
 
   static Future showErrorDialog(String message) {
     final size = Get.mediaQuery.size;
-    return showDialog(
+    return showConfirmDialog(
       title: AppLocalization.error,
       onSubmit: () => Get.back(),
       submitText: AppLocalization.ok,

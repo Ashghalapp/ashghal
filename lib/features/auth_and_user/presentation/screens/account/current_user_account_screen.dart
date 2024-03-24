@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/widget/posts_builder_widget.dart';
+import 'package:ashghal_app_frontend/core/widget/scale_down_transition.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/account/current_user_account_controller.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/account/account_nested_scroll_view_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/account/header_widgets/profile_account_header_widget.dart';
@@ -78,18 +79,20 @@ class CurrentUserAccountScreen extends StatelessWidget {
           // ),
         ),
         floatingActionButton: Obx(
-          () => AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            height: _showAddButton.value ? 53 : 0,
-            width: 53,
-            child: FloatingActionButton(
-              onPressed: () {
-                Get.find<MainScreenController>().changePage(2);
-              },
-              // shape: const CircleBorder(),
-              // elevation: 4,
-              tooltip: AppLocalization.addNewPost,
-              child: Icon(Icons.add, size: _showAddButton.value ? 25 : 0),
+          () => ScaleDownTransitionWidget(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: _showAddButton.value ? 53 : 0,
+              width: 53,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Get.find<MainScreenController>().changePage(2);
+                },
+                // shape: const CircleBorder(),
+                // elevation: 4,
+                tooltip: AppLocalization.addNewPost,
+                child: Icon(Icons.add, size: _showAddButton.value ? 25 : 0),
+              ),
             ),
           ),
         ),

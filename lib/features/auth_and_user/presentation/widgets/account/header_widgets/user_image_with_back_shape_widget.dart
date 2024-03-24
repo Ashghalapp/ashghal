@@ -1,7 +1,7 @@
-import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
+
 import 'package:ashghal_app_frontend/core/widget/circle_cached_networkimage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 
 class UserImageWithBackShapeWidget extends StatelessWidget {
   final String? imageUrl;
@@ -100,8 +100,8 @@ class WaveClipper extends CustomClipper<Path> {
     double height = size.height;
 
     var path = Path();
-    path.lineTo(0, height); // start path with this if you are
-    path.lineTo(width / 8, height); // start path with this if you are
+    path.lineTo(0, height);
+    path.lineTo(width / 8, height); 
 
     var firstStart = Offset(width / 5, height);
     var firstEnd = Offset(width / 4 + width / 20, height - height / 6);

@@ -45,6 +45,7 @@ class AppTheme {
           fontSize: FontSize.s18, color: AppColors.appColorPrimary),
       surfaceTintColor: AppColors.appLayoutBackground,
       color: AppColors.appLayoutBackground,
+      iconTheme: const IconThemeData(color: AppColors.iconColor),
       // iconTheme: const IconThemeData(color: textPrimaryColor),
       systemOverlayStyle:
           const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.dark),
@@ -182,6 +183,7 @@ class AppTheme {
       // shadowColor: AppColors.appColorPrimaryDark,
       titleTextStyle:
           getRegularStyle(fontSize: FontSize.s16, color: AppColors.white),
+      iconTheme: const IconThemeData(color: AppColors.iconColor),
       surfaceTintColor: AppColors.appBackgroundColorDark,
       color: AppColors.appBackgroundColorDark,
       systemOverlayStyle:
@@ -233,7 +235,7 @@ class AppTheme {
           getBoldStyle(color: AppColors.bodyDark, fontSize: FontSize.s30),
       headlineMedium: getSemiBoldStyle(
           color: AppColors.blackHeadline, fontSize: FontSize.s24),
-         titleLarge: getBoldStyle(
+      titleLarge: getBoldStyle(
           color: AppColors.appColorPrimary, fontSize: FontSize.s20),
       titleMedium: getMediumStyle(
           color: AppColors.appColorPrimary, fontSize: FontSize.s16),

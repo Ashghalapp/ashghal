@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 
 class ValidateController extends GetxController {
-  late String verficationCode;
   RxInt remainingSeconds = 60.obs;
   Timer? _timer;
 

@@ -4,6 +4,9 @@ import 'package:ashghal_app_frontend/config/app_colors.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/posts_builder_widget.dart';
+import 'package:ashghal_app_frontend/core/widget/scale_down_transition.dart';
+import 'package:ashghal_app_frontend/core/widget/horizontal_slide_transition_widget.dart';
+import 'package:ashghal_app_frontend/core_api/users_state_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/getx/chat_controller.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/screens/chat_screen.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/filled_outline_button.dart';
@@ -12,6 +15,7 @@ import 'package:ashghal_app_frontend/features/post/presentation/widget/ScrollerA
 import 'package:ashghal_app_frontend/features/post/presentation/widget/jump_to_top_or_bottom_Button.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/post_widget.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/post_shimmer.dart';
+import 'package:ashghal_app_frontend/tester.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -28,13 +32,14 @@ class PostsScreen extends StatelessWidget {
 
   // late final PostController postController = Get.put(PostController());
   late final PostController postController = Get.find();
+  late final UsersStateController stateController = Get.find();
+  late final ChatController chatController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     // if (postController.postList.isEmpty) {
     //   postController.getAlivePosts();
     // }
-    ChatController chatController = Get.find();
 
     return RefreshIndicator(
       onRefresh: postController.refreshFilteredPosts,
@@ -59,7 +64,10 @@ class PostsScreen extends StatelessWidget {
                     },
                   ),
                 ],
-                bottom: Obx(() => buildFilterButtons()),
+                bottom: HorizontalSlideTransitionWidget(
+                  millisecondToLate: 500,
+                  child: Obx(() => buildFilterButtons()),
+                ),
                 onScrollDirectionChange: (scrollDirection, isAppBarShow) {
                   _showJumpTopButton.value = isAppBarShow;
                   if (_showJumpTopButton.value) {
@@ -120,22 +128,24 @@ class PostsScreen extends StatelessWidget {
     // )),
   }
 
-  IconButton _buildChatIcon() {
-    return IconButton(
-      icon: SvgPicture.asset(
-        AppIcons.chatBorder,
-        width: 25,
-        height: 25,
-        colorFilter: const ColorFilter.mode(
-          AppColors.iconColor,
-          BlendMode.srcIn,
+  Widget _buildChatIcon() {
+    return ScaleDownTransitionWidget(
+      child: IconButton(
+        icon: SvgPicture.asset(
+          AppIcons.chatBorder,
+          width: 25,
+          height: 25,
+          colorFilter: const ColorFilter.mode(
+            AppColors.iconColor,
+            BlendMode.srcIn,
+          ),
         ),
+        onPressed: () {
+          if (AppUtil.checkUserLoginAndNotifyUser()) {
+            Get.to(() => ChatScreen());
+          }
+        },
       ),
-      onPressed: () {
-        if (AppUtil.checkUserLoginAndNotifyUser()) {
-          Get.to(() => ChatScreen());
-        }
-      },
     );
   }
 
@@ -282,10 +292,12 @@ class PostsScreen extends StatelessWidget {
     );
   }
 
+  // RxBool isTapped = false.obs;
+
   /// Filter outlined button
-  Padding _buildFilterButton(PostFilters filter) {
+  Widget _buildFilterButton(PostFilters filter) {
     return Padding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(right: 8),
       child: CustomOutlineButton(
         isFilled: postController.appliedFilter.value == filter,
         text: filter.value.tr,

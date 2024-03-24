@@ -20,29 +20,34 @@ class SettingItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      leading: Icon(icon, color: iconColor ?? Get.theme.iconTheme.color),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label.tr,
-            maxLines: 1,
-            style: labelStyle ?? Get.textTheme.bodyMedium,
-          ),
-          const SizedBox(width: 20),
-          if (data != null)
-            Flexible(
-              child: Text(
-                data!,
-                overflow: TextOverflow.ellipsis,
-                style: Get.textTheme.bodyMedium?.copyWith(
-                  fontSize: (Get.textTheme.bodyMedium?.fontSize ?? 14) - 2,
+    return TweenAnimationBuilder(
+      duration: const Duration(milliseconds: 500),
+      tween: Tween<double>(begin: 0, end: 1),
+      builder: (context, value, child) => Opacity(opacity: value, child: child),
+      child: ListTile(
+        onTap: onTap,
+        leading: Icon(icon, color: iconColor ?? Get.theme.iconTheme.color),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label.tr,
+              maxLines: 1,
+              style: labelStyle ?? Get.textTheme.bodyMedium,
+            ),
+            const SizedBox(width: 20),
+            if (data != null)
+              Flexible(
+                child: Text(
+                  data!,
+                  overflow: TextOverflow.ellipsis,
+                  style: Get.textTheme.bodyMedium?.copyWith(
+                    fontSize: (Get.textTheme.bodyMedium?.fontSize ?? 14) - 2,
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

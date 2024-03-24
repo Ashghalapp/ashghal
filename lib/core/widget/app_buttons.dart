@@ -1,4 +1,5 @@
 import 'package:ashghal_app_frontend/config/app_colors.dart';
+import 'package:ashghal_app_frontend/core/widget/scale_down_transition.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,31 +17,34 @@ class AppGesterDedector extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: 50,
-        width: double.infinity,
-        margin: const EdgeInsets.symmetric(horizontal: 0),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                blurRadius: 4,
-                color: Colors.black12.withOpacity(.2),
-                offset: const Offset(2, 2))
-          ],
-          borderRadius: BorderRadius.circular(10),
-          // borderRadius: BorderRadius.circular(30).copyWith(
-          //     topRight: Radius.circular(0), bottomLeft: Radius.circular(0)),
-          // gradient: LinearGradient(colors: [
-          //   Colors.purple.shade200,
-          //   Colors.purple.shade900,
-          // ],
-          // ),
-          color: color ?? Theme.of(context).primaryColor,
-        ),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.displayLarge,
+      child: ScaleDownTransitionWidget(
+        minSize: 0.9,
+        child: Container(
+          height: 50,
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(horizontal: 0),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  blurRadius: 4,
+                  color: Colors.black12.withOpacity(.2),
+                  offset: const Offset(2, 2))
+            ],
+            borderRadius: BorderRadius.circular(10),
+            // borderRadius: BorderRadius.circular(30).copyWith(
+            //     topRight: Radius.circular(0), bottomLeft: Radius.circular(0)),
+            // gradient: LinearGradient(colors: [
+            //   Colors.purple.shade200,
+            //   Colors.purple.shade900,
+            // ],
+            // ),
+            color: color ?? Theme.of(context).primaryColor,
+          ),
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
         ),
       ),
       // style: ElevatedButton.styleFrom(
@@ -57,7 +61,7 @@ class AppGesterDedector extends StatelessWidget {
 /// لعرض نص بجانبه ايقونه كزر قابل للنقر widget يتم استخدام هذا الـ
 class CustomTextAndIconButton extends StatelessWidget {
   final Widget text;
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final Widget icon;
   final double height;
   final double? width;
@@ -76,17 +80,20 @@ class CustomTextAndIconButton extends StatelessWidget {
     return SizedBox(
       height: height,
       width: width,
-      child: ElevatedButton.icon(
-        onPressed: onPressed,
-        icon: icon,
-        label: text,
-        style: ButtonStyle(
-          overlayColor: MaterialStatePropertyAll(Get.theme.hoverColor),
-          backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
-          elevation: const MaterialStatePropertyAll(0),
-          iconColor: MaterialStatePropertyAll(Get.textTheme.bodyMedium?.color),
-          padding: const MaterialStatePropertyAll(
-              EdgeInsets.symmetric(horizontal: 0)),
+      child: ScaleDownTransitionWidget(
+        minSize: 0.9,
+        child: ElevatedButton.icon(
+          onPressed: onPressed,
+          icon: icon,
+          label: text,
+          style: ButtonStyle(
+            overlayColor: MaterialStatePropertyAll(Get.theme.hoverColor),
+            backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
+            elevation: const MaterialStatePropertyAll(0),
+            iconColor: MaterialStatePropertyAll(Get.textTheme.bodyMedium?.color),
+            padding: const MaterialStatePropertyAll(
+                EdgeInsets.symmetric(horizontal: 0)),
+          ),
         ),
       ),
     );

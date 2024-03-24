@@ -1,6 +1,7 @@
 import 'package:ashghal_app_frontend/config/chat_theme.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
+import 'package:ashghal_app_frontend/core/widget/horizontal_slide_transition_widget.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/conversation_with_count_and_last_message.dart';
 import 'package:ashghal_app_frontend/features/chat/data/models/participant_model.dart';
 import 'package:ashghal_app_frontend/features/chat/presentation/widgets/appbars/chat_screen_appbar.dart';
@@ -174,39 +175,43 @@ class ChatScreen extends StatelessWidget {
         ),
         margin: const EdgeInsets.all(0),
         elevation: 2,
-        child: ListView(
-          padding: const EdgeInsets.only(left: 15),
-          scrollDirection: Axis.horizontal,
-          children: [
-            Obx(
-              () => Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Obx(
-                    () =>
-                        _chatController.getConversationsWithNewMessagesCount > 0
-                            ? _buildWidgetWithCountAvatar(
-                                _buildFilterButton(ChatFilters.all),
-                                _chatController
-                                    .getConversationsWithNewMessagesCount,
-                              )
-                            : _buildFilterButton(ChatFilters.all),
-                  ),
-                  Obx(
-                    () => _chatController.getNewMessagesCount > 0
-                        ? _buildWidgetWithCountAvatar(
-                            _buildFilterButton(ChatFilters.recentMessages),
-                            _chatController.getNewMessagesCount,
-                          )
-                        : _buildFilterButton(ChatFilters.recentMessages),
-                  ),
-                  _buildFilterButton(ChatFilters.active),
-                  _buildFilterButton(ChatFilters.favorite),
-                  _buildFilterButton(ChatFilters.archived),
-                ],
+        child: HorizontalSlideTransitionWidget(
+          millisecondToLate: 200,
+          child: ListView(
+            padding: const EdgeInsets.only(left: 15),
+            scrollDirection: Axis.horizontal,
+            children: [
+              Obx(
+                () => Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Obx(
+                      () =>
+                          _chatController.getConversationsWithNewMessagesCount >
+                                  0
+                              ? _buildWidgetWithCountAvatar(
+                                  _buildFilterButton(ChatFilters.all),
+                                  _chatController
+                                      .getConversationsWithNewMessagesCount,
+                                )
+                              : _buildFilterButton(ChatFilters.all),
+                    ),
+                    Obx(
+                      () => _chatController.getNewMessagesCount > 0
+                          ? _buildWidgetWithCountAvatar(
+                              _buildFilterButton(ChatFilters.recentMessages),
+                              _chatController.getNewMessagesCount,
+                            )
+                          : _buildFilterButton(ChatFilters.recentMessages),
+                    ),
+                    _buildFilterButton(ChatFilters.active),
+                    _buildFilterButton(ChatFilters.favorite),
+                    _buildFilterButton(ChatFilters.archived),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -256,7 +261,7 @@ class ChatScreen extends StatelessWidget {
   /// Filter outlined button
   Padding _buildFilterButton(ChatFilters filter) {
     return Padding(
-      padding: const EdgeInsets.only(right: 13),
+      padding: const EdgeInsets.only(right: 8),
       child: CustomOutlineButton(
         isFilled:
             _screenController.chatController.appliedFilter.value == filter,

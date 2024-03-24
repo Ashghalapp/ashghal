@@ -2,6 +2,7 @@ import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/bottom_sheet_util.dart';
 import 'package:ashghal_app_frontend/core/widget/circle_cached_networkimage.dart';
+import 'package:ashghal_app_frontend/core/widget/horizontal_slide_transition_widget.dart';
 import 'package:ashghal_app_frontend/core/widget/user_card_widget.dart';
 import 'package:ashghal_app_frontend/core/widget/users_builder_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/account/follow_controller.dart';
@@ -35,55 +36,58 @@ class StatisticsWidget extends StatelessWidget {
       Get.put(FollowController(), tag: userId.toString());
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        // followers
-        _buildStatisticColumn(
-          text: AppLocalization.followers,
-          count: followers,
-          onTap: () {
-            followController.getFollowers(userId);
-            BottomSheetUtil.buildBottomsheet(
-              height: Get.height * 0.7,
-              // child: _usersBuilder(followController.followersList),
-              child: UsersBuilderWidget(
-                users: followController.followersModel.users,
-                onIndexChange: _onFollowersUserBuilderIndexChange,
-                isRequestFinishWithoutData:
-                    followController.followersModel.isRequestFinishWithoutData,
-                faildDownloadWidget: Center(
-                  child: Text(AppLocalization.notFound),
+    return HorizontalSlideTransitionWidget(
+      millisecondToLate: 200,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          // followers
+          _buildStatisticColumn(
+            text: AppLocalization.followers,
+            count: followers,
+            onTap: () {
+              followController.getFollowers(userId);
+              BottomSheetUtil.buildBottomsheet(
+                height: Get.height * 0.7,
+                // child: _usersBuilder(followController.followersList),
+                child: UsersBuilderWidget(
+                  users: followController.followersModel.users,
+                  onIndexChange: _onFollowersUserBuilderIndexChange,
+                  isRequestFinishWithoutData:
+                      followController.followersModel.isRequestFinishWithoutData,
+                  faildDownloadWidget: Center(
+                    child: Text(AppLocalization.notFound),
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-        // followings
-        _buildStatisticColumn(
-          text: AppLocalization.followings,
-          count: followings,
-          onTap: () {
-            followController.getFollowings(userId);
-            BottomSheetUtil.buildBottomsheet(
-              height: Get.height * 0.7,
-              //   child: _usersBuilder(followController.followingsList),
-              // );
-              child: UsersBuilderWidget(
-                users: followController.followingsModel.users,
-                onIndexChange: _onFollowingsUserBuilderIndexChange,
-                isRequestFinishWithoutData:
-                    followController.followingsModel.isRequestFinishWithoutData,
-                faildDownloadWidget: Center(
-                  child: Text(AppLocalization.notFound),
+              );
+            },
+          ),
+          // followings
+          _buildStatisticColumn(
+            text: AppLocalization.followings,
+            count: followings,
+            onTap: () {
+              followController.getFollowings(userId);
+              BottomSheetUtil.buildBottomsheet(
+                height: Get.height * 0.7,
+                //   child: _usersBuilder(followController.followingsList),
+                // );
+                child: UsersBuilderWidget(
+                  users: followController.followingsModel.users,
+                  onIndexChange: _onFollowingsUserBuilderIndexChange,
+                  isRequestFinishWithoutData:
+                      followController.followingsModel.isRequestFinishWithoutData,
+                  faildDownloadWidget: Center(
+                    child: Text(AppLocalization.notFound),
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-        _buildStatisticColumn(text: AppLocalization.posts, count: posts),
-        // _buildUserCard(),
-      ],
+              );
+            },
+          ),
+          _buildStatisticColumn(text: AppLocalization.posts, count: posts),
+          // _buildUserCard(),
+        ],
+      ),
     );
   }
 

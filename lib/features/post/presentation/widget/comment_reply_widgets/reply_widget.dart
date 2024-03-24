@@ -79,7 +79,7 @@ class ReplyWidget extends CommentReplyWidgetAbstract {
 
   @override
   void onDelete() {
-    DialogUtil.showDialog(
+    DialogUtil.showConfirmDialog(
       title: AppLocalization.warning,
       message: AppLocalization.areYouSureToDeleteYourReply,
       onSubmit: () async {

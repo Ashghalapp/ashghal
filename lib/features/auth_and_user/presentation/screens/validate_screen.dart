@@ -49,27 +49,26 @@ class ValidateScreen extends StatelessWidget {
                   width: double.infinity,
                   child: Column(
                     children: [
-                      OtpTextField(
-                        clearText: true,
-                        focusedBorderColor: Theme.of(context).primaryColor,
-                        fieldWidth: 50,
-                        cursorColor: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(20),
-                        numberOfFields: 6,
-                        borderColor: Theme.of(context).primaryColor,
-                        //set to true to show as box or false to show as dash
-                        showFieldAsBox: true,
-                        //runs when a code is typed in
-                        // onCodeChanged: (String code) {
-                        //   //handle validation or checks here
-                        // },
-                        //runs when every textfield is filled
-                        onSubmit: (String verificationCode) async {
-                          EasyLoading.show(status: AppLocalization.loading);
-                          await verifyCodeFunction(verificationCode);
-                          EasyLoading.dismiss();
-                          // controller.checkCode(verificationCode);
-                        },
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: OtpTextField(
+                          clearText: true,
+                          focusedBorderColor: Theme.of(context).primaryColor,
+                          fieldWidth: 50,
+                          cursorColor: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(20),
+                          numberOfFields: 6,
+                          borderColor: Theme.of(context).primaryColor,
+                          //set to true to show as box or false to show as dash
+                          showFieldAsBox: true,
+                          //runs when every textfield is filled
+                          onSubmit: (String verificationCode) async {
+                            EasyLoading.show(status: AppLocalization.loading);
+                            await verifyCodeFunction(verificationCode);
+                            EasyLoading.dismiss();
+                            // controller.checkCode(verificationCode);
+                          },
+                        ),
                       ),
                       const SizedBox(
                         height: 20,

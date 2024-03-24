@@ -7,30 +7,42 @@ import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/delete_account_uc.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/account/current_user_account_controller.dart';
+import 'package:ashghal_app_frontend/mainscreen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
-  void logOut() { 
-    SharedPref.logout();
-    Get.delete<CurrentUserAccountController>();
-    Get.offAllNamed(AppRoutes.logIn);
+  void submitLogOutButton() {
+    DialogUtil.showConfirmDialog(
+      title: AppLocalization.logout,
+      message: AppLocalization.areYouSure,
+      submitText: AppLocalization.sure,
+      onSubmit: () {
+        SharedPref.logout();
+
+        // close all pages
+        // Get.until((route) => Get.currentRoute == '/');
+        // open the login page
+        Get.offAllNamed(AppRoutes.logIn);
+        Get.delete<MainScreenController>();
+      },
+    );
   }
 
   Future<void> submitDeleteAccount() async {
-    DialogUtil.showDialog(
+    DialogUtil.showConfirmDialog(
       title: AppLocalization.warning,
       message: AppLocalization.areYouSureToDeleteYourAccount,
       submitText: AppLocalization.sure,
       onSubmit: () {
         Get.back();
-        DialogUtil.showDialog(
+        DialogUtil.showConfirmDialog(
           title: AppLocalization.warning,
           message: AppLocalization.noteForDeleteAccount,
           onSubmit: () {
             Get.back();
-            DialogUtil.showDialog(
+            DialogUtil.showConfirmDialog(
               title: AppLocalization.warning,
               message:
                   AppLocalization.noteForDeleteAccountThatWillDeleteAllPosts,
@@ -55,7 +67,7 @@ class SettingsController extends GetxController {
       AppUtil.hanldeAndShowFailure(failure);
     }, (success) {
       AppUtil.showMessage(success.message, Colors.green);
-      logOut();
+      submitLogOutButton();
     });
     EasyLoading.dismiss();
   }

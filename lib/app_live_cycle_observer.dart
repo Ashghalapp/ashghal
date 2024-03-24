@@ -54,6 +54,7 @@ class _AppLifeCycleManagerState extends State<AppLifeCycleManager>
         AppPrint.printData("AppLifecycleState.detached");
         // isAppResumed.value = false;
         break;
+      default: break;
     }
   }
 }

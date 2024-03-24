@@ -2,6 +2,8 @@ import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
+import 'package:ashghal_app_frontend/core/widget/page_size_transition.dart';
+import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/auth/chooseusertype.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,7 +13,7 @@ import '../../../../../core/util/validinput.dart';
 import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/Auth/login_controller.dart';
-import '../../widgets/logo.dart';
+import '../../../../../core/widget/logo_widget.dart';
 import '../../widgets/social_icons.dart';
 
 class LoginScreen extends GetView<LoginController> {
@@ -143,9 +145,15 @@ class LoginScreen extends GetView<LoginController> {
                           AppLocalization.dontHaveAccount,
                         ),
                         TextButton(
+                          // onPressed: () =>
+                          //     Get.toNamed(AppRoutes.chooseUserTypeScreen),
                           onPressed: () => Get.toNamed(
-                            AppRoutes.chooseUserTypeScreen,
+                            // () => const ChooseUserTypeScreen(),
+                            AppRoutes.chooseUserTypeScreen
                           ),
+                          // onPressed: () {
+                          // Navigator.push(context, PageSizeTransition(const ChooseUserTypeScreen()));
+                          // },
                           child: Text(AppLocalization.signUp,
                               style: Get.textTheme.labelMedium),
                         ),

@@ -9,13 +9,14 @@ import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/settings/change_password_controller.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
-  ChangePasswordScreen({
-    super.key,
-  });
+  ChangePasswordScreen({super.key});
 
   final controller = Get.put(ChangePasswordController());
+
   @override
   Widget build(BuildContext context) {
+   
+
     return Scaffold(
       body: ListView(
         children: [
@@ -63,7 +64,7 @@ class ChangePasswordScreen extends StatelessWidget {
                       //   errorText: controller.errorPassword.value,
                       //   // margin: const EdgeInsets.only(bottom: 15),
                       // ),
-
+      
                       // // forget password
                       // Container(
                       //   alignment: AlignmentDirectional.centerEnd,
@@ -79,7 +80,7 @@ class ChangePasswordScreen extends StatelessWidget {
                       //     ),
                       //   ),
                       // ),
-
+      
                       // new password
                       AppTextFormField(
                         sufficxIconDataName:
@@ -96,7 +97,7 @@ class ChangePasswordScreen extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 20, top: 15),
                         validator: (val) => validInput(val!, 6, 30, 'password'),
                       ),
-
+      
                       // confirm new password
                       AppTextFormField(
                         sufficxIconDataName:

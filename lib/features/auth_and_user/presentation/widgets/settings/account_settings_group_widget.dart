@@ -1,8 +1,6 @@
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
-import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core/widget/check_password_widget.dart';
-import 'package:ashghal_app_frontend/features/account/Resetert_Email_Screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/change_email_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/show_edit_profile_screen.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens/settings/show_edit_provider_screen.dart';
@@ -10,6 +8,7 @@ import 'package:ashghal_app_frontend/features/auth_and_user/presentation/screens
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/setting_group_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/entities/user.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/settings/setting_item_widget.dart';
+import 'package:ashghal_app_frontend/tester%20copy.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,9 +44,10 @@ class AccountSettingsGroupWidget extends StatelessWidget {
           label: AppLocalization.changePassword.tr,
           data: "******",
           onTap: () {
+            // Get.to(teest());
             DialogUtil.showDialogForWidget(
               child: CheckPasswordWidget(
-                ifValidCheck: () {
+                onCorrectCheck: () {
                   // close the dialog
                   Get.back();
                   Get.to(() => ChangePasswordScreen());
@@ -56,7 +56,6 @@ class AccountSettingsGroupWidget extends StatelessWidget {
             ).then((value) {
               Get.delete<CheckPasswordController>();
             });
-            // Get.to(() => ChangePasswordScreen());
           },
         ),
 
@@ -68,7 +67,7 @@ class AccountSettingsGroupWidget extends StatelessWidget {
           onTap: () {
             DialogUtil.showDialogForWidget(
               child: CheckPasswordWidget(
-                ifValidCheck: () {
+                onCorrectCheck: () {
                   // close the dialog
                   Get.back();
                   Get.to(() => const ChangeEmailScreen());

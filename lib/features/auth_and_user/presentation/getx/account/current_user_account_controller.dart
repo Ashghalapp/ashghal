@@ -279,7 +279,7 @@ class CurrentUserAccountController extends GetxController {
     } else if (value == "Disallow comments to this post") {
       disallowCommentForPost(post.id);
     } else if (value == "Delete") {
-      DialogUtil.showDialog(
+      DialogUtil.showConfirmDialog(
         title: AppLocalization.warning,
         message: AppLocalization.areYouSureToDelete,
         onSubmit: () {

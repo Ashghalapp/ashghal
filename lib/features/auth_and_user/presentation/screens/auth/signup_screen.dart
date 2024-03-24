@@ -1,9 +1,9 @@
 import 'package:ashghal_app_frontend/config/app_icons.dart';
 import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
-import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
+import 'package:ashghal_app_frontend/core/widget/app_dropdownbutton.dart';
 import 'package:ashghal_app_frontend/core/widget/app_scaffold_widget.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/presentation/getx/address_controller.dart';
-import 'package:ashghal_app_frontend/features/auth_and_user/presentation/widgets/logo.dart';
+import 'package:ashghal_app_frontend/core/widget/logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +14,6 @@ import '../../../../../core/widget/app_buttons.dart';
 import '../../../../../core/widget/app_textformfield.dart';
 import '../../getx/Auth/singup_controller.dart';
 import '../../widgets/social_icons.dart';
-import '../validate_screen.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends GetView<SignUpController> {
@@ -26,15 +25,14 @@ class SignUpScreen extends GetView<SignUpController> {
   Widget build(BuildContext context) {
     Get.lazyPut(() => SignUpController());
     Size size = MediaQuery.of(context).size;
-    return AppScaffold(
-      child: Container(
+    return Scaffold(
+      appBar: AppBar(),
+      body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: ListView(
           children: [
             const LogoWidget(),
-            const SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
             Text(
               textAlign: TextAlign.center,
               AppLocalization.createNewAccount,

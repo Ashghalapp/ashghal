@@ -1,6 +1,3 @@
-
-
-import 'package:ashghal_app_frontend/config/app_theme.dart';
 import 'package:ashghal_app_frontend/core/helper/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,6 +16,6 @@ class ThemeController extends GetxController {
   void changeTheme(ThemeMode themeMode){
     SharedPref.setThemeMode(themeMode);
     Get.changeThemeMode(themeMode);
-    printError(info: "<<<<${themeMode.name}");
+    printInfo(info: ":::::Done change theme mode to themeMode.name");
   }
 }

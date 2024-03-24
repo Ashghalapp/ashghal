@@ -132,7 +132,7 @@ class SpecificUserAccountController extends GetxController {
 
   void submitFollowButton() {
     if (meFollowHim.value && heFollowMe.value) {
-      DialogUtil.showDialog(
+      DialogUtil.showConfirmDialog(
         message: AppLocalization.unfollowFriend,
         onSubmit: () {
           unfollowUser(userId);

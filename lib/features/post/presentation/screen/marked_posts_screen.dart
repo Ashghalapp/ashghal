@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/widget/posts_builder_widget.dart';
+import 'package:ashghal_app_frontend/core/widget/scale_down_transition.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/getx/marked_posts_controller.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/ScrollerAppBar.dart';
 import 'package:ashghal_app_frontend/features/post/presentation/widget/jump_to_top_or_bottom_Button.dart';
@@ -28,9 +29,11 @@ class MarkedPostsScreen extends StatelessWidget {
                 title: AppLocalization.markedPosts,
                 pageScrollController: scrollController,
                 action: [
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: markedPostsController.getMarkedPosts,
+                  ScaleDownTransitionWidget(
+                    child: IconButton(
+                      icon: const Icon(Icons.refresh),
+                      onPressed: markedPostsController.getMarkedPosts,
+                    ),
                   ),
                 ],
                 onScrollDirectionChange: (scrollDirection, isAppBarShow) {

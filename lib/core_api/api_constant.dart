@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class ApiConstants {
   // static const String baseUrl = "http://10.0.2.2:8000/api/";
-  static const String baseUrl = "http://192.168.215.245:8000/api/";
+  static const String baseUrl = "https://joys25.com/api/";
   // static const String baseUrl = "http://192.168.197.108:8000/api/";
   // static const String baseUrl = "http://127.0.0.1:8000/api/";
   static const String channelsAutherizingUrl = "${baseUrl}broadcasting/auth";

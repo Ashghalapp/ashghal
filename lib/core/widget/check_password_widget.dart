@@ -5,14 +5,15 @@ import 'package:ashghal_app_frontend/core/services/dependency_injection.dart';
 import 'package:ashghal_app_frontend/core/util/app_util.dart';
 import 'package:ashghal_app_frontend/core/util/validinput.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
+import 'package:ashghal_app_frontend/core/widget/scale_down_transition.dart';
 import 'package:ashghal_app_frontend/features/auth_and_user/domain/use_cases/user_usecases/check_password_uc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class CheckPasswordWidget extends StatelessWidget {
-  final void Function() ifValidCheck;
-  CheckPasswordWidget({super.key, required this.ifValidCheck});
+  final void Function() onCorrectCheck;
+  CheckPasswordWidget({super.key, required this.onCorrectCheck});
 
   final controller = Get.put(CheckPasswordController());
 
@@ -20,76 +21,100 @@ class CheckPasswordWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // controller.errorPassword.value = null;
     // controller.passwordController.text = "";
+    final animationCon = AnimationController(
+      vsync: Navigator.of(context),
+      duration: const Duration(milliseconds: 450),
+    );
 
-    return SizedBox(
-      // color: Get.theme.scaffoldBackgroundColor,
-      // height: 100,
-      width: Get.width,
-      child: Column(
-        // shrinkWrap: true,
+    final scaleAnimation = CurvedAnimation(
+      parent: animationCon..forward(),
+      curve: Curves.easeIn,
+      reverseCurve: Curves.elasticOut,
+    );  
 
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            alignment: AlignmentDirectional.center,
-            margin: const EdgeInsets.only(right: 10, left: 10, bottom: 20),
-            child: Text(AppLocalization.pleaseEnterYourPassword.tr),
-          ),
-          // old password
-          Form(
-            key: controller.formKey,
-            child: Obx(
-              () => AppTextFormField(
-                sufficxIconDataName: controller.securePassword.value
-                    ? AppIcons.hide
-                    : AppIcons.show,
-                obscureText: controller.securePassword.value,
-                onSuffixIconPressed: () => controller.changPasswordVisible(),
-                controller: controller.passwordController,
-                // labelText: AppLocalization.oldPassword,
-                hintText: AppLocalization.enterYourPassword,
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                validator: (val) => validInput(val!, 6, 30, 'password'),
-                errorText: controller.errorPassword.value,
-                // margin: const EdgeInsets.only(bottom: 15),
-              ),
-            ),
-          ),
-          
-          // forget password
-          Container(
-            alignment: AlignmentDirectional.centerEnd,
-            child: TextButton(
-              onPressed: () {
-                Get.toNamed(AppRoutes.forgetPassword);
-              },
-              child: Text(
-                AppLocalization.forgetPassword,
-                style: Get.textTheme.labelSmall,
-              ),
-            ),
-          ),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Center(
+      child: ScaleTransition(
+        scale: scaleAnimation,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          // color: Get.theme.scaffoldBackgroundColor,
+          // height: 500,
+          // width: Get.width,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: Text(AppLocalization.cancel),
+              Container(
+                alignment: AlignmentDirectional.center,
+                margin: const EdgeInsets.all(10),
+                child: Text(AppLocalization.pleaseEnterYourPassword.tr),
               ),
-              TextButton(
-                onPressed: () async {
-                  if (await controller.checkPassword()) {
-                    ifValidCheck();
-                  }
-                },
-                child: Text(AppLocalization.check),
+      
+              // old password
+              Form(
+                key: controller.formKey,
+                child: Obx(
+                  () => AppTextFormField(
+                    sufficxIconDataName: controller.securePassword.value
+                        ? AppIcons.hide
+                        : AppIcons.show,
+                    obscureText: controller.securePassword.value,
+                    onSuffixIconPressed: () => controller.changPasswordVisible(),
+                    controller: controller.passwordController,
+                    // labelText: AppLocalization.oldPassword,
+                    hintText: AppLocalization.enterYourPassword,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    validator: (val) => validInput(val!, 6, 30, 'password'),
+                    errorText: controller.errorPassword.value,
+                    margin: const EdgeInsets.only(top: 10),
+                  ),
+                ),
               ),
+      
+              // forget password
+              Container(
+                height: 35,
+                margin: const EdgeInsets.only(bottom: 10),
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton(
+                  onPressed: () => Get.toNamed(AppRoutes.forgetPassword),
+                  child: Text(
+                    AppLocalization.forgetPassword,
+                    style: Get.textTheme.labelSmall,
+                  ),
+                ),
+              ),
+      
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: ScaleDownTransitionWidget(
+                      child: TextButton(
+                        onPressed: () async {
+                          await animationCon.reverse();
+                          Get.back();
+                        },
+                        child: Text(AppLocalization.cancel),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () async {
+                        if (await controller.checkPassword()) {
+                          await animationCon.reverse();
+                          onCorrectCheck();
+                        }
+                      },
+                      child: Text(AppLocalization.check),
+                    ),
+                  ),
+                ],
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
@@ -122,14 +147,13 @@ class CheckPasswordController extends GetxController {
 
   Future<bool> checkPassword() async {
     if (!(formKey.currentState?.validate() ?? false)) return false;
-    // formKey.currentState?.reset();
 
     EasyLoading.show(status: AppLocalization.loading);
     final CheckPasswordUseCase checkPasswordUC = getIt();
     final result = (await checkPasswordUC.call(passwordController.text)).fold(
       (failure) {
-        AppUtil.hanldeAndShowFailure(failure);
-        // errorPassword.value = failure.message;
+        // AppUtil.hanldeAndShowFailure(failure);
+        errorPassword.value = failure.message;
         return false;
       },
       (checkResult) {

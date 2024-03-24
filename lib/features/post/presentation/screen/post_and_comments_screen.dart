@@ -29,6 +29,8 @@ class PostCommentsScreen extends StatelessWidget {
   final TextEditingController textInputController = TextEditingController();
 
   final RxBool _showJumpTopButton = false.obs;
+  static GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  static GlobalKey inputKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class PostCommentsScreen extends StatelessWidget {
       onRefresh: () => commentController.getPostComments(post.id),
       child: SafeArea(
         child: Scaffold(
+          key: scaffoldKey,
           // backgroundColor: const Color(0xFFEDF0F6),
           // appBar: AppBar(),
           body: Column(
@@ -84,6 +87,7 @@ class PostCommentsScreen extends StatelessWidget {
               Obx(
                 () => focusedController.isAddCommentFocused.value
                     ? CommentInputWidget(
+                      key: inputKey,
                         parentId: post.id,
                         hintText: "Write a comment",
                         textController: textInputController,

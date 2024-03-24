@@ -16,8 +16,9 @@ class ChooseUserTypeScreen extends GetView<ChooseUserTypeController> {
   Widget build(BuildContext context) {
     Get.lazyPut(() => ChooseUserTypeController());
     Size size = MediaQuery.of(context).size;
-    return AppScaffold(
-      child: Padding(
+    return Scaffold(
+      appBar: AppBar(),
+      body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
         child: Column(
              

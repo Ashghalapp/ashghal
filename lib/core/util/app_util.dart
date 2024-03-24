@@ -6,7 +6,7 @@ import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/services/dependency_injection.dart';
 import 'package:ashghal_app_frontend/core/util/dialog_util.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
-import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
+import 'package:ashghal_app_frontend/core/widget/app_dropdownbutton.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core_api/api_util.dart';
 import 'package:ashghal_app_frontend/core_api/api_constant.dart';
@@ -155,7 +155,7 @@ class AppUtil {
   }
 
   static Future<bool> exitApp(BuildContext context) {
-    DialogUtil.showDialog(
+    DialogUtil.showConfirmDialog(
       title: AppLocalization.warning,
       message: AppLocalization.doyouwanttoexitApp,
       onSubmit: () {

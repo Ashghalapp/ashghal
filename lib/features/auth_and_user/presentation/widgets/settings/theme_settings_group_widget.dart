@@ -25,7 +25,7 @@ class ThemeSettingsGroupWidget extends StatelessWidget {
       showEndDivider: true,
       items: [
         SettingItemWidget(
-          icon: Icons.language,
+          icon: Icons.color_lens_outlined,
           label: AppLocalization.themeMode.tr,
           onTap: () => Get.to(
             () => ChoiceChipRow(
@@ -59,7 +59,7 @@ class ThemeSettingsGroupWidget extends StatelessWidget {
                               ThemeMode.values.byName(chioce.toLowerCase());
                           themeController
                               .changeTheme(themeController.themeMode.value);
-                          Restart.restartApp();
+                          // Restart.restartApp();
                         }
                       },
                     ),

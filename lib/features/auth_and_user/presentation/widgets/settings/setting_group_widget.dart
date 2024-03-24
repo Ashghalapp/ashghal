@@ -15,21 +15,26 @@ class SettingGroupWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            // height: 30,
-            // alignment: AlignmentDirectional.centerStart,
-            child: Text(groupTitle.tr),
-          ),
-          if (items != null) ...items!,
-          if (showEndDivider)
-            Divider(thickness: 4, color: Get.theme.dividerColor)
-        ],
+    return TweenAnimationBuilder(
+      duration: const Duration(milliseconds: 1000),
+      tween: Tween<double>(begin: 0, end: 1),
+      builder: (context, value, child) => SizedBox(width: 20, child: child),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              // height: 30,
+              // alignment: AlignmentDirectional.centerStart,
+              child: Text(groupTitle.tr),
+            ),
+            if (items != null) ...items!,
+            if (showEndDivider)
+              Divider(thickness: 4, color: Get.theme.dividerColor)
+          ],
+        ),
       ),
     );
   }

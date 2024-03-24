@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:ashghal_app_frontend/core/cities_and_districts.dart';
 import 'package:ashghal_app_frontend/core/localization/app_localization.dart';
 import 'package:ashghal_app_frontend/core/widget/app_buttons.dart';
-import 'package:ashghal_app_frontend/core/widget/app_dropdownbuttonformfield.dart';
+import 'package:ashghal_app_frontend/core/widget/app_dropdownbutton.dart';
 import 'package:ashghal_app_frontend/core/widget/app_textformfield.dart';
 import 'package:ashghal_app_frontend/core/widget/cashed_image_widget.dart';
 import 'package:ashghal_app_frontend/features/post/domain/entities/post.dart';
@@ -91,6 +91,7 @@ class AddUpdatePostScreen extends StatelessWidget {
                     hintText: AppLocalization.selectCategory,
                     labelText: AppLocalization.category,
                     initialValue: addPostController.selectedCategory,
+                    margin: const EdgeInsets.only(top: 4),
                   ),
                 ),
 

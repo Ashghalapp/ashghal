@@ -1,6 +1,8 @@
-import 'package:ashghal_app_frontend/app_live_cycle_controller.dart';
-import 'package:ashghal_app_frontend/app_live_cycle_observer.dart';
+
+import 'package:ashghal_app_frontend/bottombar_builder_widget.dart';
 import 'package:ashghal_app_frontend/core/helper/app_print_class.dart';
+import 'package:ashghal_app_frontend/core/widget/fade_transition_widget.dart';
+import 'package:ashghal_app_frontend/core/widget/horizontal_slide_transition_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'mainscreen_controller.dart';
@@ -8,56 +10,52 @@ import 'mainscreen_controller.dart';
 class MainScreen extends GetView<MainScreenController> {
   const MainScreen({super.key});
 
+  static GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  
   @override
   Widget build(BuildContext context) {
-    Get.put(MainScreenController(),permanent: false);
+    Get.put(MainScreenController(), permanent: false);
     // print();
     // print("--------------------------------------------------------------");
     // print("Theme is dark ${Get.isDarkMode}");
     // print("Theme is dark ${Theme.of(context).brightness == Brightness.dark}");
     // print("--------------------------------------------------------------");
 
+    // final animationCon = AnimationController(
+    //   duration: const Duration(milliseconds: 400),
+    //   vsync: Navigator.of(context),
+    // );
+
+    // Timer(const Duration(seconds: 1), () {
+    //   animationCon.forward();
+    // });
+
     // printError(info: "<<<<<<<<<<<${Get.isDarkMode} ${Get.isPlatformDarkMode}");
     return GetBuilder<MainScreenController>(
       init: MainScreenController(),
       initState: (_) {},
       builder: (controller) {
-        AppPrint.printInfo("Main Screen rebuilt");
+        AppPrint.printInfo("Main Screen rebuild");
         return Scaffold(
+          key: scaffoldKey,
           // onBack: () => AppUtil.exitApp(context),
-          bottomNavigationBar: BottomNavigationBar(
-            unselectedItemColor: Colors.grey.shade600,
-            selectedItemColor: Theme.of(context).primaryColor,
-            currentIndex: controller.currentIndex,
-            onTap: controller.changePage,
-            type: BottomNavigationBarType.fixed,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            iconSize: 30,
-            items: controller.getItems(),
+          bottomNavigationBar: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              HorizontalSlideTransitionWidget(
+                millisecondToLate: 800,
+                milliseconds: 600,
+                child: BottombarBuilderWidget(
+                  onTap: controller.changePage,
+                  currentIndex: controller.currentIndex,
+                ),
+              ),
+            ],
           ),
-          body: controller.listPage[controller.currentIndex],
-          // IndexedStack(
-          //   index: controller.currentIndex,
-          //   children: [
-          //     // index tap 0
-          //     controller.currentIndex == 0 ? PostsScreen() : Container(),
-          //     // index tap 1
-          //     const Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [Center(child: Text("Search screen"))],
-          //     ),
-          //     // index tap 2
-          //     controller.currentIndex == 2 ? AddPostScreen() : Container(),
-          //     // index tap 3
-          //     const Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [Center(child: Text("Activity Screen"))],
-          //     ),
-          //     // index tap 4
-          //     controller.currentIndex == 4 ? AccountScreen() : Container(),
-          //   ],
-          // ) // controller.listPage.elementAt(controller.currentIndex),
+          body: FadeTransitionWidget(
+            milliseconds: 500,
+            child: controller.listPage[controller.currentIndex],
+          ),
         );
       },
     );
